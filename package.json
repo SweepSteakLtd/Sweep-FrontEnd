@@ -1,0 +1,40 @@
+{
+  "name": "sweepsteak-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "local": "cross-env VITE_APPLIED_ENV=local vite",
+    "build:local": "tsc && cross-env VITE_APPLIED_ENV=local vite build",
+
+    "dev": "cross-env VITE_APPLIED_ENV=development vite",
+    "build:dev": "tsc && cross-env VITE_APPLIED_ENV=development vite build",
+
+    "prod": "cross-env VITE_APPLIED_ENV=production vite",
+    "build:prod": "tsc && cross-env VITE_APPLIED_ENV=production vite build"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.83.0",
+    "@types/styled-components": "^5.1.34",
+    "axios": "^1.10.0",
+    "cross-env": "7.0.3",
+    "firebase": "^12.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.7.0",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^9.31.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.37.0",
+    "vite": "^7.0.5"
+  }
+}
