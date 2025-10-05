@@ -1,40 +1,34 @@
 {
   "name": "sweepsteak-frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "main": "index.ts",
   "scripts": {
-    "local": "cross-env VITE_APPLIED_ENV=local vite",
-    "build:local": "tsc && cross-env VITE_APPLIED_ENV=local vite build",
-
-    "dev": "cross-env VITE_APPLIED_ENV=development vite",
-    "build:dev": "tsc && cross-env VITE_APPLIED_ENV=development vite build",
-
-    "prod": "cross-env VITE_APPLIED_ENV=production vite",
-    "build:prod": "tsc && cross-env VITE_APPLIED_ENV=production vite build"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build:dev:web": "expo export -p web -c --output-dir dist"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.83.0",
-    "@types/styled-components": "^5.1.34",
-    "axios": "^1.10.0",
-    "cross-env": "7.0.3",
-    "firebase": "^12.0.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.0",
-    "styled-components": "^6.1.19"
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@rneui/base": "^4.0.0-rc.8",
+    "@rneui/themed": "^4.0.0-rc.8",
+    "expo": "~54.0.12",
+    "expo-status-bar": "~3.0.8",
+    "firebase": "^12.3.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.4",
+    "react-native-safe-area-context": "^5.6.1",
+    "react-native-url-polyfill": "^3.0.0",
+    "react-native-web": "^0.21.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.7.0",
-    "eslint": "^9.31.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.37.0",
-    "vite": "^7.0.5"
-  }
+    "@types/react": "~19.1.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "typescript": "~5.9.2"
+  },
+  "private": true,
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
