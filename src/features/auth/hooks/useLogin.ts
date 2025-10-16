@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useAlert } from '~/components/Alert';
@@ -21,19 +20,6 @@ export const useLogin = () => {
         setLoading(false);
         return false;
       }
-
-      const currentToken = await user.getIdToken();
-
-      if (!currentToken) {
-        showAlert({
-          title: 'Authentication Failed',
-          message: 'Authentication failed. Please try again.',
-        });
-        setLoading(false);
-        return false;
-      }
-
-      await AsyncStorage.setItem('access_token', JSON.stringify(currentToken));
 
       setLoading(false);
       return true;

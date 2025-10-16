@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQueryClient } from '@tanstack/react-query';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
@@ -48,12 +47,8 @@ export const useCreateAccount = () => {
               Alert.alert('Please check your inbox for email verification!');
             }
 
-            // Save token and invalidate queries
-            const currentToken = await user.getIdToken();
-            if (currentToken) {
-              await AsyncStorage.setItem('access_token', JSON.stringify(currentToken));
-              await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
-            }
+            // Invalidate user queries to refetch with new account
+            await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
           },
           onError: (error: Error) => {
             console.error('[DEBUG]: Failed to create user in database', error);

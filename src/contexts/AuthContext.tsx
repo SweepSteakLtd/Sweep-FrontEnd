@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signInWithEmailAndPassword, signOut as firebaseSignOut } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAlert } from '~/components/Alert';
@@ -39,17 +38,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return false;
       }
 
-      const currentToken = await user.getIdToken();
-
-      if (!currentToken) {
-        showAlert({
-          title: 'Authentication Failed',
-          message: 'Authentication failed. Please try again.',
-        });
-        return false;
-      }
-
-      await AsyncStorage.setItem('access_token', JSON.stringify(currentToken));
       return true;
     } catch (error: any) {
       const { title, message } = getAuthErrorMessage(error);
@@ -61,7 +49,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     try {
       await firebaseSignOut(firebaseAuth);
-      await AsyncStorage.removeItem('access_token');
     } catch (error) {
       console.error('Error logging out:', error);
     }
