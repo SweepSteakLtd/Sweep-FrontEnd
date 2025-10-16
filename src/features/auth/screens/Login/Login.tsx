@@ -1,13 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button';
 import { Icon } from '~/components/Icon';
 import { Input } from '~/components/Input';
 import { Typography } from '~/components/Typography';
+import { useAuth } from '~/contexts/AuthContext';
 import type { RootStackParamList } from '~/navigation/types';
-import { useTheme } from '~/theme/ThemeProvider';
-import { useLogin } from '~/features/auth/hooks/useLogin';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -15,13 +15,17 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const Login = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
-  const { loading, signIn } = useLogin();
+  const { signIn } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('karamvir.mangat@uvconsulting.net');
+  const [password, setPassword] = useState('Hello123');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignIn = () => {
-    signIn(email, password);
+  const handleSignIn = async () => {
+    setLoading(true);
+    await signIn(email, password);
+    setLoading(false);
+    // Navigation will happen automatically based on user state in RootNavigator
   };
 
   return (

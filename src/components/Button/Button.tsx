@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, TouchableOpacityProps } from 'react-native';
-import { useTheme } from '~/theme/ThemeProvider';
+import { useTheme } from 'styled-components/native';
 import { StyledButton, ButtonText, getTextColor } from './styles';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'link';

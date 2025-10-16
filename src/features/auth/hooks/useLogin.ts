@@ -1,18 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useQueryClient } from '@tanstack/react-query';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useAlert } from '~/components/Alert';
 import { firebaseAuth } from '~/lib/firebase';
-import { userQueryKeys } from '~/services/apis/User/useGetUser';
 import { getAuthErrorMessage } from './utils/authErrors';
 
 export const useLogin = () => {
-  const queryClient = useQueryClient();
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<boolean> => {
     setLoading(true);
     try {
       const { user } = await signInWithEmailAndPassword(firebaseAuth, email, password);
@@ -22,7 +19,7 @@ export const useLogin = () => {
           message: 'Failed to sign in.',
         });
         setLoading(false);
-        return;
+        return false;
       }
 
       const currentToken = await user.getIdToken();
@@ -33,20 +30,19 @@ export const useLogin = () => {
           message: 'Authentication failed. Please try again.',
         });
         setLoading(false);
-        return;
-      }
-      await AsyncStorage.setItem('access_token', JSON.stringify(currentToken));
-      // Invalidate and refetch user data
-      await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
-    } catch (error: any) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('[DEBUG]:', error);
+        return false;
       }
 
+      await AsyncStorage.setItem('access_token', JSON.stringify(currentToken));
+
+      setLoading(false);
+      return true;
+    } catch (error: any) {
       const { title, message } = getAuthErrorMessage(error);
       showAlert({ title, message });
+      setLoading(false);
+      return false;
     }
-    setLoading(false);
   };
 
   return {

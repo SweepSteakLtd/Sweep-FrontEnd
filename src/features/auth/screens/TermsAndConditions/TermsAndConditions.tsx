@@ -6,7 +6,7 @@ import { Checkbox } from '~/components/Checkbox';
 import { Icon } from '~/components/Icon';
 import { Typography } from '~/components/Typography';
 import type { RootStackParamList } from '~/navigation/types';
-import { useTheme } from '~/theme/ThemeProvider';
+import { useTheme } from 'styled-components/native';
 import { Container, ContentCard, Footer, Header, IconContainer, ScrollContainer } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'TermsAndConditions'>;

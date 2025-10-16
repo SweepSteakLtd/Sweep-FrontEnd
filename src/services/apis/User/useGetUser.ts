@@ -10,18 +10,26 @@ export const userQueryKeys = {
 // API Function
 async function fetchUser(): Promise<User | null> {
   const token = await firebaseAuth.currentUser?.getIdToken();
-  if (!token) return null;
 
-  const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users/me`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json', 'x-auth-id': token },
-  });
+  if (!token) {
+    return null;
+  }
 
-  if (res.status !== 200) return null;
+  try {
+    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users/me`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', 'x-auth-id': token },
+    });
 
-  const data = (await res.json()).data as User;
-  console.log('Fetched user:', data);
-  return data;
+    if (res.status !== 200) {
+      return null;
+    }
+
+    const data = (await res.json()).data as User;
+    return data;
+  } catch (error) {
+    return null;
+  }
 }
 
 /**

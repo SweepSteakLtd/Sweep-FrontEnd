@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'react-native-url-polyfill/auto';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { ThemeProvider } from 'styled-components/native';
 import { AlertProvider } from './src/components/Alert';
+import { AuthProvider } from './src/contexts/AuthContext';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { theme } from './src/theme/theme';
-import { ThemeProvider } from './src/theme/ThemeProvider';
 
 // Create a React Query client
 const queryClient = new QueryClient({
@@ -19,14 +19,14 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <StyledThemeProvider theme={theme}>
-        <AlertProvider>
+    <ThemeProvider theme={theme}>
+      <AlertProvider>
+        <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <RootNavigator />
           </QueryClientProvider>
-        </AlertProvider>
-      </StyledThemeProvider>
+        </AuthProvider>
+      </AlertProvider>
     </ThemeProvider>
   );
 }

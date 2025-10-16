@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
-import { useTheme } from '~/theme/ThemeProvider';
+import { useTheme } from 'styled-components/native';
 import { Button } from '../Button';
 import { Typography } from '../Typography';
 import { Overlay, AlertContainer, AlertTitle, AlertMessage, ButtonContainer } from './styles';

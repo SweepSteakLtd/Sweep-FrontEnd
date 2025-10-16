@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextProps } from 'react-native';
-import { useTheme } from '~/theme/ThemeProvider';
+import { useTheme } from 'styled-components/native';
 import { StyledText } from './styles';
 
 type TypographyVariant = 'title' | 'heading' | 'subheading' | 'body' | 'caption' | 'label';

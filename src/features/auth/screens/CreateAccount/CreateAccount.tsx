@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '~/components/Button';
 import { Icon } from '~/components/Icon';
 import { Typography } from '~/components/Typography';
-import { useTheme } from '~/theme/ThemeProvider';
+import { useTheme } from 'styled-components/native';
 import { Container, Header, IconContainer, OptionCard, OptionContent, OptionsContainer } from './styles';
 
 type DepositMethod = 'instant' | 'manual' | null;

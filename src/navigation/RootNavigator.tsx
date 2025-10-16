@@ -1,16 +1,16 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAuth } from '~/contexts/AuthContext';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
-import { useGetUser } from '~/services/apis/User/useGetUser';
 import { AuthNavigator } from './AuthNavigator';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator = () => {
-  const { data: user, isLoading } = useGetUser();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  // Show nothing while loading user data
+  // Show nothing while checking auth state
   if (isLoading) {
     return null;
   }
@@ -22,7 +22,7 @@ export const RootNavigator = () => {
           headerShown: false,
         }}
       >
-        {user ? (
+        {isAuthenticated ? (
           // Authenticated routes
           <>
             <Stack.Screen name="Dashboard" component={Dashboard} />

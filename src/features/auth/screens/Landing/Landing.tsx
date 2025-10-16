@@ -4,7 +4,7 @@ import { Button } from '~/components/Button';
 import { Icon } from '~/components/Icon';
 import { Typography } from '~/components/Typography';
 import type { RootStackParamList } from '~/navigation/types';
-import { useTheme } from '~/theme/ThemeProvider';
+import { useTheme } from 'styled-components/native';
 import {
   BadgeContainer,
   ButtonsContainer,
