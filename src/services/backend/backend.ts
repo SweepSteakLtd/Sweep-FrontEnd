@@ -6,7 +6,7 @@ export const createUser = async (
 ) => {
   // worth to set into provider to reduce amount of calls on that function?
   const token = await firebaseAuth.currentUser?.getIdToken();
-  return fetch(`${process.env.BACKEND_URL}/api/users`, {
+  return fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users`, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json', 'x-auth-id': token || '' },
