@@ -14,7 +14,7 @@
         "buildType": "apk"
       }
     },
-    "preview": {
+    "test": {
       "distribution": "internal",
       "ios": {
         "simulator": false,
