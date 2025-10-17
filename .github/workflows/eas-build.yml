@@ -6,10 +6,10 @@ on:
       profile:
         description: 'Build profile to use'
         required: true
-        default: 'preview'
+        default: 'test'
         type: choice
         options:
-          - preview
+          - test
           - production
       platform:
         description: 'Platform to build for'
