@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Button } from '~/components/Button';
-import { Icon } from '~/components/Icon';
-import { Typography } from '~/components/Typography';
+import { Button } from '~/components/Button/Button';
+import { Icon } from '~/components/Icon/Icon';
+import { Typography } from '~/components/Typography/Typography';
 import { useTheme } from 'styled-components/native';
 import { Container, Header, IconContainer, OptionCard, OptionContent, OptionsContainer } from './styles';
 

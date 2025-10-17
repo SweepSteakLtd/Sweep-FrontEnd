@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Button } from '~/components/Button';
-import { Icon } from '~/components/Icon';
-import { Typography } from '~/components/Typography';
+import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
+import { Button } from '~/components/Button/Button';
+import { Icon } from '~/components/Icon/Icon';
+import { Typography } from '~/components/Typography/Typography';
 import type { RootStackParamList } from '~/navigation/types';
 import { useTheme } from 'styled-components/native';
 import {
@@ -47,9 +48,13 @@ export const Landing = () => {
           <Typography variant="caption" color={theme.colors.text.secondary} align="center">
             Prize Payout to Date
           </Typography>
-          <Typography variant="title" color={theme.colors.text.secondary} align="center" weight="bold">
-            £52,300
-          </Typography>
+          <AnimatedAmount
+            value={52300}
+            variant="title"
+            color={theme.colors.text.secondary}
+            align="center"
+            weight="bold"
+          />
         </PrizeContainer>
 
         <BadgeContainer>

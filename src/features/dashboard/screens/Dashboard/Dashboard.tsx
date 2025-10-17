@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button } from '~/components/Button';
+import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
+import { Button } from '~/components/Button/Button';
 import { useAuth } from '~/contexts/AuthContext';
-import { ButtonContainer, Container, ContentContainer } from './styles';
+import { AmountContainer, ButtonContainer, Container, ContentContainer } from './styles';
 
 export const Dashboard = () => {
   const { signOut } = useAuth();
@@ -16,6 +17,9 @@ export const Dashboard = () => {
   return (
     <Container>
       <ContentContainer>
+        <AmountContainer>
+          <AnimatedAmount value={52300} variant="title" align="center" />
+        </AmountContainer>
         <ButtonContainer>
           <Button variant="primary" onPress={handleLogout} loading={loggingOut} disabled={loggingOut}>
             Log Out

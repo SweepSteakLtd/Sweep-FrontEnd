@@ -1,10 +1,10 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { Button } from '~/components/Button';
-import { Checkbox } from '~/components/Checkbox';
-import { Icon } from '~/components/Icon';
-import { Typography } from '~/components/Typography';
+import { Button } from '~/components/Button/Button';
+import { Checkbox } from '~/components/Checkbox/Checkbox';
+import { Icon } from '~/components/Icon/Icon';
+import { Typography } from '~/components/Typography/Typography';
 import type { RootStackParamList } from '~/navigation/types';
 import { useTheme } from 'styled-components/native';
 import { Container, ContentCard, Footer, Header, IconContainer, ScrollContainer } from './styles';

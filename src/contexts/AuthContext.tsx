@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword, signOut as firebaseSignOut } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useAlert } from '~/components/Alert';
+import { useAlert } from '~/components/Alert/Alert';
 import { firebaseAuth } from '~/lib/firebase';
 import { getAuthErrorMessage } from '~/features/auth/hooks/utils/authErrors';
 

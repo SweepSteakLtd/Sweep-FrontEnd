@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { Button } from '../Button';
-import { Typography } from '../Typography';
+import { Button } from '../Button/Button';
+import { Typography } from '../Typography/Typography';
 import { Overlay, AlertContainer, AlertTitle, AlertMessage, ButtonContainer } from './styles';
 
 interface AlertOptions {

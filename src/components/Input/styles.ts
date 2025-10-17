@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { Typography } from '../Typography';
+import { Typography } from '../Typography/Typography';
 
 export const Container = styled.View`
   margin-bottom: 15px;

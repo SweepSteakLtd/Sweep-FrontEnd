@@ -1,8 +1,8 @@
 import React from 'react';
 import { TouchableOpacityProps } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { Icon } from '../Icon';
-import { Typography } from '../Typography';
+import { Icon } from '../Icon/Icon';
+import { Typography } from '../Typography/Typography';
 import { Container, CheckboxBox, LabelContainer } from './styles';
 
 interface CheckboxProps extends TouchableOpacityProps {

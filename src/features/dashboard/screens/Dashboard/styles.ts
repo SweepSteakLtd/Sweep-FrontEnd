@@ -7,9 +7,15 @@ export const Container = styled.View`
 
 export const ContentContainer = styled.View`
   flex: 1;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 20px;
   padding-bottom: 40px;
+`;
+
+export const AmountContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Title = styled.Text`
