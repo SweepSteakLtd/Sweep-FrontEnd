@@ -4,14 +4,15 @@ import { getAuth } from 'firebase/auth';
 import { getRemoteConfig } from 'firebase/remote-config';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBLvjmSr6veKWXza12BABz9KdhSCz1A4tk',
-  authDomain: 'sweepsteak-64dd0.firebaseapp.com',
-  projectId: 'sweepsteak-64dd0',
-  storageBucket: 'sweepsteak-64dd0.firebasestorage.app',
-  messagingSenderId: '230553092247',
-  appId: '1:230553092247:web:755825b939a886633ce9d2',
-  measurementId: 'G-ZB9L5P1S5E',
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
+
 const app = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(app);
 export const firebaseRemoteConfig = getRemoteConfig(app);

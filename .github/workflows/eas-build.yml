@@ -1,0 +1,68 @@
+name: EAS Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Build profile to use'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+      platform:
+        description: 'Platform to build for'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - ios
+          - android
+
+jobs:
+  build:
+    name: EAS Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: yarn
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build on EAS
+        run: |
+          if [ "${{ github.event.inputs.platform }}" == "all" ]; then
+            eas build --platform all --profile ${{ github.event.inputs.profile }} --non-interactive --no-wait
+          else
+            eas build --platform ${{ github.event.inputs.platform }} --profile ${{ github.event.inputs.profile }} --non-interactive --no-wait
+          fi
+
+      - name: Comment on commit
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const profile = '${{ github.event.inputs.profile }}';
+            const platform = '${{ github.event.inputs.platform }}';
+            const sha = context.sha;
+
+            github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: sha,
+              body: `🚀 EAS Build started for **${platform}** with **${profile}** profile\n\nCheck build status at: https://expo.dev/accounts/${{ secrets.EXPO_ACCOUNT_OWNER }}/projects/sweepsteak/builds`
+            });
