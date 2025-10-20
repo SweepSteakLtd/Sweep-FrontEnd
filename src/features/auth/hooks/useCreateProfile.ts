@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAlert } from '~/components/Alert/Alert';
-import { useUpdateUserProfile, UpdateUserProfileParams } from '~/services/apis/User/useUpdateUserProfile';
+import { useCreateUserProfile, CreateUserProfileParams } from '~/services/apis/User/useCreateUserProfile';
 import { userQueryKeys } from '~/services/apis/User/useGetUser';
 
 export const useCreateProfile = () => {
   const { showAlert } = useAlert();
   const queryClient = useQueryClient();
-  const updateProfileMutation = useUpdateUserProfile();
+  const createProfileMutation = useCreateUserProfile();
   const [loading, setLoading] = useState(false);
 
-  const createProfile = async (profileData: UpdateUserProfileParams): Promise<boolean> => {
+  const createProfile = async (profileData: CreateUserProfileParams): Promise<boolean> => {
     setLoading(true);
 
     try {
-      await updateProfileMutation.mutateAsync(profileData);
+      await createProfileMutation.mutateAsync(profileData);
       // Invalidate user query to trigger refetch
       await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
       setLoading(false);
@@ -31,6 +31,6 @@ export const useCreateProfile = () => {
 
   return {
     createProfile,
-    loading: loading || updateProfileMutation.isPending,
+    loading: loading || createProfileMutation.isPending,
   };
 };

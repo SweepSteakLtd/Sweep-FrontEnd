@@ -8,7 +8,7 @@ export const userQueryKeys = {
 };
 
 // API Function
-async function fetchUser(): Promise<User | null> {
+const fetchUser = async (): Promise<User | null> => {
   const token = await firebaseAuth.currentUser?.getIdToken();
 
   if (!token) {
@@ -35,7 +35,7 @@ async function fetchUser(): Promise<User | null> {
 /**
  * Hook to fetch the current user
  */
-export function useGetUser() {
+export const useGetUser = () => {
   return useQuery({
     queryKey: userQueryKeys.user,
     queryFn: fetchUser,

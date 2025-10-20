@@ -3,7 +3,7 @@ import { firebaseAuth } from '~/lib/firebase';
 import { User } from './types';
 import { userQueryKeys } from './useGetUser';
 
-export interface UpdateUserProfileParams {
+export interface CreateUserProfileParams {
   first_name?: string;
   last_name?: string;
   bio?: string;
@@ -14,23 +14,21 @@ export interface UpdateUserProfileParams {
 }
 
 // API Function
-async function updateUserProfile(params: UpdateUserProfileParams): Promise<User> {
+const createUserProfile = async (params: CreateUserProfileParams): Promise<User> => {
   const token = await firebaseAuth.currentUser?.getIdToken();
 
-  const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users/me`, {
-    method: 'PUT',
+  const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users`, {
+    method: 'POST',
     body: JSON.stringify(params),
     headers: {
       'Content-Type': 'application/json',
       'x-auth-id': token || '',
     },
   });
-  console.log('[DEBUG]: URL:', `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users/me`);
-  console.log('[DEBUG]: updateUserProfile request body:', JSON.stringify(params));
-  console.log('[DEBUG]: updateUserProfile response status:', response.status);
+
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Failed to update profile' }));
-    throw new Error(error.message || 'Failed to update profile');
+    const error = await response.json().catch(() => ({ message: 'Failed to create profile' }));
+    throw new Error(error.message || 'Failed to create profile');
   }
 
   return response.json();
@@ -39,11 +37,11 @@ async function updateUserProfile(params: UpdateUserProfileParams): Promise<User>
 /**
  * Hook to update user profile via PUT /api/users/me
  */
-export function useUpdateUserProfile() {
+export const useCreateUserProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateUserProfile,
+    mutationFn: createUserProfile,
     onSuccess: () => {
       // Invalidate user query to refetch updated data
       queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
