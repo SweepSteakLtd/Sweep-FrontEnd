@@ -5,6 +5,7 @@ export type RootStackParamList = {
   Login: undefined;
   TermsAndConditions: { nextScreen: 'Login' | 'CreateAccount' };
   CreateAccount: undefined;
+  ProfileSetup: undefined;
   Dashboard: undefined;
 };
 

@@ -25,7 +25,7 @@ export const Login = () => {
     setLoading(true);
     await signIn(email, password);
     setLoading(false);
-    // Navigation will happen automatically based on user state in RootNavigator
+    // Navigation will happen automatically via AuthContext based on profile state
   };
 
   return (

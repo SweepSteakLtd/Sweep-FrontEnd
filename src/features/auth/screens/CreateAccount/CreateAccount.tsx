@@ -1,68 +1,100 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
+import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
+import { useCreateFirebaseAccount } from '~/features/auth/hooks/useCreateFirebaseAccount';
+import type { RootStackParamList } from '~/navigation/types';
 import { useTheme } from 'styled-components/native';
-import { Container, Header, IconContainer, OptionCard, OptionContent, OptionsContainer } from './styles';
+import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
 
-type DepositMethod = 'instant' | 'manual' | null;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const CreateAccount = () => {
   const theme = useTheme();
-  const [selectedMethod, setSelectedMethod] = useState<DepositMethod>(null);
+  const navigation = useNavigation<NavigationProp>();
+  const { createAccount, loading } = useCreateFirebaseAccount();
 
-  const handleContinue = () => {
-    if (selectedMethod) {
-      // Navigate to signup form or next step
-      console.log('Selected method:', selectedMethod);
-      // TODO: Navigate to signup form with selected method
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleContinue = async () => {
+    // Validation
+    if (!email || !password) {
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      return;
+    }
+
+    // Create Firebase account
+    const success = await createAccount(email, password);
+
+    if (success) {
+      // Navigate to profile creation
+      navigation.navigate('ProfileSetup');
     }
   };
 
   return (
     <Container>
+      <LogoContainer>
+        <LogoCircle>
+          <Icon name="⛳" size={20} />
+        </LogoCircle>
+        <Typography variant="heading" color={theme.colors.white}>
+          Sweepsteak
+        </Typography>
+      </LogoContainer>
+
       <Header>
-        <Typography variant="title" color={theme.colors.white}>
-          Create Account
+        <Typography variant="heading" color={theme.colors.white}>
+          Create Your Account
+        </Typography>
+        <Typography variant="body" color={theme.colors.white} style={{ opacity: 0.8, marginTop: 5 }}>
+          Join the social golf sweeps
         </Typography>
       </Header>
 
-      <OptionsContainer>
-        <OptionCard onPress={() => setSelectedMethod('instant')}>
-          <IconContainer>
-            <Icon name="📱" size={24} />
-          </IconContainer>
-          <OptionContent>
-            <Typography variant="subheading" color={theme.colors.text.secondary} style={{ marginBottom: 8 }}>
-              Instant Deposit
-            </Typography>
-            <Typography variant="body" color={theme.colors.text.muted}>
-              Connect all your socials in seconds with our instant banking app installed on their phone.
-            </Typography>
-          </OptionContent>
-        </OptionCard>
+      <FormContainer>
+        <Input
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="email@address.com"
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-        <OptionCard onPress={() => setSelectedMethod('manual')}>
-          <IconContainer>
-            <Icon name="🏦" size={24} />
-          </IconContainer>
-          <OptionContent>
-            <Typography variant="subheading" color={theme.colors.text.secondary} style={{ marginBottom: 8 }}>
-              Manual Deposit
-            </Typography>
-            <Typography variant="body" color={theme.colors.text.muted}>
-              A slightly longer verification process using open banking technology. You will not need your banking app installed on their phone.
-            </Typography>
-          </OptionContent>
-        </OptionCard>
-      </OptionsContainer>
+        <Input
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          secureTextEntry
+          autoCapitalize="none"
+        />
 
-      <Typography variant="body" color={theme.colors.white} align="center" style={{ marginBottom: 20, lineHeight: 18 }}>
-        You can change your deposit method later in account settings
-      </Typography>
+        <Input
+          label="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          placeholder="Confirm Password"
+          secureTextEntry
+          autoCapitalize="none"
+        />
 
-      <Button onPress={handleContinue}>
-        Select a Deposit Method
+        <Button disabled={loading} loading={loading} onPress={handleContinue} style={{ marginTop: 20 }}>
+          Continue
+        </Button>
+      </FormContainer>
+
+      <Button variant="link" onPress={() => navigation.goBack()} fullWidth={false}>
+        {'< Back to Home'}
       </Button>
     </Container>
   );

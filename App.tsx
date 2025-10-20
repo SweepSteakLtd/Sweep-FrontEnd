@@ -20,13 +20,13 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AlertProvider>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <AlertProvider>
+          <AuthProvider>
             <RootNavigator />
-          </QueryClientProvider>
-        </AuthProvider>
-      </AlertProvider>
+          </AuthProvider>
+        </AlertProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
