@@ -35,6 +35,9 @@
         "projectId": "beb39d44-bd25-4231-81ae-578a80713cbf"
       }
     },
-    "owner": "karamvir.mangat"
+    "owner": "karamvir.mangat",
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

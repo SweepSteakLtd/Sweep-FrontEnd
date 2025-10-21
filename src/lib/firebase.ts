@@ -1,7 +1,9 @@
 import { initializeApp } from 'firebase/app';
-
-import { getAuth } from 'firebase/auth';
+import { initializeAuth } from 'firebase/auth';
 import { getRemoteConfig } from 'firebase/remote-config';
+// @ts-ignore - Firebase auth persistence types
+import { getReactNativePersistence } from '@firebase/auth/dist/rn/index';
+import { secureStorage } from './secureStorage';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -14,5 +16,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const firebaseAuth = getAuth(app);
+
+// Initialize Auth with Secure persistence
+// Uses Keychain on iOS and EncryptedSharedPreferences on Android via expo-secure-store
+export const firebaseAuth = initializeAuth(app, {
+  persistence: getReactNativePersistence(secureStorage),
+});
+
 export const firebaseRemoteConfig = getRemoteConfig(app);

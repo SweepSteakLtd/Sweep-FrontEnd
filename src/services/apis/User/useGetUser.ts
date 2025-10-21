@@ -7,8 +7,8 @@ export const userQueryKeys = {
   user: ['user'] as const,
 };
 
-// API Function
-const fetchUser = async (): Promise<User | null> => {
+// API Function - exported for use outside of hook
+export const fetchUser = async (): Promise<User | null> => {
   const token = await firebaseAuth.currentUser?.getIdToken();
 
   if (!token) {

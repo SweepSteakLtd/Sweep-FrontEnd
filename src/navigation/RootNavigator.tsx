@@ -1,5 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthGuard } from '~/components/AuthGuard';
+import { Splash } from '~/features/auth/screens/Splash/Splash';
 import { Landing } from '~/features/auth/screens/Landing/Landing';
 import { Login } from '~/features/auth/screens/Login/Login';
 import { TermsAndConditions } from '~/features/auth/screens/TermsAndConditions/TermsAndConditions';
@@ -13,12 +15,14 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const RootNavigator = () => {
   return (
     <NavigationContainer>
+      <AuthGuard />
       <Stack.Navigator
-        initialRouteName="Landing"
+        initialRouteName="Splash"
         screenOptions={{
           headerShown: false,
         }}
       >
+        <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
