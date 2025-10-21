@@ -18,8 +18,6 @@ import { Container, LogoContainer, GoldCircle, AppName } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const MINIMUM_SPLASH_TIME = 1500; // 1.5 seconds minimum display time
-
 export const Splash = () => {
   const navigation = useNavigation<NavigationProp>();
   const queryClient = useQueryClient();
@@ -49,8 +47,6 @@ export const Splash = () => {
 
   useEffect(() => {
     const checkAuthAndNavigate = async () => {
-      const startTime = Date.now();
-
       // Wait for Firebase to check persisted auth state
       const unsubscribe = firebaseAuth.onAuthStateChanged(async (user) => {
         let targetScreen: keyof RootStackParamList;
@@ -73,13 +69,8 @@ export const Splash = () => {
           targetScreen = 'Landing';
         }
 
-        // Ensure minimum splash screen time
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(0, MINIMUM_SPLASH_TIME - elapsedTime);
-
-        setTimeout(() => {
-          navigation.replace(targetScreen);
-        }, remainingTime);
+        // Navigate immediately once ready
+        navigation.replace(targetScreen);
 
         // Clean up listener after first check
         unsubscribe();
