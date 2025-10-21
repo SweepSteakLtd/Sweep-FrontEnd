@@ -1,48 +1,30 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ActivityIndicator, View } from 'react-native';
-import { useAuth } from '~/contexts/AuthContext';
-import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
+import { Landing } from '~/features/auth/screens/Landing/Landing';
+import { Login } from '~/features/auth/screens/Login/Login';
+import { TermsAndConditions } from '~/features/auth/screens/TermsAndConditions/TermsAndConditions';
+import { CreateAccount } from '~/features/auth/screens/CreateAccount/CreateAccount';
 import { ProfileSetup } from '~/features/auth/screens/ProfileSetup/ProfileSetup';
-import { AuthNavigator } from './AuthNavigator';
+import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator = () => {
-  const { isAuthenticated, isLoading, profileComplete } = useAuth();
-
-  // Show loading screen only during initial auth check
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000' }}>
-        <ActivityIndicator size="large" color="#fff" />
-      </View>
-    );
-  }
-
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName="Landing"
         screenOptions={{
           headerShown: false,
         }}
       >
-        {isAuthenticated ? (
-          // Authenticated routes
-          <>
-            {profileComplete ? (
-              <Stack.Screen name="Dashboard" component={Dashboard} />
-            ) : (
-              <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
-            )}
-          </>
-        ) : (
-          // Unauthenticated routes
-          <>
-            {AuthNavigator(Stack)}
-          </>
-        )}
+        <Stack.Screen name="Landing" component={Landing} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
+        <Stack.Screen name="CreateAccount" component={CreateAccount} />
+        <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
+        <Stack.Screen name="Dashboard" component={Dashboard} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -6,7 +6,7 @@ import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
-import { useAuth } from '~/contexts/AuthContext';
+import { useLogin } from '~/features/auth/hooks/useLogin';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
 
@@ -15,17 +15,24 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const Login = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
-  const { signIn } = useAuth();
+  const { login, loading } = useLogin();
 
   const [email, setEmail] = useState('karamvir.mangat@uvconsulting.net');
   const [password, setPassword] = useState('Hello123');
-  const [loading, setLoading] = useState(false);
 
   const handleSignIn = async () => {
-    setLoading(true);
-    await signIn(email, password);
-    setLoading(false);
-    // Navigation will happen automatically via AuthContext based on profile state
+    const result = await login(email, password);
+
+    if (result.success) {
+      if (result.profileComplete) {
+        // User has profile - go to Dashboard
+        navigation.navigate('Dashboard');
+      } else {
+        // User needs to complete profile
+        navigation.navigate('ProfileSetup');
+      }
+    }
+    // If failed, error is already shown by useLogin hook
   };
 
   return (

@@ -35,11 +35,11 @@ const fetchUser = async (): Promise<User | null> => {
 /**
  * Hook to fetch the current user
  */
-export const useGetUser = () => {
+export const useGetUser = (enabled: boolean = true) => {
   return useQuery({
     queryKey: userQueryKeys.user,
     queryFn: fetchUser,
-    enabled: !!firebaseAuth.currentUser, // Only fetch if user is authenticated
+    enabled: enabled && !!firebaseAuth.currentUser, // Only fetch if user is authenticated
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
   });

@@ -1,16 +1,22 @@
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
 import { useAlert } from '~/components/Alert/Alert';
 import { useCreateProfile } from '~/features/auth/hooks/useCreateProfile';
+import type { RootStackParamList } from '~/navigation/types';
 import { useTheme } from 'styled-components/native';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const ProfileSetup = () => {
   const theme = useTheme();
+  const navigation = useNavigation<NavigationProp>();
   const { showAlert } = useAlert();
 
   // Form state
@@ -34,7 +40,7 @@ export const ProfileSetup = () => {
     }
 
     // Create profile
-    await createProfile({
+    const success = await createProfile({
       first_name: firstName,
       last_name: lastName,
       phone_number: phoneNumber,
@@ -42,6 +48,11 @@ export const ProfileSetup = () => {
       deposit_limit: depositLimit ? parseInt(depositLimit, 10) : undefined,
       betting_limit: bettingLimit ? parseInt(bettingLimit, 10) : undefined,
     });
+
+    if (success) {
+      // Navigate to Dashboard after successful profile creation
+      navigation.navigate('Dashboard');
+    }
   };
 
   return (
