@@ -8,6 +8,7 @@ export type RootStackParamList = {
   CreateAccount: undefined;
   ProfileSetup: undefined;
   Dashboard: undefined;
+  Settings: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

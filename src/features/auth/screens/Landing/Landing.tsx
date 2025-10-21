@@ -11,6 +11,7 @@ import {
   ButtonsContainer,
   Container,
   ContentContainer,
+  HeaderContainer,
   ImageContainer,
   LogoCircle,
   LogoContainer,
@@ -26,14 +27,16 @@ export const Landing = () => {
 
   return (
     <Container>
-      <LogoContainer>
-        <LogoCircle>
-          <Icon name="⛳" size={20} />
-        </LogoCircle>
-        <Typography variant="heading" color={theme.colors.white}>
-          Sweepsteak
-        </Typography>
-      </LogoContainer>
+      <HeaderContainer>
+        <LogoContainer>
+          <LogoCircle>
+            <Icon name="⛳" size={20} />
+          </LogoCircle>
+          <Typography variant="heading" color={theme.colors.white}>
+            Sweepsteak
+          </Typography>
+        </LogoContainer>
+      </HeaderContainer>
 
       <ContentContainer>
         <ImageContainer>
@@ -74,7 +77,7 @@ export const Landing = () => {
           Create account
         </Button>
 
-        <Button variant="outline" onPress={() => navigation.navigate('TermsAndConditions', { nextScreen: 'Login' })}>
+        <Button variant="outline" onPress={() => navigation.navigate('TermsAndConditions', { nextScreen: 'Login' })} style={{ marginTop: 12 }}>
           Log In
         </Button>
 

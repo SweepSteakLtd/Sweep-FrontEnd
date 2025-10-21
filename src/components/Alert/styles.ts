@@ -32,5 +32,4 @@ export const AlertMessage = styled.View`
 export const ButtonContainer = styled.View`
   flex-direction: row;
   justify-content: flex-end;
-  gap: 12px;
 `;

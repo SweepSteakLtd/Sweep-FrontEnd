@@ -58,7 +58,6 @@ export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
   opacity: ${(props: StyledButtonProps) => (props.disabled ? 0.6 : 1)};
   width: ${(props: StyledButtonProps) => (props.fullWidth ? '100%' : 'auto')};
   flex-direction: row;
-  gap: 8px;
 `;
 
 interface ButtonTextProps {

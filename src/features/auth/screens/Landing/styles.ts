@@ -8,10 +8,17 @@ export const Container = styled.View`
   padding: 60px 30px 30px 30px;
 `;
 
+export const HeaderContainer = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`;
+
 export const LogoContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 20px;
 `;
 
 export const LogoCircle = styled.View`
@@ -64,5 +71,4 @@ export const BadgeContainer = styled.View`
 
 export const ButtonsContainer = styled.View`
   width: 100%;
-  gap: 12px;
 `;

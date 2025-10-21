@@ -86,7 +86,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                             key={index}
                             variant={button.style === 'destructive' ? 'primary' : 'outline'}
                             onPress={() => handleButtonPress(button.onPress)}
-                            style={{ flex: 1 }}
+                            style={{ flex: 1, marginLeft: index > 0 ? 12 : 0 }}
                           >
                             {button.text}
                           </Button>

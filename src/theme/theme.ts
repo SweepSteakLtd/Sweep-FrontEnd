@@ -7,6 +7,9 @@ export const theme = {
     secondary: colorTokens.gold500,
     background: colorTokens.green100,
     white: colorTokens.white,
+    border: colorTokens.green800,
+    textSecondary: colorTokens.gray600,
+    card: colorTokens.white,
     text: {
       primary: colorTokens.white,
       secondary: colorTokens.green800,

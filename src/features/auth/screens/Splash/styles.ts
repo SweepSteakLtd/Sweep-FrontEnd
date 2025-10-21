@@ -10,7 +10,6 @@ export const Container = styled.View`
 
 export const LogoContainer = styled.View`
   align-items: center;
-  gap: 20px;
 `;
 
 export const GoldCircle = styled.View`
