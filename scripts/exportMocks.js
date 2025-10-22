@@ -132,6 +132,156 @@ function loadHandlers() {
 }
 
 /**
+ * Infer JSON schema from data
+ */
+function inferSchema(data, name = 'object') {
+  if (data === null || data === undefined) {
+    return { type: 'null' };
+  }
+
+  if (Array.isArray(data)) {
+    return {
+      type: 'array',
+      items: data.length > 0 ? inferSchema(data[0]) : { type: 'string' },
+    };
+  }
+
+  if (typeof data === 'object') {
+    const properties = {};
+    for (const [key, value] of Object.entries(data)) {
+      properties[key] = inferSchema(value, key);
+    }
+    return {
+      type: 'object',
+      properties,
+    };
+  }
+
+  if (typeof data === 'string') {
+    // Check if it's a timestamp placeholder
+    if (data === '<timestamp>') {
+      return { type: 'string', format: 'date-time' };
+    }
+    return { type: 'string' };
+  }
+
+  if (typeof data === 'number') {
+    return Number.isInteger(data) ? { type: 'integer' } : { type: 'number' };
+  }
+
+  if (typeof data === 'boolean') {
+    return { type: 'boolean' };
+  }
+
+  return { type: 'string' };
+}
+
+/**
+ * Generate OpenAPI 3.0 specification from handlers
+ */
+function generateOpenAPISpec(handlers) {
+  const paths = {};
+
+  // Group handlers by path
+  const handlersByPath = {};
+  for (const handler of handlers) {
+    if (!handlersByPath[handler.urlPattern]) {
+      handlersByPath[handler.urlPattern] = [];
+    }
+    handlersByPath[handler.urlPattern].push(handler);
+  }
+
+  // Build paths
+  for (const [path, pathHandlers] of Object.entries(handlersByPath)) {
+    paths[path] = {};
+
+    for (const handler of pathHandlers) {
+      const method = handler.method.toLowerCase();
+      const responses = {};
+
+      // Build responses from scenarios
+      const responsesByStatus = {};
+      for (const [scenarioName, scenario] of Object.entries(handler.scenarios)) {
+        const status = scenario.status.toString();
+
+        if (!responsesByStatus[status]) {
+          responsesByStatus[status] = {
+            description: getStatusDescription(scenario.status),
+            content: {
+              'application/json': {
+                schema: scenario.data ? inferSchema(scenario.data) : { type: 'object' },
+                examples: {},
+              },
+            },
+          };
+        }
+
+        // Add example for this scenario
+        responsesByStatus[status].content['application/json'].examples[scenarioName] = {
+          summary: scenarioName,
+          value: scenario.data,
+        };
+      }
+
+      paths[path][method] = {
+        summary: handler.name,
+        description: `${handler.name} endpoint`,
+        operationId: handler.id,
+        responses: responsesByStatus,
+      };
+
+      // Add request body for POST/PUT/PATCH methods
+      if (['post', 'put', 'patch'].includes(method)) {
+        // Try to infer request body from successful response
+        const successScenario = Object.values(handler.scenarios).find(s => s.status === 200);
+        if (successScenario && successScenario.data && successScenario.data.data) {
+          paths[path][method].requestBody = {
+            required: true,
+            content: {
+              'application/json': {
+                schema: inferSchema(successScenario.data.data),
+              },
+            },
+          };
+        }
+      }
+    }
+  }
+
+  return {
+    openapi: '3.0.0',
+    info: {
+      title: 'SweepSteak Mock API',
+      version: '1.0.0',
+      description: 'Mock API specification for SweepSteak mobile app development',
+    },
+    servers: [
+      {
+        url: process.env.EXPO_PUBLIC_BACKEND_URL || 'https://api.sweepsteak.com',
+        description: 'Production server',
+      },
+    ],
+    paths,
+  };
+}
+
+/**
+ * Get description for HTTP status code
+ */
+function getStatusDescription(status) {
+  const descriptions = {
+    200: 'Successful response',
+    201: 'Created',
+    400: 'Bad request',
+    401: 'Unauthorized',
+    403: 'Forbidden',
+    404: 'Not found',
+    500: 'Internal server error',
+  };
+  return descriptions[status] || `Response with status ${status}`;
+}
+
+/**
  * Generate simplified mock documentation from handlers
  */
 function generateMockDocs(handlers) {
@@ -179,6 +329,12 @@ function exportMocks() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
+  // Generate OpenAPI spec
+  const openApiSpec = generateOpenAPISpec(handlers);
+  const openApiPath = path.join(outputDir, 'openapi.json');
+  fs.writeFileSync(openApiPath, JSON.stringify(openApiSpec, null, 2));
+  console.log(`✓ OpenAPI spec exported to: ${openApiPath}`);
+
   // Generate mock docs
   const mockDocs = generateMockDocs(handlers);
   const mockDocsPath = path.join(outputDir, 'mock-documentation.json');
@@ -189,6 +345,18 @@ function exportMocks() {
   const readme = `# SweepSteak Mock API Documentation
 
 Generated: ${new Date().toISOString()}
+
+## Files
+
+- **openapi.json** - OpenAPI 3.0 specification (import into Swagger UI, Postman, etc.)
+- **mock-documentation.json** - Simplified documentation with all scenarios and response data
+
+## Using OpenAPI Spec
+
+Import \`openapi.json\` into:
+- **Swagger UI**: View and test the API
+- **Postman**: Generate collections
+- **Backend Tools**: Validate implementation against contract
 
 ## Endpoints
 
@@ -206,10 +374,11 @@ ${endpoint.scenarios.map(s => `- ${s.name} (${s.status}) - ${s.delay}`).join('\n
 
 ## Sharing with Backend Team
 
-Share this documentation with your backend team to show:
-- All available API endpoints
-- Mock scenarios for each endpoint
-- Expected status codes and response times
+Share the \`openapi.json\` with your backend team so they can:
+- Import it into their API development tools
+- Use it as a contract for API implementation
+- Validate their implementation against the spec
+- See all mock scenarios and expected responses
 `;
 
   const readmePath = path.join(outputDir, 'README.md');

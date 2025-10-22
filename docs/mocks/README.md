@@ -1,6 +1,18 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-10-22T11:27:35.109Z
+Generated: 2025-10-22T12:51:28.490Z
+
+## Files
+
+- **openapi.json** - OpenAPI 3.0 specification (import into Swagger UI, Postman, etc.)
+- **mock-documentation.json** - Simplified documentation with all scenarios and response data
+
+## Using OpenAPI Spec
+
+Import `openapi.json` into:
+- **Swagger UI**: View and test the API
+- **Postman**: Generate collections
+- **Backend Tools**: Validate implementation against contract
 
 ## Endpoints
 
@@ -34,7 +46,8 @@ Create User Profile endpoint
 
 ## Sharing with Backend Team
 
-Share this documentation with your backend team to show:
-- All available API endpoints
-- Mock scenarios for each endpoint
-- Expected status codes and response times
+Share the `openapi.json` with your backend team so they can:
+- Import it into their API development tools
+- Use it as a contract for API implementation
+- Validate their implementation against the spec
+- See all mock scenarios and expected responses
