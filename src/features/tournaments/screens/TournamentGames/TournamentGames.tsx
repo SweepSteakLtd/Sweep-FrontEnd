@@ -29,8 +29,8 @@ export const TournamentGames = () => {
   const navigation = useNavigation<TournamentGamesNavigationProp>();
   const theme = useTheme();
 
-  const { data: tournaments = [] } = useGetTournaments();
-  const { data: games = [], isLoading: loading } = useGetGames();
+  const { data: tournaments = [], error: tournamentsError } = useGetTournaments();
+  const { data: games = [], isLoading: loading, error: gamesError } = useGetGames();
 
   // Transform tournaments to tabs format
   const tournamentTabs = tournaments.map((tournament) => ({
@@ -95,6 +95,19 @@ export const TournamentGames = () => {
       <Container>
         <EmptyState>
           <ActivityIndicator size="large" color={theme.colors.primary} />
+        </EmptyState>
+      </Container>
+    );
+  }
+
+  if (tournamentsError || gamesError) {
+    return (
+      <Container>
+        <EmptyState>
+          <PotLabel>Failed to load data</PotLabel>
+          <PotLabel style={{ fontSize: 14, marginTop: 8 }}>
+            {tournamentsError?.message || gamesError?.message || 'Please try again later'}
+          </PotLabel>
         </EmptyState>
       </Container>
     );

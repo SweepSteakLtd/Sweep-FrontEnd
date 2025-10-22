@@ -25,7 +25,7 @@ export const Dashboard = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { signOut } = useAuth();
-  const { data: tournaments = [], isLoading: loading } = useGetTournaments();
+  const { data: tournaments = [], isLoading: loading, error } = useGetTournaments();
 
   const handleLogout = async () => {
     await signOut();
@@ -45,6 +45,7 @@ export const Dashboard = () => {
         fontSize: 20,
       },
       headerShadowVisible: false,
+      headerBackVisible: false,
       headerLeft: () => null,
       headerRight: () => (
         <LogoutButton onPress={handleLogout}>
@@ -64,6 +65,19 @@ export const Dashboard = () => {
       <Container>
         <EmptyState>
           <ActivityIndicator size="large" color={theme.colors.primary} />
+        </EmptyState>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <EmptyState>
+          <EmptyStateText>Failed to load tournaments</EmptyStateText>
+          <EmptyStateText style={{ fontSize: 14, marginTop: 8, opacity: 0.7 }}>
+            {error.message || 'Please try again later'}
+          </EmptyStateText>
         </EmptyState>
       </Container>
     );

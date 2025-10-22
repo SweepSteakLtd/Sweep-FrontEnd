@@ -7,7 +7,7 @@ export const Container = styled.View`
 
 export const StyledInput = styled.TextInput<{ theme: any }>`
   background-color: ${(props: { theme: any }) => props.theme.colors.input.background};
-  color: ${(props: { theme: any }) => props.theme.colors.white};
+  color: ${(props: { theme: any }) => props.theme.colors.input.text};
   padding: 15px;
   border-radius: 8px;
   font-size: 16px;
