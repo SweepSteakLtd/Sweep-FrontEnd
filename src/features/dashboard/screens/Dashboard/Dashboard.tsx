@@ -1,13 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useAuth } from '~/contexts/AuthContext';
 import {
   Tournament,
   TournamentCard,
 } from '~/features/dashboard/components/TournamentCard/TournamentCard';
+import { TournamentCardSkeleton } from '~/features/dashboard/components/TournamentCard/TournamentCardSkeleton';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import {
@@ -63,9 +64,14 @@ export const Dashboard = () => {
   if (loading) {
     return (
       <Container>
-        <EmptyState>
-          <ActivityIndicator size="large" color={theme.colors.primary} />
-        </EmptyState>
+        <TournamentGrid>
+          <View style={{ padding: 20 }}>
+            {/* Show 3 skeleton cards while loading */}
+            {[...Array(3)].map((_, index) => (
+              <TournamentCardSkeleton key={index} />
+            ))}
+          </View>
+        </TournamentGrid>
       </Container>
     );
   }

@@ -8,6 +8,7 @@ import { EmptyState, EmptyStateText, SearchAndTabsWrapper, SearchWrapper } from 
 interface JoinGameListProps {
   games: Game[];
   onGamePress?: (game: Game) => void;
+  loading?: boolean;
 }
 
 const gameTabs = [
@@ -16,7 +17,7 @@ const gameTabs = [
   { id: 'private', label: 'Private' },
 ];
 
-export const JoinGameList = ({ games, onGamePress }: JoinGameListProps) => {
+export const JoinGameList = ({ games, onGamePress, loading = false }: JoinGameListProps) => {
   const [activeGameTab, setActiveGameTab] = useState('featured');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -47,9 +48,9 @@ export const JoinGameList = ({ games, onGamePress }: JoinGameListProps) => {
           tabs={gameTabs}
           activeTab={activeGameTab}
           onTabPress={setActiveGameTab}
-          variant="segmented"
+          loading={loading}
         />
-        {activeGameTab !== 'private' && (
+        {!loading && activeGameTab !== 'private' && (
           <SearchWrapper>
             <SearchInput
               value={searchQuery}

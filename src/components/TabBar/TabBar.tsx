@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { Animated, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { Skeleton } from '~/components/Skeleton/Skeleton';
 import { Container, Tab, TabText } from './styles';
 
 export interface TabItem {
@@ -7,39 +8,20 @@ export interface TabItem {
   label: string;
 }
 
-export type TabBarVariant = 'default' | 'segmented';
-
 interface TabBarProps {
   tabs: TabItem[];
   activeTab: string;
   onTabPress: (tabId: string) => void;
-  variant?: TabBarVariant;
+  loading?: boolean;
 }
 
-export const TabBar = ({ tabs, activeTab, onTabPress, variant = 'default' }: TabBarProps) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+export const TabBar = ({ tabs, activeTab, onTabPress, loading = false }: TabBarProps) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const tabRefs = useRef<{ [key: string]: View | null }>({});
 
   useEffect(() => {
-    // Animate scale when tab changes (only for default variant)
-    if (variant === 'default') {
-      Animated.sequence([
-        Animated.timing(scaleAnim, {
-          toValue: 0.95,
-          duration: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 150,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-
-    // Auto-scroll to selected tab for segmented variant
-    if (variant === 'segmented' && tabRefs.current[activeTab]) {
+    // Auto-scroll to selected tab
+    if (tabRefs.current[activeTab]) {
       tabRefs.current[activeTab]?.measureLayout(
         scrollViewRef.current as any,
         (x, _y, _width) => {
@@ -51,49 +33,55 @@ export const TabBar = ({ tabs, activeTab, onTabPress, variant = 'default' }: Tab
         () => {},
       );
     }
-  }, [activeTab, scaleAnim, variant]);
+  }, [activeTab]);
+
+  if (loading) {
+    return (
+      <Container>
+        <Skeleton.Item flexDirection="row" paddingHorizontal={4} gap={4}>
+          {[...Array(3)].map((_, index) => (
+            <Skeleton key={index} width={100} height={40} borderRadius={8} />
+          ))}
+        </Skeleton.Item>
+      </Container>
+    );
+  }
 
   return (
-    <Container variant={variant}>
+    <Container>
       <ScrollView
         ref={scrollViewRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         style={{ flexGrow: 0 }}
         contentContainerStyle={{
-          paddingHorizontal: variant === 'segmented' ? 0 : 20,
-          paddingVertical: variant === 'segmented' ? 0 : 12,
+          paddingHorizontal: 0,
+          paddingVertical: 0,
           flexGrow: 1,
-          justifyContent: variant === 'default' ? 'center' : 'flex-start',
-          gap: variant === 'default' ? 12 : 0,
+          justifyContent: 'flex-start',
+          gap: 0,
         }}
       >
         {tabs.map((tab, index) => {
           const isActive = activeTab === tab.id;
           const isLast = index === tabs.length - 1;
           return (
-            <Animated.View
+            <View
               key={tab.id}
               ref={(ref) => {
                 tabRefs.current[tab.id] = ref as View | null;
               }}
-              style={{
-                transform: [{ scale: isActive && variant === 'default' ? scaleAnim : 1 }],
-                flex: 1,
-              }}
+              style={{ flex: 1 }}
             >
               <Tab
                 active={isActive}
-                variant={variant}
                 isLast={isLast}
                 onPress={() => onTabPress(tab.id)}
                 activeOpacity={0.7}
               >
-                <TabText active={isActive} variant={variant}>
-                  {tab.label}
-                </TabText>
+                <TabText active={isActive}>{tab.label}</TabText>
               </Tab>
-            </Animated.View>
+            </View>
           );
         })}
       </ScrollView>

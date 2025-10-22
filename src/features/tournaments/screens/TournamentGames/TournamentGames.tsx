@@ -2,7 +2,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { TabBar } from '~/components/TabBar/TabBar';
@@ -20,6 +20,7 @@ import {
   PotLabel,
   SegmentedTabWrapper,
 } from './styles';
+import { TournamentGamesSkeleton } from './TournamentGamesSkeleton';
 
 type TournamentGamesRouteProp = RouteProp<RootStackParamList, 'TournamentGames'>;
 type TournamentGamesNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -29,8 +30,12 @@ export const TournamentGames = () => {
   const navigation = useNavigation<TournamentGamesNavigationProp>();
   const theme = useTheme();
 
-  const { data: tournaments = [], error: tournamentsError } = useGetTournaments();
-  const { data: games = [], isLoading: loading, error: gamesError } = useGetGames();
+  const {
+    data: tournaments = [],
+    isLoading: tournamentsLoading,
+    error: tournamentsError,
+  } = useGetTournaments();
+  const { data: games = [], isLoading: gamesLoading, error: gamesError } = useGetGames();
 
   // Transform tournaments to tabs format
   const tournamentTabs = tournaments.map((tournament) => ({
@@ -90,13 +95,13 @@ export const TournamentGames = () => {
     });
   };
 
-  if (loading) {
+  if (gamesLoading) {
     return (
-      <Container>
-        <EmptyState>
-          <ActivityIndicator size="large" color={theme.colors.primary} />
-        </EmptyState>
-      </Container>
+      <TournamentGamesSkeleton
+        tournamentTabs={tournamentTabs}
+        activeTournament={activeTournament}
+        onTabPress={setActiveTournament}
+      />
     );
   }
 
@@ -116,17 +121,15 @@ export const TournamentGames = () => {
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Level 1: Tournament Tabs - Segmented Style */}
-        {tournamentTabs.length > 0 && (
-          <SegmentedTabWrapper>
-            <TabBar
-              tabs={tournamentTabs}
-              activeTab={activeTournament}
-              onTabPress={setActiveTournament}
-              variant="segmented"
-            />
-          </SegmentedTabWrapper>
-        )}
+        {/* Level 1: Tournament Tabs */}
+        <SegmentedTabWrapper>
+          <TabBar
+            tabs={tournamentTabs}
+            activeTab={activeTournament}
+            onTabPress={setActiveTournament}
+            loading={tournamentsLoading}
+          />
+        </SegmentedTabWrapper>
 
         <PotInfo>
           <PotLabel>
@@ -142,7 +145,7 @@ export const TournamentGames = () => {
             weight="bold"
           />
         </PotInfo>
-        <JoinGameList games={filteredGames} onGamePress={handleGamePress} />
+        <JoinGameList games={filteredGames} onGamePress={handleGamePress} loading={gamesLoading} />
       </ScrollView>
     </Container>
   );
