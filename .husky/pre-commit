@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Export mocks documentation
+echo "📝 Exporting mock API documentation..."
+yarn export-mocks
+
+# Check if mock docs changed
+if git diff --quiet docs/mocks/; then
+  echo "✅ Mock docs are up to date"
+else
+  echo "📄 Mock docs updated, staging changes..."
+  git add docs/mocks/
+fi
+
+exit 0

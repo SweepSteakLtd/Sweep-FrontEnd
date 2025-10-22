@@ -1,0 +1,99 @@
+{
+  "title": "SweepSteak Mock API Documentation",
+  "version": "1.0.0",
+  "generatedAt": "2025-10-22T11:27:35.108Z",
+  "endpoints": [
+    {
+      "id": "get-user",
+      "name": "Get User Profile",
+      "method": "GET",
+      "path": "/api/users/me",
+      "description": "Get User Profile endpoint",
+      "defaultScenario": "Complete Profile",
+      "scenarios": [
+        {
+          "name": "Complete Profile",
+          "status": 200,
+          "delay": "500ms",
+          "response": {
+            "data": {
+              "id": "mock-user-123",
+              "email": "mock@example.com",
+              "username": "mockuser",
+              "displayName": "Mock User",
+              "handicap": 15,
+              "createdAt": "<timestamp>"
+            }
+          }
+        },
+        {
+          "name": "No Profile (404)",
+          "status": 404,
+          "delay": "500ms",
+          "response": {
+            "error": "User profile not found"
+          }
+        },
+        {
+          "name": "Server Error (500)",
+          "status": 500,
+          "delay": "1000ms",
+          "response": {
+            "error": "Internal server error"
+          }
+        }
+      ]
+    },
+    {
+      "id": "create-profile",
+      "name": "Create User Profile",
+      "method": "POST",
+      "path": "/api/users/me",
+      "description": "Create User Profile endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "1000ms",
+          "response": {
+            "data": {
+              "id": "new-user-123",
+              "email": "newuser@example.com",
+              "username": "newuser",
+              "displayName": "New User",
+              "handicap": 0,
+              "createdAt": "<timestamp>"
+            }
+          }
+        },
+        {
+          "name": "Username Taken",
+          "status": 400,
+          "delay": "500ms",
+          "response": {
+            "error": "Username already taken",
+            "field": "username"
+          }
+        },
+        {
+          "name": "Invalid Data",
+          "status": 400,
+          "delay": "500ms",
+          "response": {
+            "error": "Invalid profile data",
+            "details": "Username must be at least 3 characters"
+          }
+        },
+        {
+          "name": "Server Error (500)",
+          "status": 500,
+          "delay": "1000ms",
+          "response": {
+            "error": "Failed to create profile"
+          }
+        }
+      ]
+    }
+  ]
+}
