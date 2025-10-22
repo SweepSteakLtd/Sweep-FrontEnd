@@ -10,7 +10,14 @@ export const colorTokens = {
 
   // Neutrals
   white: '#FFFFFF',
+  gray900: '#1a1a1a',
+  gray800: '#2d2d2d',
   gray600: '#666666',
+  gray200: '#e8e8e8',
+  gray100: '#f5f5f5',
+
+  // Error/Danger
+  red500: '#ff4444',
 
   // Transparent
   transparent: 'transparent',

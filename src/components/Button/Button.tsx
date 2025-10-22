@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, TouchableOpacityProps } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { StyledButton, ButtonText, getTextColor } from './styles';
+import { ButtonText, getTextColor, StyledButton } from './styles';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'link';
 
@@ -32,7 +32,9 @@ export const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator color={getTextColor(variant, theme)} />
       ) : (
-        <ButtonText variant={variant} theme={theme}>{children}</ButtonText>
+        <ButtonText variant={variant} theme={theme}>
+          {children}
+        </ButtonText>
       )}
     </StyledButton>
   );

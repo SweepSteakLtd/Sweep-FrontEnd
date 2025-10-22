@@ -16,7 +16,7 @@ export const getMockConfig = async (): Promise<MockConfig> => {
     console.error('[MockStorage]: Error loading mock config:', error);
   }
 
-  // Return default config
+  // Return default config (mocks disabled by default)
   return {
     globalEnabled: false,
     globalDelay: null,
@@ -47,10 +47,7 @@ export const toggleGlobalMock = async (enabled: boolean): Promise<void> => {
 /**
  * Toggle individual mock handler
  */
-export const toggleMockHandler = async (
-  handlerId: string,
-  enabled: boolean
-): Promise<void> => {
+export const toggleMockHandler = async (handlerId: string, enabled: boolean): Promise<void> => {
   const config = await getMockConfig();
   if (!config.handlers[handlerId]) {
     config.handlers[handlerId] = { enabled: false, selectedScenario: '', delay: null };
@@ -62,10 +59,7 @@ export const toggleMockHandler = async (
 /**
  * Select a scenario for a mock handler
  */
-export const selectMockScenario = async (
-  handlerId: string,
-  scenario: string
-): Promise<void> => {
+export const selectMockScenario = async (handlerId: string, scenario: string): Promise<void> => {
   const config = await getMockConfig();
   if (!config.handlers[handlerId]) {
     config.handlers[handlerId] = { enabled: false, selectedScenario: '', delay: null };
@@ -86,14 +80,24 @@ export const setGlobalDelay = async (delay: number | null): Promise<void> => {
 /**
  * Set delay for a specific handler (overrides scenario delays for that handler)
  */
-export const setHandlerDelay = async (
-  handlerId: string,
-  delay: number | null
-): Promise<void> => {
+export const setHandlerDelay = async (handlerId: string, delay: number | null): Promise<void> => {
   const config = await getMockConfig();
   if (!config.handlers[handlerId]) {
     config.handlers[handlerId] = { enabled: false, selectedScenario: '', delay: null };
   }
   config.handlers[handlerId].delay = delay;
   await saveMockConfig(config);
+};
+
+/**
+ * Reset mock configuration to default
+ * Useful for clearing any stored config and returning to defaults
+ */
+export const resetMockConfig = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(MOCK_CONFIG_KEY);
+    console.log('[MockStorage]: Mock config reset to defaults');
+  } catch (error) {
+    console.error('[MockStorage]: Error resetting mock config:', error);
+  }
 };

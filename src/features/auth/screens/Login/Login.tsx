@@ -50,7 +50,11 @@ export const Login = () => {
         <Typography variant="heading" color={theme.colors.white}>
           Welcome to SweepSteak
         </Typography>
-        <Typography variant="body" color={theme.colors.white} style={{ opacity: 0.8, marginTop: 5 }}>
+        <Typography
+          variant="body"
+          color={theme.colors.white}
+          style={{ opacity: 0.8, marginTop: 5 }}
+        >
           Sign in to your account
         </Typography>
       </Header>
@@ -74,7 +78,12 @@ export const Login = () => {
           autoCapitalize="none"
         />
 
-        <Button disabled={loading} loading={loading} onPress={handleSignIn} style={{ marginTop: 20 }}>
+        <Button
+          disabled={loading}
+          loading={loading}
+          onPress={handleSignIn}
+          style={{ marginTop: 20 }}
+        >
           Sign In
         </Button>
       </FormContainer>

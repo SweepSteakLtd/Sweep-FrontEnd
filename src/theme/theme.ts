@@ -5,14 +5,16 @@ export const theme = {
   colors: {
     primary: colorTokens.green800,
     secondary: colorTokens.gold500,
-    background: colorTokens.green100,
+    background: colorTokens.white,
+    backgroundLight: colorTokens.gray100,
     white: colorTokens.white,
-    border: colorTokens.green800,
+    border: colorTokens.gray600,
     textSecondary: colorTokens.gray600,
     card: colorTokens.white,
+    error: colorTokens.red500,
     text: {
-      primary: colorTokens.white,
-      secondary: colorTokens.green800,
+      primary: colorTokens.gray900,
+      secondary: colorTokens.gray600,
       muted: colorTokens.gray600,
     },
     button: {
@@ -21,9 +23,9 @@ export const theme = {
       text: colorTokens.green800,
     },
     input: {
-      background: colorTokens.green900,
-      border: colorTokens.green800,
-      text: colorTokens.white,
+      background: colorTokens.white,
+      border: colorTokens.gray600,
+      text: colorTokens.gray900,
     },
   },
 } as const;

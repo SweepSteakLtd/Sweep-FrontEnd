@@ -6,11 +6,7 @@ import * as SecureStore from 'expo-secure-store';
  * Firebase uses ":", "[", "]" which are not allowed
  */
 function sanitizeKey(key: string): string {
-  return key
-    .replace(/:/g, '_')
-    .replace(/\[/g, '_')
-    .replace(/]/g, '_')
-    .replace(/\//g, '_');
+  return key.replace(/:/g, '_').replace(/\[/g, '_').replace(/]/g, '_').replace(/\//g, '_');
 }
 
 /**

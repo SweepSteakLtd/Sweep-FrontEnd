@@ -1,7 +1,10 @@
-import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
-import { useCreateUserProfile, CreateUserProfileParams } from '~/services/apis/User/useCreateUserProfile';
+import {
+  CreateUserProfileParams,
+  useCreateUserProfile,
+} from '~/services/apis/User/useCreateUserProfile';
 import { userQueryKeys } from '~/services/apis/User/useGetUser';
 
 export const useCreateProfile = () => {

@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withSequence,
   withTiming,
-  Easing,
 } from 'react-native-reanimated';
 import { Icon } from '~/components/Icon/Icon';
 import { firebaseAuth } from '~/lib/firebase';
-import { userQueryKeys, fetchUser } from '~/services/apis/User/useGetUser';
 import type { RootStackParamList } from '~/navigation/types';
-import { Container, LogoContainer, GoldCircle, AppName } from './styles';
+import { fetchUser, userQueryKeys } from '~/services/apis/User/useGetUser';
+import { AppName, Container, GoldCircle, LogoContainer } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -31,17 +31,17 @@ export const Splash = () => {
     scale.value = withRepeat(
       withSequence(
         withTiming(1.1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) })
+        withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
       ),
       -1, // Infinite
-      false
+      false,
     );
 
     // Subtle rotation animation
     rotation.value = withRepeat(
       withTiming(360, { duration: 3000, easing: Easing.linear }),
       -1, // Infinite
-      false
+      false,
     );
   }, []);
 

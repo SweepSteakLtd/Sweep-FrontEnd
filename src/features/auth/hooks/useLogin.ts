@@ -2,8 +2,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import { firebaseAuth } from '~/lib/firebase';
-import { getAuthErrorMessage } from './utils/authErrors';
 import { useGetUser } from '~/services/apis/User/useGetUser';
+import { getAuthErrorMessage } from './utils/authErrors';
 
 export type LoginResult =
   | { success: true; profileComplete: true }

@@ -1,10 +1,10 @@
-import type { MockHandler } from '../types';
 import {
-  profileCreationSuccessMock,
-  profileCreationUsernameTakenMock,
   profileCreationInvalidDataMock,
   profileCreationServerErrorMock,
+  profileCreationSuccessMock,
+  profileCreationUsernameTakenMock,
 } from '~/features/auth/mocks';
+import type { MockHandler } from '../types';
 
 export const createProfileHandler: MockHandler = {
   id: 'create-profile',

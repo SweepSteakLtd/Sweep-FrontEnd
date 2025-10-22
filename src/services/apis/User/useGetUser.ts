@@ -30,7 +30,7 @@ export const fetchUser = async (): Promise<User | null> => {
   } catch (error) {
     return null;
   }
-}
+};
 
 /**
  * Hook to fetch the current user
@@ -43,4 +43,4 @@ export const useGetUser = (enabled: boolean = true) => {
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
   });
-}
+};

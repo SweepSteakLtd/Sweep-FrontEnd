@@ -1,12 +1,28 @@
 import type { MockHandler } from '../types';
-import { getUserHandler } from './userHandler';
+import {
+  createGameHandler,
+  getGameByIdHandler,
+  getGamesHandler,
+  joinGameHandler,
+} from './gameHandler';
 import { createProfileHandler } from './profileHandler';
+import { getTournamentByIdHandler, getTournamentsHandler } from './tournamentHandler';
+import { getUserHandler } from './userHandler';
 
 /**
  * Registry of all mock handlers
  * Add new handlers here as you create them
  */
-export const mockHandlers: MockHandler[] = [getUserHandler, createProfileHandler];
+export const mockHandlers: MockHandler[] = [
+  getUserHandler,
+  createProfileHandler,
+  getTournamentsHandler,
+  getTournamentByIdHandler,
+  getGamesHandler,
+  getGameByIdHandler,
+  createGameHandler,
+  joinGameHandler,
+];
 
 /**
  * Get a handler by ID

@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '../Button/Button';
 import { Typography } from '../Typography/Typography';
-import { Overlay, AlertContainer, AlertTitle, AlertMessage, ButtonContainer } from './styles';
+import { AlertContainer, AlertMessage, AlertTitle, ButtonContainer, Overlay } from './styles';
 
 interface AlertOptions {
   title: string;
@@ -36,25 +36,19 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTimeout(() => setAlertOptions(null), 300);
   }, []);
 
-  const handleButtonPress = useCallback((onPress?: () => void) => {
-    hideAlert();
-    onPress?.();
-  }, [hideAlert]);
+  const handleButtonPress = useCallback(
+    (onPress?: () => void) => {
+      hideAlert();
+      onPress?.();
+    },
+    [hideAlert],
+  );
 
   return (
     <AlertContext.Provider value={{ showAlert }}>
       {children}
-      <Modal
-        visible={visible}
-        transparent
-        animationType="fade"
-        onRequestClose={hideAlert}
-      >
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          activeOpacity={1}
-          onPress={hideAlert}
-        >
+      <Modal visible={visible} transparent animationType="fade" onRequestClose={hideAlert}>
+        <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={hideAlert}>
           <Overlay>
             <TouchableOpacity activeOpacity={1}>
               <AlertContainer theme={theme}>
@@ -71,10 +65,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     </AlertTitle>
 
                     <AlertMessage>
-                      <Typography
-                        variant="body"
-                        color={theme.colors.text.secondary}
-                      >
+                      <Typography variant="body" color={theme.colors.text.secondary}>
                         {alertOptions.message}
                       </Typography>
                     </AlertMessage>
@@ -92,11 +83,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                           </Button>
                         ))
                       ) : (
-                        <Button
-                          variant="primary"
-                          onPress={hideAlert}
-                          style={{ flex: 1 }}
-                        >
+                        <Button variant="primary" onPress={hideAlert} style={{ flex: 1 }}>
                           OK
                         </Button>
                       )}

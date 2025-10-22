@@ -13,6 +13,8 @@ function loadMockData(mockName) {
   // Find the mocks.ts file that contains this mock
   const possiblePaths = [
     path.join(__dirname, '../src/features/auth/mocks.ts'),
+    path.join(__dirname, '../src/features/tournaments/mocks.ts'),
+    path.join(__dirname, '../src/features/games/mocks.ts'),
     // Add more feature paths as needed
   ];
 

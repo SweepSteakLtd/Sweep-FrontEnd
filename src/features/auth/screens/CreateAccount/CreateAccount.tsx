@@ -1,13 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
 import { useCreateFirebaseAccount } from '~/features/auth/hooks/useCreateFirebaseAccount';
 import type { RootStackParamList } from '~/navigation/types';
-import { useTheme } from 'styled-components/native';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -55,7 +55,11 @@ export const CreateAccount = () => {
         <Typography variant="heading" color={theme.colors.white}>
           Create Your Account
         </Typography>
-        <Typography variant="body" color={theme.colors.white} style={{ opacity: 0.8, marginTop: 5 }}>
+        <Typography
+          variant="body"
+          color={theme.colors.white}
+          style={{ opacity: 0.8, marginTop: 5 }}
+        >
           Join the social golf sweeps
         </Typography>
       </Header>
@@ -88,7 +92,12 @@ export const CreateAccount = () => {
           autoCapitalize="none"
         />
 
-        <Button disabled={loading} loading={loading} onPress={handleContinue} style={{ marginTop: 20 }}>
+        <Button
+          disabled={loading}
+          loading={loading}
+          onPress={handleContinue}
+          style={{ marginTop: 20 }}
+        >
           Continue
         </Button>
       </FormContainer>

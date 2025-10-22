@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-10-22T12:54:43.754Z
+Generated: 2025-10-22T16:38:18.846Z
 
 ## Files
 
@@ -17,17 +17,18 @@ Import `openapi.json` into:
 ## Endpoints
 
 
-### GET /api/users/me
-**Get User Profile**
+### GET /api/games
+**Get Games List**
 
-Get User Profile endpoint
+Get Games List endpoint
 
-**Default Scenario:** Complete Profile
+**Default Scenario:** Success
 
-**Scenarios:** 3
-- Complete Profile (200) - 500ms
-- No Profile (404) (404) - 500ms
-- Server Error (500) (500) - 1000ms
+**Scenarios:** 4
+- Success (200) - 500ms
+- Empty List (200) - 500ms
+- data (200) - 500ms
+- Server Error (500) - 1000ms
 
 
 ### POST /api/users/me
@@ -41,6 +42,33 @@ Create User Profile endpoint
 - Success (200) - 1000ms
 - Username Taken (400) - 500ms
 - Invalid Data (400) - 500ms
+- Server Error (500) (500) - 1000ms
+
+
+### GET /api/tournaments
+**Get Tournaments List**
+
+Get Tournaments List endpoint
+
+**Default Scenario:** Success
+
+**Scenarios:** 4
+- Success (200) - 500ms
+- Empty List (200) - 500ms
+- data (200) - 500ms
+- Server Error (500) - 1000ms
+
+
+### GET /api/users/me
+**Get User Profile**
+
+Get User Profile endpoint
+
+**Default Scenario:** Complete Profile
+
+**Scenarios:** 3
+- Complete Profile (200) - 500ms
+- No Profile (404) (404) - 500ms
 - Server Error (500) (500) - 1000ms
 
 

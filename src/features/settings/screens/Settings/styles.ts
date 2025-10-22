@@ -1,28 +1,9 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-export const Container = styled.SafeAreaView`
+export const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
-`;
-
-export const Header = styled.View`
-  padding: 16px 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const BackButton = styled.TouchableOpacity`
-  padding: 4px;
-`;
-
-export const HeaderTitle = styled.Text`
-  font-size: 20px;
-  font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
-  margin-left: 12px;
 `;
 
 export const ScrollContent = styled.ScrollView`
@@ -59,7 +40,7 @@ export const HandlerCard = styled.TouchableOpacity<{ disabled: boolean }>`
   margin-bottom: 12px;
   border-width: 1px;
   border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  opacity: ${({ disabled }: { disabled: boolean }) => (disabled ? 0.5 : 1)};
 `;
 
 export const HandlerHeader = styled.View`
@@ -89,7 +70,7 @@ export const HandlerMeta = styled.View`
 export const HandlerMethod = styled.Text<{ method: string }>`
   font-size: 12px;
   font-weight: 600;
-  color: ${({ method }) => {
+  color: ${({ method }: { method: string }) => {
     switch (method) {
       case 'GET':
         return '#10b981';
@@ -158,7 +139,7 @@ export const ScenarioOption = styled.TouchableOpacity<{ selected: boolean }>`
 
 export const ScenarioText = styled.Text<{ selected: boolean }>`
   font-size: 16px;
-  font-weight: ${({ selected }) => (selected ? '600' : '500')};
+  font-weight: ${({ selected }: { selected: boolean }) => (selected ? '600' : '500')};
   color: ${({ selected, theme }: { selected: boolean; theme: Theme }) =>
     selected ? theme.colors.primary : theme.colors.text.secondary};
   flex: 1;

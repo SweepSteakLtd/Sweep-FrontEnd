@@ -1,45 +1,217 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-10-22T12:54:43.753Z",
+  "generatedAt": "2025-10-22T16:38:18.846Z",
   "endpoints": [
     {
-      "id": "get-user",
-      "name": "Get User Profile",
+      "id": "get-games",
+      "name": "Get Games List",
       "method": "GET",
-      "path": "/api/users/me",
-      "description": "Get User Profile endpoint",
-      "defaultScenario": "Complete Profile",
+      "path": "/api/games",
+      "description": "Get Games List endpoint",
+      "defaultScenario": "Success",
       "scenarios": [
         {
-          "name": "Complete Profile",
+          "name": "Success",
           "status": 200,
           "delay": "500ms",
           "response": {
-            "data": {
-              "id": "mock-user-123",
-              "email": "mock@example.com",
-              "username": "mockuser",
-              "displayName": "Mock User",
-              "handicap": 15,
-              "createdAt": "<timestamp>"
-            }
+            "data": [
+              {
+                "id": "1",
+                "name": "Memnons GOLF",
+                "description": "Join the biggest Masters sweepstake of the season!",
+                "tournamentId": "1",
+                "tournamentName": "MASTERS",
+                "tournamentYear": 2026,
+                "entryFee": 785,
+                "joinCode": "34634",
+                "totalPot": 335973,
+                "maxParticipants": 100,
+                "currentParticipants": 43,
+                "contactPhone": "+44 7700 900000",
+                "contactEmail": "memnon@sweepsteak.com",
+                "contactVisibility": "public",
+                "rewards": [
+                  {
+                    "position": 1,
+                    "amount": 200000,
+                    "percentage": 60
+                  },
+                  {
+                    "position": 2,
+                    "amount": 100000,
+                    "percentage": 30
+                  },
+                  {
+                    "position": 3,
+                    "amount": 35973,
+                    "percentage": 10
+                  }
+                ],
+                "startTime": "2026-04-09T08:00:00Z",
+                "endTime": "2026-04-12T20:00:00Z",
+                "isPrivate": false,
+                "isFeatured": true,
+                "ownerId": "user-123",
+                "userIdList": [
+                  "user-123",
+                  "user-456",
+                  "user-789"
+                ],
+                "createdAt": "2025-10-01T10:00:00Z",
+                "updatedAt": "2025-10-20T15:30:00Z"
+              },
+              {
+                "id": "2",
+                "name": "Pauls PinLads",
+                "description": "Private league for the pin seekers",
+                "tournamentId": "1",
+                "tournamentName": "MASTERS",
+                "tournamentYear": 2026,
+                "entryFee": 567,
+                "joinCode": "33634",
+                "totalPot": 285420,
+                "maxParticipants": 80,
+                "currentParticipants": 51,
+                "contactPhone": "+44 7700 900001",
+                "contactEmail": "paul@sweepsteak.com",
+                "contactVisibility": "participants",
+                "rewards": [
+                  {
+                    "position": 1,
+                    "amount": 171252,
+                    "percentage": 60
+                  },
+                  {
+                    "position": 2,
+                    "amount": 85626,
+                    "percentage": 30
+                  },
+                  {
+                    "position": 3,
+                    "amount": 28542,
+                    "percentage": 10
+                  }
+                ],
+                "startTime": "2026-04-09T08:00:00Z",
+                "endTime": "2026-04-12T20:00:00Z",
+                "isPrivate": false,
+                "isFeatured": false,
+                "ownerId": "user-456",
+                "userIdList": [
+                  "user-456"
+                ],
+                "createdAt": "2025-10-02T12:00:00Z",
+                "updatedAt": "2025-10-21T09:15:00Z"
+              },
+              {
+                "id": "3",
+                "name": "BIG Johns League",
+                "description": "Go big or go home!",
+                "tournamentId": "1",
+                "tournamentName": "MASTERS",
+                "tournamentYear": 2026,
+                "entryFee": 785,
+                "joinCode": "34634",
+                "totalPot": 189500,
+                "maxParticipants": 50,
+                "currentParticipants": 24,
+                "contactPhone": null,
+                "contactEmail": "bigjohn@sweepsteak.com",
+                "contactVisibility": "private",
+                "rewards": [
+                  {
+                    "position": 1,
+                    "amount": 113700,
+                    "percentage": 60
+                  },
+                  {
+                    "position": 2,
+                    "amount": 56850,
+                    "percentage": 30
+                  },
+                  {
+                    "position": 3,
+                    "amount": 18950,
+                    "percentage": 10
+                  }
+                ],
+                "startTime": "2026-04-09T08:00:00Z",
+                "endTime": "2026-04-12T20:00:00Z",
+                "isPrivate": false,
+                "isFeatured": false,
+                "ownerId": "user-789",
+                "userIdList": [
+                  "user-789"
+                ],
+                "createdAt": "2025-10-03T14:30:00Z",
+                "updatedAt": "2025-10-20T11:00:00Z"
+              },
+              {
+                "id": "4",
+                "name": "KING GOLF",
+                "description": "For the kings of the course",
+                "tournamentId": "1",
+                "tournamentName": "MASTERS",
+                "tournamentYear": 2026,
+                "entryFee": 567,
+                "joinCode": "33634",
+                "totalPot": 125890,
+                "maxParticipants": 40,
+                "currentParticipants": 22,
+                "contactPhone": "+44 7700 900003",
+                "contactEmail": null,
+                "contactVisibility": "public",
+                "rewards": [
+                  {
+                    "position": 1,
+                    "amount": 75534,
+                    "percentage": 60
+                  },
+                  {
+                    "position": 2,
+                    "amount": 37767,
+                    "percentage": 30
+                  },
+                  {
+                    "position": 3,
+                    "amount": 12589,
+                    "percentage": 10
+                  }
+                ],
+                "startTime": "2026-04-09T08:00:00Z",
+                "endTime": "2026-04-12T20:00:00Z",
+                "isPrivate": false,
+                "isFeatured": false,
+                "ownerId": "user-321",
+                "userIdList": [
+                  "user-321"
+                ],
+                "createdAt": "2025-10-04T16:45:00Z",
+                "updatedAt": "2025-10-19T13:20:00Z"
+              }
+            ]
           }
         },
         {
-          "name": "No Profile (404)",
-          "status": 404,
+          "name": "Empty List",
+          "status": 200,
           "delay": "500ms",
-          "response": {
-            "error": "User profile not found"
-          }
+          "response": null
         },
         {
-          "name": "Server Error (500)",
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
           "status": 500,
           "delay": "1000ms",
           "response": {
-            "error": "Internal server error"
+            "error": "Failed to process request"
           }
         }
       ]
@@ -91,6 +263,126 @@
           "delay": "1000ms",
           "response": {
             "error": "Failed to create profile"
+          }
+        }
+      ]
+    },
+    {
+      "id": "get-tournaments",
+      "name": "Get Tournaments List",
+      "method": "GET",
+      "path": "/api/tournaments",
+      "description": "Get Tournaments List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": {
+            "data": [
+              {
+                "id": "1",
+                "name": "The Masters",
+                "year": 2026,
+                "category": "MASTERS",
+                "imageUrl": "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400",
+                "startDate": "2026-04-09T00:00:00Z",
+                "endDate": "2026-04-12T00:00:00Z",
+                "status": "upcoming"
+              },
+              {
+                "id": "2",
+                "name": "The Open Championship",
+                "year": 2025,
+                "category": "OPEN",
+                "imageUrl": "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400",
+                "startDate": "2025-07-17T00:00:00Z",
+                "endDate": "2025-07-20T00:00:00Z",
+                "status": "upcoming"
+              },
+              {
+                "id": "3",
+                "name": "The Players Championship",
+                "year": 2025,
+                "category": "TC_SAWGRASS",
+                "imageUrl": "https://images.unsplash.com/photo-1592919505780-303950717480?w=400",
+                "startDate": "2025-03-13T00:00:00Z",
+                "endDate": "2025-03-16T00:00:00Z",
+                "status": "upcoming"
+              },
+              {
+                "id": "4",
+                "name": "PGA Championship",
+                "year": 2025,
+                "category": "PGA",
+                "imageUrl": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=400",
+                "startDate": "2025-05-15T00:00:00Z",
+                "endDate": "2025-05-18T00:00:00Z",
+                "status": "upcoming"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": {
+            "error": "Failed to fetch tournaments"
+          }
+        }
+      ]
+    },
+    {
+      "id": "get-user",
+      "name": "Get User Profile",
+      "method": "GET",
+      "path": "/api/users/me",
+      "description": "Get User Profile endpoint",
+      "defaultScenario": "Complete Profile",
+      "scenarios": [
+        {
+          "name": "Complete Profile",
+          "status": 200,
+          "delay": "500ms",
+          "response": {
+            "data": {
+              "id": "mock-user-123",
+              "email": "mock@example.com",
+              "username": "mockuser",
+              "displayName": "Mock User",
+              "handicap": 15,
+              "createdAt": "<timestamp>"
+            }
+          }
+        },
+        {
+          "name": "No Profile (404)",
+          "status": 404,
+          "delay": "500ms",
+          "response": {
+            "error": "User profile not found"
+          }
+        },
+        {
+          "name": "Server Error (500)",
+          "status": 500,
+          "delay": "1000ms",
+          "response": {
+            "error": "Internal server error"
           }
         }
       ]

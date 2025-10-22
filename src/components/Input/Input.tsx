@@ -2,7 +2,7 @@ import React from 'react';
 import { TextInputProps } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Typography } from '../Typography/Typography';
-import { Container, StyledInput, ErrorText } from './styles';
+import { Container, ErrorText, StyledInput } from './styles';
 
 interface InputProps extends TextInputProps {
   label?: string;

@@ -1,9 +1,9 @@
-import type { MockHandler } from '../types';
 import {
   userProfileCompleteMock,
   userProfileNoProfileMock,
   userProfileServerErrorMock,
 } from '~/features/auth/mocks';
+import type { MockHandler } from '../types';
 
 export const getUserHandler: MockHandler = {
   id: 'get-user',

@@ -9,10 +9,14 @@ export type RootStackParamList = {
   ProfileSetup: undefined;
   Dashboard: undefined;
   Settings: undefined;
+  TournamentGames: { tournamentId: string };
+  CreateGame: { tournamentId: string };
 };
 
-export type RootStackScreenProps<T extends keyof RootStackParamList> =
-  NativeStackScreenProps<RootStackParamList, T>;
+export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<
+  RootStackParamList,
+  T
+>;
 
 declare global {
   namespace ReactNavigation {

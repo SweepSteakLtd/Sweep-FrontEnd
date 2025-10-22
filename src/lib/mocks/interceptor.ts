@@ -1,6 +1,6 @@
-import type { MockConfig, MockHandler } from './types';
-import { getMockConfig } from './storage';
 import { mockHandlers } from './handlers/registry';
+import { getMockConfig } from './storage';
+import type { MockConfig, MockHandler } from './types';
 
 // Store the original fetch (before any interception)
 const originalFetch = global.fetch;
@@ -31,7 +31,7 @@ const getCachedMockConfig = async (): Promise<MockConfig> => {
 const findMatchingHandler = (
   url: string,
   method: string,
-  config: MockConfig
+  config: MockConfig,
 ): MockHandler | null => {
   // Only log for API calls
   const isApiCall = url.includes('/api/');
@@ -66,7 +66,7 @@ const findMatchingHandler = (
 
   if (isApiCall) {
     console.log(
-      `[MockInterceptor]: No mock handler matched for ${method} ${url} (mocks are enabled but no handler configured)`
+      `[MockInterceptor]: No mock handler matched for ${method} ${url} (mocks are enabled but no handler configured)`,
     );
   }
 
@@ -92,10 +92,7 @@ const createMockResponse = (status: number, data: any): Response => {
 /**
  * Intercepted fetch function
  */
-const mockedFetch = async (
-  input: RequestInfo | URL,
-  init?: RequestInit
-): Promise<Response> => {
+const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   try {
     const url = typeof input === 'string' ? input : input.toString();
     const method = init?.method || 'GET';
@@ -105,8 +102,7 @@ const mockedFetch = async (
 
     if (handler) {
       const handlerConfig = config.handlers[handler.id];
-      const selectedScenario =
-        handlerConfig?.selectedScenario || handler.defaultScenario;
+      const selectedScenario = handlerConfig?.selectedScenario || handler.defaultScenario;
 
       if (!selectedScenario) {
         console.warn(`[MockInterceptor]: No scenario selected for ${handler.name}`);
@@ -117,21 +113,20 @@ const mockedFetch = async (
 
       if (!mockResponse) {
         console.warn(
-          `[MockInterceptor]: Scenario '${selectedScenario}' not found for ${handler.name}`
+          `[MockInterceptor]: Scenario '${selectedScenario}' not found for ${handler.name}`,
         );
         return originalFetch(input, init);
       }
 
       // Determine delay with priority: global > handler > scenario
-      const delay =
-        config.globalDelay ?? handlerConfig?.delay ?? mockResponse.delay ?? 0;
+      const delay = config.globalDelay ?? handlerConfig?.delay ?? mockResponse.delay ?? 0;
 
       console.log(
         `[MockInterceptor]: 🎭 Mocking ${method} ${url}`,
         `\n  Handler: ${handler.name}`,
         `\n  Scenario: ${selectedScenario}`,
         `\n  Status: ${mockResponse.status}`,
-        `\n  Delay: ${delay}ms`
+        `\n  Delay: ${delay}ms`,
       );
 
       // Simulate network delay if specified

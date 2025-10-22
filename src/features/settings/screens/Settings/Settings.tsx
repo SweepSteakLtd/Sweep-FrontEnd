@@ -1,51 +1,47 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Switch, ActivityIndicator } from 'react-native';
+import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Switch } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
+import { mockHandlers } from '~/lib/mocks/handlers/registry';
+import { refreshMockConfig } from '~/lib/mocks/interceptor';
 import {
   getMockConfig,
-  toggleGlobalMock,
-  toggleMockHandler,
   selectMockScenario,
   setHandlerDelay,
+  toggleGlobalMock,
+  toggleMockHandler,
 } from '~/lib/mocks/storage';
-import { refreshMockConfig } from '~/lib/mocks/interceptor';
 import type { MockConfig, MockHandler } from '~/lib/mocks/types';
-import { mockHandlers } from '~/lib/mocks/handlers/registry';
 import type { RootStackParamList } from '~/navigation/types';
-import { Icon } from '~/components/Icon/Icon';
 import {
+  BottomSheetContainer,
+  BottomSheetTitle,
+  CheckIcon,
   Container,
-  Header,
-  BackButton,
-  HeaderTitle,
-  ScrollContent,
-  Section,
-  ToggleRow,
-  ToggleLabel,
+  DelayButton,
+  DelayButtonsRow,
+  DelayButtonText,
+  DelayLabel,
+  DelaySection,
+  EmptyState,
+  EmptyStateText,
   HandlerCard,
   HandlerHeader,
   HandlerInfo,
-  HandlerName,
   HandlerMeta,
   HandlerMethod,
+  HandlerName,
   HandlerUrl,
-  SelectedScenario,
-  EmptyState,
-  EmptyStateText,
-  BottomSheetContainer,
-  BottomSheetTitle,
   ScenarioOption,
   ScenarioText,
-  CheckIcon,
-  DelaySection,
-  DelayLabel,
-  DelayButtonsRow,
-  DelayButton,
-  DelayButtonText,
+  ScrollContent,
+  Section,
+  SelectedScenario,
+  ToggleLabel,
+  ToggleRow,
 } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -71,8 +67,26 @@ export const Settings = () => {
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} />
     ),
-    []
+    [],
   );
+
+  // Configure navigation header
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      title: 'Mock APIs',
+      headerStyle: {
+        backgroundColor: theme.colors.primary,
+      },
+      headerTintColor: theme.colors.white,
+      headerTitleStyle: {
+        fontWeight: '600',
+        fontSize: 20,
+      },
+      headerShadowVisible: false,
+      headerBackTitle: '',
+    });
+  }, [navigation, theme]);
 
   // Load mock configuration
   const loadConfig = async () => {
@@ -112,7 +126,7 @@ export const Settings = () => {
 
     // Update local state
     setHandlers((prev) =>
-      prev.map((h) => (h.id === handlerId ? { ...h, configEnabled: value } : h))
+      prev.map((h) => (h.id === handlerId ? { ...h, configEnabled: value } : h)),
     );
 
     setConfig({
@@ -136,8 +150,8 @@ export const Settings = () => {
     // Update local state
     setHandlers((prev) =>
       prev.map((h) =>
-        h.id === selectedHandler.id ? { ...h, configSelectedScenario: scenario } : h
-      )
+        h.id === selectedHandler.id ? { ...h, configSelectedScenario: scenario } : h,
+      ),
     );
 
     setConfig({
@@ -195,9 +209,8 @@ export const Settings = () => {
   const renderHandler = (handler: HandlerWithConfig) => {
     const isDisabled = !config?.globalEnabled;
     const handlerDelay = config?.handlers[handler.id]?.delay;
-    const delayText = handlerDelay !== null && handlerDelay !== undefined
-      ? `${handlerDelay / 1000}s`
-      : null;
+    const delayText =
+      handlerDelay !== null && handlerDelay !== undefined ? `${handlerDelay / 1000}s` : null;
 
     return (
       <HandlerCard
@@ -235,12 +248,6 @@ export const Settings = () => {
   if (loading) {
     return (
       <Container>
-        <Header>
-          <BackButton onPress={() => navigation.goBack()}>
-            <Icon name="←" size={24} />
-          </BackButton>
-          <HeaderTitle>Mock APIs</HeaderTitle>
-        </Header>
         <EmptyState>
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </EmptyState>
@@ -251,12 +258,6 @@ export const Settings = () => {
   if (!config) {
     return (
       <Container>
-        <Header>
-          <BackButton onPress={() => navigation.goBack()}>
-            <Icon name="←" size={24} />
-          </BackButton>
-          <HeaderTitle>Mock APIs</HeaderTitle>
-        </Header>
         <EmptyState>
           <EmptyStateText>Failed to load mock configuration</EmptyStateText>
         </EmptyState>
@@ -266,13 +267,6 @@ export const Settings = () => {
 
   return (
     <Container>
-      <Header>
-        <BackButton onPress={() => navigation.goBack()}>
-          <Icon name="←" size={24} />
-        </BackButton>
-        <HeaderTitle>Mock APIs</HeaderTitle>
-      </Header>
-
       <ScrollContent>
         <Section>
           <ToggleRow>
@@ -334,7 +328,9 @@ export const Settings = () => {
                     selected={scenarioName === selectedHandler.configSelectedScenario}
                     onPress={() => handleScenarioSelect(scenarioName)}
                   >
-                    <ScenarioText selected={scenarioName === selectedHandler.configSelectedScenario}>
+                    <ScenarioText
+                      selected={scenarioName === selectedHandler.configSelectedScenario}
+                    >
                       {scenarioName}
                     </ScenarioText>
                     {scenarioName === selectedHandler.configSelectedScenario && (

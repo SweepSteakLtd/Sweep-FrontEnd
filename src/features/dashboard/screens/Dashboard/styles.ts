@@ -1,8 +1,39 @@
 import styled from 'styled-components/native';
+import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
+`;
+
+export const LogoutButton = styled.TouchableOpacity`
+  padding: 8px 16px;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white}20;
+  border-radius: 8px;
+  margin-right: 12px;
+`;
+
+export const LogoutText = styled.Text`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+`;
+
+export const TournamentGrid = styled.View`
+  flex: 1;
+`;
+
+export const EmptyState = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+`;
+
+export const EmptyStateText = styled.Text`
+  font-size: 16px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  text-align: center;
 `;
 
 export const ContentContainer = styled.View`

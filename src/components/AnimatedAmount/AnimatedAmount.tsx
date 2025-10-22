@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useMemo } from 'react';
-import { Animated, TextProps, View } from 'react-native';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Animated, TextProps } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { PlaceholderText, StyledAnimatedText, Wrapper } from './styles';
 
@@ -38,39 +38,63 @@ export const AnimatedAmount: React.FC<AnimatedAmountProps> = ({
   const defaultColor = color || theme.colors.text.primary;
   const calculatedStartValue = startValue ?? value * 0.5;
   const animatedValue = useRef(new Animated.Value(calculatedStartValue)).current;
-  const [displayValue, setDisplayValue] = React.useState(formatCurrency(calculatedStartValue, currencySymbol, decimals));
+  const [displayValue, setDisplayValue] = React.useState(
+    formatCurrency(calculatedStartValue, currencySymbol, decimals),
+  );
 
   // Pre-calculate final formatted value to reserve space
-  const finalFormattedValue = useMemo(() => formatCurrency(value, currencySymbol, decimals), [value, currencySymbol, decimals]);
+  const finalFormattedValue = useMemo(
+    () => formatCurrency(value, currencySymbol, decimals),
+    [value, currencySymbol, decimals],
+  );
 
   useEffect(() => {
-    // Set up listener to update display value as animation progresses
-    const listenerId = animatedValue.addListener(({ value: currentValue }) => {
-      setDisplayValue(formatCurrency(currentValue, currencySymbol, decimals));
-    });
+    // Only animate if value is more than 50
+    if (value > 50) {
+      // Set up listener to update display value as animation progresses
+      const listenerId = animatedValue.addListener(({ value: currentValue }) => {
+        setDisplayValue(formatCurrency(currentValue, currencySymbol, decimals));
+      });
 
-    // Animate to final value
-    Animated.timing(animatedValue, {
-      toValue: value,
-      duration,
-      useNativeDriver: false, // Can't use native driver for value interpolation
-    }).start();
+      // Animate to final value
+      Animated.timing(animatedValue, {
+        toValue: value,
+        duration,
+        useNativeDriver: false, // Can't use native driver for value interpolation
+      }).start();
 
-    // Cleanup listener on unmount
-    return () => {
-      animatedValue.removeListener(listenerId);
-    };
-  }, [value, duration, currencySymbol, decimals]);
+      // Cleanup listener on unmount
+      return () => {
+        animatedValue.removeListener(listenerId);
+      };
+    } else {
+      // For values <= 50, just display the value directly without animation
+      setDisplayValue(formatCurrency(value, currencySymbol, decimals));
+      return undefined;
+    }
+  }, [value, duration, currencySymbol, decimals, animatedValue]);
 
   return (
     <Wrapper align={align}>
       {/* Invisible placeholder to reserve space for final value */}
-      <PlaceholderText variant={variant} color={defaultColor} align={align} weight={weight} {...props}>
+      <PlaceholderText
+        variant={variant}
+        color={defaultColor}
+        align={align}
+        weight={weight}
+        {...props}
+      >
         {finalFormattedValue}
       </PlaceholderText>
 
       {/* Visible animated value */}
-      <StyledAnimatedText variant={variant} color={defaultColor} align={align} weight={weight} {...props}>
+      <StyledAnimatedText
+        variant={variant}
+        color={defaultColor}
+        align={align}
+        weight={weight}
+        {...props}
+      >
         {displayValue}
       </StyledAnimatedText>
     </Wrapper>

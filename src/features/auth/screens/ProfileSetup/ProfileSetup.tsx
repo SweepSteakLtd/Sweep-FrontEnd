@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useState } from 'react';
+import { ScrollView } from 'react-native';
+import { useTheme } from 'styled-components/native';
+import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
-import { useAlert } from '~/components/Alert/Alert';
 import { useCreateProfile } from '~/features/auth/hooks/useCreateProfile';
 import type { RootStackParamList } from '~/navigation/types';
-import { useTheme } from 'styled-components/native';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -70,7 +70,11 @@ export const ProfileSetup = () => {
         <Typography variant="heading" color={theme.colors.white}>
           Complete Your Profile
         </Typography>
-        <Typography variant="body" color={theme.colors.white} style={{ opacity: 0.8, marginTop: 5 }}>
+        <Typography
+          variant="body"
+          color={theme.colors.white}
+          style={{ opacity: 0.8, marginTop: 5 }}
+        >
           Almost there! Tell us about yourself
         </Typography>
       </Header>

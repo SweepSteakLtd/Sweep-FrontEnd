@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Typography } from '~/components/Typography/Typography';
 import type { RootStackParamList } from '~/navigation/types';
-import { useTheme } from 'styled-components/native';
 import {
   BadgeContainer,
   ButtonsContainer,
@@ -73,11 +73,18 @@ export const Landing = () => {
       </ContentContainer>
 
       <ButtonsContainer>
-        <Button variant="primary" onPress={() => navigation.navigate('TermsAndConditions', { nextScreen: 'CreateAccount' })}>
+        <Button
+          variant="primary"
+          onPress={() => navigation.navigate('TermsAndConditions', { nextScreen: 'CreateAccount' })}
+        >
           Create account
         </Button>
 
-        <Button variant="outline" onPress={() => navigation.navigate('TermsAndConditions', { nextScreen: 'Login' })} style={{ marginTop: 12 }}>
+        <Button
+          variant="outline"
+          onPress={() => navigation.navigate('TermsAndConditions', { nextScreen: 'Login' })}
+          style={{ marginTop: 12 }}
+        >
           Log In
         </Button>
 
@@ -88,11 +95,19 @@ export const Landing = () => {
           style={{ lineHeight: 16, marginTop: 20 }}
         >
           By continuing you agree to our{' '}
-          <Typography variant="caption" color={theme.colors.white} style={{ textDecorationLine: 'underline' }}>
+          <Typography
+            variant="caption"
+            color={theme.colors.white}
+            style={{ textDecorationLine: 'underline' }}
+          >
             Terms of Service
           </Typography>{' '}
           and{' '}
-          <Typography variant="caption" color={theme.colors.white} style={{ textDecorationLine: 'underline' }}>
+          <Typography
+            variant="caption"
+            color={theme.colors.white}
+            style={{ textDecorationLine: 'underline' }}
+          >
             Privacy Policy
           </Typography>
         </Typography>

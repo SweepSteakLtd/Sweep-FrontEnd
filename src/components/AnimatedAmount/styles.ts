@@ -78,7 +78,8 @@ interface StyledAnimatedTextProps {
 const BaseText = styled.Text<StyledAnimatedTextProps>`
   color: ${(props: StyledAnimatedTextProps) => props.color};
   font-size: ${(props: StyledAnimatedTextProps) => getStyles(props.variant).fontSize}px;
-  font-weight: ${(props: StyledAnimatedTextProps) => props.weight || getStyles(props.variant).fontWeight};
+  font-weight: ${(props: StyledAnimatedTextProps) =>
+    props.weight || getStyles(props.variant).fontWeight};
   line-height: ${(props: StyledAnimatedTextProps) => getStyles(props.variant).lineHeight}px;
   text-align: ${(props: StyledAnimatedTextProps) => props.align};
   font-variant-numeric: tabular-nums;

@@ -32,7 +32,7 @@ const createUserProfile = async (params: CreateUserProfileParams): Promise<User>
   }
 
   return response.json();
-}
+};
 
 /**
  * Hook to update user profile via PUT /api/users/me
@@ -47,4 +47,4 @@ export const useCreateUserProfile = () => {
       queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
     },
   });
-}
+};

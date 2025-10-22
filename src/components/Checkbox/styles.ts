@@ -1,5 +1,5 @@
-import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native';
+import styled from 'styled-components/native';
 
 export const Container = styled(TouchableOpacity)`
   flex-direction: row;
@@ -20,7 +20,8 @@ export const CheckboxBox = styled.View<CheckboxBoxProps>`
   border-radius: 4px;
   border-width: 2px;
   border-color: ${(props: CheckboxBoxProps) => props.theme.colors.white};
-  background-color: ${(props: CheckboxBoxProps) => (props.checked ? props.theme.colors.white : 'transparent')};
+  background-color: ${(props: CheckboxBoxProps) =>
+    props.checked ? props.theme.colors.white : 'transparent'};
   align-items: center;
   justify-content: center;
   margin-right: 12px;

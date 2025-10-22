@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from 'styled-components/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { useEffect, useState } from 'react';
+import { Dimensions } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
   runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from 'react-native-reanimated';
-import type { RootStackParamList } from '~/navigation/types';
+import { useTheme } from 'styled-components/native';
 import { Icon } from '~/components/Icon/Icon';
+import type { RootStackParamList } from '~/navigation/types';
 import { FloatingButton } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

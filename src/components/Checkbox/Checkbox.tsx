@@ -3,7 +3,7 @@ import { TouchableOpacityProps } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../Typography/Typography';
-import { Container, CheckboxBox, LabelContainer } from './styles';
+import { CheckboxBox, Container, LabelContainer } from './styles';
 
 interface CheckboxProps extends TouchableOpacityProps {
   checked: boolean;
@@ -15,7 +15,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({ checked, label, children, ..
   const theme = useTheme();
   return (
     <Container {...props}>
-      <CheckboxBox checked={checked} theme={theme}>{checked && <Icon name="✓" size={16} />}</CheckboxBox>
+      <CheckboxBox checked={checked} theme={theme}>
+        {checked && <Icon name="✓" size={16} />}
+      </CheckboxBox>
       <LabelContainer>
         {label && (
           <Typography variant="caption" color={theme.colors.white}>
