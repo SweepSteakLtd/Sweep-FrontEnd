@@ -308,17 +308,12 @@ function generateMockDocs(handlers) {
  * Main export function
  */
 function exportMocks() {
-  console.log('🎭 SweepSteak Mock API Exporter\n');
-  console.log('================================\n');
-
   const handlers = loadHandlers();
 
   if (handlers.length === 0) {
     console.error('❌ No handlers found');
-    return;
+    return false;
   }
-
-  console.log(`\n✓ Loaded ${handlers.length} handler(s)\n`);
 
   const outputDir = path.join(__dirname, '../docs/mocks');
 
@@ -327,22 +322,65 @@ function exportMocks() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  // Generate OpenAPI spec
-  const openApiSpec = generateOpenAPISpec(handlers);
+  // Read existing files to check for changes
   const openApiPath = path.join(outputDir, 'openapi.json');
-  fs.writeFileSync(openApiPath, JSON.stringify(openApiSpec, null, 2));
-  console.log(`✓ OpenAPI spec exported to: ${openApiPath}`);
-
-  // Generate mock docs
-  const mockDocs = generateMockDocs(handlers);
   const mockDocsPath = path.join(outputDir, 'mock-documentation.json');
-  fs.writeFileSync(mockDocsPath, JSON.stringify(mockDocs, null, 2));
-  console.log(`✓ Mock docs exported to: ${mockDocsPath}`);
+  const readmePath = path.join(outputDir, 'README.md');
 
-  // Generate README
-  const readme = `# SweepSteak Mock API Documentation
+  const oldOpenApi = fs.existsSync(openApiPath) ? fs.readFileSync(openApiPath, 'utf-8') : '';
+  const oldMockDocs = fs.existsSync(mockDocsPath) ? fs.readFileSync(mockDocsPath, 'utf-8') : '';
 
-Generated: ${new Date().toISOString()}
+  // Generate new content
+  const openApiSpec = generateOpenAPISpec(handlers);
+  const newOpenApi = JSON.stringify(openApiSpec, null, 2);
+
+  // Check if OpenAPI changed
+  const openApiChanged = oldOpenApi !== newOpenApi;
+
+  // Check if mock docs changed (excluding timestamps)
+  let mockDocsChanged = false;
+  let newMockDocs;
+  let existingTimestamp = new Date().toISOString();
+
+  try {
+    const oldMockDocsObj = oldMockDocs ? JSON.parse(oldMockDocs) : null;
+
+    if (oldMockDocsObj) {
+      // Preserve existing timestamp
+      existingTimestamp = oldMockDocsObj.generatedAt || existingTimestamp;
+
+      // Generate new docs and compare without timestamp
+      const mockDocsWithoutTime = generateMockDocs(handlers);
+      const oldWithoutTime = { ...oldMockDocsObj };
+      delete oldWithoutTime.generatedAt;
+      delete mockDocsWithoutTime.generatedAt;
+
+      mockDocsChanged = JSON.stringify(oldWithoutTime) !== JSON.stringify(mockDocsWithoutTime);
+
+      // If changed, use new timestamp; if unchanged, use old timestamp
+      const mockDocsObj = generateMockDocs(handlers);
+      mockDocsObj.generatedAt = mockDocsChanged ? new Date().toISOString() : existingTimestamp;
+      newMockDocs = JSON.stringify(mockDocsObj, null, 2);
+    } else {
+      const mockDocsObj = generateMockDocs(handlers);
+      newMockDocs = JSON.stringify(mockDocsObj, null, 2);
+      mockDocsChanged = true;
+    }
+  } catch (e) {
+    const mockDocsObj = generateMockDocs(handlers);
+    newMockDocs = JSON.stringify(mockDocsObj, null, 2);
+    mockDocsChanged = true;
+  }
+
+  // Only write files if there are changes
+  if (openApiChanged || mockDocsChanged) {
+    fs.writeFileSync(openApiPath, newOpenApi);
+    fs.writeFileSync(mockDocsPath, newMockDocs);
+
+    const mockDocsObj = JSON.parse(newMockDocs);
+    const readme = `# SweepSteak Mock API Documentation
+
+Generated: ${mockDocsObj.generatedAt}
 
 ## Files
 
@@ -358,7 +396,7 @@ Import \`openapi.json\` into:
 
 ## Endpoints
 
-${mockDocs.endpoints.map(endpoint => `
+${mockDocsObj.endpoints.map(endpoint => `
 ### ${endpoint.method} ${endpoint.path}
 **${endpoint.name}**
 
@@ -379,12 +417,14 @@ Share the \`openapi.json\` with your backend team so they can:
 - See all mock scenarios and expected responses
 `;
 
-  const readmePath = path.join(outputDir, 'README.md');
-  fs.writeFileSync(readmePath, readme);
-  console.log(`✓ README exported to: ${readmePath}`);
+    fs.writeFileSync(readmePath, readme);
 
-  console.log('\n✅ Export complete!\n');
-  console.log('Share the docs/mocks folder with your backend team.\n');
+    console.log('📝 Mock API documentation updated');
+    return true;
+  } else {
+    console.log('✅ Mock API documentation unchanged');
+    return false;
+  }
 }
 
 // Run the export
