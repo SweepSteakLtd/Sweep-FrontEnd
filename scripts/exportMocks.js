@@ -58,8 +58,6 @@ function loadHandlers() {
     const fullPath = path.join(__dirname, '../src/lib/mocks/handlers', handlerFile + '.ts');
 
     if (fs.existsSync(fullPath)) {
-      console.log(`✓ Loading ${path.basename(fullPath)}`);
-
       // Read the handler file
       const content = fs.readFileSync(fullPath, 'utf-8');
 
