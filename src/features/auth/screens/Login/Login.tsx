@@ -83,6 +83,7 @@ export const Login = () => {
       <FormContainer>
         <Input
           label="Email"
+          variant="light"
           value={email}
           onChangeText={(text) => {
             setEmail(text);
@@ -98,6 +99,7 @@ export const Login = () => {
 
         <Input
           label="Password"
+          variant="light"
           value={password}
           onChangeText={(text) => {
             setPassword(text);

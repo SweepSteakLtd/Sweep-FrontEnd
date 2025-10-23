@@ -7,9 +7,17 @@ import { Container, ErrorText, StyledInput } from './styles';
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
+  variant?: 'dark' | 'light';
 }
 
-export const Input: React.FC<InputProps> = ({ label, error, onFocus, onBlur, ...props }) => {
+export const Input: React.FC<InputProps> = ({
+  label,
+  error,
+  variant = 'dark',
+  onFocus,
+  onBlur,
+  ...props
+}) => {
   const theme = useTheme();
   const [isFocused, setIsFocused] = useState(false);
 
@@ -23,12 +31,14 @@ export const Input: React.FC<InputProps> = ({ label, error, onFocus, onBlur, ...
     onBlur?.(e);
   };
 
+  const labelColor = variant === 'light' ? theme.colors.white : theme.colors.text.primary;
+
   return (
     <Container>
       {label && (
         <Typography
           variant="label"
-          color={theme.colors.text.primary}
+          color={labelColor}
           style={{ marginBottom: 4, fontSize: 13, fontWeight: '400' }}
         >
           {label}

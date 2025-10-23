@@ -7,10 +7,18 @@ import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
 import { useCreateFirebaseAccount } from '~/features/auth/hooks/useCreateFirebaseAccount';
+import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
+import { createAccountSchema } from './validation';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+interface FieldErrors extends Record<string, string | undefined> {
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
 
 export const CreateAccount = () => {
   const theme = useTheme();
@@ -20,16 +28,22 @@ export const CreateAccount = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   const handleContinue = async () => {
-    // Validation
-    if (!email || !password) {
+    // Validate using Zod
+    const validation = validateWithZod<FieldErrors>(createAccountSchema, {
+      email,
+      password,
+      confirmPassword,
+    });
+
+    if (!validation.success) {
+      setFieldErrors(validation.errors);
       return;
     }
 
-    if (password !== confirmPassword) {
-      return;
-    }
+    setFieldErrors({});
 
     // Create Firebase account
     const success = await createAccount(email, password);
@@ -67,29 +81,50 @@ export const CreateAccount = () => {
       <FormContainer>
         <Input
           label="Email"
+          variant="light"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            if (fieldErrors.email) {
+              setFieldErrors((prev) => ({ ...prev, email: undefined }));
+            }
+          }}
           placeholder="email@address.com"
           autoCapitalize="none"
           keyboardType="email-address"
+          error={fieldErrors.email}
         />
 
         <Input
           label="Password"
+          variant="light"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={(text) => {
+            setPassword(text);
+            if (fieldErrors.password) {
+              setFieldErrors((prev) => ({ ...prev, password: undefined }));
+            }
+          }}
           placeholder="Password"
           secureTextEntry
           autoCapitalize="none"
+          error={fieldErrors.password}
         />
 
         <Input
           label="Confirm Password"
+          variant="light"
           value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          onChangeText={(text) => {
+            setConfirmPassword(text);
+            if (fieldErrors.confirmPassword) {
+              setFieldErrors((prev) => ({ ...prev, confirmPassword: undefined }));
+            }
+          }}
           placeholder="Confirm Password"
           secureTextEntry
           autoCapitalize="none"
+          error={fieldErrors.confirmPassword}
         />
 
         <Button
