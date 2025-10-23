@@ -10,7 +10,7 @@ export type RootStackParamList = {
   Dashboard: undefined;
   Settings: undefined;
   TournamentGames: { tournamentId: string };
-  CreateGame: { tournamentId: string };
+  CreateGame: { tournamentId: string; defaultGameType?: 'public' | 'private' };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

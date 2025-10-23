@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { View } from 'react-native';
 import { SearchInput } from '~/components/SearchInput/SearchInput';
 import { TabBar } from '~/components/TabBar/TabBar';
@@ -13,6 +12,8 @@ interface JoinGameListProps {
   loading?: boolean;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
+  activeGameTab?: string;
+  onGameTabChange?: (tab: string) => void;
 }
 
 const gameTabs = [
@@ -27,9 +28,9 @@ export const JoinGameList = ({
   loading = false,
   searchQuery = '',
   onSearchChange,
+  activeGameTab = 'featured',
+  onGameTabChange,
 }: JoinGameListProps) => {
-  const [activeGameTab, setActiveGameTab] = useState('featured');
-
   // Client-side filtering only by game tab, search is handled by API
   const filteredGames = games.filter((game) => {
     // Filter by game tab (Featured/Public/Private)
@@ -51,7 +52,7 @@ export const JoinGameList = ({
         <TabBar
           tabs={gameTabs}
           activeTab={activeGameTab}
-          onTabPress={setActiveGameTab}
+          onTabPress={onGameTabChange || (() => {})}
           loading={false}
         />
         <SearchWrapper style={{ opacity: activeGameTab === 'private' ? 0 : 1 }}>

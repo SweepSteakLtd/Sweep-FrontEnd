@@ -11,6 +11,7 @@ import { createGameSchema } from './validation';
 
 interface CreateGameFormProps {
   activeTournamentId: string;
+  defaultGameType?: 'public' | 'private';
   onSuccess?: () => void;
 }
 
@@ -20,13 +21,17 @@ interface FieldErrors extends Record<string, string | undefined> {
   maxEntries?: string;
 }
 
-export const CreateGameForm = ({ activeTournamentId, onSuccess }: CreateGameFormProps) => {
+export const CreateGameForm = ({
+  activeTournamentId,
+  defaultGameType = 'public',
+  onSuccess,
+}: CreateGameFormProps) => {
   const theme = useTheme();
   const createGameMutation = useCreateGame();
 
   const [gameName, setGameName] = useState('');
   const [tournamentName, setTournamentName] = useState('');
-  const [gameType, setGameType] = useState<'public' | 'private'>('private');
+  const [gameType, setGameType] = useState<'public' | 'private'>(defaultGameType);
   const [entryFee, setEntryFee] = useState('');
   const [maxEntries, setMaxEntries] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});

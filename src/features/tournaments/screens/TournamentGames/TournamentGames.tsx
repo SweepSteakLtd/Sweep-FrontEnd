@@ -1,7 +1,7 @@
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
@@ -34,6 +34,11 @@ export const TournamentGames = () => {
   const [activeTournament, setActiveTournament] = useState(route.params?.tournamentId || '');
   const [searchQuery, setSearchQuery] = useState('');
   const [totalPotForTournament, setTotalPotForTournament] = useState(0);
+  const [activeGameTab, setActiveGameTab] = useState('featured');
+
+  const handleGameTabChange = (tab: string) => {
+    setActiveGameTab(tab);
+  };
 
   // Debounce search query for API calls
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
@@ -59,6 +64,16 @@ export const TournamentGames = () => {
     label: tournament.name,
   }));
 
+  const handleCreateGame = useCallback(() => {
+    // Default to 'private' if on private tab, otherwise 'public' (for featured and public tabs)
+    const defaultGameType = activeGameTab === 'private' ? 'private' : 'public';
+
+    navigation.navigate('CreateGame', {
+      tournamentId: activeTournament || tournaments[0]?.id || '1',
+      defaultGameType,
+    });
+  }, [activeGameTab, activeTournament, tournaments, navigation]);
+
   // Configure navigation header
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -70,7 +85,7 @@ export const TournamentGames = () => {
         </CreateButton>
       ),
     });
-  }, [navigation, activeTournament, tournaments]);
+  }, [navigation, handleCreateGame]);
 
   // Set active tournament from route params or default to first tournament when loaded
   useEffect(() => {
@@ -93,12 +108,6 @@ export const TournamentGames = () => {
   const handleGamePress = (game: Game) => {
     // Navigate to game details
     console.log('Game pressed:', game.id);
-  };
-
-  const handleCreateGame = () => {
-    navigation.navigate('CreateGame', {
-      tournamentId: activeTournament || tournaments[0]?.id || '1',
-    });
   };
 
   // Show full skeleton only on true initial load (isLoading means no cached data)
@@ -160,6 +169,8 @@ export const TournamentGames = () => {
           loading={gamesFetching}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          activeGameTab={activeGameTab}
+          onGameTabChange={handleGameTabChange}
         />
       </ScrollView>
     </Container>

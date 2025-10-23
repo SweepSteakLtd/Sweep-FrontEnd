@@ -30,7 +30,12 @@ export const CreateGame = () => {
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <CreateGameForm activeTournamentId={route.params.tournamentId} onSuccess={handleSuccess} />
+        <CreateGameForm
+          key={`${route.params.tournamentId}-${route.params.defaultGameType}`}
+          activeTournamentId={route.params.tournamentId}
+          defaultGameType={route.params.defaultGameType}
+          onSuccess={handleSuccess}
+        />
       </ScrollView>
     </Container>
   );
