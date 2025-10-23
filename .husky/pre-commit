@@ -42,7 +42,7 @@ fi
 if [ -n "$STAGED_FILES" ]; then
   echo ""
   echo "🔍 Running ESLint..."
-  if echo "$STAGED_FILES" | xargs npx eslint; then
+  if echo "$STAGED_FILES" | xargs npx eslint --no-warn-ignored; then
     echo "✅ Linting passed"
   else
     echo ""
