@@ -37,9 +37,10 @@ const SkeletonBox = ({ width = '100%', height = 20, borderRadius = 4, style }: S
   return (
     <Animated.View
       style={[
+        // @ts-expect-error - React Native Animated.View style types don't properly handle number | string for width/height
         {
-          width: width as any,
-          height: height as any,
+          width,
+          height,
           borderRadius,
           backgroundColor: '#d0d0d0',
         },

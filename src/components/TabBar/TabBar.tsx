@@ -21,9 +21,10 @@ export const TabBar = ({ tabs, activeTab, onTabPress, loading = false }: TabBarP
 
   useEffect(() => {
     // Auto-scroll to selected tab
-    if (tabRefs.current[activeTab]) {
+    if (tabRefs.current[activeTab] && scrollViewRef.current) {
       tabRefs.current[activeTab]?.measureLayout(
-        scrollViewRef.current as any,
+        // @ts-expect-error - React Native measureLayout types are incorrect
+        scrollViewRef.current,
         (x, _y, _width) => {
           scrollViewRef.current?.scrollTo({
             x: Math.max(0, x - 20), // Add some padding

@@ -162,7 +162,7 @@ const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promis
  */
 export const installMockInterceptor = () => {
   if (!isInstalled) {
-    global.fetch = mockedFetch as any;
+    global.fetch = mockedFetch as typeof fetch;
     isInstalled = true;
     console.log('[MockInterceptor]: ✅ Mock interceptor installed');
   }
