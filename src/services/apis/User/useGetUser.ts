@@ -40,7 +40,5 @@ export const useGetUser = (enabled: boolean = true) => {
     queryKey: userQueryKeys.user,
     queryFn: fetchUser,
     enabled: enabled && !!firebaseAuth.currentUser, // Only fetch if user is authenticated
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2,
   });
 };

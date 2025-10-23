@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { SearchInput } from '~/components/SearchInput/SearchInput';
 import { TabBar } from '~/components/TabBar/TabBar';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
+import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
 import type { Game } from '~/services/apis/Game/types';
 import { EmptyState, EmptyStateText, SearchAndTabsWrapper, SearchWrapper } from './styles';
 
@@ -51,19 +52,21 @@ export const JoinGameList = ({
           tabs={gameTabs}
           activeTab={activeGameTab}
           onTabPress={setActiveGameTab}
-          loading={loading}
+          loading={false}
         />
-        <SearchWrapper style={{ opacity: loading || activeGameTab === 'private' ? 0 : 1 }}>
+        <SearchWrapper style={{ opacity: activeGameTab === 'private' ? 0 : 1 }}>
           <SearchInput
             value={searchQuery}
             onChangeText={onSearchChange || (() => {})}
             placeholder="Search games..."
-            editable={!loading && activeGameTab !== 'private'}
+            editable={activeGameTab !== 'private'}
           />
         </SearchWrapper>
       </SearchAndTabsWrapper>
 
-      {filteredGames.length === 0 ? (
+      {loading && filteredGames.length === 0 ? (
+        <GameCardSkeleton />
+      ) : filteredGames.length === 0 ? (
         <EmptyState>
           <EmptyStateText>No games found</EmptyStateText>
         </EmptyState>

@@ -28,13 +28,13 @@ export const TournamentGamesSkeleton = ({
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Tournament Tabs Loading */}
+        {/* Tournament Tabs - Always interactive, never loading */}
         <SegmentedTabWrapper>
           <TabBar
             tabs={tournamentTabs}
             activeTab={activeTournament}
             onTabPress={onTabPress}
-            loading={true}
+            loading={false}
           />
         </SegmentedTabWrapper>
 

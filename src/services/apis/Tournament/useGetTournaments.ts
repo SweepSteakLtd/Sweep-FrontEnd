@@ -51,7 +51,5 @@ export const useGetTournaments = (enabled: boolean = true) => {
     queryKey: tournamentQueryKeys.tournaments,
     queryFn: fetchTournaments,
     enabled: enabled && !!firebaseAuth.currentUser,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2,
   });
 };

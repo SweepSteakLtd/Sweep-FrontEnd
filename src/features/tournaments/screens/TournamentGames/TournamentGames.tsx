@@ -33,19 +33,17 @@ export const TournamentGames = () => {
 
   const [activeTournament, setActiveTournament] = useState(route.params?.tournamentId || '');
   const [searchQuery, setSearchQuery] = useState('');
+  const [totalPotForTournament, setTotalPotForTournament] = useState(0);
 
   // Debounce search query for API calls
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
 
-  const {
-    data: tournaments = [],
-    isLoading: tournamentsLoading,
-    error: tournamentsError,
-  } = useGetTournaments();
+  const { data: tournaments = [], error: tournamentsError } = useGetTournaments();
 
   const {
     data: games = [],
     isLoading: gamesLoading,
+    isFetching: gamesFetching,
     error: gamesError,
   } = useGetGames(
     {
@@ -81,12 +79,16 @@ export const TournamentGames = () => {
     }
   }, [tournaments, route.params?.tournamentId, activeTournament]);
 
-  // Games are already filtered by backend (tournament_id + search_term)
-  // Calculate total pot from all returned games (entry_fee * max_participants)
-  const totalPot = games.reduce(
-    (sum, game) => sum + (game.entry_fee ?? 0) * (game.max_participants ?? 0),
-    0,
-  );
+  // Update total pot when we have unfiltered games data (no search)
+  useEffect(() => {
+    if (!debouncedSearchQuery && games.length > 0) {
+      const total = games.reduce(
+        (sum, game) => sum + (game.entry_fee ?? 0) * (game.max_participants ?? 0),
+        0,
+      );
+      setTotalPotForTournament(total);
+    }
+  }, [games, debouncedSearchQuery]);
 
   const handleGamePress = (game: Game) => {
     // Navigate to game details
@@ -99,7 +101,10 @@ export const TournamentGames = () => {
     });
   };
 
-  if (gamesLoading) {
+  // Show full skeleton only on true initial load (isLoading means no cached data)
+  // isFetching can be true even with cached data (background refetch)
+  if (gamesLoading && tournaments.length === 0) {
+    // Very first load - show full skeleton
     return (
       <TournamentGamesSkeleton
         tournamentTabs={tournamentTabs}
@@ -131,7 +136,7 @@ export const TournamentGames = () => {
             tabs={tournamentTabs}
             activeTab={activeTournament}
             onTabPress={setActiveTournament}
-            loading={tournamentsLoading}
+            loading={false}
           />
         </SegmentedTabWrapper>
 
@@ -142,7 +147,7 @@ export const TournamentGames = () => {
               : 'Total Staked'}
           </PotLabel>
           <AnimatedAmount
-            value={totalPot}
+            value={totalPotForTournament}
             variant="title"
             color={theme.colors.text.secondary}
             align="center"
@@ -152,7 +157,7 @@ export const TournamentGames = () => {
         <JoinGameList
           games={games}
           onGamePress={handleGamePress}
-          loading={gamesLoading}
+          loading={gamesFetching}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
         />

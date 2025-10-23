@@ -60,7 +60,5 @@ export const useGetGames = (params?: FetchGamesParams, enabled: boolean = true) 
     queryKey: gameQueryKeys.games(params),
     queryFn: () => fetchGames(params),
     enabled: enabled && !!firebaseAuth.currentUser,
-    staleTime: 1000 * 60 * 2, // 2 minutes (games update more frequently)
-    retry: 2,
   });
 };

@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
 import { ThemeProvider } from 'styled-components/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AlertProvider } from './src/components/Alert/Alert';
 import { AuthProvider } from './src/contexts/AuthContext';
+import { installMockInterceptor } from './src/lib/mocks/interceptor';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { theme } from './src/theme/theme';
-import { installMockInterceptor } from './src/lib/mocks/interceptor';
 
 // Install mock interceptor globally
 installMockInterceptor();
@@ -15,7 +15,7 @@ installMockInterceptor();
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 2,
+      // retry: 2,
       staleTime: 1000 * 60 * 5, // 5 minutes
       gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
     },

@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-10-23T12:28:44.958Z
+Generated: 2025-10-23T12:42:04.377Z
 
 ## Files
 
