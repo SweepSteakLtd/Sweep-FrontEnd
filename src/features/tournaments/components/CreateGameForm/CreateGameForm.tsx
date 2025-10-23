@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Switch, View } from 'react-native';
+import { View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
+import { Switch } from '~/components/Switch/Switch';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import { useCreateGame } from '~/services/apis/Game/useCreateGame';
 import { ButtonContainer, ErrorText, GameTypeRow, InputLabel, SwitchLabel } from './styles';
@@ -108,9 +109,6 @@ export const CreateGameForm = ({ activeTournamentId, onSuccess }: CreateGameForm
           <Switch
             value={gameType === 'private'}
             onValueChange={(value) => setGameType(value ? 'private' : 'public')}
-            trackColor={{ false: '#E5E5EA', true: '#34C759' }}
-            thumbColor="#FFFFFF"
-            ios_backgroundColor="#E5E5EA"
           />
           <SwitchLabel isActive={gameType === 'private'}>Private</SwitchLabel>
         </View>

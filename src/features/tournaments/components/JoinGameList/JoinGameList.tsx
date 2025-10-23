@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { SearchInput } from '~/components/SearchInput/SearchInput';
 import { TabBar } from '~/components/TabBar/TabBar';
-import { Game, GameCard } from '~/features/tournaments/components/GameCard/GameCard';
+import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
+import type { Game } from '~/services/apis/Game/types';
 import { EmptyState, EmptyStateText, SearchAndTabsWrapper, SearchWrapper } from './styles';
 
 interface JoinGameListProps {
   games: Game[];
   onGamePress?: (game: Game) => void;
   loading?: boolean;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
 const gameTabs = [
@@ -17,21 +20,21 @@ const gameTabs = [
   { id: 'private', label: 'Private' },
 ];
 
-export const JoinGameList = ({ games, onGamePress, loading = false }: JoinGameListProps) => {
+export const JoinGameList = ({
+  games,
+  onGamePress,
+  loading = false,
+  searchQuery = '',
+  onSearchChange,
+}: JoinGameListProps) => {
   const [activeGameTab, setActiveGameTab] = useState('featured');
-  const [searchQuery, setSearchQuery] = useState('');
 
+  // Client-side filtering only by game tab, search is handled by API
   const filteredGames = games.filter((game) => {
     // Filter by game tab (Featured/Public/Private)
-    if (activeGameTab === 'featured' && !game.isFeatured) return false;
-    if (activeGameTab === 'public' && game.isPrivate) return false;
-    if (activeGameTab === 'private' && !game.isPrivate) return false;
-
-    // Filter by search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      return game.name.toLowerCase().includes(query) || game.joinCode.toLowerCase().includes(query);
-    }
+    if (activeGameTab === 'featured' && !game.is_featured) return false;
+    if (activeGameTab === 'public' && game.type === 'private') return false;
+    if (activeGameTab === 'private' && game.type !== 'private') return false;
 
     return true;
   });
@@ -50,15 +53,14 @@ export const JoinGameList = ({ games, onGamePress, loading = false }: JoinGameLi
           onTabPress={setActiveGameTab}
           loading={loading}
         />
-        {!loading && activeGameTab !== 'private' && (
-          <SearchWrapper>
-            <SearchInput
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder="Search games..."
-            />
-          </SearchWrapper>
-        )}
+        <SearchWrapper style={{ opacity: loading || activeGameTab === 'private' ? 0 : 1 }}>
+          <SearchInput
+            value={searchQuery}
+            onChangeText={onSearchChange || (() => {})}
+            placeholder="Search games..."
+            editable={!loading && activeGameTab !== 'private'}
+          />
+        </SearchWrapper>
       </SearchAndTabsWrapper>
 
       {filteredGames.length === 0 ? (

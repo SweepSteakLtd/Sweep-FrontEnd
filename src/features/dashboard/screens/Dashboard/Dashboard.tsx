@@ -3,12 +3,10 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
 import { FlatList, View } from 'react-native';
 import { useAuth } from '~/contexts/AuthContext';
-import {
-  Tournament,
-  TournamentCard,
-} from '~/features/dashboard/components/TournamentCard/TournamentCard';
+import { TournamentCard } from '~/features/dashboard/components/TournamentCard/TournamentCard';
 import { TournamentCardSkeleton } from '~/features/dashboard/components/TournamentCard/TournamentCardSkeleton';
 import type { RootStackParamList } from '~/navigation/types';
+import type { Tournament } from '~/services/apis/schemas';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import {
   Container,

@@ -1,11 +1,21 @@
-export interface Tournament {
+export type { Tournament, TournamentsResponse } from '../schemas';
+
+// These types are not fully defined in OpenAPI spec yet, defining them locally
+export interface TournamentHole {
   id: string;
-  name: string;
-  year: number;
-  imageUrl: string;
-  category: string;
+  number: number;
+  par: number;
+  distance: number;
 }
 
-export interface TournamentsResponse {
-  data: Tournament[];
+export interface TournamentAd {
+  id: string;
+  image_url: string;
+  link_url: string;
+}
+
+export interface TournamentPlayer {
+  id: string;
+  user_id: string;
+  tournament_id: string;
 }

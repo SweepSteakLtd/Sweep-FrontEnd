@@ -6,9 +6,10 @@ import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { TabBar } from '~/components/TabBar/TabBar';
-import { Game } from '~/features/tournaments/components/GameCard/GameCard';
 import { JoinGameList } from '~/features/tournaments/components/JoinGameList/JoinGameList';
+import { useDebouncedValue } from '~/hooks/useDebouncedValue';
 import type { RootStackParamList } from '~/navigation/types';
+import type { Game } from '~/services/apis/Game/types';
 import { useGetGames } from '~/services/apis/Game/useGetGames';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import {
@@ -30,20 +31,35 @@ export const TournamentGames = () => {
   const navigation = useNavigation<TournamentGamesNavigationProp>();
   const theme = useTheme();
 
+  const [activeTournament, setActiveTournament] = useState(route.params?.tournamentId || '');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Debounce search query for API calls
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
+
   const {
     data: tournaments = [],
     isLoading: tournamentsLoading,
     error: tournamentsError,
   } = useGetTournaments();
-  const { data: games = [], isLoading: gamesLoading, error: gamesError } = useGetGames();
+
+  const {
+    data: games = [],
+    isLoading: gamesLoading,
+    error: gamesError,
+  } = useGetGames(
+    {
+      searchTerm: debouncedSearchQuery || undefined,
+      tournamentId: activeTournament || undefined,
+    },
+    true,
+  );
 
   // Transform tournaments to tabs format
   const tournamentTabs = tournaments.map((tournament) => ({
     id: tournament.id,
-    label: tournament.category,
+    label: tournament.name,
   }));
-
-  const [activeTournament, setActiveTournament] = useState(route.params?.tournamentId || '');
 
   // Configure navigation header
   useLayoutEffect(() => {
@@ -65,14 +81,12 @@ export const TournamentGames = () => {
     }
   }, [tournaments, route.params?.tournamentId, activeTournament]);
 
-  // Filter games by active tournament
-  const filteredGames = games.filter((game) => {
-    if (activeTournament && game.tournamentId !== activeTournament) return false;
-    return true;
-  });
-
-  // Calculate total pot from filtered games
-  const totalPot = filteredGames.reduce((sum, game) => sum + (game.totalPot || 0), 0);
+  // Games are already filtered by backend (tournament_id + search_term)
+  // Calculate total pot from all returned games (entry_fee * max_participants)
+  const totalPot = games.reduce(
+    (sum, game) => sum + (game.entry_fee ?? 0) * (game.max_participants ?? 0),
+    0,
+  );
 
   const handleGamePress = (game: Game) => {
     // Navigate to game details
@@ -135,7 +149,13 @@ export const TournamentGames = () => {
             weight="bold"
           />
         </PotInfo>
-        <JoinGameList games={filteredGames} onGamePress={handleGamePress} loading={gamesLoading} />
+        <JoinGameList
+          games={games}
+          onGamePress={handleGamePress}
+          loading={gamesLoading}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
       </ScrollView>
     </Container>
   );

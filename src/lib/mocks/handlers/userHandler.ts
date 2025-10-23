@@ -8,6 +8,7 @@ import type { MockHandler } from '../types';
 export const getUserHandler: MockHandler = {
   id: 'get-user',
   name: 'Get User Profile',
+  group: 'User',
   method: 'GET',
   urlPattern: '/api/users/me',
   defaultScenario: 'Complete Profile',

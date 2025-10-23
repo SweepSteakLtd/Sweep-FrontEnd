@@ -22,8 +22,6 @@ export const ToggleRow = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.card};
   border-radius: 12px;
   margin-bottom: 20px;
-  border-width: 1px;
-  border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
 `;
 
 export const ToggleLabel = styled.Text`
@@ -31,6 +29,45 @@ export const ToggleLabel = styled.Text`
   font-weight: 500;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
   flex: 1;
+`;
+
+export const GroupContainer = styled.View<{ expanded: boolean }>`
+  margin-top: 16px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  border-left-color: ${({ theme, expanded }: { theme: Theme; expanded: boolean }) =>
+    expanded ? theme.colors.primary : theme.colors.border};
+  padding-left: 12px;
+`;
+
+export const GroupHeaderContainer = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 0px;
+  margin-bottom: 12px;
+`;
+
+export const GroupHeader = styled.Text`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+`;
+
+export const GroupChevron = styled.Text<{ expanded: boolean }>`
+  font-size: 16px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  transform: ${({ expanded }: { expanded: boolean }) =>
+    expanded ? 'rotate(90deg)' : 'rotate(0deg)'};
+  margin-left: 8px;
+`;
+
+export const GroupSummary = styled.Text`
+  font-size: 12px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  margin-top: 4px;
 `;
 
 export const HandlerCard = styled.TouchableOpacity<{ disabled: boolean }>`

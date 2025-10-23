@@ -3,8 +3,9 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Switch } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import { Switch } from '~/components/Switch/Switch';
 import { mockHandlers } from '~/lib/mocks/handlers/registry';
 import { refreshMockConfig } from '~/lib/mocks/interceptor';
 import {
@@ -28,6 +29,11 @@ import {
   DelaySection,
   EmptyState,
   EmptyStateText,
+  GroupChevron,
+  GroupContainer,
+  GroupHeader,
+  GroupHeaderContainer,
+  GroupSummary,
   HandlerCard,
   HandlerHeader,
   HandlerInfo,
@@ -57,6 +63,12 @@ export const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<MockConfig | null>(null);
   const [handlers, setHandlers] = useState<HandlerWithConfig[]>([]);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
+    User: true,
+    Tournament: true,
+    Game: true,
+    Bet: true,
+  });
 
   // Bottom sheet
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -94,6 +106,25 @@ export const Settings = () => {
 
     setHandlers(handlersWithConfig);
     setLoading(false);
+  };
+
+  // Group handlers by their group property
+  const groupedHandlers = useMemo(() => {
+    const groups: Record<string, HandlerWithConfig[]> = {};
+    handlers.forEach((handler) => {
+      if (!groups[handler.group]) {
+        groups[handler.group] = [];
+      }
+      groups[handler.group].push(handler);
+    });
+    return groups;
+  }, [handlers]);
+
+  const toggleGroup = (group: string) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [group]: !prev[group],
+    }));
   };
 
   useEffect(() => {
@@ -227,8 +258,6 @@ export const Settings = () => {
             value={handler.configEnabled}
             onValueChange={(value) => handleHandlerToggle(handler.id, value)}
             disabled={isDisabled}
-            trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
-            thumbColor={handler.configEnabled ? theme.colors.white : theme.colors.textSecondary}
           />
         </HandlerHeader>
       </HandlerCard>
@@ -261,18 +290,33 @@ export const Settings = () => {
         <Section>
           <ToggleRow>
             <ToggleLabel>Enable Mock APIs</ToggleLabel>
-            <Switch
-              value={config.globalEnabled}
-              onValueChange={handleGlobalToggle}
-              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
-              thumbColor={config.globalEnabled ? theme.colors.white : theme.colors.textSecondary}
-            />
+            <Switch value={config.globalEnabled} onValueChange={handleGlobalToggle} />
           </ToggleRow>
 
           {handlers.length === 0 ? (
             <EmptyStateText>No mock handlers configured</EmptyStateText>
           ) : (
-            handlers.map(renderHandler)
+            Object.entries(groupedHandlers).map(([group, groupHandlers]) => {
+              const isExpanded = expandedGroups[group] ?? false;
+              const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
+              const enabledCount = enabledHandlers.length;
+              const totalCount = groupHandlers.length;
+
+              return (
+                <GroupContainer key={group} expanded={isExpanded}>
+                  <GroupHeaderContainer onPress={() => toggleGroup(group)} activeOpacity={0.7}>
+                    <GroupHeader>{group}</GroupHeader>
+                    <GroupChevron expanded={isExpanded}>▶</GroupChevron>
+                  </GroupHeaderContainer>
+                  {!isExpanded && enabledCount > 0 && (
+                    <GroupSummary>
+                      {enabledCount} of {totalCount} enabled
+                    </GroupSummary>
+                  )}
+                  {isExpanded && groupHandlers.map(renderHandler)}
+                </GroupContainer>
+              );
+            })
           )}
         </Section>
       </ScrollContent>

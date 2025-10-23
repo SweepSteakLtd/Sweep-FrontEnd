@@ -7,6 +7,7 @@ export interface MockResponse {
 export interface MockHandler {
   id: string;
   name: string;
+  group: 'User' | 'Tournament' | 'Game' | 'Bet';
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   urlPattern: string;
   scenarios: Record<string, MockResponse>;

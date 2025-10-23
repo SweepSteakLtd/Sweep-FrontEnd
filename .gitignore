@@ -36,6 +36,9 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Temporary schema files
+src/services/apis/schemas.temp.ts
+
 # generated native folders
 /ios
 /android

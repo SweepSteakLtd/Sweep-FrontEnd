@@ -12,6 +12,83 @@
     }
   ],
   "paths": {
+    "/api/bets/": {
+      "post": {
+        "summary": "Create Bet",
+        "description": "Create Bet endpoint",
+        "operationId": "create-bet",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Insufficient Funds": {
+                    "summary": "Insufficient Funds",
+                    "value": null
+                  },
+                  "Invalid Data": {
+                    "summary": "Invalid Data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/games": {
       "get": {
         "summary": "Get Games List",
@@ -341,14 +418,14 @@
         }
       }
     },
-    "/api/users/me": {
+    "/api/users/": {
       "post": {
         "summary": "Create User Profile",
         "description": "Create User Profile endpoint",
         "operationId": "create-profile",
         "responses": {
-          "200": {
-            "description": "Successful response",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
@@ -455,39 +532,213 @@
               }
             }
           }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
+        }
+      }
+    },
+    "/api/tournaments": {
+      "get": {
+        "summary": "Get Tournaments List",
+        "description": "Get Tournaments List endpoint",
+        "operationId": "get-tournaments",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "starts_at": {
+                            "type": "string"
+                          },
+                          "finishes_at": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "cover_picture": {
+                            "type": "string"
+                          },
+                          "gallery": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "holes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "ads": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "proposed_entry_fee": {
+                            "type": "integer"
+                          },
+                          "maximum_cut_amount": {
+                            "type": "integer"
+                          },
+                          "maximum_score_generator": {
+                            "type": "integer"
+                          },
+                          "players": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": {
+                      "data": [
+                        {
+                          "id": "tournament-1",
+                          "name": "The Masters",
+                          "starts_at": "2026-04-09T08:00:00.000Z",
+                          "finishes_at": "2026-04-12T18:00:00.000Z",
+                          "description": "The Masters Tournament, one of golf's four major championships.",
+                          "url": "https://example.com/masters",
+                          "cover_picture": "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400",
+                          "gallery": [],
+                          "holes": [],
+                          "ads": [],
+                          "proposed_entry_fee": 100,
+                          "maximum_cut_amount": 50,
+                          "maximum_score_generator": 100,
+                          "players": [],
+                          "created_at": "<timestamp>",
+                          "updated_at": "<timestamp>"
+                        },
+                        {
+                          "id": "tournament-2",
+                          "name": "The Open Championship",
+                          "starts_at": "2025-07-17T08:00:00.000Z",
+                          "finishes_at": "2025-07-20T18:00:00.000Z",
+                          "description": "The Open Championship, the oldest of golf's major championships.",
+                          "url": "https://example.com/open",
+                          "cover_picture": "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400",
+                          "gallery": [],
+                          "holes": [],
+                          "ads": [],
+                          "proposed_entry_fee": 75,
+                          "maximum_cut_amount": 40,
+                          "maximum_score_generator": 90,
+                          "players": [],
+                          "created_at": "<timestamp>",
+                          "updated_at": "<timestamp>"
+                        },
+                        {
+                          "id": "tournament-3",
+                          "name": "The Players Championship",
+                          "starts_at": "2025-03-13T08:00:00.000Z",
+                          "finishes_at": "2025-03-16T18:00:00.000Z",
+                          "description": "The Players Championship at TPC Sawgrass.",
+                          "url": "https://example.com/players",
+                          "cover_picture": "https://images.unsplash.com/photo-1592919505780-303950717480?w=400",
+                          "gallery": [],
+                          "holes": [],
+                          "ads": [],
+                          "proposed_entry_fee": 50,
+                          "maximum_cut_amount": 30,
+                          "maximum_score_generator": 80,
+                          "players": [],
+                          "created_at": "<timestamp>",
+                          "updated_at": "<timestamp>"
+                        },
+                        {
+                          "id": "tournament-4",
+                          "name": "PGA Championship",
+                          "starts_at": "2025-05-15T08:00:00.000Z",
+                          "finishes_at": "2025-05-18T18:00:00.000Z",
+                          "description": "The PGA Championship, one of golf's four major championships.",
+                          "url": "https://example.com/pga",
+                          "cover_picture": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=400",
+                          "gallery": [],
+                          "holes": [],
+                          "ads": [],
+                          "proposed_entry_fee": 125,
+                          "maximum_cut_amount": 60,
+                          "maximum_score_generator": 110,
+                          "players": [],
+                          "created_at": "<timestamp>",
+                          "updated_at": "<timestamp>"
+                        }
+                      ]
+                    }
                   },
-                  "email": {
-                    "type": "string"
+                  "Empty List": {
+                    "summary": "Empty List",
+                    "value": null
                   },
-                  "username": {
-                    "type": "string"
-                  },
-                  "displayName": {
-                    "type": "string"
-                  },
-                  "handicap": {
-                    "type": "integer"
-                  },
-                  "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": {
+                      "error": "Failed to fetch tournaments"
+                    }
                   }
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/api/users/me": {
       "get": {
         "summary": "Get User Profile",
         "description": "Get User Profile endpoint",
@@ -584,139 +835,6 @@
                     "summary": "Server Error (500)",
                     "value": {
                       "error": "Internal server error"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/tournaments": {
-      "get": {
-        "summary": "Get Tournaments List",
-        "description": "Get Tournaments List endpoint",
-        "operationId": "get-tournaments",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "year": {
-                            "type": "integer"
-                          },
-                          "category": {
-                            "type": "string"
-                          },
-                          "imageUrl": {
-                            "type": "string"
-                          },
-                          "startDate": {
-                            "type": "string"
-                          },
-                          "endDate": {
-                            "type": "string"
-                          },
-                          "status": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "Success": {
-                    "summary": "Success",
-                    "value": {
-                      "data": [
-                        {
-                          "id": "1",
-                          "name": "The Masters",
-                          "year": 2026,
-                          "category": "MASTERS",
-                          "imageUrl": "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400",
-                          "startDate": "2026-04-09T00:00:00Z",
-                          "endDate": "2026-04-12T00:00:00Z",
-                          "status": "upcoming"
-                        },
-                        {
-                          "id": "2",
-                          "name": "The Open Championship",
-                          "year": 2025,
-                          "category": "OPEN",
-                          "imageUrl": "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400",
-                          "startDate": "2025-07-17T00:00:00Z",
-                          "endDate": "2025-07-20T00:00:00Z",
-                          "status": "upcoming"
-                        },
-                        {
-                          "id": "3",
-                          "name": "The Players Championship",
-                          "year": 2025,
-                          "category": "TC_SAWGRASS",
-                          "imageUrl": "https://images.unsplash.com/photo-1592919505780-303950717480?w=400",
-                          "startDate": "2025-03-13T00:00:00Z",
-                          "endDate": "2025-03-16T00:00:00Z",
-                          "status": "upcoming"
-                        },
-                        {
-                          "id": "4",
-                          "name": "PGA Championship",
-                          "year": 2025,
-                          "category": "PGA",
-                          "imageUrl": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=400",
-                          "startDate": "2025-05-15T00:00:00Z",
-                          "endDate": "2025-05-18T00:00:00Z",
-                          "status": "upcoming"
-                        }
-                      ]
-                    }
-                  },
-                  "Empty List": {
-                    "summary": "Empty List",
-                    "value": null
-                  },
-                  "data": {
-                    "summary": "data",
-                    "value": null
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "examples": {
-                  "Server Error": {
-                    "summary": "Server Error",
-                    "value": {
-                      "error": "Failed to fetch tournaments"
                     }
                   }
                 }

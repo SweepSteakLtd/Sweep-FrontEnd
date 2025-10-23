@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-10-22T16:38:18.846Z
+Generated: 2025-10-23T12:28:44.958Z
 
 ## Files
 
@@ -17,6 +17,21 @@ Import `openapi.json` into:
 ## Endpoints
 
 
+### POST /api/bets/
+**Create Bet**
+
+Create Bet endpoint
+
+**Default Scenario:** Success
+
+**Scenarios:** 5
+- Success (201) - 800ms
+- data (200) - 800ms
+- Insufficient Funds (400) - 500ms
+- Invalid Data (400) - 500ms
+- Server Error (500) - 1000ms
+
+
 ### GET /api/games
 **Get Games List**
 
@@ -31,7 +46,7 @@ Get Games List endpoint
 - Server Error (500) - 1000ms
 
 
-### POST /api/users/me
+### POST /api/users/
 **Create User Profile**
 
 Create User Profile endpoint
@@ -39,7 +54,7 @@ Create User Profile endpoint
 **Default Scenario:** Success
 
 **Scenarios:** 4
-- Success (200) - 1000ms
+- Success (201) - 1000ms
 - Username Taken (400) - 500ms
 - Invalid Data (400) - 500ms
 - Server Error (500) (500) - 1000ms

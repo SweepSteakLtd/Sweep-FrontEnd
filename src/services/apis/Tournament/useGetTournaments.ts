@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
-import { Tournament, TournamentsResponse } from './types';
+import { tournamentsResponseSchema, type Tournament } from '../schemas';
 
 // Query Keys
 export const tournamentQueryKeys = {
@@ -26,8 +26,17 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
       throw new Error(`Failed to fetch tournaments: ${res.status}`);
     }
 
-    const data = (await res.json()) as TournamentsResponse;
-    return data.data;
+    const rawData = await res.json();
+
+    // Validate response with Zod
+    const validationResult = tournamentsResponseSchema.safeParse(rawData);
+
+    if (!validationResult.success) {
+      console.error('[fetchTournaments] Validation error:', validationResult.error.format());
+      throw new Error('Invalid tournament data received from API');
+    }
+
+    return validationResult.data.data;
   } catch (error) {
     console.error('Error fetching tournaments:', error);
     throw error;

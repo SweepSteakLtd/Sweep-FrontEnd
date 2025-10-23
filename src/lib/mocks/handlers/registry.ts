@@ -1,11 +1,13 @@
 import type { MockHandler } from '../types';
+import { createBetHandler, deleteBetHandler, getBetsHandler, updateBetHandler } from './betHandler';
 import {
   createGameHandler,
+  deleteGameHandler,
   getGameByIdHandler,
   getGamesHandler,
-  joinGameHandler,
+  updateGameHandler,
 } from './gameHandler';
-import { createProfileHandler } from './profileHandler';
+import { createProfileHandler, updateProfileHandler } from './profileHandler';
 import { getTournamentByIdHandler, getTournamentsHandler } from './tournamentHandler';
 import { getUserHandler } from './userHandler';
 
@@ -14,14 +16,27 @@ import { getUserHandler } from './userHandler';
  * Add new handlers here as you create them
  */
 export const mockHandlers: MockHandler[] = [
+  // User endpoints
   getUserHandler,
   createProfileHandler,
+  updateProfileHandler,
+
+  // Tournament endpoints
   getTournamentsHandler,
   getTournamentByIdHandler,
+
+  // Game endpoints
   getGamesHandler,
   getGameByIdHandler,
   createGameHandler,
-  joinGameHandler,
+  updateGameHandler,
+  deleteGameHandler,
+
+  // Bet endpoints
+  createBetHandler,
+  getBetsHandler,
+  updateBetHandler,
+  deleteBetHandler,
 ];
 
 /**

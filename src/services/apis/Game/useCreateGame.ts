@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
 import { CreateGameRequest, Game } from './types';
-import { gameQueryKeys } from './useGetGames';
 
 // API Function
 export const createGame = async (gameData: CreateGameRequest): Promise<Game> => {
@@ -44,7 +43,7 @@ export const useCreateGame = () => {
     mutationFn: createGame,
     onSuccess: () => {
       // Invalidate games query to refetch the list
-      queryClient.invalidateQueries({ queryKey: gameQueryKeys.games });
+      queryClient.invalidateQueries({ queryKey: ['games'] });
     },
   });
 };

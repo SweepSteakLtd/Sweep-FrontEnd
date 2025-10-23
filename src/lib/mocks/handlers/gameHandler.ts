@@ -15,15 +15,11 @@
  */
 
 import {
-  alreadyJoinedMock,
   createGameSuccessMock,
   gameDetailMock,
-  gameFullMock,
   gameNotFoundMock,
   gameServerErrorMock,
   gamesListMock,
-  invalidGameCodeMock,
-  joinGameSuccessMock,
 } from '~/features/games/mocks';
 import type { MockHandler } from '../types';
 
@@ -34,6 +30,7 @@ import type { MockHandler } from '../types';
 export const getGamesHandler: MockHandler = {
   id: 'get-games',
   name: 'Get Games List',
+  group: 'Game',
   method: 'GET',
   urlPattern: '/api/games',
   defaultScenario: 'Success',
@@ -63,6 +60,7 @@ export const getGamesHandler: MockHandler = {
 export const getGameByIdHandler: MockHandler = {
   id: 'get-game-by-id',
   name: 'Get Game By ID',
+  group: 'Game',
   method: 'GET',
   urlPattern: '/api/games/',
   defaultScenario: 'Success',
@@ -110,6 +108,7 @@ export const getGameByIdHandler: MockHandler = {
 export const createGameHandler: MockHandler = {
   id: 'create-game',
   name: 'Create Game',
+  group: 'Game',
   method: 'POST',
   urlPattern: '/api/games',
   defaultScenario: 'Success',
@@ -133,40 +132,72 @@ export const createGameHandler: MockHandler = {
 };
 
 /**
- * POST /api/games/join
- * Join a game using a join code
+ * PUT /api/games/:id
+ * Updates game details
  *
  * Request body:
- * - join_code: string
- * - user_id: string
+ * - name?: string
+ * - description?: string
+ * - entry_fee?: number
+ * - max_participants?: number
+ * - is_featured?: boolean
+ * - type?: string
  *
- * Response: 200 OK with success message and game_id
+ * Response: 200 OK with updated game object
  */
-export const joinGameHandler: MockHandler = {
-  id: 'join-game',
-  name: 'Join Game',
-  method: 'POST',
-  urlPattern: '/api/games/join',
+export const updateGameHandler: MockHandler = {
+  id: 'update-game',
+  name: 'Update Game',
+  group: 'Game',
+  method: 'PUT',
+  urlPattern: '/api/games/',
   defaultScenario: 'Success',
   scenarios: {
     Success: {
       status: 200,
-      data: joinGameSuccessMock,
+      data: gameDetailMock,
       delay: 800,
     },
-    'Invalid Code': {
-      status: 400,
-      data: invalidGameCodeMock,
+    'Not Found': {
+      status: 404,
+      data: gameNotFoundMock,
       delay: 500,
     },
-    'Game Full': {
+    'Invalid Data': {
       status: 400,
-      data: gameFullMock,
+      data: { error: 'Invalid game data' },
       delay: 500,
     },
-    'Already Joined': {
-      status: 400,
-      data: alreadyJoinedMock,
+    'Server Error': {
+      status: 500,
+      data: gameServerErrorMock,
+      delay: 1000,
+    },
+  },
+};
+
+/**
+ * DELETE /api/games/:id
+ * Removes a game
+ *
+ * Response: 204 No Content
+ */
+export const deleteGameHandler: MockHandler = {
+  id: 'delete-game',
+  name: 'Delete Game',
+  group: 'Game',
+  method: 'DELETE',
+  urlPattern: '/api/games/',
+  defaultScenario: 'Success',
+  scenarios: {
+    Success: {
+      status: 204,
+      data: null,
+      delay: 500,
+    },
+    'Not Found': {
+      status: 404,
+      data: gameNotFoundMock,
       delay: 500,
     },
     'Server Error': {

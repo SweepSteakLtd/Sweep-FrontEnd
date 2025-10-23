@@ -33,6 +33,7 @@ import type { MockHandler } from '../types';
 export const getTournamentsHandler: MockHandler = {
   id: 'get-tournaments',
   name: 'Get Tournaments List',
+  group: 'Tournament',
   method: 'GET',
   urlPattern: '/api/tournaments',
   defaultScenario: 'Success',
@@ -62,6 +63,7 @@ export const getTournamentsHandler: MockHandler = {
 export const getTournamentByIdHandler: MockHandler = {
   id: 'get-tournament-by-id',
   name: 'Get Tournament By ID',
+  group: 'Tournament',
   method: 'GET',
   urlPattern: '/api/tournaments/',
   defaultScenario: 'Success',

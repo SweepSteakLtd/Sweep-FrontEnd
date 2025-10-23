@@ -1,3 +1,4 @@
+import type { Game } from '~/services/apis/Game/types';
 import {
   AmountText,
   Card,
@@ -10,42 +11,20 @@ import {
   TournamentInfo,
 } from './styles';
 
-export interface Game {
-  id: string;
-  name: string;
-  description?: string;
-  tournamentId: string;
-  tournamentName: string;
-  tournamentYear: number;
-  entryFee: number;
-  joinCode: string;
-  totalPot?: number;
-  maxParticipants: number;
-  currentParticipants?: number;
-  contactPhone?: string | null;
-  contactEmail?: string | null;
-  contactVisibility?: string;
-  rewards?: Array<{ position: number; amount: number; percentage: number }>;
-  startTime?: string;
-  endTime?: string;
-  isPrivate: boolean;
-  isFeatured: boolean;
-  ownerId: string;
-  userIdList?: string[];
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 interface GameCardProps {
   game: Game;
+  tournamentName?: string;
   index: number;
   onPress: () => void;
 }
 
-export const GameCard = ({ game, onPress }: GameCardProps) => {
+export const GameCard = ({ game, tournamentName = '', onPress }: GameCardProps) => {
   const formatCurrency = (amount: number) => {
     return `£${amount.toLocaleString()}`;
   };
+
+  const totalPot = (game.entry_fee ?? 0) * (game.max_participants ?? 0);
+  const year = game.start_time ? new Date(game.start_time).getFullYear() : new Date().getFullYear();
 
   return (
     <Card onPress={onPress} activeOpacity={0.7}>
@@ -53,14 +32,14 @@ export const GameCard = ({ game, onPress }: GameCardProps) => {
         <LeftSection>
           <GameName>{game.name}</GameName>
           <TournamentInfo>
-            {game.tournamentName} {game.tournamentYear}
+            {tournamentName} {year}
           </TournamentInfo>
         </LeftSection>
 
         <RightSection>
-          <AmountText>{formatCurrency(game.totalPot || 0)}</AmountText>
+          <AmountText>{formatCurrency(totalPot)}</AmountText>
           <PlayersText>
-            <InfoLabel>{game.currentParticipants || 0} players</InfoLabel>
+            <InfoLabel>{game.user_id_list?.length || 0} players</InfoLabel>
           </PlayersText>
         </RightSection>
       </CardContainer>

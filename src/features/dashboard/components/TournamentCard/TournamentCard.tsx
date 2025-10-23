@@ -1,12 +1,5 @@
+import type { Tournament } from '~/services/apis/schemas';
 import { Card, TournamentImage, TournamentOverlay, TournamentTitle } from './styles';
-
-export interface Tournament {
-  id: string;
-  name: string;
-  year: number;
-  imageUrl: string;
-  category: string;
-}
 
 interface TournamentCardProps {
   tournament: Tournament;
@@ -14,12 +7,14 @@ interface TournamentCardProps {
 }
 
 export const TournamentCard = ({ tournament, onPress }: TournamentCardProps) => {
+  const year = new Date(tournament.starts_at).getFullYear();
+
   return (
     <Card onPress={onPress} activeOpacity={0.8}>
-      <TournamentImage source={{ uri: tournament.imageUrl }} />
+      <TournamentImage source={{ uri: tournament.cover_picture }} />
       <TournamentOverlay>
         <TournamentTitle>
-          {tournament.name} {tournament.year}
+          {tournament.name} {year}
         </TournamentTitle>
       </TournamentOverlay>
     </Card>
