@@ -4,6 +4,7 @@ import 'react-native-url-polyfill/auto';
 import { ThemeProvider } from 'styled-components/native';
 import { AlertProvider } from './src/components/Alert/Alert';
 import { AuthProvider } from './src/contexts/AuthContext';
+import { BottomSheetProvider } from './src/contexts/BottomSheetContext';
 import { installMockInterceptor } from './src/lib/mocks/interceptor';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { theme } from './src/theme/theme';
@@ -28,9 +29,11 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <AlertProvider>
-            <AuthProvider>
-              <RootNavigator />
-            </AuthProvider>
+            <BottomSheetProvider>
+              <AuthProvider>
+                <RootNavigator />
+              </AuthProvider>
+            </BottomSheetProvider>
           </AlertProvider>
         </QueryClientProvider>
       </ThemeProvider>

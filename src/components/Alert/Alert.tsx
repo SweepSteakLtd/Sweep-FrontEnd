@@ -75,7 +75,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                         alertOptions.buttons.map((button, index) => (
                           <Button
                             key={index}
-                            variant={button.style === 'destructive' ? 'primary' : 'outline'}
+                            variant={button.style === 'destructive' ? 'primary' : 'secondary'}
                             onPress={() => handleButtonPress(button.onPress)}
                             style={{ flex: 1, marginLeft: index > 0 ? 12 : 0 }}
                           >

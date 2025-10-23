@@ -9,6 +9,7 @@ import { EmptyState, EmptyStateText, SearchAndTabsWrapper, SearchWrapper } from 
 interface JoinGameListProps {
   games: Game[];
   onGamePress?: (game: Game) => void;
+  onGameDelete?: (gameId: string) => void;
   loading?: boolean;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
@@ -25,6 +26,7 @@ const gameTabs = [
 export const JoinGameList = ({
   games,
   onGamePress,
+  onGameDelete,
   loading = false,
   searchQuery = '',
   onSearchChange,
@@ -43,6 +45,10 @@ export const JoinGameList = ({
 
   const handleGamePress = (game: Game) => {
     onGamePress?.(game);
+  };
+
+  const handleGameDelete = (gameId: string) => {
+    onGameDelete?.(gameId);
   };
 
   return (
@@ -79,6 +85,7 @@ export const JoinGameList = ({
               game={item}
               index={index}
               onPress={() => handleGamePress(item)}
+              onDelete={onGameDelete ? handleGameDelete : undefined}
             />
           ))}
         </View>

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
-import { CreateGameRequest, Game } from './types';
+import { CreateGameRequest, CreateGameResponse } from './types';
 
 // API Function
-export const createGame = async (gameData: CreateGameRequest): Promise<Game> => {
+export const createGame = async (gameData: CreateGameRequest): Promise<CreateGameResponse> => {
   const token = await firebaseAuth.currentUser?.getIdToken();
 
   if (!token) {
@@ -26,7 +26,7 @@ export const createGame = async (gameData: CreateGameRequest): Promise<Game> => 
     }
 
     const data = await res.json();
-    return data.data as Game;
+    return data.data as CreateGameResponse;
   } catch (error) {
     console.error('Error creating game:', error);
     throw error;

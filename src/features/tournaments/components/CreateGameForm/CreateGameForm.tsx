@@ -2,46 +2,58 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
+import { Dropdown } from '~/components/Dropdown/Dropdown';
 import { Input } from '~/components/Input/Input';
 import { Switch } from '~/components/Switch/Switch';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import { useCreateGame } from '~/services/apis/Game/useCreateGame';
+import type { Tournament } from '~/services/apis/Tournament/types';
 import { ButtonContainer, ErrorText, GameTypeRow, InputLabel, SwitchLabel } from './styles';
 import { createGameSchema } from './validation';
 
 interface CreateGameFormProps {
   activeTournamentId: string;
+  tournaments: Tournament[];
   defaultGameType?: 'public' | 'private';
   onSuccess?: () => void;
+  onPrivateGameCreated?: (joinCode: string, gameName: string) => void;
 }
 
 interface FieldErrors extends Record<string, string | undefined> {
   gameName?: string;
+  tournamentId?: string;
   entryFee?: string;
   maxEntries?: string;
 }
 
 export const CreateGameForm = ({
   activeTournamentId,
+  tournaments,
   defaultGameType = 'public',
   onSuccess,
+  onPrivateGameCreated,
 }: CreateGameFormProps) => {
   const theme = useTheme();
   const createGameMutation = useCreateGame();
 
   const [gameName, setGameName] = useState('');
-  const [tournamentName, setTournamentName] = useState('');
+  const [selectedTournamentId, setSelectedTournamentId] = useState(activeTournamentId);
   const [gameType, setGameType] = useState<'public' | 'private'>(defaultGameType);
   const [entryFee, setEntryFee] = useState('');
   const [maxEntries, setMaxEntries] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [createError, setCreateError] = useState('');
 
+  const tournamentOptions = tournaments.map((t) => ({
+    label: t.name,
+    value: t.id,
+  }));
+
   const handleCreateGame = async () => {
     // Validate using Zod
     const validation = validateWithZod<FieldErrors>(createGameSchema, {
       gameName,
-      tournamentName,
+      tournamentId: selectedTournamentId,
       entryFee,
       maxEntries,
     });
@@ -56,7 +68,7 @@ export const CreateGameForm = ({
 
     // TODO: Add proper owner_id from auth context and other required fields
     try {
-      await createGameMutation.mutateAsync({
+      const response = await createGameMutation.mutateAsync({
         name: gameName,
         description: '',
         entry_fee: parseFloat(entryFee),
@@ -65,17 +77,24 @@ export const CreateGameForm = ({
         start_time: new Date().toISOString(),
         end_time: new Date().toISOString(),
         owner_id: 'current-user-id', // TODO: Get from auth context
-        tournament_id: activeTournamentId,
+        tournament_id: selectedTournamentId,
+        type: gameType,
       });
 
       // Reset form on success
       setGameName('');
-      setTournamentName('');
-      setGameType('private');
+      setSelectedTournamentId(activeTournamentId);
       setEntryFee('');
       setMaxEntries('');
 
-      onSuccess?.();
+      // If private game, call the callback to show join code
+      if (gameType === 'private' && response.join_code) {
+        onPrivateGameCreated?.(response.join_code, gameName);
+      } else {
+        // For public games, call onSuccess immediately
+        onSuccess?.();
+      }
+
       console.log('Game created successfully');
     } catch (error) {
       setCreateError('Failed to create game. Please try again.');
@@ -99,12 +118,18 @@ export const CreateGameForm = ({
         error={fieldErrors.gameName}
       />
 
-      <Input
-        label="Tournament (optional)"
-        value={tournamentName}
-        onChangeText={setTournamentName}
-        placeholder="Tournament Name"
-        placeholderTextColor={theme.colors.text.secondary}
+      <Dropdown
+        label="Tournament"
+        value={selectedTournamentId}
+        options={tournamentOptions}
+        onValueChange={(value) => {
+          setSelectedTournamentId(value);
+          if (fieldErrors.tournamentId) {
+            setFieldErrors((prev) => ({ ...prev, tournamentId: undefined }));
+          }
+        }}
+        placeholder="Select a tournament"
+        error={fieldErrors.tournamentId}
       />
 
       <GameTypeRow>
@@ -121,6 +146,7 @@ export const CreateGameForm = ({
 
       <Input
         label="Entry Fee (min £20 max £1500)"
+        variant="currency"
         value={entryFee}
         onChangeText={(text) => {
           setEntryFee(text);
@@ -128,8 +154,7 @@ export const CreateGameForm = ({
             setFieldErrors((prev) => ({ ...prev, entryFee: undefined }));
           }
         }}
-        placeholder="£40"
-        keyboardType="numeric"
+        placeholder="40"
         placeholderTextColor={theme.colors.text.secondary}
         error={fieldErrors.entryFee}
       />

@@ -60,3 +60,14 @@ export const AmountText = styled.Text`
   color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
   line-height: 24px;
 `;
+
+export const DeleteButton = styled.View`
+  width: 80px;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.error};
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  margin-right: 16px;
+  margin-bottom: 12px;
+  flex: 1;
+`;

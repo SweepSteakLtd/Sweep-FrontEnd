@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, RefreshControl, View } from 'react-native';
+import { useTheme } from 'styled-components/native';
 import { useAuth } from '~/contexts/AuthContext';
 import { TournamentCard } from '~/features/dashboard/components/TournamentCard/TournamentCard';
 import { TournamentCardSkeleton } from '~/features/dashboard/components/TournamentCard/TournamentCardSkeleton';
@@ -21,11 +22,22 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const Dashboard = () => {
   const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme();
   const { signOut } = useAuth();
-  const { data: tournaments = [], isLoading: loading, error } = useGetTournaments();
+  const {
+    data: tournaments = [],
+    isLoading: loading,
+    isFetching,
+    error,
+    refetch,
+  } = useGetTournaments();
 
   const handleLogout = async () => {
     await signOut();
+  };
+
+  const handleRefresh = async () => {
+    await refetch();
   };
 
   // Configure navigation header
@@ -92,6 +104,13 @@ export const Dashboard = () => {
             keyExtractor={(item) => item.id}
             contentContainerStyle={{ padding: 20 }}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isFetching && !loading}
+                onRefresh={handleRefresh}
+                tintColor={theme.colors.primary}
+              />
+            }
           />
         </TournamentGrid>
       )}

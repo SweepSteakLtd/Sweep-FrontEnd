@@ -2,7 +2,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { TabBar } from '~/components/TabBar/TabBar';
@@ -10,6 +10,7 @@ import { JoinGameList } from '~/features/tournaments/components/JoinGameList/Joi
 import { useDebouncedValue } from '~/hooks/useDebouncedValue';
 import type { RootStackParamList } from '~/navigation/types';
 import type { Game } from '~/services/apis/Game/types';
+import { useDeleteGame } from '~/services/apis/Game/useDeleteGame';
 import { useGetGames } from '~/services/apis/Game/useGetGames';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import {
@@ -43,13 +44,18 @@ export const TournamentGames = () => {
   // Debounce search query for API calls
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
 
-  const { data: tournaments = [], error: tournamentsError } = useGetTournaments();
+  const {
+    data: tournaments = [],
+    error: tournamentsError,
+    refetch: refetchTournaments,
+  } = useGetTournaments();
 
   const {
     data: games = [],
     isLoading: gamesLoading,
     isFetching: gamesFetching,
     error: gamesError,
+    refetch: refetchGames,
   } = useGetGames(
     {
       searchTerm: debouncedSearchQuery || undefined,
@@ -57,6 +63,20 @@ export const TournamentGames = () => {
     },
     true,
   );
+
+  const deleteGameMutation = useDeleteGame();
+
+  const handleRefresh = async () => {
+    await Promise.all([refetchTournaments(), refetchGames()]);
+  };
+
+  const handleGameDelete = async (gameId: string) => {
+    try {
+      await deleteGameMutation.mutateAsync(gameId);
+    } catch (error) {
+      console.error('Failed to delete game:', error);
+    }
+  };
 
   // Transform tournaments to tabs format
   const tournamentTabs = tournaments.map((tournament) => ({
@@ -138,7 +158,16 @@ export const TournamentGames = () => {
 
   return (
     <Container>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={gamesFetching && games.length > 0}
+            onRefresh={handleRefresh}
+            tintColor={theme.colors.primary}
+          />
+        }
+      >
         {/* Level 1: Tournament Tabs */}
         <SegmentedTabWrapper>
           <TabBar
@@ -166,6 +195,7 @@ export const TournamentGames = () => {
         <JoinGameList
           games={games}
           onGamePress={handleGamePress}
+          onGameDelete={handleGameDelete}
           loading={gamesFetching}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
