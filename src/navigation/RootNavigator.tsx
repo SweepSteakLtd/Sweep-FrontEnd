@@ -1,6 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTheme } from 'styled-components/native';
 import { AuthGuard } from '~/components/AuthGuard';
+import { BackButton } from '~/components/BackButton/BackButton';
 import { FloatingMockButton } from '~/components/FloatingMockButton/FloatingMockButton';
 import { CreateAccount } from '~/features/auth/screens/CreateAccount/CreateAccount';
 import { Landing } from '~/features/auth/screens/Landing/Landing';
@@ -17,14 +19,33 @@ import type { RootStackParamList } from './types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator = () => {
+  const theme = useTheme();
+
   return (
     <NavigationContainer>
       <AuthGuard />
       <Stack.Navigator
         initialRouteName="Splash"
-        screenOptions={{
+        screenOptions={({ navigation }) => ({
           headerShown: false,
-        }}
+          headerBackTitle: ' ',
+          headerStyle: {
+            backgroundColor: theme.colors.primary,
+          },
+          headerTintColor: theme.colors.white,
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 20,
+          },
+          headerShadowVisible: false,
+          headerLeft: (props) => {
+            // Only show back button if we can go back
+            if (navigation.canGoBack()) {
+              return <BackButton tintColor={props.tintColor} />;
+            }
+            return null;
+          },
+        })}
       >
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Landing" component={Landing} />

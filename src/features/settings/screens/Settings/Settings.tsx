@@ -75,18 +75,8 @@ export const Settings = () => {
     navigation.setOptions({
       headerShown: true,
       title: 'Mock APIs',
-      headerStyle: {
-        backgroundColor: theme.colors.primary,
-      },
-      headerTintColor: theme.colors.white,
-      headerTitleStyle: {
-        fontWeight: '600',
-        fontSize: 20,
-      },
-      headerShadowVisible: false,
-      headerBackTitle: '',
     });
-  }, [navigation, theme]);
+  }, [navigation]);
 
   // Load mock configuration
   const loadConfig = async () => {

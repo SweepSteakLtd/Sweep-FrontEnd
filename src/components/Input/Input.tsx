@@ -1,5 +1,5 @@
-import React from 'react';
-import { TextInputProps } from 'react-native';
+import React, { useState } from 'react';
+import { NativeSyntheticEvent, TextInputFocusEventData, TextInputProps } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Typography } from '../Typography/Typography';
 import { Container, ErrorText, StyledInput } from './styles';
@@ -9,18 +9,41 @@ interface InputProps extends TextInputProps {
   error?: string;
 }
 
-export const Input: React.FC<InputProps> = ({ label, error, ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, error, onFocus, onBlur, ...props }) => {
   const theme = useTheme();
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    setIsFocused(true);
+    onFocus?.(e);
+  };
+
+  const handleBlur = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    setIsFocused(false);
+    onBlur?.(e);
+  };
+
   return (
     <Container>
       {label && (
-        <Typography variant="label" color={theme.colors.white} style={{ marginBottom: 8 }}>
+        <Typography
+          variant="label"
+          color={theme.colors.text.primary}
+          style={{ marginBottom: 4, fontSize: 13, fontWeight: '400' }}
+        >
           {label}
         </Typography>
       )}
-      <StyledInput theme={theme} placeholderTextColor="rgba(255,255,255,0.5)" {...props} />
+      <StyledInput
+        theme={theme}
+        isFocused={isFocused}
+        hasError={!!error}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        {...props}
+      />
       {error && (
-        <ErrorText variant="caption" color="#ff6b6b">
+        <ErrorText variant="caption" color={theme.colors.error}>
           {error}
         </ErrorText>
       )}

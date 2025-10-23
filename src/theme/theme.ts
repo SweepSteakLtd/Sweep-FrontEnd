@@ -8,13 +8,15 @@ export const theme = {
     background: colorTokens.white,
     backgroundLight: colorTokens.gray100,
     white: colorTokens.white,
-    border: colorTokens.gray600,
+    border: colorTokens.gray200,
     textSecondary: colorTokens.gray600,
     card: colorTokens.white,
     error: colorTokens.red500,
     text: {
       primary: colorTokens.gray900,
       secondary: colorTokens.gray600,
+      tertiary: colorTokens.gray400,
+      placeholder: colorTokens.gray400,
       muted: colorTokens.gray600,
     },
     button: {

@@ -1,14 +1,22 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Switch, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
-import { RadioButton } from '~/components/RadioButton/RadioButton';
+import { Input } from '~/components/Input/Input';
+import { validateWithZod } from '~/lib/validation/zodHelpers';
 import { useCreateGame } from '~/services/apis/Game/useCreateGame';
-import { ButtonContainer, ErrorText, FormInput, FormTitle, InputLabel, RadioGroup } from './styles';
+import { ButtonContainer, ErrorText, GameTypeRow, InputLabel, SwitchLabel } from './styles';
+import { createGameSchema } from './validation';
 
 interface CreateGameFormProps {
   activeTournamentId: string;
   onSuccess?: () => void;
+}
+
+interface FieldErrors extends Record<string, string | undefined> {
+  gameName?: string;
+  entryFee?: string;
+  maxEntries?: string;
 }
 
 export const CreateGameForm = ({ activeTournamentId, onSuccess }: CreateGameFormProps) => {
@@ -20,23 +28,24 @@ export const CreateGameForm = ({ activeTournamentId, onSuccess }: CreateGameForm
   const [gameType, setGameType] = useState<'public' | 'private'>('private');
   const [entryFee, setEntryFee] = useState('');
   const [maxEntries, setMaxEntries] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [createError, setCreateError] = useState('');
 
   const handleCreateGame = async () => {
-    // Validation
-    if (!gameName.trim()) {
-      setCreateError('Please enter a game name');
-      return;
-    }
-    if (!entryFee || parseFloat(entryFee) <= 0) {
-      setCreateError('Please enter a valid entry fee');
-      return;
-    }
-    if (!maxEntries || parseInt(maxEntries) <= 0) {
-      setCreateError('Please enter valid max participants');
+    // Validate using Zod
+    const validation = validateWithZod<FieldErrors>(createGameSchema, {
+      gameName,
+      tournamentName,
+      entryFee,
+      maxEntries,
+    });
+
+    if (!validation.success) {
+      setFieldErrors(validation.errors);
       return;
     }
 
+    setFieldErrors({});
     setCreateError('');
 
     // TODO: Add proper owner_id from auth context and other required fields
@@ -70,54 +79,71 @@ export const CreateGameForm = ({ activeTournamentId, onSuccess }: CreateGameForm
 
   return (
     <View style={{ padding: 20 }}>
-      <FormTitle>Create Private Game</FormTitle>
-
-      <InputLabel>Game Name</InputLabel>
-      <FormInput
+      <Input
+        label="Game Name"
         value={gameName}
-        onChangeText={setGameName}
+        onChangeText={(text) => {
+          setGameName(text);
+          if (fieldErrors.gameName) {
+            setFieldErrors((prev) => ({ ...prev, gameName: undefined }));
+          }
+        }}
         placeholder="Game Name"
         placeholderTextColor={theme.colors.text.secondary}
+        error={fieldErrors.gameName}
       />
 
-      <InputLabel>Tournament (optional)</InputLabel>
-      <FormInput
+      <Input
+        label="Tournament (optional)"
         value={tournamentName}
         onChangeText={setTournamentName}
         placeholder="Tournament Name"
         placeholderTextColor={theme.colors.text.secondary}
       />
 
-      <InputLabel>Game Type</InputLabel>
-      <RadioGroup>
-        <RadioButton
-          label="Public"
-          selected={gameType === 'public'}
-          onPress={() => setGameType('public')}
-        />
-        <RadioButton
-          label="Private"
-          selected={gameType === 'private'}
-          onPress={() => setGameType('private')}
-        />
-      </RadioGroup>
+      <GameTypeRow>
+        <InputLabel>Game Type</InputLabel>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <SwitchLabel isActive={gameType === 'public'}>Public</SwitchLabel>
+          <Switch
+            value={gameType === 'private'}
+            onValueChange={(value) => setGameType(value ? 'private' : 'public')}
+            trackColor={{ false: '#E5E5EA', true: '#34C759' }}
+            thumbColor="#FFFFFF"
+            ios_backgroundColor="#E5E5EA"
+          />
+          <SwitchLabel isActive={gameType === 'private'}>Private</SwitchLabel>
+        </View>
+      </GameTypeRow>
 
-      <InputLabel>Entry Fee (min £20 max £1500)</InputLabel>
-      <FormInput
+      <Input
+        label="Entry Fee (min £20 max £1500)"
         value={entryFee}
-        onChangeText={setEntryFee}
+        onChangeText={(text) => {
+          setEntryFee(text);
+          if (fieldErrors.entryFee) {
+            setFieldErrors((prev) => ({ ...prev, entryFee: undefined }));
+          }
+        }}
         placeholder="£40"
         keyboardType="numeric"
         placeholderTextColor={theme.colors.text.secondary}
+        error={fieldErrors.entryFee}
       />
 
-      <InputLabel>Max ENTRIES per user</InputLabel>
-      <FormInput
+      <Input
+        label="Max ENTRIES per user"
         value={maxEntries}
-        onChangeText={setMaxEntries}
+        onChangeText={(text) => {
+          setMaxEntries(text);
+          if (fieldErrors.maxEntries) {
+            setFieldErrors((prev) => ({ ...prev, maxEntries: undefined }));
+          }
+        }}
         placeholder="=3"
         keyboardType="numeric"
         placeholderTextColor={theme.colors.text.secondary}
+        error={fieldErrors.maxEntries}
       />
 
       {createError ? <ErrorText>{createError}</ErrorText> : null}

@@ -50,23 +50,13 @@ export const TournamentGames = () => {
     navigation.setOptions({
       headerShown: true,
       title: 'LIVE',
-      headerStyle: {
-        backgroundColor: theme.colors.primary,
-      },
-      headerTintColor: theme.colors.white,
-      headerTitleStyle: {
-        fontWeight: '600',
-        fontSize: 20,
-      },
-      headerShadowVisible: false,
-      headerBackTitle: '',
       headerRight: () => (
         <CreateButton onPress={handleCreateGame}>
           <CreateButtonText>+</CreateButtonText>
         </CreateButton>
       ),
     });
-  }, [navigation, theme, activeTournament, tournaments]);
+  }, [navigation, activeTournament, tournaments]);
 
   // Set active tournament from route params or default to first tournament when loaded
   useEffect(() => {

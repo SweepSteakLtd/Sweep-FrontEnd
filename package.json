@@ -42,7 +42,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-url-polyfill": "^3.0.0",
     "react-native-web": "~0.19.13",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/react": "~18.3.12",

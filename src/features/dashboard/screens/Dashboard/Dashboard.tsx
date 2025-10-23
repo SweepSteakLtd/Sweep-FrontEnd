@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
 import { FlatList, View } from 'react-native';
-import { useTheme } from 'styled-components/native';
 import { useAuth } from '~/contexts/AuthContext';
 import {
   Tournament,
@@ -24,7 +23,6 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const Dashboard = () => {
   const navigation = useNavigation<NavigationProp>();
-  const theme = useTheme();
   const { signOut } = useAuth();
   const { data: tournaments = [], isLoading: loading, error } = useGetTournaments();
 
@@ -37,15 +35,6 @@ export const Dashboard = () => {
     navigation.setOptions({
       headerShown: true,
       title: 'Tournaments',
-      headerStyle: {
-        backgroundColor: theme.colors.primary,
-      },
-      headerTintColor: theme.colors.white,
-      headerTitleStyle: {
-        fontWeight: '600',
-        fontSize: 20,
-      },
-      headerShadowVisible: false,
       headerBackVisible: false,
       headerLeft: () => null,
       headerRight: () => (
@@ -54,7 +43,7 @@ export const Dashboard = () => {
         </LogoutButton>
       ),
     });
-  }, [navigation, theme]);
+  }, [navigation]);
 
   const handleTournamentPress = (tournament: Tournament) => {
     // Navigate to the games listing screen for this tournament

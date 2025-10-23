@@ -7,10 +7,17 @@ import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
 import { useLogin } from '~/features/auth/hooks/useLogin';
+import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
+import { loginSchema } from './validation';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+interface FieldErrors extends Record<string, string | undefined> {
+  email?: string;
+  password?: string;
+}
 
 export const Login = () => {
   const theme = useTheme();
@@ -19,12 +26,26 @@ export const Login = () => {
 
   const [email, setEmail] = useState('karamvir.mangat@uvconsulting.net');
   const [password, setPassword] = useState('Hello123');
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   const handleSignIn = async () => {
-    const result = await login(email, password);
+    // Validate using Zod
+    const validation = validateWithZod<FieldErrors>(loginSchema, {
+      email,
+      password,
+    });
 
-    if (result.success) {
-      if (result.profileComplete) {
+    if (!validation.success) {
+      setFieldErrors(validation.errors);
+      return;
+    }
+
+    setFieldErrors({});
+
+    const loginResult = await login(email, password);
+
+    if (loginResult.success) {
+      if (loginResult.profileComplete) {
         // User has profile - go to Dashboard
         navigation.navigate('Dashboard');
       } else {
@@ -63,19 +84,31 @@ export const Login = () => {
         <Input
           label="Email"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            if (fieldErrors.email) {
+              setFieldErrors((prev) => ({ ...prev, email: undefined }));
+            }
+          }}
           placeholder="email@address.com"
           autoCapitalize="none"
           keyboardType="email-address"
+          error={fieldErrors.email}
         />
 
         <Input
           label="Password"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={(text) => {
+            setPassword(text);
+            if (fieldErrors.password) {
+              setFieldErrors((prev) => ({ ...prev, password: undefined }));
+            }
+          }}
           placeholder="Password"
           secureTextEntry
           autoCapitalize="none"
+          error={fieldErrors.password}
         />
 
         <Button

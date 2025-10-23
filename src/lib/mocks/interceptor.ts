@@ -1,3 +1,4 @@
+import { logApiRequest, logApiResponse } from '~/lib/debug/apiLogger';
 import { mockHandlers } from './handlers/registry';
 import { getMockConfig } from './storage';
 import type { MockConfig, MockHandler } from './types';
@@ -93,10 +94,13 @@ const createMockResponse = (status: number, data: any): Response => {
  * Intercepted fetch function
  */
 const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-  try {
-    const url = typeof input === 'string' ? input : input.toString();
-    const method = init?.method || 'GET';
+  const url = typeof input === 'string' ? input : input.toString();
+  const method = init?.method || 'GET';
 
+  // Log the request
+  logApiRequest(url, method, init);
+
+  try {
     const config = await getCachedMockConfig();
     const handler = findMatchingHandler(url, method, config);
 
@@ -106,7 +110,9 @@ const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promis
 
       if (!selectedScenario) {
         console.warn(`[MockInterceptor]: No scenario selected for ${handler.name}`);
-        return originalFetch(input, init);
+        const response = await originalFetch(input, init);
+        await logApiResponse(url, method, response, false);
+        return response;
       }
 
       const mockResponse = handler.scenarios[selectedScenario];
@@ -115,7 +121,9 @@ const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promis
         console.warn(
           `[MockInterceptor]: Scenario '${selectedScenario}' not found for ${handler.name}`,
         );
-        return originalFetch(input, init);
+        const response = await originalFetch(input, init);
+        await logApiResponse(url, method, response, false);
+        return response;
       }
 
       // Determine delay with priority: global > handler > scenario
@@ -134,7 +142,9 @@ const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promis
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
 
-      return createMockResponse(mockResponse.status, mockResponse.data);
+      const response = createMockResponse(mockResponse.status, mockResponse.data);
+      await logApiResponse(url, method, response, true);
+      return response;
     }
   } catch (error) {
     console.error('[MockInterceptor]: Error in mock interceptor:', error);
@@ -142,7 +152,9 @@ const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promis
   }
 
   // No mock matched or error occurred - use original fetch
-  return originalFetch(input, init);
+  const response = await originalFetch(input, init);
+  await logApiResponse(url, method, response, false);
+  return response;
 };
 
 /**

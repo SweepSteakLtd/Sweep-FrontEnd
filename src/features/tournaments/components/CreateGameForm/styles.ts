@@ -9,9 +9,9 @@ export const FormTitle = styled.Text`
 `;
 
 export const InputLabel = styled.Text`
-  font-size: 14px;
-  font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+  font-size: 13px;
+  font-weight: 400;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
   margin-bottom: 8px;
   margin-top: 16px;
 `;
@@ -26,10 +26,19 @@ export const FormInput = styled.TextInput`
   border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
 `;
 
-export const RadioGroup = styled.View`
+export const GameTypeRow = styled.View`
   flex-direction: row;
-  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 8px;
+  margin-bottom: 16px;
+`;
+
+export const SwitchLabel = styled.Text<{ isActive: boolean }>`
+  font-size: 14px;
+  font-weight: 400;
+  color: ${({ theme, isActive }: { theme: Theme; isActive: boolean }) =>
+    isActive ? theme.colors.primary : theme.colors.text.secondary};
 `;
 
 export const ButtonContainer = styled.View`
