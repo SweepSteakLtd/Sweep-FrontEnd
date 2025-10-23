@@ -1,8 +1,9 @@
 import styled from 'styled-components/native';
+import type { Theme } from '~/theme/theme';
 
-export const Container = styled.View`
+export const Container = styled.View<{ theme: Theme }>`
   flex: 1;
-  background-color: ${(props: any) => props.theme.colors.primary};
+  background-color: ${(props: { theme: Theme }) => props.theme.colors.primary};
   align-items: center;
   justify-content: space-between;
   padding: 60px 30px 30px 30px;
@@ -21,11 +22,11 @@ export const LogoContainer = styled.View`
   align-items: center;
 `;
 
-export const LogoCircle = styled.View`
+export const LogoCircle = styled.View<{ theme: Theme }>`
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: ${(props: any) => props.theme.colors.white};
+  background-color: ${(props: { theme: Theme }) => props.theme.colors.white};
   align-items: center;
   justify-content: center;
   margin-right: 10px;
@@ -55,8 +56,8 @@ export const PlaceholderImage = styled.View`
   justify-content: center;
 `;
 
-export const PrizeContainer = styled.View`
-  background-color: ${(props: any) => props.theme.colors.white};
+export const PrizeContainer = styled.View<{ theme: Theme }>`
+  background-color: ${(props: { theme: Theme }) => props.theme.colors.white};
   padding: 15px 25px;
   border-radius: 25px;
   margin-bottom: 15px;

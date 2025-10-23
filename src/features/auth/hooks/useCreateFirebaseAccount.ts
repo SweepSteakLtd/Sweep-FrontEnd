@@ -15,7 +15,7 @@ export const useCreateFirebaseAccount = () => {
       await createUserWithEmailAndPassword(firebaseAuth, email, password);
       setLoading(false);
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       setLoading(false);
 
       const { title, message } = getAuthErrorMessage(error);

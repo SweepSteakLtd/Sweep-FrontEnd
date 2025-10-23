@@ -1,6 +1,6 @@
 export interface MockResponse {
   status: number;
-  data: any;
+  data: unknown;
   delay?: number;
 }
 

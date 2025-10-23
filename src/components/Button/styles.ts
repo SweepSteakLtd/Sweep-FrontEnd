@@ -1,9 +1,10 @@
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
+import type { Theme } from '~/theme/theme';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'link';
 
-export const getBackgroundColor = (variant: ButtonVariant, disabled: boolean, theme: any) => {
+export const getBackgroundColor = (variant: ButtonVariant, disabled: boolean, theme: Theme) => {
   if (variant === 'link') return 'transparent';
   if (disabled) return '#8b8b8b';
 
@@ -19,7 +20,7 @@ export const getBackgroundColor = (variant: ButtonVariant, disabled: boolean, th
   }
 };
 
-export const getTextColor = (variant: ButtonVariant, theme: any) => {
+export const getTextColor = (variant: ButtonVariant, theme: Theme) => {
   switch (variant) {
     case 'primary':
       return theme.colors.button.text;
@@ -34,7 +35,7 @@ export const getTextColor = (variant: ButtonVariant, theme: any) => {
   }
 };
 
-export const getBorderColor = (variant: ButtonVariant, theme: any) => {
+export const getBorderColor = (variant: ButtonVariant, theme: Theme) => {
   if (variant === 'link') return 'transparent';
   return variant === 'outline' ? theme.colors.white : 'transparent';
 };
@@ -43,7 +44,7 @@ interface StyledButtonProps {
   variant: ButtonVariant;
   disabled: boolean;
   fullWidth: boolean;
-  theme: any;
+  theme: Theme;
 }
 
 export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
@@ -62,7 +63,7 @@ export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
 
 interface ButtonTextProps {
   variant: ButtonVariant;
-  theme: any;
+  theme: Theme;
 }
 
 export const ButtonText = styled.Text<ButtonTextProps>`

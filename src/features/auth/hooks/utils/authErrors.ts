@@ -52,10 +52,16 @@ const DEFAULT_ERROR: ErrorResponse = {
   message: 'An error occurred. Please try again.',
 };
 
-export const getAuthErrorMessage = (error: AuthError): ErrorResponse => {
-  if (!error?.code) {
+export const getAuthErrorMessage = (error: unknown): ErrorResponse => {
+  // Type guard to check if error is an AuthError
+  if (!error || typeof error !== 'object' || !('code' in error)) {
     return DEFAULT_ERROR;
   }
 
-  return AUTH_ERROR_MESSAGES[error.code] || DEFAULT_ERROR;
+  const authError = error as AuthError;
+  if (!authError.code) {
+    return DEFAULT_ERROR;
+  }
+
+  return AUTH_ERROR_MESSAGES[authError.code] || DEFAULT_ERROR;
 };

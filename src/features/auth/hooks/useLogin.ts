@@ -52,7 +52,7 @@ export const useLogin = () => {
         // Assume no profile on error
         return { success: true, profileComplete: false };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setLoading(false);
       const { title, message } = getAuthErrorMessage(error);
       showAlert({ title, message });

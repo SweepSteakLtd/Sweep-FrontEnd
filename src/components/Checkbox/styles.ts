@@ -1,5 +1,6 @@
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
+import type { Theme } from '~/theme/theme';
 
 export const Container = styled(TouchableOpacity)`
   flex-direction: row;
@@ -11,7 +12,7 @@ export const Container = styled(TouchableOpacity)`
 
 interface CheckboxBoxProps {
   checked: boolean;
-  theme: any;
+  theme: Theme;
 }
 
 export const CheckboxBox = styled.View<CheckboxBoxProps>`

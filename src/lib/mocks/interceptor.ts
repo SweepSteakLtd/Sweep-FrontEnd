@@ -77,7 +77,7 @@ const findMatchingHandler = (
 /**
  * Create a mock Response object
  */
-const createMockResponse = (status: number, data: any): Response => {
+const createMockResponse = (status: number, data: unknown): Response => {
   const body = JSON.stringify(data);
 
   return new Response(body, {

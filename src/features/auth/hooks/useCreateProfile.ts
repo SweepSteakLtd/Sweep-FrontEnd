@@ -22,11 +22,12 @@ export const useCreateProfile = () => {
       await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
       setLoading(false);
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       setLoading(false);
+      const errorMessage = error instanceof Error ? error.message : 'Please try again.';
       showAlert({
         title: 'Failed to create profile',
-        message: error.message || 'Please try again.',
+        message: errorMessage,
       });
       return false;
     }
