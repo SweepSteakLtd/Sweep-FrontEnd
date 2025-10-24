@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-10-23T11:32:36.491Z
+ * Generated: 2025-10-24T10:59:59.415Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -94,6 +94,20 @@ export const betSchema = z.object({
 
 export type Bet = z.infer<typeof betSchema>;
 
+// Transaction
+export const transactionSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  value: z.string().optional(),
+  type: z.string().optional(),
+  charge_id: z.string().optional(),
+  user_id: z.string().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
+export type Transaction = z.infer<typeof transactionSchema>;
+
 // API Response Wrappers
 export const usersResponseSchema = z.object({
   data: z.array(userSchema),
@@ -118,3 +132,9 @@ export const betsResponseSchema = z.object({
 });
 
 export type BetsResponse = z.infer<typeof betsResponseSchema>;
+
+export const transactionsResponseSchema = z.object({
+  data: z.array(transactionSchema),
+});
+
+export type TransactionsResponse = z.infer<typeof transactionsResponseSchema>;

@@ -158,8 +158,10 @@ async function verifySchemas() {
       process.exit(1);
     }
   } catch (error) {
-    console.error('❌ Error verifying schemas:', error);
-    process.exit(1);
+    console.error('⚠️  Failed to fetch OpenAPI spec (API may be unavailable)');
+    console.error('⚠️  Allowing commit to proceed...\n');
+    // Exit code 2 indicates fetch failure (allow commit)
+    process.exit(2);
   }
 }
 

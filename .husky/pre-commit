@@ -18,13 +18,20 @@ fi
 # Verify API schemas are in sync with OpenAPI spec
 echo ""
 echo "🔍 Verifying API schemas..."
-if yarn verify-schemas; then
+yarn verify-schemas
+SCHEMA_EXIT_CODE=$?
+
+if [ $SCHEMA_EXIT_CODE -eq 0 ]; then
   echo "✅ API schemas are in sync"
-else
-  echo ""
-  echo "⚠️  Schema verification failed (this may be due to API being unavailable)"
+elif [ $SCHEMA_EXIT_CODE -eq 2 ]; then
+  # Exit code 2 = API fetch failed, allow commit to proceed
   echo "⚠️  To fix schema mismatch when API is available, run: yarn generate-schemas"
-  echo "⚠️  Allowing commit to proceed..."
+else
+  # Exit code 1 = Schema mismatch detected, block commit
+  echo ""
+  echo "❌ Schema mismatch detected! Commit blocked."
+  echo "❌ Please run 'yarn generate-schemas' to fix the schemas before committing."
+  exit 1
 fi
 
 # Run Prettier on staged files
