@@ -82,7 +82,69 @@ yarn build:web               # Build for web deployment
 yarn test:android            # Install and run test build on Android emulator
 yarn format                  # Format code with Prettier
 yarn type-check             # Run TypeScript type checking
+yarn lint                    # Run ESLint
+yarn generate-schemas        # Generate API schemas from OpenAPI spec
+yarn verify-schemas          # Verify schemas match OpenAPI spec
+yarn export-mocks            # Export mock API documentation
 ```
+
+### Code Quality & Pre-commit Checks
+
+The project uses pre-commit hooks to ensure code quality. When you attempt to commit, the following checks run automatically:
+
+1. **Mock API Documentation** - Exports and stages updated mock documentation
+2. **Schema Verification** - Verifies API schemas match the OpenAPI specification
+3. **Code Formatting** - Runs Prettier on staged files
+4. **Linting** - Runs ESLint on staged files
+5. **Type Checking** - Runs TypeScript type checker
+
+#### Troubleshooting Failed Commits
+
+If your commit is blocked, here's how to fix each type of failure:
+
+**❌ Schema Mismatch**
+```bash
+# Error: "Schema mismatch detected! Commit blocked."
+# Fix: Regenerate schemas from the latest API
+yarn generate-schemas
+
+# Then try committing again
+git commit -m "your message"
+```
+
+**❌ ESLint Errors**
+```bash
+# Error: "ESLint found errors"
+# Fix: Run ESLint and fix issues
+yarn lint
+
+# Or auto-fix where possible
+yarn lint --fix
+
+# Then try committing again
+git commit -m "your message"
+```
+
+**❌ TypeScript Errors**
+```bash
+# Error: "Type check failed"
+# Fix: Run type checker to see errors
+yarn type-check
+
+# Fix the TypeScript errors shown
+# Then try committing again
+git commit -m "your message"
+```
+
+**⚠️ API Unavailable**
+```bash
+# Warning: "Failed to fetch OpenAPI spec"
+# This is just a warning - your commit will proceed automatically
+# Fix schemas later when API is available:
+yarn generate-schemas
+```
+
+**Note:** Code formatting (Prettier) runs automatically and stages the formatted files, so you don't need to do anything if only formatting issues are found.
 
 ## 🏗️ Project Structure
 
