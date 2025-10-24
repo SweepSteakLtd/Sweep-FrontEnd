@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useContext, useMemo, useRef, useStat
 import { useTheme } from 'styled-components/native';
 import type { DropdownOption } from '~/components/Dropdown/Dropdown';
 import { Typography } from '~/components/Typography/Typography';
-import { OptionItem, SheetContainer, SheetHeader } from './BottomSheetContext.styles';
+import { CheckIcon, OptionItem, SheetContainer, SheetHeader } from './BottomSheetContext.styles';
 
 interface BottomSheetOptions {
   title: string;
@@ -50,24 +50,26 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({ c
   );
 
   const renderItem = useCallback(
-    ({ item }: { item: DropdownOption }) => (
-      <OptionItem
-        onPress={() => handleSelect(item.value)}
-        activeOpacity={0.7}
-        isSelected={item.value === options?.selectedValue}
-        theme={theme}
-      >
-        <Typography
-          variant="body"
-          color={
-            item.value === options?.selectedValue ? theme.colors.primary : theme.colors.text.primary
-          }
-          weight={item.value === options?.selectedValue ? 'bold' : 'normal'}
+    ({ item }: { item: DropdownOption }) => {
+      const isSelected = item.value === options?.selectedValue;
+      return (
+        <OptionItem
+          onPress={() => handleSelect(item.value)}
+          activeOpacity={0.7}
+          isSelected={isSelected}
+          theme={theme}
         >
-          {item.label}
-        </Typography>
-      </OptionItem>
-    ),
+          <Typography
+            variant="body"
+            color={isSelected ? theme.colors.primary : theme.colors.text.primary}
+            weight={isSelected ? 'bold' : 'normal'}
+          >
+            {item.label}
+          </Typography>
+          {isSelected && <CheckIcon theme={theme}>✓</CheckIcon>}
+        </OptionItem>
+      );
+    },
     [options?.selectedValue, theme, handleSelect],
   );
 

@@ -4,13 +4,7 @@ import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { TabBar } from '~/components/TabBar/TabBar';
 import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
 import { SearchAndTabsWrapper } from '~/features/tournaments/components/JoinGameList/styles';
-import { Container, PotInfo, PotLabel, SegmentedTabWrapper } from './styles';
-
-interface TournamentGamesSkeletonProps {
-  tournamentTabs?: { id: string; label: string }[];
-  activeTournament?: string;
-  onTabPress?: (id: string) => void;
-}
+import { Container, PotInfo, PotLabel } from './styles';
 
 const gameTabs = [
   { id: 'featured', label: 'Featured' },
@@ -18,26 +12,12 @@ const gameTabs = [
   { id: 'private', label: 'Private' },
 ];
 
-export const TournamentGamesSkeleton = ({
-  tournamentTabs = [],
-  activeTournament = '',
-  onTabPress = () => {},
-}: TournamentGamesSkeletonProps) => {
+export const TournamentGamesSkeleton = () => {
   const theme = useTheme();
 
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Tournament Tabs - Always interactive, never loading */}
-        <SegmentedTabWrapper>
-          <TabBar
-            tabs={tournamentTabs}
-            activeTab={activeTournament}
-            onTabPress={onTabPress}
-            loading={false}
-          />
-        </SegmentedTabWrapper>
-
         <PotInfo>
           <PotLabel>Total Staked</PotLabel>
           <AnimatedAmount

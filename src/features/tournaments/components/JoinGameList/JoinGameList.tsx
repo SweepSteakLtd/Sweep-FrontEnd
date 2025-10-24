@@ -4,12 +4,21 @@ import { TabBar } from '~/components/TabBar/TabBar';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
 import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
 import type { Game } from '~/services/apis/Game/types';
-import { EmptyState, EmptyStateText, SearchAndTabsWrapper, SearchWrapper } from './styles';
+import {
+  CreateButton,
+  CreateButtonText,
+  EmptyState,
+  EmptyStateText,
+  SearchAndCreateRow,
+  SearchAndTabsWrapper,
+  SearchWrapper,
+} from './styles';
 
 interface JoinGameListProps {
   games: Game[];
   onGamePress?: (game: Game) => void;
   onGameDelete?: (gameId: string) => void;
+  onCreateGame?: () => void;
   loading?: boolean;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
@@ -27,6 +36,7 @@ export const JoinGameList = ({
   games,
   onGamePress,
   onGameDelete,
+  onCreateGame,
   loading = false,
   searchQuery = '',
   onSearchChange,
@@ -53,7 +63,7 @@ export const JoinGameList = ({
 
   return (
     <>
-      {/* Search and Tabs in one section */}
+      {/* Tabs with more padding */}
       <SearchAndTabsWrapper>
         <TabBar
           tabs={gameTabs}
@@ -61,6 +71,10 @@ export const JoinGameList = ({
           onTabPress={onGameTabChange || (() => {})}
           loading={false}
         />
+      </SearchAndTabsWrapper>
+
+      {/* Search and Create row aligned with list items */}
+      <SearchAndCreateRow>
         <SearchWrapper style={{ opacity: activeGameTab === 'private' ? 0 : 1 }}>
           <SearchInput
             value={searchQuery}
@@ -69,7 +83,12 @@ export const JoinGameList = ({
             editable={activeGameTab !== 'private'}
           />
         </SearchWrapper>
-      </SearchAndTabsWrapper>
+        {onCreateGame && (
+          <CreateButton onPress={onCreateGame}>
+            <CreateButtonText>+</CreateButtonText>
+          </CreateButton>
+        )}
+      </SearchAndCreateRow>
 
       {loading && filteredGames.length === 0 ? (
         <GameCardSkeleton />
