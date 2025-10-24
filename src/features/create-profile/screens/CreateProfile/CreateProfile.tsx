@@ -100,7 +100,8 @@ export const CreateProfile = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <FormContainer>
           <Input
-          variant="light"            label="First Name"
+            variant="light"
+            label="First Name"
             value={firstName}
             onChangeText={(text) => {
               setFirstName(text);
@@ -114,7 +115,8 @@ export const CreateProfile = () => {
           />
 
           <Input
-          variant="light"            label="Last Name"
+            variant="light"
+            label="Last Name"
             value={lastName}
             onChangeText={(text) => {
               setLastName(text);
@@ -128,7 +130,8 @@ export const CreateProfile = () => {
           />
 
           <Input
-          variant="light"            label="Phone Number"
+            variant="light"
+            label="Phone Number"
             value={phoneNumber}
             onChangeText={(text) => {
               setPhoneNumber(text);
@@ -142,7 +145,8 @@ export const CreateProfile = () => {
           />
 
           <Input
-          variant="light"            label="Bio (Optional)"
+            variant="light"
+            label="Bio (Optional)"
             value={bio}
             onChangeText={(text) => {
               setBio(text);
@@ -157,7 +161,8 @@ export const CreateProfile = () => {
           />
 
           <Input
-          variant="light"            label="Deposit Limit (Optional)"
+            variant="light"
+            label="Deposit Limit (Optional)"
             value={depositLimit}
             onChangeText={(text) => {
               setDepositLimit(text);
@@ -171,7 +176,8 @@ export const CreateProfile = () => {
           />
 
           <Input
-          variant="light"            label="Betting Limit (Optional)"
+            variant="light"
+            label="Betting Limit (Optional)"
             value={bettingLimit}
             onChangeText={(text) => {
               setBettingLimit(text);

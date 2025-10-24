@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
@@ -76,48 +77,50 @@ export const Login = () => {
         </Typography>
       </Header>
 
-      <FormContainer>
-        <Input
-          variant="light"
-          label="Email"
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-            if (fieldErrors.email) {
-              setFieldErrors((prev) => ({ ...prev, email: undefined }));
-            }
-          }}
-          placeholder="email@address.com"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          error={fieldErrors.email}
-        />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <FormContainer>
+          <Input
+            variant="light"
+            label="Email"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+              if (fieldErrors.email) {
+                setFieldErrors((prev) => ({ ...prev, email: undefined }));
+              }
+            }}
+            placeholder="email@address.com"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            error={fieldErrors.email}
+          />
 
-        <Input
-          variant="light"
-          label="Password"
-          value={password}
-          onChangeText={(text) => {
-            setPassword(text);
-            if (fieldErrors.password) {
-              setFieldErrors((prev) => ({ ...prev, password: undefined }));
-            }
-          }}
-          placeholder="Password"
-          secureTextEntry
-          autoCapitalize="none"
-          error={fieldErrors.password}
-        />
+          <Input
+            variant="light"
+            label="Password"
+            value={password}
+            onChangeText={(text) => {
+              setPassword(text);
+              if (fieldErrors.password) {
+                setFieldErrors((prev) => ({ ...prev, password: undefined }));
+              }
+            }}
+            placeholder="Password"
+            secureTextEntry
+            autoCapitalize="none"
+            error={fieldErrors.password}
+          />
 
-        <Button
-          disabled={loading}
-          loading={loading}
-          onPress={handleSignIn}
-          style={{ marginTop: 20 }}
-        >
-          Sign In
-        </Button>
-      </FormContainer>
+          <Button
+            disabled={loading}
+            loading={loading}
+            onPress={handleSignIn}
+            style={{ marginTop: 20 }}
+          >
+            Sign In
+          </Button>
+        </FormContainer>
+      </ScrollView>
 
       <Button variant="link" onPress={() => navigation.goBack()} fullWidth={false}>
         {'< Back to Home'}

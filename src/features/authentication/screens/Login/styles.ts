@@ -28,5 +28,5 @@ export const Header = styled.View<{ theme: Theme }>`
 `;
 
 export const FormContainer = styled.View<{ theme: Theme }>`
-  flex: 1;
+  width: 100%;
 `;

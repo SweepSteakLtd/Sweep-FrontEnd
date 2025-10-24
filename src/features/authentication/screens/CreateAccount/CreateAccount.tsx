@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
@@ -78,64 +79,66 @@ export const CreateAccount = () => {
         </Typography>
       </Header>
 
-      <FormContainer>
-        <Input
-          label="Email"
-          variant="light"
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-            if (fieldErrors.email) {
-              setFieldErrors((prev) => ({ ...prev, email: undefined }));
-            }
-          }}
-          placeholder="email@address.com"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          error={fieldErrors.email}
-        />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <FormContainer>
+          <Input
+            label="Email"
+            variant="light"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+              if (fieldErrors.email) {
+                setFieldErrors((prev) => ({ ...prev, email: undefined }));
+              }
+            }}
+            placeholder="email@address.com"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            error={fieldErrors.email}
+          />
 
-        <Input
-          label="Password"
-          variant="light"
-          value={password}
-          onChangeText={(text) => {
-            setPassword(text);
-            if (fieldErrors.password) {
-              setFieldErrors((prev) => ({ ...prev, password: undefined }));
-            }
-          }}
-          placeholder="Password"
-          secureTextEntry
-          autoCapitalize="none"
-          error={fieldErrors.password}
-        />
+          <Input
+            label="Password"
+            variant="light"
+            value={password}
+            onChangeText={(text) => {
+              setPassword(text);
+              if (fieldErrors.password) {
+                setFieldErrors((prev) => ({ ...prev, password: undefined }));
+              }
+            }}
+            placeholder="Password"
+            secureTextEntry
+            autoCapitalize="none"
+            error={fieldErrors.password}
+          />
 
-        <Input
-          label="Confirm Password"
-          variant="light"
-          value={confirmPassword}
-          onChangeText={(text) => {
-            setConfirmPassword(text);
-            if (fieldErrors.confirmPassword) {
-              setFieldErrors((prev) => ({ ...prev, confirmPassword: undefined }));
-            }
-          }}
-          placeholder="Confirm Password"
-          secureTextEntry
-          autoCapitalize="none"
-          error={fieldErrors.confirmPassword}
-        />
+          <Input
+            label="Confirm Password"
+            variant="light"
+            value={confirmPassword}
+            onChangeText={(text) => {
+              setConfirmPassword(text);
+              if (fieldErrors.confirmPassword) {
+                setFieldErrors((prev) => ({ ...prev, confirmPassword: undefined }));
+              }
+            }}
+            placeholder="Confirm Password"
+            secureTextEntry
+            autoCapitalize="none"
+            error={fieldErrors.confirmPassword}
+          />
 
-        <Button
-          disabled={loading}
-          loading={loading}
-          onPress={handleContinue}
-          style={{ marginTop: 20 }}
-        >
-          Continue
-        </Button>
-      </FormContainer>
+          <Button
+            disabled={loading}
+            loading={loading}
+            onPress={handleContinue}
+            style={{ marginTop: 20 }}
+          >
+            Continue
+          </Button>
+        </FormContainer>
+      </ScrollView>
 
       <Button variant="link" onPress={() => navigation.goBack()} fullWidth={false}>
         {'< Back to Home'}
