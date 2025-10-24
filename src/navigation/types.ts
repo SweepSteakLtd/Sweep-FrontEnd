@@ -8,6 +8,7 @@ export type RootStackParamList = {
   CreateAccount: undefined;
   CreateProfile: undefined;
   Dashboard: undefined;
+  Profile: undefined;
   Settings: undefined;
   TournamentGames: { tournamentId: string };
   CreateGame: { tournamentId: string; defaultGameType?: 'public' | 'private' };

@@ -12,6 +12,7 @@ import { CreateGame } from '~/features/games/screens/CreateGame/CreateGame';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
 import { Landing } from '~/features/onboarding/screens/Landing/Landing';
 import { Splash } from '~/features/onboarding/screens/Splash/Splash';
+import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
 import { TournamentGames } from '~/features/tournaments/screens/TournamentGames/TournamentGames';
 import type { RootStackParamList } from './types';
@@ -54,6 +55,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="CreateProfile" component={CreateProfile} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
+        <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="TournamentGames" component={TournamentGames} />
         <Stack.Screen name="CreateGame" component={CreateGame} />
         <Stack.Screen name="Settings" component={Settings} />

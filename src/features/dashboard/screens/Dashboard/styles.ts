@@ -6,15 +6,15 @@ export const Container = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
 `;
 
-export const LogoutButton = styled.TouchableOpacity`
-  padding: 8px 16px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white}20;
-  border-radius: 8px;
+export const ProfileButton = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
   margin-right: 12px;
+  gap: 8px;
 `;
 
-export const LogoutText = styled.Text`
-  font-size: 14px;
+export const ProfileBalance = styled.Text`
+  font-size: 16px;
   font-weight: 600;
   color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;

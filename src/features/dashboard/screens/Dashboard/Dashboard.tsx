@@ -3,18 +3,19 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
 import { FlatList, RefreshControl, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { useAuth } from '~/contexts/AuthContext';
+import { Avatar } from '~/components/Avatar/Avatar';
 import { TournamentCard } from '~/features/dashboard/components/TournamentCard/TournamentCard';
 import { TournamentCardSkeleton } from '~/features/dashboard/components/TournamentCard/TournamentCardSkeleton';
 import type { RootStackParamList } from '~/navigation/types';
 import type { Tournament } from '~/services/apis/schemas';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
+import { useGetUser } from '~/services/apis/User/useGetUser';
 import {
   Container,
   EmptyState,
   EmptyStateText,
-  LogoutButton,
-  LogoutText,
+  ProfileBalance,
+  ProfileButton,
   TournamentGrid,
 } from './styles';
 
@@ -23,7 +24,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const Dashboard = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
-  const { signOut } = useAuth();
+  const { data: user } = useGetUser();
   const {
     data: tournaments = [],
     isLoading: loading,
@@ -32,12 +33,17 @@ export const Dashboard = () => {
     refetch,
   } = useGetTournaments();
 
-  const handleLogout = async () => {
-    await signOut();
+  const formatBalance = (balance?: number) => {
+    if (balance === undefined || balance === null) return '£0.00';
+    return `£${balance.toFixed(2)}`;
   };
 
   const handleRefresh = async () => {
     await refetch();
+  };
+
+  const handleProfilePress = () => {
+    navigation.navigate('Profile');
   };
 
   // Configure navigation header
@@ -48,12 +54,13 @@ export const Dashboard = () => {
       headerBackVisible: false,
       headerLeft: () => null,
       headerRight: () => (
-        <LogoutButton onPress={handleLogout}>
-          <LogoutText>Logout</LogoutText>
-        </LogoutButton>
+        <ProfileButton onPress={handleProfilePress}>
+          <ProfileBalance>{formatBalance(user?.current_balance)}</ProfileBalance>
+          <Avatar size={32} />
+        </ProfileButton>
       ),
     });
-  }, [navigation]);
+  }, [navigation, user]);
 
   const handleTournamentPress = (tournament: Tournament) => {
     // Navigate to the games listing screen for this tournament
