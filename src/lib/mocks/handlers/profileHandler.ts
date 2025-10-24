@@ -16,7 +16,7 @@ import {
   profileCreationServerErrorMock,
   profileCreationSuccessMock,
   profileCreationUsernameTakenMock,
-} from '~/features/auth/mocks';
+} from '~/features/authentication/mocks';
 import type { MockHandler } from '../types';
 
 /**

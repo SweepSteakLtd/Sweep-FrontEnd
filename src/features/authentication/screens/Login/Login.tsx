@@ -6,7 +6,7 @@ import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
-import { useLogin } from '~/features/auth/hooks/useLogin';
+import { useLogin } from '~/features/authentication/hooks/useLogin';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
@@ -50,7 +50,7 @@ export const Login = () => {
         navigation.navigate('Dashboard');
       } else {
         // User needs to complete profile
-        navigation.navigate('ProfileSetup');
+        navigation.navigate('AccountSetup');
       }
     }
     // If failed, error is already shown by useLogin hook

@@ -7,11 +7,11 @@ import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
-import { useCreateProfile } from '~/features/auth/hooks/useCreateProfile';
+import { useCompleteAccountSetup } from '~/features/account-setup/hooks/useCompleteAccountSetup';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
-import { profileSetupSchema } from './validation';
+import { accountSetupSchema } from './validation';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -24,7 +24,7 @@ interface FieldErrors extends Record<string, string | undefined> {
   bettingLimit?: string;
 }
 
-export const ProfileSetup = () => {
+export const AccountSetup = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
@@ -37,11 +37,11 @@ export const ProfileSetup = () => {
   const [bettingLimit, setBettingLimit] = useState('100');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
-  const { createProfile, loading } = useCreateProfile();
+  const { completeAccountSetup, loading } = useCompleteAccountSetup();
 
   const onSubmit = async () => {
     // Validate using Zod
-    const validation = validateWithZod<FieldErrors>(profileSetupSchema, {
+    const validation = validateWithZod<FieldErrors>(accountSetupSchema, {
       firstName,
       lastName,
       phoneNumber,
@@ -57,8 +57,8 @@ export const ProfileSetup = () => {
 
     setFieldErrors({});
 
-    // Create profile
-    const success = await createProfile({
+    // Complete account setup
+    const success = await completeAccountSetup({
       first_name: firstName,
       last_name: lastName,
       phone_number: phoneNumber,
@@ -68,7 +68,7 @@ export const ProfileSetup = () => {
     });
 
     if (success) {
-      // Navigate to Dashboard after successful profile creation
+      // Navigate to Dashboard after successful account setup
       navigation.navigate('Dashboard');
     }
   };

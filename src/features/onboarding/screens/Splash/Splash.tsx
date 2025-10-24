@@ -59,10 +59,10 @@ export const Splash = () => {
               queryFn: fetchUser,
             });
 
-            targetScreen = userData ? 'Dashboard' : 'ProfileSetup';
+            targetScreen = userData ? 'Dashboard' : 'AccountSetup';
           } catch (error) {
             console.error('[DEBUG]: Failed to check user profile:', error);
-            targetScreen = 'ProfileSetup';
+            targetScreen = 'AccountSetup';
           }
         } else {
           // Not authenticated - go to Landing

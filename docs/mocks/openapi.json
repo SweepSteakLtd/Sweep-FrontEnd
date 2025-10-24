@@ -408,47 +408,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "email": {
-                          "type": "string"
-                        },
-                        "username": {
-                          "type": "string"
-                        },
-                        "displayName": {
-                          "type": "string"
-                        },
-                        "handicap": {
-                          "type": "integer"
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        }
-                      }
-                    }
-                  }
+                  "type": "object"
                 },
                 "examples": {
                   "Success": {
                     "summary": "Success",
-                    "value": {
-                      "data": {
-                        "id": "new-user-123",
-                        "email": "newuser@example.com",
-                        "username": "newuser",
-                        "displayName": "New User",
-                        "handicap": 0,
-                        "createdAt": "<timestamp>"
-                      }
-                    }
+                    "value": null
                   }
                 }
               }
@@ -459,30 +424,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    },
-                    "field": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "object"
                 },
                 "examples": {
                   "Username Taken": {
                     "summary": "Username Taken",
-                    "value": {
-                      "error": "Username already taken",
-                      "field": "username"
-                    }
+                    "value": null
                   },
                   "Invalid Data": {
                     "summary": "Invalid Data",
-                    "value": {
-                      "error": "Invalid profile data",
-                      "details": "Username must be at least 3 characters"
-                    }
+                    "value": null
                   }
                 }
               }
@@ -493,19 +444,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "object"
                 },
                 "examples": {
                   "Server Error (500)": {
                     "summary": "Server Error (500)",
-                    "value": {
-                      "error": "Failed to create profile"
-                    }
+                    "value": null
                   }
                 }
               }
@@ -728,47 +672,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "email": {
-                          "type": "string"
-                        },
-                        "username": {
-                          "type": "string"
-                        },
-                        "displayName": {
-                          "type": "string"
-                        },
-                        "handicap": {
-                          "type": "integer"
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        }
-                      }
-                    }
-                  }
+                  "type": "object"
                 },
                 "examples": {
                   "Complete Profile": {
                     "summary": "Complete Profile",
-                    "value": {
-                      "data": {
-                        "id": "mock-user-123",
-                        "email": "mock@example.com",
-                        "username": "mockuser",
-                        "displayName": "Mock User",
-                        "handicap": 15,
-                        "createdAt": "<timestamp>"
-                      }
-                    }
+                    "value": null
                   }
                 }
               }
@@ -779,19 +688,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "object"
                 },
                 "examples": {
                   "No Profile (404)": {
                     "summary": "No Profile (404)",
-                    "value": {
-                      "error": "User profile not found"
-                    }
+                    "value": null
                   }
                 }
               }
@@ -802,19 +704,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "object"
                 },
                 "examples": {
                   "Server Error (500)": {
                     "summary": "Server Error (500)",
-                    "value": {
-                      "error": "Internal server error"
-                    }
+                    "value": null
                   }
                 }
               }

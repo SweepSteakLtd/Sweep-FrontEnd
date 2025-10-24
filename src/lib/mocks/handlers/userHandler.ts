@@ -2,7 +2,7 @@ import {
   userProfileCompleteMock,
   userProfileNoProfileMock,
   userProfileServerErrorMock,
-} from '~/features/auth/mocks';
+} from '~/features/authentication/mocks';
 import type { MockHandler } from '../types';
 
 export const getUserHandler: MockHandler = {

@@ -7,13 +7,13 @@ import {
 } from '~/services/apis/User/useCreateUserProfile';
 import { userQueryKeys } from '~/services/apis/User/useGetUser';
 
-export const useCreateProfile = () => {
+export const useCompleteAccountSetup = () => {
   const { showAlert } = useAlert();
   const queryClient = useQueryClient();
   const createProfileMutation = useCreateUserProfile();
   const [loading, setLoading] = useState(false);
 
-  const createProfile = async (profileData: CreateUserProfileParams): Promise<boolean> => {
+  const completeAccountSetup = async (profileData: CreateUserProfileParams): Promise<boolean> => {
     setLoading(true);
 
     try {
@@ -26,7 +26,7 @@ export const useCreateProfile = () => {
       setLoading(false);
       const errorMessage = error instanceof Error ? error.message : 'Please try again.';
       showAlert({
-        title: 'Failed to create profile',
+        title: 'Failed to complete account setup',
         message: errorMessage,
       });
       return false;
@@ -34,7 +34,7 @@ export const useCreateProfile = () => {
   };
 
   return {
-    createProfile,
+    completeAccountSetup,
     loading: loading || createProfileMutation.isPending,
   };
 };

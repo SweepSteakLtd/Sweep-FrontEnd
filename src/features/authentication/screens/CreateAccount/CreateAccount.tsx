@@ -6,7 +6,7 @@ import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
-import { useCreateFirebaseAccount } from '~/features/auth/hooks/useCreateFirebaseAccount';
+import { useCreateFirebaseAccount } from '~/features/authentication/hooks/useCreateFirebaseAccount';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
@@ -49,8 +49,8 @@ export const CreateAccount = () => {
     const success = await createAccount(email, password);
 
     if (success) {
-      // Navigate to profile creation
-      navigation.navigate('ProfileSetup');
+      // Navigate to account setup
+      navigation.navigate('AccountSetup');
     }
   };
 

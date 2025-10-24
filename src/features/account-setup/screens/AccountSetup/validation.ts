@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const profileSetupSchema = z.object({
+export const accountSetupSchema = z.object({
   firstName: z.string().min(1, 'First name is required').min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(1, 'Last name is required').min(2, 'Last name must be at least 2 characters'),
   phoneNumber: z
@@ -32,4 +32,4 @@ export const profileSetupSchema = z.object({
     ),
 });
 
-export type ProfileSetupFormData = z.infer<typeof profileSetupSchema>;
+export type AccountSetupFormData = z.infer<typeof accountSetupSchema>;

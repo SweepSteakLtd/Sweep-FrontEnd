@@ -1,7 +1,7 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-10-23T12:42:04.377Z",
+  "generatedAt": "2025-10-24T11:30:31.344Z",
   "endpoints": [
     {
       "id": "create-bet",
@@ -256,42 +256,25 @@
           "name": "Success",
           "status": 201,
           "delay": "1000ms",
-          "response": {
-            "data": {
-              "id": "new-user-123",
-              "email": "newuser@example.com",
-              "username": "newuser",
-              "displayName": "New User",
-              "handicap": 0,
-              "createdAt": "<timestamp>"
-            }
-          }
+          "response": null
         },
         {
           "name": "Username Taken",
           "status": 400,
           "delay": "500ms",
-          "response": {
-            "error": "Username already taken",
-            "field": "username"
-          }
+          "response": null
         },
         {
           "name": "Invalid Data",
           "status": 400,
           "delay": "500ms",
-          "response": {
-            "error": "Invalid profile data",
-            "details": "Username must be at least 3 characters"
-          }
+          "response": null
         },
         {
           "name": "Server Error (500)",
           "status": 500,
           "delay": "1000ms",
-          "response": {
-            "error": "Failed to create profile"
-          }
+          "response": null
         }
       ]
     },
@@ -418,32 +401,19 @@
           "name": "Complete Profile",
           "status": 200,
           "delay": "500ms",
-          "response": {
-            "data": {
-              "id": "mock-user-123",
-              "email": "mock@example.com",
-              "username": "mockuser",
-              "displayName": "Mock User",
-              "handicap": 15,
-              "createdAt": "<timestamp>"
-            }
-          }
+          "response": null
         },
         {
           "name": "No Profile (404)",
           "status": 404,
           "delay": "500ms",
-          "response": {
-            "error": "User profile not found"
-          }
+          "response": null
         },
         {
           "name": "Server Error (500)",
           "status": 500,
           "delay": "1000ms",
-          "response": {
-            "error": "Internal server error"
-          }
+          "response": null
         }
       ]
     }
