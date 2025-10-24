@@ -12,7 +12,6 @@ export const Container = styled(TouchableOpacity)`
 
 interface CheckboxBoxProps {
   checked: boolean;
-  theme: Theme;
 }
 
 export const CheckboxBox = styled.View<CheckboxBoxProps>`
@@ -20,9 +19,9 @@ export const CheckboxBox = styled.View<CheckboxBoxProps>`
   height: 24px;
   border-radius: 4px;
   border-width: 2px;
-  border-color: ${(props: CheckboxBoxProps) => props.theme.colors.white};
-  background-color: ${(props: CheckboxBoxProps) =>
-    props.checked ? props.theme.colors.white : 'transparent'};
+  border-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  background-color: ${({ theme, checked }: { theme: Theme; checked: boolean }) =>
+    checked ? theme.colors.white : 'transparent'};
   align-items: center;
   justify-content: center;
   margin-right: 12px;

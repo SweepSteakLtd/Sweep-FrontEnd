@@ -50,7 +50,7 @@ export const Login = () => {
         navigation.navigate('Dashboard');
       } else {
         // User needs to complete profile
-        navigation.navigate('AccountSetup');
+        navigation.navigate('CreateProfile');
       }
     }
     // If failed, error is already shown by useLogin hook
@@ -71,19 +71,15 @@ export const Login = () => {
         <Typography variant="heading" color={theme.colors.white}>
           Welcome to SweepSteak
         </Typography>
-        <Typography
-          variant="body"
-          color={theme.colors.white}
-          style={{ opacity: 0.8, marginTop: 5 }}
-        >
+        <Typography variant="body" color={theme.colors.white} style={{ marginTop: 5 }}>
           Sign in to your account
         </Typography>
       </Header>
 
       <FormContainer>
         <Input
-          label="Email"
           variant="light"
+          label="Email"
           value={email}
           onChangeText={(text) => {
             setEmail(text);
@@ -98,8 +94,8 @@ export const Login = () => {
         />
 
         <Input
-          label="Password"
           variant="light"
+          label="Password"
           value={password}
           onChangeText={(text) => {
             setPassword(text);

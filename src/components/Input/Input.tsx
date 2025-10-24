@@ -45,7 +45,6 @@ export const Input: React.FC<InputProps> = ({
 
   const inputContent = (
     <StyledInput
-      theme={theme}
       isFocused={isFocused}
       hasError={!!error}
       hasCurrency={variant === 'currency'}
@@ -71,7 +70,7 @@ export const Input: React.FC<InputProps> = ({
       )}
       {variant === 'currency' ? (
         <CurrencyWrapper>
-          <CurrencyPrefix theme={theme} isFocused={isFocused} hasError={!!error}>
+          <CurrencyPrefix isFocused={isFocused} hasError={!!error}>
             <Typography variant="body" color={theme.colors.text.primary}>
               £
             </Typography>

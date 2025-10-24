@@ -7,11 +7,11 @@ import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
-import { useCompleteAccountSetup } from '~/features/account-setup/hooks/useCompleteAccountSetup';
+import { useCreateProfile } from '~/features/create-profile/hooks/useCreateProfile';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
-import { accountSetupSchema } from './validation';
+import { createProfileSchema } from './validation';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -24,7 +24,7 @@ interface FieldErrors extends Record<string, string | undefined> {
   bettingLimit?: string;
 }
 
-export const AccountSetup = () => {
+export const CreateProfile = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
@@ -37,11 +37,11 @@ export const AccountSetup = () => {
   const [bettingLimit, setBettingLimit] = useState('100');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
-  const { completeAccountSetup, loading } = useCompleteAccountSetup();
+  const { createProfile, loading } = useCreateProfile();
 
   const onSubmit = async () => {
     // Validate using Zod
-    const validation = validateWithZod<FieldErrors>(accountSetupSchema, {
+    const validation = validateWithZod<FieldErrors>(createProfileSchema, {
       firstName,
       lastName,
       phoneNumber,
@@ -57,8 +57,8 @@ export const AccountSetup = () => {
 
     setFieldErrors({});
 
-    // Complete account setup
-    const success = await completeAccountSetup({
+    // Create user profile
+    const success = await createProfile({
       first_name: firstName,
       last_name: lastName,
       phone_number: phoneNumber,
@@ -68,7 +68,7 @@ export const AccountSetup = () => {
     });
 
     if (success) {
-      // Navigate to Dashboard after successful account setup
+      // Navigate to Dashboard after successful profile creation
       navigation.navigate('Dashboard');
     }
   };
@@ -100,7 +100,7 @@ export const AccountSetup = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <FormContainer>
           <Input
-            label="First Name"
+          variant="light"            label="First Name"
             value={firstName}
             onChangeText={(text) => {
               setFirstName(text);
@@ -114,7 +114,7 @@ export const AccountSetup = () => {
           />
 
           <Input
-            label="Last Name"
+          variant="light"            label="Last Name"
             value={lastName}
             onChangeText={(text) => {
               setLastName(text);
@@ -128,7 +128,7 @@ export const AccountSetup = () => {
           />
 
           <Input
-            label="Phone Number"
+          variant="light"            label="Phone Number"
             value={phoneNumber}
             onChangeText={(text) => {
               setPhoneNumber(text);
@@ -142,7 +142,7 @@ export const AccountSetup = () => {
           />
 
           <Input
-            label="Bio (Optional)"
+          variant="light"            label="Bio (Optional)"
             value={bio}
             onChangeText={(text) => {
               setBio(text);
@@ -157,7 +157,7 @@ export const AccountSetup = () => {
           />
 
           <Input
-            label="Deposit Limit (Optional)"
+          variant="light"            label="Deposit Limit (Optional)"
             value={depositLimit}
             onChangeText={(text) => {
               setDepositLimit(text);
@@ -171,7 +171,7 @@ export const AccountSetup = () => {
           />
 
           <Input
-            label="Betting Limit (Optional)"
+          variant="light"            label="Betting Limit (Optional)"
             value={bettingLimit}
             onChangeText={(text) => {
               setBettingLimit(text);

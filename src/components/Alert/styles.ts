@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-export const Overlay = styled.View<{ theme: Theme }>`
+export const Overlay = styled.View`
   flex: 1;
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
@@ -9,8 +9,8 @@ export const Overlay = styled.View<{ theme: Theme }>`
   padding: 20px;
 `;
 
-export const AlertContainer = styled.View<{ theme: Theme }>`
-  background-color: ${(props: { theme: Theme }) => props.theme.colors.white};
+export const AlertContainer = styled.View`
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   border-radius: 16px;
   padding: 24px;
   width: 100%;
@@ -22,15 +22,15 @@ export const AlertContainer = styled.View<{ theme: Theme }>`
   elevation: 8;
 `;
 
-export const AlertTitle = styled.View<{ theme: Theme }>`
+export const AlertTitle = styled.View`
   margin-bottom: 12px;
 `;
 
-export const AlertMessage = styled.View<{ theme: Theme }>`
+export const AlertMessage = styled.View`
   margin-bottom: 24px;
 `;
 
-export const ButtonContainer = styled.View<{ theme: Theme }>`
+export const ButtonContainer = styled.View`
   flex-direction: row;
   justify-content: flex-end;
 `;

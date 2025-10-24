@@ -6,7 +6,7 @@ export type RootStackParamList = {
   Login: undefined;
   TermsAndConditions: { nextScreen: 'Login' | 'CreateAccount' };
   CreateAccount: undefined;
-  AccountSetup: undefined;
+  CreateProfile: undefined;
   Dashboard: undefined;
   Settings: undefined;
   TournamentGames: { tournamentId: string };

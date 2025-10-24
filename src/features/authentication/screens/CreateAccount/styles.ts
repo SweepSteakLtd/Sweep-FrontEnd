@@ -28,5 +28,6 @@ export const Header = styled.View<{ theme: Theme }>`
 `;
 
 export const FormContainer = styled.View<{ theme: Theme }>`
+  width: 100%;
   padding-bottom: 20px;
 `;

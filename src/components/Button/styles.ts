@@ -44,30 +44,30 @@ interface StyledButtonProps {
   variant: ButtonVariant;
   disabled: boolean;
   fullWidth: boolean;
-  theme: Theme;
 }
 
 export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
-  background-color: ${(props: StyledButtonProps) =>
-    getBackgroundColor(props.variant, props.disabled, props.theme)};
-  padding: ${(props: StyledButtonProps) => (props.variant === 'link' ? '8px' : '16px 24px')};
-  border-radius: ${(props: StyledButtonProps) => (props.variant === 'link' ? '0px' : '25px')};
+  background-color: ${({ theme, variant, disabled }: StyledButtonProps & { theme: Theme }) =>
+    getBackgroundColor(variant, disabled, theme)};
+  padding: ${({ variant }: StyledButtonProps) => (variant === 'link' ? '8px' : '16px 24px')};
+  border-radius: ${({ variant }: StyledButtonProps) => (variant === 'link' ? '0px' : '25px')};
   align-items: center;
   justify-content: center;
-  border-width: ${(props: StyledButtonProps) => (props.variant === 'link' ? '0px' : '2px')};
-  border-color: ${(props: StyledButtonProps) => getBorderColor(props.variant, props.theme)};
-  opacity: ${(props: StyledButtonProps) => (props.disabled ? 0.6 : 1)};
-  width: ${(props: StyledButtonProps) => (props.fullWidth ? '100%' : 'auto')};
+  border-width: ${({ variant }: StyledButtonProps) => (variant === 'link' ? '0px' : '2px')};
+  border-color: ${({ theme, variant }: StyledButtonProps & { theme: Theme }) =>
+    getBorderColor(variant, theme)};
+  opacity: ${({ disabled }: StyledButtonProps) => (disabled ? 0.6 : 1)};
+  width: ${({ fullWidth }: StyledButtonProps) => (fullWidth ? '100%' : 'auto')};
   flex-direction: row;
 `;
 
 interface ButtonTextProps {
   variant: ButtonVariant;
-  theme: Theme;
 }
 
 export const ButtonText = styled.Text<ButtonTextProps>`
-  color: ${(props: ButtonTextProps) => getTextColor(props.variant, props.theme)};
-  font-size: ${(props: ButtonTextProps) => (props.variant === 'link' ? '14px' : '16px')};
-  font-weight: ${(props: ButtonTextProps) => (props.variant === 'link' ? 'normal' : '600')};
+  color: ${({ theme, variant }: ButtonTextProps & { theme: Theme }) =>
+    getTextColor(variant, theme)};
+  font-size: ${({ variant }: ButtonTextProps) => (variant === 'link' ? '14px' : '16px')};
+  font-weight: ${({ variant }: ButtonTextProps) => (variant === 'link' ? 'normal' : '600')};
 `;

@@ -50,7 +50,7 @@ export const CreateAccount = () => {
 
     if (success) {
       // Navigate to account setup
-      navigation.navigate('AccountSetup');
+      navigation.navigate('CreateProfile');
     }
   };
 

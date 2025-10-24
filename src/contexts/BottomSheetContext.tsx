@@ -57,7 +57,6 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({ c
           onPress={() => handleSelect(item.value)}
           activeOpacity={0.7}
           isSelected={isSelected}
-          theme={theme}
         >
           <Typography
             variant="body"
@@ -66,7 +65,7 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({ c
           >
             {item.label}
           </Typography>
-          {isSelected && <CheckIcon theme={theme}>✓</CheckIcon>}
+          {isSelected && <CheckIcon>✓</CheckIcon>}
         </OptionItem>
       );
     },
@@ -86,7 +85,7 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({ c
         handleIndicatorStyle={{ backgroundColor: theme.colors.border }}
       >
         <SheetContainer>
-          <SheetHeader theme={theme}>
+          <SheetHeader>
             <Typography variant="subheading" weight="bold">
               {options?.title || 'Select'}
             </Typography>

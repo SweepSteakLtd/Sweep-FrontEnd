@@ -4,9 +4,9 @@ import { useTheme } from 'styled-components/native';
 import { AuthGuard } from '~/components/AuthGuard';
 import { BackButton } from '~/components/BackButton/BackButton';
 import { FloatingMockButton } from '~/components/FloatingMockButton/FloatingMockButton';
-import { AccountSetup } from '~/features/account-setup/screens/AccountSetup/AccountSetup';
 import { CreateAccount } from '~/features/authentication/screens/CreateAccount/CreateAccount';
 import { Login } from '~/features/authentication/screens/Login/Login';
+import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { CreateGame } from '~/features/games/screens/CreateGame/CreateGame';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
@@ -52,7 +52,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
-        <Stack.Screen name="AccountSetup" component={AccountSetup} />
+        <Stack.Screen name="CreateProfile" component={CreateProfile} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="TournamentGames" component={TournamentGames} />
         <Stack.Screen name="CreateGame" component={CreateGame} />

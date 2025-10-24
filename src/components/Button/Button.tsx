@@ -22,19 +22,11 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <StyledButton
-      variant={variant}
-      disabled={disabled || loading}
-      fullWidth={fullWidth}
-      theme={theme}
-      {...props}
-    >
+    <StyledButton variant={variant} disabled={disabled || loading} fullWidth={fullWidth} {...props}>
       {loading ? (
         <ActivityIndicator color={getTextColor(variant, theme)} />
       ) : (
-        <ButtonText variant={variant} theme={theme}>
-          {children}
-        </ButtonText>
+        <ButtonText variant={variant}>{children}</ButtonText>
       )}
     </StyledButton>
   );

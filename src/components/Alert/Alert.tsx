@@ -51,7 +51,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={hideAlert}>
           <Overlay>
             <TouchableOpacity activeOpacity={1}>
-              <AlertContainer theme={theme}>
+              <AlertContainer>
                 {alertOptions && (
                   <>
                     <AlertTitle>

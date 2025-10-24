@@ -42,8 +42,8 @@ export const Dropdown = ({
   return (
     <Container>
       {label && <Label>{label}</Label>}
-      <DropdownButton onPress={handleOpen} activeOpacity={0.7} hasError={!!error} theme={theme}>
-        <DropdownText hasValue={!!selectedOption} theme={theme}>
+      <DropdownButton onPress={handleOpen} activeOpacity={0.7} hasError={!!error}>
+        <DropdownText hasValue={!!selectedOption}>
           {selectedOption ? selectedOption.label : placeholder}
         </DropdownText>
         <Typography variant="body" color={theme.colors.text.secondary}>
