@@ -29,14 +29,17 @@ interface StyledInputProps {
   isFocused: boolean;
   hasError: boolean;
   hasCurrency?: boolean;
+  disabled?: boolean;
 }
 
 export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) => ({
   placeholderTextColor: theme.colors.text.placeholder,
 }))<StyledInputProps>`
   flex: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.input.background};
-  color: ${({ theme }: { theme: Theme }) => theme.colors.input.text};
+  background-color: ${({ theme, disabled }: { theme: Theme; disabled?: boolean }) =>
+    disabled ? theme.colors.backgroundLight : theme.colors.input.background};
+  color: ${({ theme, disabled }: { theme: Theme; disabled?: boolean }) =>
+    disabled ? theme.colors.text.secondary : theme.colors.input.text};
   padding: 12px 16px;
   padding-left: ${({ hasCurrency }: { hasCurrency?: boolean }) => (hasCurrency ? '36px' : '16px')};
   border-radius: 8px;
@@ -46,14 +49,18 @@ export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) 
     theme,
     hasError,
     isFocused,
+    disabled,
   }: {
     theme: Theme;
     hasError: boolean;
     isFocused: boolean;
+    disabled?: boolean;
   }) => {
+    if (disabled) return theme.colors.border;
     if (hasError) return theme.colors.error;
     return isFocused ? theme.colors.primary : theme.colors.border;
   }};
+  opacity: ${({ disabled }: { disabled?: boolean }) => (disabled ? 0.6 : 1)};
 `;
 
 export const ErrorText = styled(Typography)`

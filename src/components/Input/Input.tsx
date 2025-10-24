@@ -48,6 +48,7 @@ export const Input: React.FC<InputProps> = ({
       isFocused={isFocused}
       hasError={!!error}
       hasCurrency={variant === 'currency'}
+      disabled={props.editable === false}
       onFocus={handleFocus}
       onBlur={handleBlur}
       value={value}
