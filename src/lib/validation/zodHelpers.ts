@@ -13,7 +13,7 @@ export interface ValidationResult<T extends Record<string, string | undefined>> 
  */
 export function validateWithZod<T extends Record<string, string | undefined>>(
   schema: ZodSchema,
-  data: unknown
+  data: unknown,
 ): ValidationResult<T> {
   const result = schema.safeParse(data);
 
