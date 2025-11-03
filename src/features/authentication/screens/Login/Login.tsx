@@ -26,7 +26,7 @@ export const Login = () => {
   const { login, loading } = useLogin();
 
   const [email, setEmail] = useState('karamvir.mangat@uvconsulting.net');
-  const [password, setPassword] = useState('Hello123');
+  const [password, setPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   const handleSignIn = async () => {

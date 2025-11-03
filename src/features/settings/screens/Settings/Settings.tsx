@@ -108,17 +108,35 @@ export const Settings = () => {
     setLoading(false);
   };
 
+  // Separate handlers into admin and user endpoints
+  const { adminHandlers, userHandlers } = useMemo(() => {
+    const admin = handlers.filter((h) => h.isAdmin);
+    const user = handlers.filter((h) => !h.isAdmin);
+    return { adminHandlers: admin, userHandlers: user };
+  }, [handlers]);
+
   // Group handlers by their group property
-  const groupedHandlers = useMemo(() => {
+  const groupedUserHandlers = useMemo(() => {
     const groups: Record<string, HandlerWithConfig[]> = {};
-    handlers.forEach((handler) => {
+    userHandlers.forEach((handler) => {
       if (!groups[handler.group]) {
         groups[handler.group] = [];
       }
       groups[handler.group].push(handler);
     });
     return groups;
-  }, [handlers]);
+  }, [userHandlers]);
+
+  const groupedAdminHandlers = useMemo(() => {
+    const groups: Record<string, HandlerWithConfig[]> = {};
+    adminHandlers.forEach((handler) => {
+      if (!groups[handler.group]) {
+        groups[handler.group] = [];
+      }
+      groups[handler.group].push(handler);
+    });
+    return groups;
+  }, [adminHandlers]);
 
   const toggleGroup = (group: string) => {
     setExpandedGroups((prev) => ({
@@ -296,27 +314,74 @@ export const Settings = () => {
           {handlers.length === 0 ? (
             <EmptyStateText>No mock handlers configured</EmptyStateText>
           ) : (
-            Object.entries(groupedHandlers).map(([group, groupHandlers]) => {
-              const isExpanded = expandedGroups[group] ?? false;
-              const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
-              const enabledCount = enabledHandlers.length;
-              const totalCount = groupHandlers.length;
+            <>
+              {/* User Endpoints Section */}
+              {Object.keys(groupedUserHandlers).length > 0 && (
+                <>
+                  <GroupHeader style={{ marginTop: 20, marginBottom: 10 }}>
+                    User Endpoints
+                  </GroupHeader>
+                  {Object.entries(groupedUserHandlers).map(([group, groupHandlers]) => {
+                    const isExpanded = expandedGroups[group] ?? false;
+                    const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
+                    const enabledCount = enabledHandlers.length;
+                    const totalCount = groupHandlers.length;
 
-              return (
-                <GroupContainer key={group} expanded={isExpanded}>
-                  <GroupHeaderContainer onPress={() => toggleGroup(group)} activeOpacity={0.7}>
-                    <GroupHeader>{group}</GroupHeader>
-                    <GroupChevron expanded={isExpanded}>▶</GroupChevron>
-                  </GroupHeaderContainer>
-                  {!isExpanded && enabledCount > 0 && (
-                    <GroupSummary>
-                      {enabledCount} of {totalCount} enabled
-                    </GroupSummary>
-                  )}
-                  {isExpanded && groupHandlers.map(renderHandler)}
-                </GroupContainer>
-              );
-            })
+                    return (
+                      <GroupContainer key={group} expanded={isExpanded}>
+                        <GroupHeaderContainer
+                          onPress={() => toggleGroup(group)}
+                          activeOpacity={0.7}
+                        >
+                          <GroupHeader>{group}</GroupHeader>
+                          <GroupChevron expanded={isExpanded}>▶</GroupChevron>
+                        </GroupHeaderContainer>
+                        {!isExpanded && enabledCount > 0 && (
+                          <GroupSummary>
+                            {enabledCount} of {totalCount} enabled
+                          </GroupSummary>
+                        )}
+                        {isExpanded && groupHandlers.map(renderHandler)}
+                      </GroupContainer>
+                    );
+                  })}
+                </>
+              )}
+
+              {/* Admin Endpoints Section */}
+              {Object.keys(groupedAdminHandlers).length > 0 && (
+                <>
+                  <GroupHeader style={{ marginTop: 20, marginBottom: 10 }}>
+                    Admin Endpoints
+                  </GroupHeader>
+                  {Object.entries(groupedAdminHandlers).map(([group, groupHandlers]) => {
+                    const groupKey = `admin-${group}`;
+                    const isExpanded = expandedGroups[groupKey] ?? false;
+                    const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
+                    const enabledCount = enabledHandlers.length;
+                    const totalCount = groupHandlers.length;
+
+                    return (
+                      <GroupContainer key={groupKey} expanded={isExpanded}>
+                        <GroupHeaderContainer
+                          onPress={() => toggleGroup(groupKey)}
+                          activeOpacity={0.7}
+                        >
+                          <GroupHeader>{group}</GroupHeader>
+                          <GroupChevron expanded={isExpanded}>▶</GroupChevron>
+                        </GroupHeaderContainer>
+                        {!isExpanded && enabledCount > 0 && (
+                          <GroupSummary>
+                            {enabledCount} of {totalCount} enabled
+                          </GroupSummary>
+                        )}
+                        {isExpanded && groupHandlers.map(renderHandler)}
+                      </GroupContainer>
+                    );
+                  })}
+                </>
+              )}
+            </>
           )}
         </Section>
       </ScrollContent>

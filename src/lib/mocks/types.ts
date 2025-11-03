@@ -12,6 +12,7 @@ export interface MockHandler {
   urlPattern: string;
   scenarios: Record<string, MockResponse>;
   defaultScenario: string;
+  isAdmin?: boolean; // Flag to indicate admin-only endpoints
 }
 
 export interface MockConfig {
