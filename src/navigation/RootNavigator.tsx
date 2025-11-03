@@ -4,11 +4,13 @@ import { useTheme } from 'styled-components/native';
 import { AuthGuard } from '~/components/AuthGuard';
 import { BackButton } from '~/components/BackButton/BackButton';
 import { FloatingMockButton } from '~/components/FloatingMockButton/FloatingMockButton';
+import { AccountDetails } from '~/features/account/screens/AccountDetails/AccountDetails';
+import { Security } from '~/features/account/screens/Security/Security';
 import { CreateAccount } from '~/features/authentication/screens/CreateAccount/CreateAccount';
 import { Login } from '~/features/authentication/screens/Login/Login';
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
-import { CreateGame } from '~/features/games/screens/CreateGame/CreateGame';
+import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
 import { Landing } from '~/features/onboarding/screens/Landing/Landing';
 import { Splash } from '~/features/onboarding/screens/Splash/Splash';
@@ -56,8 +58,10 @@ export const RootNavigator = () => {
         <Stack.Screen name="CreateProfile" component={CreateProfile} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="AccountDetails" component={AccountDetails} />
+        <Stack.Screen name="Security" component={Security} />
         <Stack.Screen name="TournamentGames" component={TournamentGames} />
-        <Stack.Screen name="CreateGame" component={CreateGame} />
+        <Stack.Screen name="CreateLeague" component={CreateLeague} />
         <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
       <FloatingMockButton />

@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
-import { CreateGameRequest, CreateGameResponse } from './types';
+import { CreateLeagueRequest, CreateLeagueResponse } from './types';
 
 // API Function
-export const createGame = async (gameData: CreateGameRequest): Promise<CreateGameResponse> => {
+export const createLeague = async (
+  leagueData: CreateLeagueRequest,
+): Promise<CreateLeagueResponse> => {
   const token = await firebaseAuth.currentUser?.getIdToken();
 
   if (!token) {
@@ -17,30 +19,30 @@ export const createGame = async (gameData: CreateGameRequest): Promise<CreateGam
         'Content-Type': 'application/json',
         'x-auth-id': token,
       },
-      body: JSON.stringify(gameData),
+      body: JSON.stringify(leagueData),
     });
 
     if (res.status !== 201) {
       const errorData = await res.json();
-      throw new Error(errorData.error || `Failed to create game: ${res.status}`);
+      throw new Error(errorData.error || `Failed to create league: ${res.status}`);
     }
 
     const data = await res.json();
-    return data.data as CreateGameResponse;
+    return data.data as CreateLeagueResponse;
   } catch (error) {
-    console.error('Error creating game:', error);
+    console.error('Error creating league:', error);
     throw error;
   }
 };
 
 /**
- * Hook to create a new game
+ * Hook to create a new league
  */
-export const useCreateGame = () => {
+export const useCreateLeague = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createGame,
+    mutationFn: createLeague,
     onSuccess: () => {
       // Invalidate games query to refetch the list
       queryClient.invalidateQueries({ queryKey: ['games'] });

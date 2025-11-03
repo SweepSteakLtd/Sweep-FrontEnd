@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
 
 // API Function
-export const deleteGame = async (gameId: string): Promise<void> => {
+export const deleteLeague = async (leagueId: string): Promise<void> => {
   const token = await firebaseAuth.currentUser?.getIdToken();
 
   if (!token) {
@@ -10,7 +10,7 @@ export const deleteGame = async (gameId: string): Promise<void> => {
   }
 
   try {
-    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/games/${gameId}`, {
+    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/games/${leagueId}`, {
       method: 'DELETE',
       headers: {
         'x-auth-id': token,
@@ -19,22 +19,22 @@ export const deleteGame = async (gameId: string): Promise<void> => {
 
     if (res.status !== 204 && res.status !== 200) {
       const errorData = await res.json();
-      throw new Error(errorData.error || `Failed to delete game: ${res.status}`);
+      throw new Error(errorData.error || `Failed to delete league: ${res.status}`);
     }
   } catch (error) {
-    console.error('Error deleting game:', error);
+    console.error('Error deleting league:', error);
     throw error;
   }
 };
 
 /**
- * Hook to delete a game
+ * Hook to delete a league
  */
-export const useDeleteGame = () => {
+export const useDeleteLeague = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteGame,
+    mutationFn: deleteLeague,
     onSuccess: () => {
       // Invalidate games query to refetch the list
       queryClient.invalidateQueries({ queryKey: ['games'] });

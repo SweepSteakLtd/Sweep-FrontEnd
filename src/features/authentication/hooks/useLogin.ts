@@ -43,14 +43,28 @@ export const useLogin = () => {
           // Profile exists - full success
           return { success: true, profileComplete: true };
         } else {
-          // No profile - needs profile setup
+          // No profile (404 response) - needs profile setup
           return { success: true, profileComplete: false };
         }
       } catch (error) {
         console.error('[DEBUG]: Failed to check user profile:', error);
         setLoading(false);
-        // Assume no profile on error
-        return { success: true, profileComplete: false };
+
+        // If there was a server error (500), network error, etc., treat it as a failed login
+        // Don't redirect to create profile - show error instead
+        const errorMsg =
+          error instanceof Error
+            ? error.message
+            : 'Failed to verify user profile. Please try again.';
+        showAlert({
+          title: 'Login Error',
+          message: errorMsg,
+        });
+
+        // Sign out the user since we couldn't verify their profile
+        await firebaseAuth.signOut();
+
+        return { success: false, error: errorMsg };
       }
     } catch (error: unknown) {
       setLoading(false);

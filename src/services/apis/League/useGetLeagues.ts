@@ -1,20 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
-import { Game, GamesResponse } from './types';
+import { League } from './types';
 
-interface FetchGamesParams {
+interface FetchLeaguesParams {
   searchTerm?: string;
   tournamentId?: string;
 }
 
 // Query Keys
-export const gameQueryKeys = {
-  games: (params?: FetchGamesParams) => ['games', params] as const,
-  game: (id: string) => ['games', id] as const,
+export const leagueQueryKeys = {
+  leagues: (params?: FetchLeaguesParams) => ['games', params] as const,
+  league: (id: string) => ['games', id] as const,
 };
 
 // API Function - exported for use outside of hook
-export const fetchGames = async (params?: FetchGamesParams): Promise<Game[]> => {
+export const fetchLeagues = async (params?: FetchLeaguesParams): Promise<League[]> => {
   const token = await firebaseAuth.currentUser?.getIdToken();
 
   if (!token) {
@@ -41,24 +41,24 @@ export const fetchGames = async (params?: FetchGamesParams): Promise<Game[]> => 
     });
 
     if (res.status !== 200) {
-      throw new Error(`Failed to fetch games: ${res.status}`);
+      throw new Error(`Failed to fetch leagues: ${res.status}`);
     }
 
-    const data = (await res.json()) as GamesResponse;
+    const data = (await res.json()) as { data: League[] };
     return data.data;
   } catch (error) {
-    console.error('Error fetching games:', error);
+    console.error('Error fetching leagues:', error);
     throw error;
   }
 };
 
 /**
- * Hook to fetch all games with optional search and filters
+ * Hook to fetch all leagues with optional search and filters
  */
-export const useGetGames = (params?: FetchGamesParams, enabled: boolean = true) => {
+export const useGetLeagues = (params?: FetchLeaguesParams, enabled: boolean = true) => {
   return useQuery({
-    queryKey: gameQueryKeys.games(params),
-    queryFn: () => fetchGames(params),
+    queryKey: leagueQueryKeys.leagues(params),
+    queryFn: () => fetchLeagues(params),
     enabled: enabled && !!firebaseAuth.currentUser,
   });
 };

@@ -6,53 +6,55 @@ import { Dropdown } from '~/components/Dropdown/Dropdown';
 import { Input } from '~/components/Input/Input';
 import { Switch } from '~/components/Switch/Switch';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
-import { useCreateGame } from '~/services/apis/Game/useCreateGame';
+import { useCreateLeague } from '~/services/apis/League/useCreateLeague';
 import type { Tournament } from '~/services/apis/Tournament/types';
-import { ButtonContainer, ErrorText, GameTypeRow, InputLabel, SwitchLabel } from './styles';
-import { createGameSchema } from './validation';
+import { ButtonContainer, ErrorText, LeagueTypeRow, InputLabel, SwitchLabel } from './styles';
+import { createLeagueSchema } from './validation';
 
-interface CreateGameFormProps {
+interface CreateLeagueFormProps {
   activeTournamentId: string;
   tournaments: Tournament[];
-  defaultGameType?: 'public' | 'private';
+  defaultLeagueType?: 'public' | 'private';
   onSuccess?: () => void;
-  onPrivateGameCreated?: (joinCode: string, gameName: string) => void;
+  onPrivateLeagueCreated?: (joinCode: string, leagueName: string) => void;
 }
 
 interface FieldErrors extends Record<string, string | undefined> {
-  gameName?: string;
+  leagueName?: string;
   tournamentId?: string;
   entryFee?: string;
   maxEntries?: string;
 }
 
-export const CreateGameForm = ({
+export const CreateLeagueForm = ({
   activeTournamentId,
   tournaments,
-  defaultGameType = 'public',
+  defaultLeagueType = 'public',
   onSuccess,
-  onPrivateGameCreated,
-}: CreateGameFormProps) => {
+  onPrivateLeagueCreated,
+}: CreateLeagueFormProps) => {
   const theme = useTheme();
-  const createGameMutation = useCreateGame();
+  const createLeagueMutation = useCreateLeague();
 
-  const [gameName, setGameName] = useState('');
+  const [leagueName, setLeagueName] = useState('');
   const [selectedTournamentId, setSelectedTournamentId] = useState(activeTournamentId);
-  const [gameType, setGameType] = useState<'public' | 'private'>(defaultGameType);
+  const [leagueType, setLeagueType] = useState<'public' | 'private'>(defaultLeagueType);
   const [entryFee, setEntryFee] = useState('');
   const [maxEntries, setMaxEntries] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [createError, setCreateError] = useState('');
 
-  const tournamentOptions = tournaments.map((t) => ({
-    label: t.name,
-    value: t.id,
-  }));
+  const tournamentOptions = tournaments
+    .filter((t) => t.id && t.name)
+    .map((t) => ({
+      label: t.name!,
+      value: t.id!,
+    }));
 
-  const handleCreateGame = async () => {
+  const handleCreateLeague = async () => {
     // Validate using Zod
-    const validation = validateWithZod<FieldErrors>(createGameSchema, {
-      gameName,
+    const validation = validateWithZod<FieldErrors>(createLeagueSchema, {
+      leagueName,
       tournamentId: selectedTournamentId,
       entryFee,
       maxEntries,
@@ -68,8 +70,8 @@ export const CreateGameForm = ({
 
     // TODO: Add proper owner_id from auth context and other required fields
     try {
-      const response = await createGameMutation.mutateAsync({
-        name: gameName,
+      const response = await createLeagueMutation.mutateAsync({
+        name: leagueName,
         description: '',
         entry_fee: parseFloat(entryFee),
         max_participants: parseInt(maxEntries),
@@ -78,44 +80,44 @@ export const CreateGameForm = ({
         end_time: new Date().toISOString(),
         owner_id: 'current-user-id', // TODO: Get from auth context
         tournament_id: selectedTournamentId,
-        type: gameType,
+        type: leagueType,
       });
 
       // Reset form on success
-      setGameName('');
+      setLeagueName('');
       setSelectedTournamentId(activeTournamentId);
       setEntryFee('');
       setMaxEntries('');
 
-      // If private game, call the callback to show join code
-      if (gameType === 'private' && response.join_code) {
-        onPrivateGameCreated?.(response.join_code, gameName);
+      // If private league, call the callback to show join code
+      if (leagueType === 'private' && response.join_code) {
+        onPrivateLeagueCreated?.(response.join_code, leagueName);
       } else {
-        // For public games, call onSuccess immediately
+        // For public leagues, call onSuccess immediately
         onSuccess?.();
       }
 
-      console.log('Game created successfully');
+      console.log('League created successfully');
     } catch (error) {
-      setCreateError('Failed to create game. Please try again.');
-      console.error('Error creating game:', error);
+      setCreateError('Failed to create league. Please try again.');
+      console.error('Error creating league:', error);
     }
   };
 
   return (
     <View style={{ padding: 20 }}>
       <Input
-        label="Game Name"
-        value={gameName}
+        label="League Name"
+        value={leagueName}
         onChangeText={(text) => {
-          setGameName(text);
-          if (fieldErrors.gameName) {
-            setFieldErrors((prev) => ({ ...prev, gameName: undefined }));
+          setLeagueName(text);
+          if (fieldErrors.leagueName) {
+            setFieldErrors((prev) => ({ ...prev, leagueName: undefined }));
           }
         }}
-        placeholder="Game Name"
+        placeholder="League Name"
         placeholderTextColor={theme.colors.text.secondary}
-        error={fieldErrors.gameName}
+        error={fieldErrors.leagueName}
       />
 
       <Dropdown
@@ -132,17 +134,17 @@ export const CreateGameForm = ({
         error={fieldErrors.tournamentId}
       />
 
-      <GameTypeRow>
-        <InputLabel>Game Type</InputLabel>
+      <LeagueTypeRow>
+        <InputLabel>League Type</InputLabel>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <SwitchLabel isActive={gameType === 'public'}>Public</SwitchLabel>
+          <SwitchLabel isActive={leagueType === 'public'}>Public</SwitchLabel>
           <Switch
-            value={gameType === 'private'}
-            onValueChange={(value) => setGameType(value ? 'private' : 'public')}
+            value={leagueType === 'private'}
+            onValueChange={(value) => setLeagueType(value ? 'private' : 'public')}
           />
-          <SwitchLabel isActive={gameType === 'private'}>Private</SwitchLabel>
+          <SwitchLabel isActive={leagueType === 'private'}>Private</SwitchLabel>
         </View>
-      </GameTypeRow>
+      </LeagueTypeRow>
 
       <Input
         label="Entry Fee (min £20 max £1500)"
@@ -179,11 +181,11 @@ export const CreateGameForm = ({
       <ButtonContainer>
         <Button
           variant="primary"
-          onPress={handleCreateGame}
-          disabled={createGameMutation.isPending}
-          loading={createGameMutation.isPending}
+          onPress={handleCreateLeague}
+          disabled={createLeagueMutation.isPending}
+          loading={createLeagueMutation.isPending}
         >
-          CREATE GAME
+          CREATE LEAGUE
         </Button>
       </ButtonContainer>
     </View>

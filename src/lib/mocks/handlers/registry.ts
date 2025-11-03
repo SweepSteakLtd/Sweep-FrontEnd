@@ -1,12 +1,12 @@
 import type { MockHandler } from '../types';
 import { createBetHandler, deleteBetHandler, getBetsHandler, updateBetHandler } from './betHandler';
 import {
-  createGameHandler,
-  deleteGameHandler,
-  getGameByIdHandler,
-  getGamesHandler,
-  updateGameHandler,
-} from './gameHandler';
+  createLeagueHandler,
+  deleteLeagueHandler,
+  getLeagueByIdHandler,
+  getLeaguesHandler,
+  updateLeagueHandler,
+} from './leagueHandler';
 import { createProfileHandler, updateProfileHandler } from './profileHandler';
 import { getTournamentByIdHandler, getTournamentsHandler } from './tournamentHandler';
 import { getUserHandler } from './userHandler';
@@ -25,12 +25,12 @@ export const mockHandlers: MockHandler[] = [
   getTournamentsHandler,
   getTournamentByIdHandler,
 
-  // Game endpoints
-  getGamesHandler,
-  getGameByIdHandler,
-  createGameHandler,
-  updateGameHandler,
-  deleteGameHandler,
+  // League endpoints (API still uses /games but we call them leagues in the app)
+  getLeaguesHandler,
+  getLeagueByIdHandler,
+  createLeagueHandler,
+  updateLeagueHandler,
+  deleteLeagueHandler,
 
   // Bet endpoints
   createBetHandler,

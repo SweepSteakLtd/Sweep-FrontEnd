@@ -3,7 +3,7 @@ import { SearchInput } from '~/components/SearchInput/SearchInput';
 import { TabBar } from '~/components/TabBar/TabBar';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
 import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
-import type { Game } from '~/services/apis/Game/types';
+import type { Game } from '~/services/apis/League/types';
 import {
   CreateButton,
   CreateButtonText,

@@ -26,12 +26,17 @@ interface OpenAPISchema {
   required?: string[];
 }
 
-function extractSchemasFromPaths(spec: any): Record<string, Set<string>> {
-  const schemas: Record<string, Set<string>> = {};
+interface SchemaInfo {
+  properties: Set<string>;
+  endpoints: Set<string>;
+}
+
+function extractSchemasFromPaths(spec: any): Record<string, SchemaInfo> {
+  const schemas: Record<string, SchemaInfo> = {};
   const paths = spec.paths || {};
 
   for (const [path, pathData] of Object.entries(paths as Record<string, any>)) {
-    for (const [, methodData] of Object.entries(pathData as Record<string, any>)) {
+    for (const [method, methodData] of Object.entries(pathData as Record<string, any>)) {
       if (typeof methodData !== 'object' || !methodData.responses) continue;
 
       for (const [statusCode, response] of Object.entries(
@@ -45,9 +50,24 @@ function extractSchemasFromPaths(spec: any): Record<string, Set<string>> {
 
           const pathParts = path.split('/').filter(Boolean);
           if (pathParts.length >= 2 && pathParts[0] === 'api') {
-            const resourceName = pathParts[1];
-            let schemaName = resourceName.charAt(0).toUpperCase() + resourceName.slice(1);
-            if (schemaName.endsWith('s')) {
+            // For admin endpoints like /api/admin/player-profiles, use the resource after 'admin'
+            // For regular endpoints like /api/users, use pathParts[1]
+            let resourceName: string;
+            if (pathParts[1] === 'admin' && pathParts.length >= 3) {
+              resourceName = pathParts[2];
+            } else {
+              resourceName = pathParts[1];
+            }
+
+            // Convert to PascalCase and singularize
+            // player-profiles -> PlayerProfile, users -> User, games -> Game
+            let schemaName = resourceName
+              .split('-')
+              .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+              .join('');
+
+            // Remove trailing 's' if it's there (but not for 'ss' endings)
+            if (schemaName.endsWith('s') && !schemaName.endsWith('ss')) {
               schemaName = schemaName.slice(0, -1);
             }
 
@@ -61,9 +81,12 @@ function extractSchemasFromPaths(spec: any): Record<string, Set<string>> {
 
             if (itemSchema?.properties) {
               if (!schemas[schemaName]) {
-                schemas[schemaName] = new Set();
+                schemas[schemaName] = { properties: new Set(), endpoints: new Set() };
               }
-              Object.keys(itemSchema.properties).forEach((prop) => schemas[schemaName].add(prop));
+              Object.keys(itemSchema.properties).forEach((prop) =>
+                schemas[schemaName].properties.add(prop),
+              );
+              schemas[schemaName].endpoints.add(`${method.toUpperCase()} ${path}`);
             }
           }
         }
@@ -128,24 +151,28 @@ async function verifySchemas() {
 
     // Compare schemas (only check schemas that exist in API, ignore response wrappers)
     let hasErrors = false;
+    const errors: Array<{
+      schemaName: string;
+      added: string[];
+      removed: string[];
+      endpoints: Set<string>;
+    }> = [];
 
     for (const schemaName of Object.keys(apiSchemas)) {
-      const apiProps = apiSchemas[schemaName];
+      const apiInfo = apiSchemas[schemaName];
       const fileProps = fileSchemas[schemaName] || new Set();
 
-      const added = [...apiProps].filter((p) => !fileProps.has(p));
-      const removed = [...fileProps].filter((p) => !apiProps.has(p));
+      const added = [...apiInfo.properties].filter((p) => !fileProps.has(p));
+      const removed = [...fileProps].filter((p) => !apiInfo.properties.has(p));
 
       if (added.length > 0 || removed.length > 0) {
         hasErrors = true;
-        console.error(`❌ ${schemaName} schema mismatch:`);
-        if (added.length > 0) {
-          console.error(`   Added in API: ${added.join(', ')}`);
-        }
-        if (removed.length > 0) {
-          console.error(`   Missing in schema: ${removed.join(', ')}`);
-        }
-        console.error('');
+        errors.push({
+          schemaName,
+          added,
+          removed,
+          endpoints: apiInfo.endpoints,
+        });
       }
     }
 
@@ -153,8 +180,46 @@ async function verifySchemas() {
       console.log('✅ All schemas are up to date!\n');
       process.exit(0);
     } else {
-      console.error('To fix these issues, run:');
-      console.error('  yarn generate-schemas\n');
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.error('❌ SCHEMA MISMATCH DETECTED');
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+      errors.forEach(({ schemaName, added, removed, endpoints }, index) => {
+        console.error(
+          `${index + 1}. Schema: ${schemaName}Schema (${schemaName.toLowerCase()}Schema in code)`,
+        );
+        console.error(`   Location: src/services/apis/schemas.ts`);
+        console.error(`   Affected API endpoints:`);
+        endpoints.forEach((endpoint) => {
+          console.error(`     • ${endpoint}`);
+        });
+        console.error('');
+
+        if (added.length > 0) {
+          console.error(`   📥 NEW fields in API (need to add to schema):`);
+          added.sort().forEach((field) => {
+            console.error(`      + ${field}`);
+          });
+          console.error('');
+        }
+
+        if (removed.length > 0) {
+          console.error(`   📤 REMOVED fields (exist in schema but not in API):`);
+          removed.sort().forEach((field) => {
+            console.error(`      - ${field}`);
+          });
+          console.error('');
+        }
+
+        if (index < errors.length - 1) {
+          console.error('   ─────────────────────────────────────────────────────\n');
+        }
+      });
+
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.error('💡 TO FIX: Run the following command to auto-update schemas:');
+      console.error('   yarn generate-schemas');
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
       process.exit(1);
     }
   } catch (error) {

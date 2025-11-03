@@ -64,7 +64,9 @@ export const Dashboard = () => {
 
   const handleTournamentPress = (tournament: Tournament) => {
     // Navigate to the games listing screen for this tournament
-    navigation.navigate('TournamentGames', { tournamentId: tournament.id });
+    if (tournament.id) {
+      navigation.navigate('TournamentGames', { tournamentId: tournament.id });
+    }
   };
 
   if (loading) {
@@ -108,7 +110,7 @@ export const Dashboard = () => {
             renderItem={({ item }) => (
               <TournamentCard tournament={item} onPress={() => handleTournamentPress(item)} />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id || Math.random().toString()}
             contentContainerStyle={{ padding: 20 }}
             showsVerticalScrollIndicator={false}
             refreshControl={

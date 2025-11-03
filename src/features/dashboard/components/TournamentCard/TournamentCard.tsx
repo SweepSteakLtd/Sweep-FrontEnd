@@ -7,7 +7,7 @@ interface TournamentCardProps {
 }
 
 export const TournamentCard = ({ tournament, onPress }: TournamentCardProps) => {
-  const year = new Date(tournament.starts_at).getFullYear();
+  const year = tournament.starts_at ? new Date(tournament.starts_at).getFullYear() : '';
 
   return (
     <Card onPress={onPress} activeOpacity={0.8}>

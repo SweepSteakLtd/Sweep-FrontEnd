@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-10-24T11:30:31.344Z
+Generated: 2025-11-03T14:21:57.467Z
 
 ## Files
 
@@ -33,9 +33,9 @@ Create Bet endpoint
 
 
 ### GET /api/games
-**Get Games List**
+**Get Leagues List**
 
-Get Games List endpoint
+Get Leagues List endpoint
 
 **Default Scenario:** Success
 

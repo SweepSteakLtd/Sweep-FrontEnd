@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-export const createGameSchema = z.object({
-  gameName: z
+export const createLeagueSchema = z.object({
+  leagueName: z
     .string()
-    .min(1, 'Game name is required')
-    .min(3, 'Game name must be at least 3 characters'),
+    .min(1, 'League name is required')
+    .min(3, 'League name must be at least 3 characters'),
   tournamentId: z.string().min(1, 'Tournament is required'),
   entryFee: z
     .string()
@@ -28,4 +28,4 @@ export const createGameSchema = z.object({
     ),
 });
 
-export type CreateGameFormData = z.infer<typeof createGameSchema>;
+export type CreateLeagueFormData = z.infer<typeof createLeagueSchema>;

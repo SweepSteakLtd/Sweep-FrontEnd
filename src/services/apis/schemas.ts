@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-10-24T10:59:59.415Z
+ * Generated: 2025-11-03T14:27:48.744Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -29,6 +29,9 @@ export const userSchema = z.object({
   betting_limit: z.number().optional(),
   payment_id: z.string().optional(),
   current_balance: z.number().optional(),
+  is_admin: z.boolean().optional(),
+  kyc_completed: z.boolean().optional(),
+  kyc_instance_id: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });
@@ -37,22 +40,22 @@ export type User = z.infer<typeof userSchema>;
 
 // Tournament
 export const tournamentSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  starts_at: z.string(),
-  finishes_at: z.string(),
-  description: z.string(),
-  url: z.string(),
-  cover_picture: z.string(),
-  gallery: z.array(z.string()).optional().default([]),
-  holes: z.array(z.object({})).optional().default([]),
-  ads: z.array(z.object({})).optional().default([]),
-  proposed_entry_fee: z.number(),
-  maximum_cut_amount: z.number(),
-  maximum_score_generator: z.number(),
-  players: z.array(z.object({})).optional().default([]),
-  created_at: z.string(),
-  updated_at: z.string(),
+  id: z.string().optional(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  starts_at: z.string().optional(),
+  finishes_at: z.string().optional(),
+  proposed_entry_fee: z.number().optional(),
+  maximum_cut_amount: z.number().optional(),
+  maximum_score_generator: z.number().optional(),
+  players: z.array(z.unknown()).optional().default([]),
+  url: z.string().optional(),
+  cover_picture: z.string().optional(),
+  gallery: z.array(z.unknown()).optional().default([]),
+  holes: z.array(z.unknown()).optional().default([]),
+  ads: z.array(z.unknown()).optional().default([]),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export type Tournament = z.infer<typeof tournamentSchema>;
@@ -108,6 +111,38 @@ export const transactionSchema = z.object({
 
 export type Transaction = z.infer<typeof transactionSchema>;
 
+// PlayerProfile
+export const playerProfileSchema = z.object({
+  id: z.string().optional(),
+  external_id: z.string().optional(),
+  first_name: z.string().optional(),
+  last_name: z.string().optional(),
+  country: z.string().optional(),
+  age: z.number().optional(),
+  ranking: z.number().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
+export type PlayerProfile = z.infer<typeof playerProfileSchema>;
+
+// Player
+export const playerSchema = z.object({
+  id: z.string().optional(),
+  external_id: z.string().optional(),
+  level: z.number().optional(),
+  current_score: z.number().optional(),
+  position: z.number().optional(),
+  attempts: z.array(z.unknown()).optional().default([]),
+  missed_cut: z.boolean().optional(),
+  odds: z.number().optional(),
+  profile_id: z.string().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
+export type Player = z.infer<typeof playerSchema>;
+
 // API Response Wrappers
 export const usersResponseSchema = z.object({
   data: z.array(userSchema),
@@ -138,3 +173,15 @@ export const transactionsResponseSchema = z.object({
 });
 
 export type TransactionsResponse = z.infer<typeof transactionsResponseSchema>;
+
+export const playerprofilesResponseSchema = z.object({
+  data: z.array(playerProfileSchema),
+});
+
+export type PlayerProfilesResponse = z.infer<typeof playerprofilesResponseSchema>;
+
+export const playersResponseSchema = z.object({
+  data: z.array(playerSchema),
+});
+
+export type PlayersResponse = z.infer<typeof playersResponseSchema>;

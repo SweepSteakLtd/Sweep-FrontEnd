@@ -1,6 +1,6 @@
-// Games list mock data
+// Leagues list mock data
 // Based on API schema: POST/GET /api/games/
-export const gamesListMock = {
+export const leaguesListMock = {
   data: [
     {
       id: '1',
@@ -109,8 +109,8 @@ export const gamesListMock = {
   ],
 };
 
-// Single game detail mock
-export const gameDetailMock = {
+// Single league detail mock
+export const leagueDetailMock = {
   data: {
     id: '1',
     name: 'Memnons GOLF',
@@ -140,10 +140,10 @@ export const gameDetailMock = {
   },
 };
 
-// Create game success mock
-export const createGameSuccessMock = {
+// Create league success mock
+export const createLeagueSuccessMock = {
   data: {
-    id: 'new-game-123',
+    id: 'new-league-123',
     name: 'My Private League',
     description: 'Private league for friends',
     tournament_id: '1',
@@ -171,32 +171,32 @@ export const createGameSuccessMock = {
   },
 };
 
-// Join game success mock
-export const joinGameSuccessMock = {
+// Join league success mock
+export const joinLeagueSuccessMock = {
   data: {
     success: true,
-    message: 'Successfully joined the game',
-    gameId: '1',
+    message: 'Successfully joined the league',
+    leagueId: '1',
   },
 };
 
 // Error mocks
-export const gameNotFoundMock = {
-  error: 'Game not found',
+export const leagueNotFoundMock = {
+  error: 'League not found',
 };
 
-export const gameFullMock = {
-  error: 'Game is full',
+export const leagueFullMock = {
+  error: 'League is full',
 };
 
-export const invalidGameCodeMock = {
-  error: 'Invalid game code',
+export const invalidLeagueCodeMock = {
+  error: 'Invalid league code',
 };
 
 export const alreadyJoinedMock = {
-  error: 'You have already joined this game',
+  error: 'You have already joined this league',
 };
 
-export const gameServerErrorMock = {
+export const leagueServerErrorMock = {
   error: 'Failed to process request',
 };

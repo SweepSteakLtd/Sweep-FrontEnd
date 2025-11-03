@@ -94,13 +94,28 @@ function extractSchemasFromPaths(spec: any): Record<string, OpenAPISchema> {
         ) {
           const schema = response.content['application/json'].schema;
 
-          // Extract schema name from path (e.g., /api/users/ -> User, /api/tournaments/ -> Tournament)
+          // Extract schema name from path
+          // Handle both /api/resource and /api/admin/resource patterns
           const pathParts = path.split('/').filter(Boolean);
           if (pathParts.length >= 2 && pathParts[0] === 'api') {
-            const resourceName = pathParts[1];
-            // Singularize and capitalize (tournaments -> Tournament, users -> User, games -> Game)
-            let schemaName = resourceName.charAt(0).toUpperCase() + resourceName.slice(1);
-            if (schemaName.endsWith('s')) {
+            // For admin endpoints like /api/admin/player-profiles, use the resource after 'admin'
+            // For regular endpoints like /api/users, use pathParts[1]
+            let resourceName: string;
+            if (pathParts[1] === 'admin' && pathParts.length >= 3) {
+              resourceName = pathParts[2];
+            } else {
+              resourceName = pathParts[1];
+            }
+
+            // Convert to PascalCase and singularize
+            // player-profiles -> PlayerProfile, users -> User, games -> Game
+            let schemaName = resourceName
+              .split('-')
+              .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+              .join('');
+
+            // Remove trailing 's' if it's there (but not for 'ss' endings)
+            if (schemaName.endsWith('s') && !schemaName.endsWith('ss')) {
               schemaName = schemaName.slice(0, -1);
             }
 

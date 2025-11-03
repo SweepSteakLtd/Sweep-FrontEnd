@@ -9,9 +9,11 @@ export type RootStackParamList = {
   CreateProfile: undefined;
   Dashboard: undefined;
   Profile: undefined;
+  AccountDetails: undefined;
+  Security: undefined;
   Settings: undefined;
   TournamentGames: { tournamentId: string };
-  CreateGame: { tournamentId: string; defaultGameType?: 'public' | 'private' };
+  CreateLeague: { tournamentId: string; defaultLeagueType?: 'public' | 'private' };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

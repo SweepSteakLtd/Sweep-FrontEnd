@@ -3,29 +3,29 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
-import { CreateGameForm } from '~/features/tournaments/components/CreateGameForm/CreateGameForm';
+import { CreateLeagueForm } from '~/features/tournaments/components/CreateLeagueForm/CreateLeagueForm';
 import { JoinCodeDisplay } from '~/features/tournaments/components/JoinCodeDisplay/JoinCodeDisplay';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { Container } from './styles';
 
-type CreateGameRouteProp = RouteProp<RootStackParamList, 'CreateGame'>;
-type CreateGameNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type CreateLeagueRouteProp = RouteProp<RootStackParamList, 'CreateLeague'>;
+type CreateLeagueNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export const CreateGame = () => {
-  const route = useRoute<CreateGameRouteProp>();
-  const navigation = useNavigation<CreateGameNavigationProp>();
+export const CreateLeague = () => {
+  const route = useRoute<CreateLeagueRouteProp>();
+  const navigation = useNavigation<CreateLeagueNavigationProp>();
   const { data: tournaments = [] } = useGetTournaments();
 
   const [showJoinCode, setShowJoinCode] = useState(false);
   const [joinCode, setJoinCode] = useState('');
-  const [createdGameName, setCreatedGameName] = useState('');
+  const [createdLeagueName, setCreatedLeagueName] = useState('');
 
   // Configure navigation header
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: showJoinCode ? 'Game Created' : 'Create Game',
+      title: showJoinCode ? 'League Created' : 'Create League',
     });
   }, [navigation, showJoinCode]);
 
@@ -34,9 +34,9 @@ export const CreateGame = () => {
     navigation.goBack();
   };
 
-  const handlePrivateGameCreated = (code: string, gameName: string) => {
+  const handlePrivateLeagueCreated = (code: string, leagueName: string) => {
     setJoinCode(code);
-    setCreatedGameName(gameName);
+    setCreatedLeagueName(leagueName);
     setShowJoinCode(true);
   };
 
@@ -47,18 +47,18 @@ export const CreateGame = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {showJoinCode ? (
           <JoinCodeDisplay
-            gameName={createdGameName}
+            leagueName={createdLeagueName}
             tournamentName={activeTournament?.name || ''}
             joinCode={joinCode}
           />
         ) : (
-          <CreateGameForm
-            key={`${route.params.tournamentId}-${route.params.defaultGameType}`}
+          <CreateLeagueForm
+            key={`${route.params.tournamentId}-${route.params.defaultLeagueType}`}
             activeTournamentId={route.params.tournamentId}
             tournaments={tournaments}
-            defaultGameType={route.params.defaultGameType}
+            defaultLeagueType={route.params.defaultLeagueType}
             onSuccess={handleSuccess}
-            onPrivateGameCreated={handlePrivateGameCreated}
+            onPrivateLeagueCreated={handlePrivateLeagueCreated}
           />
         )}
       </ScrollView>

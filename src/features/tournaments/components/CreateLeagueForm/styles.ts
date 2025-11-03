@@ -9,7 +9,7 @@ export const InputLabel = styled.Text`
   margin-top: 16px;
 `;
 
-export const GameTypeRow = styled.View`
+export const LeagueTypeRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;

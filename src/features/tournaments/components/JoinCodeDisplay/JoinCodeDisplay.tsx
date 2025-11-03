@@ -11,12 +11,12 @@ import {
 } from './styles';
 
 interface JoinCodeDisplayProps {
-  gameName: string;
+  leagueName: string;
   tournamentName: string;
   joinCode: string;
 }
 
-export const JoinCodeDisplay = ({ gameName, tournamentName, joinCode }: JoinCodeDisplayProps) => {
+export const JoinCodeDisplay = ({ leagueName, tournamentName, joinCode }: JoinCodeDisplayProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopyCode = async () => {
@@ -28,7 +28,7 @@ export const JoinCodeDisplay = ({ gameName, tournamentName, joinCode }: JoinCode
   return (
     <Container>
       <TitleText>
-        Invite players to join {gameName} {tournamentName}
+        Invite players to join {leagueName} {tournamentName}
       </TitleText>
 
       <DescriptionText>Code to join this league:</DescriptionText>

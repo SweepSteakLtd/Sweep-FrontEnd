@@ -8,9 +8,9 @@ import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { JoinGameList } from '~/features/tournaments/components/JoinGameList/JoinGameList';
 import { useDebouncedValue } from '~/hooks/useDebouncedValue';
 import type { RootStackParamList } from '~/navigation/types';
-import type { Game } from '~/services/apis/Game/types';
-import { useDeleteGame } from '~/services/apis/Game/useDeleteGame';
-import { useGetGames } from '~/services/apis/Game/useGetGames';
+import type { League } from '~/services/apis/League/types';
+import { useDeleteLeague } from '~/services/apis/League/useDeleteLeague';
+import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { Container, EmptyState, PotInfo, PotLabel } from './styles';
 import { TournamentGamesSkeleton } from './TournamentGamesSkeleton';
@@ -39,12 +39,12 @@ export const TournamentGames = () => {
   const currentTournament = tournaments.find((t) => t.id === tournamentId);
 
   const {
-    data: games = [],
-    isLoading: gamesLoading,
-    isFetching: gamesFetching,
-    error: gamesError,
-    refetch: refetchGames,
-  } = useGetGames(
+    data: leagues = [],
+    isLoading: leaguesLoading,
+    isFetching: leaguesFetching,
+    error: leaguesError,
+    refetch: refetchLeagues,
+  } = useGetLeagues(
     {
       searchTerm: debouncedSearchQuery || undefined,
       tournamentId: tournamentId || undefined,
@@ -52,33 +52,33 @@ export const TournamentGames = () => {
     true,
   );
 
-  // Calculate total pot from current games
-  const totalPotForTournament = games.reduce(
-    (sum, game) => sum + (game.entry_fee ?? 0) * (game.max_participants ?? 0),
+  // Calculate total pot from current leagues
+  const totalPotForTournament = leagues.reduce(
+    (sum, league) => sum + (league.entry_fee ?? 0) * (league.max_participants ?? 0),
     0,
   );
 
-  const deleteGameMutation = useDeleteGame();
+  const deleteLeagueMutation = useDeleteLeague();
 
   const handleRefresh = async () => {
-    await refetchGames();
+    await refetchLeagues();
   };
 
-  const handleGameDelete = async (gameId: string) => {
+  const handleLeagueDelete = async (leagueId: string) => {
     try {
-      await deleteGameMutation.mutateAsync(gameId);
+      await deleteLeagueMutation.mutateAsync(leagueId);
     } catch (error) {
-      console.error('Failed to delete game:', error);
+      console.error('Failed to delete league:', error);
     }
   };
 
-  const handleCreateGame = useCallback(() => {
+  const handleCreateLeague = useCallback(() => {
     // Default to 'private' if on private tab, otherwise 'public' (for featured and public tabs)
-    const defaultGameType = activeGameTab === 'private' ? 'private' : 'public';
+    const defaultLeagueType = activeGameTab === 'private' ? 'private' : 'public';
 
-    navigation.navigate('CreateGame', {
+    navigation.navigate('CreateLeague', {
       tournamentId: tournamentId,
-      defaultGameType,
+      defaultLeagueType,
     });
   }, [activeGameTab, tournamentId, navigation]);
 
@@ -90,24 +90,24 @@ export const TournamentGames = () => {
     });
   }, [navigation, currentTournament]);
 
-  const handleGamePress = (game: Game) => {
-    // Navigate to game details
-    console.log('Game pressed:', game.id);
+  const handleLeaguePress = (league: League) => {
+    // Navigate to league details
+    console.log('League pressed:', league.id);
   };
 
   // Show full skeleton only on true initial load (isLoading means no cached data)
   // isFetching can be true even with cached data (background refetch)
-  if (gamesLoading) {
+  if (leaguesLoading) {
     return <TournamentGamesSkeleton />;
   }
 
-  if (gamesError) {
+  if (leaguesError) {
     return (
       <Container>
         <EmptyState>
           <PotLabel>Failed to load data</PotLabel>
           <PotLabel style={{ fontSize: 14, marginTop: 8 }}>
-            {gamesError?.message || 'Please try again later'}
+            {leaguesError?.message || 'Please try again later'}
           </PotLabel>
         </EmptyState>
       </Container>
@@ -120,7 +120,7 @@ export const TournamentGames = () => {
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
-            refreshing={gamesFetching && games.length > 0}
+            refreshing={leaguesFetching && leagues.length > 0}
             onRefresh={handleRefresh}
             tintColor={theme.colors.primary}
           />
@@ -137,11 +137,11 @@ export const TournamentGames = () => {
           />
         </PotInfo>
         <JoinGameList
-          games={games}
-          onGamePress={handleGamePress}
-          onGameDelete={handleGameDelete}
-          onCreateGame={handleCreateGame}
-          loading={gamesFetching}
+          games={leagues}
+          onGamePress={handleLeaguePress}
+          onGameDelete={handleLeagueDelete}
+          onCreateGame={handleCreateLeague}
+          loading={leaguesFetching}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           activeGameTab={activeGameTab}
