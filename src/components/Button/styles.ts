@@ -2,10 +2,11 @@ import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'link';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'link' | 'circular';
 
 export const getBackgroundColor = (variant: ButtonVariant, disabled: boolean, theme: Theme) => {
   if (variant === 'link') return 'transparent';
+  if (variant === 'circular') return theme.colors.white;
   if (disabled) return '#8b8b8b';
 
   switch (variant) {
@@ -37,6 +38,7 @@ export const getTextColor = (variant: ButtonVariant, theme: Theme) => {
 
 export const getBorderColor = (variant: ButtonVariant, theme: Theme) => {
   if (variant === 'link') return 'transparent';
+  if (variant === 'circular') return '#d1d1d1';
   return variant === 'outline' ? theme.colors.white : 'transparent';
 };
 
@@ -49,16 +51,31 @@ interface StyledButtonProps {
 export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
   background-color: ${({ theme, variant, disabled }: StyledButtonProps & { theme: Theme }) =>
     getBackgroundColor(variant, disabled, theme)};
-  padding: ${({ variant }: StyledButtonProps) => (variant === 'link' ? '8px' : '16px 24px')};
-  border-radius: ${({ variant }: StyledButtonProps) => (variant === 'link' ? '0px' : '25px')};
+  padding: ${({ variant }: StyledButtonProps) => {
+    if (variant === 'link') return '8px';
+    if (variant === 'circular') return '8px';
+    return '16px 24px';
+  }};
+  border-radius: ${({ variant }: StyledButtonProps) => {
+    if (variant === 'link') return '0px';
+    if (variant === 'circular') return '50%';
+    return '25px';
+  }};
   align-items: center;
   justify-content: center;
-  border-width: ${({ variant }: StyledButtonProps) => (variant === 'link' ? '0px' : '2px')};
+  border-width: ${({ variant }: StyledButtonProps) => {
+    if (variant === 'link') return '0px';
+    if (variant === 'circular') return '1px';
+    return '2px';
+  }};
   border-color: ${({ theme, variant }: StyledButtonProps & { theme: Theme }) =>
     getBorderColor(variant, theme)};
   opacity: ${({ disabled }: StyledButtonProps) => (disabled ? 0.6 : 1)};
-  width: ${({ fullWidth }: StyledButtonProps) => (fullWidth ? '100%' : 'auto')};
-  flex-direction: row;
+  width: ${({ fullWidth, variant }: StyledButtonProps) => {
+    if (variant === 'circular') return 'auto';
+    return fullWidth ? '100%' : 'auto';
+  }};
+  ${({ variant }: StyledButtonProps) => variant === 'circular' && 'aspect-ratio: 1;'}
 `;
 
 interface ButtonTextProps {

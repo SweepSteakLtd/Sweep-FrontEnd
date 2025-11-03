@@ -8,13 +8,14 @@ export const Container = styled.View`
 
 export const ScrollContent = styled.ScrollView.attrs({
   showsVerticalScrollIndicator: false,
-  contentContainerStyle: { paddingBottom: 20 },
+  contentContainerStyle: { paddingBottom: 20, paddingHorizontal: 16 },
 })``;
 
 export const Section = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
-  padding: 20px;
+  padding: 0 20px 20px 20px;
   margin-bottom: 12px;
+  border-radius: 12px;
 `;
 
 export const AvatarSection = styled.View`
@@ -22,23 +23,29 @@ export const AvatarSection = styled.View`
   padding: 20px;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   margin-bottom: 12px;
+  border-radius: 12px;
 `;
 
-export const ChangePhotoButton = styled.TouchableOpacity`
-  margin-top: 12px;
+export const AvatarContainer = styled.View`
+  position: relative;
+  width: 80px;
+  height: 80px;
 `;
 
-export const ChangePhotoText = styled.Text`
-  font-size: 14px;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  text-decoration: underline;
+export const EditButton = styled.View`
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
 `;
 
 export const SectionTitle = styled.Text`
-  font-size: 14px;
-  font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
-  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+  margin-bottom: 16px;
 `;
 
 export const InputRow = styled.View`
@@ -60,9 +67,9 @@ export const ToggleLabel = styled.Text`
 export const DeleteButton = styled.TouchableOpacity`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.error};
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   align-items: center;
-  margin: 20px;
+  margin: 20px 0;
 `;
 
 export const DeleteButtonText = styled.Text`

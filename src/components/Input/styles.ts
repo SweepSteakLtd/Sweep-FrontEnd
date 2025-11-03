@@ -12,6 +12,19 @@ export const CurrencyWrapper = styled.View`
   position: relative;
 `;
 
+export const InputWrapper = styled.View`
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const EyeIconButton = styled.TouchableOpacity`
+  position: absolute;
+  right: 12px;
+  padding: 4px;
+  z-index: 1;
+`;
+
 interface CurrencyPrefixProps {
   isFocused: boolean;
   hasError: boolean;
@@ -30,6 +43,7 @@ interface StyledInputProps {
   hasError: boolean;
   hasCurrency?: boolean;
   disabled?: boolean;
+  hasEyeIcon?: boolean;
 }
 
 export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) => ({
@@ -42,6 +56,7 @@ export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) 
     disabled ? theme.colors.text.secondary : theme.colors.input.text};
   padding: 12px 16px;
   padding-left: ${({ hasCurrency }: { hasCurrency?: boolean }) => (hasCurrency ? '36px' : '16px')};
+  padding-right: ${({ hasEyeIcon }: { hasEyeIcon?: boolean }) => (hasEyeIcon ? '44px' : '16px')};
   border-radius: 8px;
   font-size: 14px;
   border-width: 1px;

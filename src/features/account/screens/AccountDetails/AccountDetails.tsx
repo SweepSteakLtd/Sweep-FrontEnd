@@ -3,17 +3,19 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatar } from '~/components/Avatar/Avatar';
+import { Button } from '~/components/Button/Button';
+import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Switch } from '~/components/Switch/Switch';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import {
+  AvatarContainer,
   AvatarSection,
-  ChangePhotoButton,
-  ChangePhotoText,
   Container,
   DeleteButton,
   DeleteButtonText,
+  EditButton,
   InputRow,
   ScrollContent,
   Section,
@@ -35,7 +37,7 @@ export const AccountDetails = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: 'Account details',
+      title: 'Account Details',
     });
   }, [navigation]);
 
@@ -56,17 +58,21 @@ export const AccountDetails = () => {
       <Container>
         <ScrollContent>
           <AvatarSection>
-            <Avatar size={80} />
-            <ChangePhotoButton onPress={handleChangePhoto}>
-              <ChangePhotoText>change profile photo</ChangePhotoText>
-            </ChangePhotoButton>
+            <AvatarContainer>
+              <Avatar size={80} />
+              <EditButton>
+                <Button variant="circular" onPress={handleChangePhoto}>
+                  <Icon name="✏️" size={16} />
+                </Button>
+              </EditButton>
+            </AvatarContainer>
           </AvatarSection>
 
           <Section>
             <SectionTitle>Name</SectionTitle>
             <InputRow>
               <Input
-                label="NickName"
+                label="Nick Name"
                 value={nickName}
                 onChangeText={setNickName}
                 placeholder="Enter nickname"
@@ -74,7 +80,7 @@ export const AccountDetails = () => {
             </InputRow>
             <InputRow>
               <Input
-                label="FirstName"
+                label="First Name"
                 value={user?.first_name || ''}
                 editable={false}
                 placeholder="First name"
@@ -82,7 +88,7 @@ export const AccountDetails = () => {
             </InputRow>
             <InputRow>
               <Input
-                label="LastName"
+                label="Last Name"
                 value={user?.last_name || ''}
                 editable={false}
                 placeholder="Last name"

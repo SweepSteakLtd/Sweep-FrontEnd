@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { NativeSyntheticEvent, TextInputFocusEventData, TextInputProps } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import { Icon } from '../Icon/Icon';
 import { Typography } from '../Typography/Typography';
-import { Container, CurrencyPrefix, CurrencyWrapper, ErrorText, StyledInput } from './styles';
+import {
+  Container,
+  CurrencyPrefix,
+  CurrencyWrapper,
+  ErrorText,
+  EyeIconButton,
+  InputWrapper,
+  StyledInput,
+} from './styles';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -18,10 +27,12 @@ export const Input: React.FC<InputProps> = ({
   onBlur,
   value,
   onChangeText,
+  secureTextEntry,
   ...props
 }) => {
   const theme = useTheme();
   const [isFocused, setIsFocused] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(true);
@@ -42,18 +53,21 @@ export const Input: React.FC<InputProps> = ({
   };
 
   const labelColor = variant === 'light' ? theme.colors.white : theme.colors.text.primary;
+  const hasEyeIcon = secureTextEntry === true;
 
   const inputContent = (
     <StyledInput
       isFocused={isFocused}
       hasError={!!error}
       hasCurrency={variant === 'currency'}
+      hasEyeIcon={hasEyeIcon}
       disabled={props.editable === false}
       onFocus={handleFocus}
       onBlur={handleBlur}
       value={value}
       onChangeText={variant === 'currency' ? handleCurrencyChange : onChangeText}
       keyboardType={variant === 'currency' ? 'decimal-pad' : props.keyboardType}
+      secureTextEntry={secureTextEntry && !isPasswordVisible}
       {...props}
     />
   );
@@ -79,7 +93,17 @@ export const Input: React.FC<InputProps> = ({
           {inputContent}
         </CurrencyWrapper>
       ) : (
-        inputContent
+        <InputWrapper>
+          {inputContent}
+          {hasEyeIcon && (
+            <EyeIconButton
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              activeOpacity={0.7}
+            >
+              <Icon name={isPasswordVisible ? '👁️' : '👁️‍🗨️'} size={20} />
+            </EyeIconButton>
+          )}
+        </InputWrapper>
       )}
       {error && (
         <ErrorText variant="caption" color={theme.colors.error}>
