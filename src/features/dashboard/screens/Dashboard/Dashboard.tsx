@@ -65,7 +65,7 @@ export const Dashboard = () => {
   const handleTournamentPress = (tournament: Tournament) => {
     // Navigate to the games listing screen for this tournament
     if (tournament.id) {
-      navigation.navigate('TournamentGames', { tournamentId: tournament.id });
+      navigation.navigate('TournamentLeagues', { tournamentId: tournament.id });
     }
   };
 

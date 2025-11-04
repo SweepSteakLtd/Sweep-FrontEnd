@@ -21,7 +21,7 @@ import { Landing } from '~/features/onboarding/screens/Landing/Landing';
 import { Splash } from '~/features/onboarding/screens/Splash/Splash';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
-import { TournamentGames } from '~/features/tournaments/screens/TournamentGames/TournamentGames';
+import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -69,7 +69,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="SetLimits" component={SetLimits} />
         <Stack.Screen name="SpendLimit" component={SpendLimit} />
         <Stack.Screen name="SelfExclusion" component={SelfExclusion} />
-        <Stack.Screen name="TournamentGames" component={TournamentGames} />
+        <Stack.Screen name="TournamentLeagues" component={TournamentLeagues} />
         <Stack.Screen name="CreateLeague" component={CreateLeague} />
         <Stack.Screen name="MyTeams" component={MyTeams} />
         <Stack.Screen name="MyLeagues" component={MyLeagues} />

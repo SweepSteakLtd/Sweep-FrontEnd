@@ -12,7 +12,7 @@ const gameTabs = [
   { id: 'private', label: 'Private' },
 ];
 
-export const TournamentGamesSkeleton = () => {
+export const TournamentLeaguesSkeleton = () => {
   const theme = useTheme();
 
   return (

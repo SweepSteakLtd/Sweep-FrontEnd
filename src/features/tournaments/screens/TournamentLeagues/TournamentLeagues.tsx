@@ -9,18 +9,17 @@ import { JoinGameList } from '~/features/tournaments/components/JoinGameList/Joi
 import { useDebouncedValue } from '~/hooks/useDebouncedValue';
 import type { RootStackParamList } from '~/navigation/types';
 import type { League } from '~/services/apis/League/types';
-import { useDeleteLeague } from '~/services/apis/League/useDeleteLeague';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { Container, EmptyState, PotInfo, PotLabel } from './styles';
-import { TournamentGamesSkeleton } from './TournamentGamesSkeleton';
+import { TournamentLeaguesSkeleton } from './TournamentLeaguesSkeleton';
 
-type TournamentGamesRouteProp = RouteProp<RootStackParamList, 'TournamentGames'>;
-type TournamentGamesNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type TournamentLeaguesRouteProp = RouteProp<RootStackParamList, 'TournamentLeagues'>;
+type TournamentLeaguesNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export const TournamentGames = () => {
-  const route = useRoute<TournamentGamesRouteProp>();
-  const navigation = useNavigation<TournamentGamesNavigationProp>();
+export const TournamentLeagues = () => {
+  const route = useRoute<TournamentLeaguesRouteProp>();
+  const navigation = useNavigation<TournamentLeaguesNavigationProp>();
   const theme = useTheme();
 
   const tournamentId = route.params?.tournamentId || '';
@@ -58,18 +57,8 @@ export const TournamentGames = () => {
     0,
   );
 
-  const deleteLeagueMutation = useDeleteLeague();
-
   const handleRefresh = async () => {
     await refetchLeagues();
-  };
-
-  const handleLeagueDelete = async (leagueId: string) => {
-    try {
-      await deleteLeagueMutation.mutateAsync(leagueId);
-    } catch (error) {
-      console.error('Failed to delete league:', error);
-    }
   };
 
   const handleCreateLeague = useCallback(() => {
@@ -98,7 +87,7 @@ export const TournamentGames = () => {
   // Show full skeleton only on true initial load (isLoading means no cached data)
   // isFetching can be true even with cached data (background refetch)
   if (leaguesLoading) {
-    return <TournamentGamesSkeleton />;
+    return <TournamentLeaguesSkeleton />;
   }
 
   if (leaguesError) {
@@ -139,7 +128,6 @@ export const TournamentGames = () => {
         <JoinGameList
           games={leagues}
           onGamePress={handleLeaguePress}
-          onGameDelete={handleLeagueDelete}
           onCreateGame={handleCreateLeague}
           loading={leaguesFetching}
           searchQuery={searchQuery}

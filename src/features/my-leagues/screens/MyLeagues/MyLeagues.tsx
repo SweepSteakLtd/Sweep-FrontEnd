@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
 import type { RootStackParamList } from '~/navigation/types';
+import { useDeleteLeague } from '~/services/apis/League/useDeleteLeague';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { MyLeaguesSkeleton } from './MyLeaguesSkeleton';
@@ -35,6 +36,7 @@ export const MyLeagues = () => {
     user?.id ? { owner_id: user.id } : undefined,
     !!user?.id,
   );
+  const deleteLeagueMutation = useDeleteLeague();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -45,6 +47,14 @@ export const MyLeagues = () => {
 
   // Calculate stats
   const leaguesCreatedCount = leagues?.length || 0;
+
+  const handleLeagueDelete = async (leagueId: string) => {
+    try {
+      await deleteLeagueMutation.mutateAsync(leagueId);
+    } catch (error) {
+      console.error('Failed to delete league:', error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -94,6 +104,7 @@ export const MyLeagues = () => {
                   // TODO: Navigate to league details
                   console.log('Navigate to league:', league.id);
                 }}
+                onDelete={handleLeagueDelete}
               />
             ))
           ) : (
