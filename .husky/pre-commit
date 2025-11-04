@@ -18,8 +18,8 @@ fi
 # Verify API schemas are in sync with OpenAPI spec
 echo ""
 echo "🔍 Verifying API schemas..."
-yarn verify-schemas
-SCHEMA_EXIT_CODE=$?
+yarn verify-schemas || SCHEMA_EXIT_CODE=$?
+SCHEMA_EXIT_CODE=${SCHEMA_EXIT_CODE:-0}
 
 if [ $SCHEMA_EXIT_CODE -eq 0 ]; then
   echo "✅ API schemas are in sync"
