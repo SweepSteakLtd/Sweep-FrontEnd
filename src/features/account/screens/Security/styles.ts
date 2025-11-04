@@ -3,7 +3,7 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;
 
 export const ScrollContent = styled.ScrollView.attrs({

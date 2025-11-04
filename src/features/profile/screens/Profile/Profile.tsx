@@ -3,6 +3,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from 'styled-components/native';
 import { Avatar } from '~/components/Avatar/Avatar';
 import { useAuth } from '~/contexts/AuthContext';
 import type { RootStackParamList } from '~/navigation/types';
@@ -27,6 +28,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const Profile = () => {
   const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme();
   const { signOut } = useAuth();
   const { data: user } = useGetUser();
 
@@ -49,24 +51,24 @@ export const Profile = () => {
   };
 
   const menuItems = [
+    { icon: '👤', label: 'Account details', onPress: () => navigation.navigate('AccountDetails') },
     { icon: '👥', label: 'My Teams', onPress: () => navigation.navigate('MyTeams') },
     { icon: '🏆', label: 'My Leagues', onPress: () => navigation.navigate('MyLeagues') },
-    { icon: '👤', label: 'Account details', onPress: () => navigation.navigate('AccountDetails') },
-    { icon: '🔒', label: 'Security', onPress: () => navigation.navigate('Security') },
+    { icon: '📊', label: 'Activity', onPress: () => {} },
+    { icon: '🔒', label: 'Change Password', onPress: () => navigation.navigate('Security') },
     {
       icon: '🎰',
       label: 'Betting Controls',
       onPress: () => navigation.navigate('BettingControls'),
     },
-    { icon: '📊', label: 'Activity', onPress: () => {} },
     { icon: '❓', label: 'Support', onPress: () => {} },
     { icon: '📄', label: 'Legal', onPress: () => {} },
-    { icon: '🚪', label: 'Sign out', onPress: handleLogout },
+    { icon: '⏻', label: 'Sign out', onPress: handleLogout },
     { icon: '⚙️', label: 'API Mocks', onPress: () => navigation.navigate('Settings') },
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}

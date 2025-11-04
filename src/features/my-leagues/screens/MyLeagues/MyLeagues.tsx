@@ -49,7 +49,7 @@ export const MyLeagues = () => {
   if (isLoading) {
     return (
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: theme.colors.backgroundLight }}
+        style={{ flex: 1, backgroundColor: theme.colors.white }}
         edges={['bottom', 'left', 'right']}
       >
         <MyLeaguesSkeleton />
@@ -59,7 +59,7 @@ export const MyLeagues = () => {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.colors.backgroundLight }}
+      style={{ flex: 1, backgroundColor: theme.colors.white }}
       edges={['bottom', 'left', 'right']}
     >
       <Container>

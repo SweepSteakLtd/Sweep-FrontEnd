@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from 'styled-components/native';
 import type { RootStackParamList } from '~/navigation/types';
 import {
   Container,
@@ -21,6 +22,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const SpendLimit = () => {
   const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme();
 
   // Mock data
   const remainingSpend = 5000;
@@ -35,7 +37,7 @@ export const SpendLimit = () => {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <ScrollContent>
           <Title>Spend Limit</Title>

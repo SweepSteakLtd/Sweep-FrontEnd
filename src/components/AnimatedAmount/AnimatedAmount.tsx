@@ -49,29 +49,22 @@ export const AnimatedAmount: React.FC<AnimatedAmountProps> = ({
   );
 
   useEffect(() => {
-    // Only animate if value is more than 50
-    if (value > 50) {
-      // Set up listener to update display value as animation progresses
-      const listenerId = animatedValue.addListener(({ value: currentValue }) => {
-        setDisplayValue(formatCurrency(currentValue, currencySymbol, decimals));
-      });
+    // Set up listener to update display value as animation progresses
+    const listenerId = animatedValue.addListener(({ value: currentValue }) => {
+      setDisplayValue(formatCurrency(currentValue, currencySymbol, decimals));
+    });
 
-      // Animate to final value
-      Animated.timing(animatedValue, {
-        toValue: value,
-        duration,
-        useNativeDriver: false, // Can't use native driver for value interpolation
-      }).start();
+    // Animate to final value
+    Animated.timing(animatedValue, {
+      toValue: value,
+      duration,
+      useNativeDriver: false, // Can't use native driver for value interpolation
+    }).start();
 
-      // Cleanup listener on unmount
-      return () => {
-        animatedValue.removeListener(listenerId);
-      };
-    } else {
-      // For values <= 50, just display the value directly without animation
-      setDisplayValue(formatCurrency(value, currencySymbol, decimals));
-      return undefined;
-    }
+    // Cleanup listener on unmount
+    return () => {
+      animatedValue.removeListener(listenerId);
+    };
   }, [value, duration, currencySymbol, decimals, animatedValue]);
 
   return (

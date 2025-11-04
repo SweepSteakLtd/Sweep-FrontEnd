@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from 'styled-components/native';
+import { useAlert } from '~/components/Alert/Alert';
 import { Avatar } from '~/components/Avatar/Avatar';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
@@ -26,6 +27,8 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const AccountDetails = () => {
   const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme();
+  const { showAlert } = useAlert();
   const { data: user } = useGetUser();
   const updateUserMutation = useUpdateUser();
 
@@ -57,15 +60,21 @@ export const AccountDetails = () => {
       await updateUserMutation.mutateAsync({
         nickname: nickName,
       });
-      Alert.alert('Success', 'Account details updated successfully');
+      showAlert({
+        title: 'Success',
+        message: 'Account details updated successfully',
+      });
     } catch (error) {
-      Alert.alert('Error', 'Failed to update account details');
+      showAlert({
+        title: 'Error',
+        message: 'Failed to update account details',
+      });
       console.error('Update error:', error);
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <ScrollContent>
           <AvatarSection>

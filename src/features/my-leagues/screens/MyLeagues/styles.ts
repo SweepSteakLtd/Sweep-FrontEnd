@@ -3,7 +3,7 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;
 
 export const ScrollContent = styled.ScrollView.attrs({
@@ -18,6 +18,13 @@ export const Header = styled.View`
   margin-bottom: 16px;
   margin-horizontal: 16px;
   border-radius: 12px;
+  border-width: 1px;
+  border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
+  shadow-color: #000;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.1;
+  shadow-radius: 4px;
+  elevation: 3;
 `;
 
 export const BalanceRow = styled.View`
@@ -64,7 +71,7 @@ export const StatCircle = styled.View`
   height: 80px;
   border-radius: 40px;
   border-width: 3px;
-  border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
+  border-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
   justify-content: center;
   align-items: center;
   margin-bottom: 8px;
@@ -73,7 +80,7 @@ export const StatCircle = styled.View`
 export const StatValue = styled.Text`
   font-size: 32px;
   font-weight: 700;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
 `;
 
 export const StatLabel = styled.Text`

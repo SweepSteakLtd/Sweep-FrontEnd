@@ -3,7 +3,7 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;
 
 export const ScrollContent = styled.ScrollView.attrs({
@@ -11,38 +11,11 @@ export const ScrollContent = styled.ScrollView.attrs({
   contentContainerStyle: { padding: 16 },
 })``;
 
-export const TabContainer = styled.View`
-  flex-direction: row;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
-  border-radius: 25px;
-  padding: 4px;
-  margin-bottom: 20px;
-`;
-
-interface TabProps {
-  active: boolean;
-}
-
-export const Tab = styled.TouchableOpacity<TabProps>`
-  flex: 1;
-  padding: 12px;
-  border-radius: 20px;
-  background-color: ${({ theme, active }: { theme: Theme; active: boolean }) =>
-    active ? theme.colors.text.primary : 'transparent'};
-  align-items: center;
-`;
-
-export const TabText = styled.Text<TabProps>`
-  font-size: 14px;
-  font-weight: 600;
-  color: ${({ theme, active }: { theme: Theme; active: boolean }) =>
-    active ? theme.colors.white : theme.colors.text.secondary};
-`;
-
 export const Section = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   padding: 20px;
   border-radius: 12px;
+  margin-top: 20px;
 `;
 
 export const InputRow = styled.View`
@@ -69,5 +42,5 @@ export const RemoveButtonText = styled.Text`
 
 export const ButtonContainer = styled.View`
   padding: 0 20px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;

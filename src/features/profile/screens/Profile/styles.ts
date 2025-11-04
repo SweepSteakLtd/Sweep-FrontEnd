@@ -3,7 +3,7 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;
 
 export const Header = styled.View`
@@ -18,8 +18,6 @@ export const BalanceCard = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   padding: 20px 24px;
   align-items: center;
-  border-bottom-width: 1px;
-  border-bottom-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
   gap: 24px;
 `;
 

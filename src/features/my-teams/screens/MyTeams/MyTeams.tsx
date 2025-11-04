@@ -51,7 +51,7 @@ export const MyTeams = () => {
   if (isLoading) {
     return (
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: theme.colors.backgroundLight }}
+        style={{ flex: 1, backgroundColor: theme.colors.white }}
         edges={['bottom', 'left', 'right']}
       >
         <MyTeamsSkeleton />
@@ -61,7 +61,7 @@ export const MyTeams = () => {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.colors.backgroundLight }}
+      style={{ flex: 1, backgroundColor: theme.colors.white }}
       edges={['bottom', 'left', 'right']}
     >
       <Container>

@@ -3,12 +3,12 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;
 
 export const ScrollContent = styled.ScrollView.attrs({
   showsVerticalScrollIndicator: false,
-  contentContainerStyle: { paddingTop: 20, paddingBottom: 20, paddingHorizontal: 16 },
+  contentContainerStyle: { paddingTop: 20, paddingBottom: 20, paddingHorizontal: 0 },
 })`
   flex: 1;
 `;
@@ -17,15 +17,21 @@ export const Section = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   padding: 0 20px 20px 20px;
   margin-bottom: 12px;
+  margin-horizontal: 16px;
   border-radius: 12px;
+  border-width: 1px;
+  border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
+  shadow-color: #000;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.1;
+  shadow-radius: 4px;
+  elevation: 3;
 `;
 
 export const AvatarSection = styled.View`
   align-items: center;
   padding: 20px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   margin-bottom: 12px;
-  border-radius: 12px;
 `;
 
 export const AvatarContainer = styled.View`
@@ -68,5 +74,5 @@ export const ToggleLabel = styled.Text`
 
 export const ButtonContainer = styled.View`
   padding: 0 16px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;

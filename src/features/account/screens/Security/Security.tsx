@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
 import type { RootStackParamList } from '~/navigation/types';
@@ -19,6 +20,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const Security = () => {
   const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme();
   const { changePassword, loading, errors } = useChangePassword();
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -48,7 +50,7 @@ export const Security = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <ScrollContent style={{ flex: 1 }}>
           <Section>

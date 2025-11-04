@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from 'styled-components/native';
 import { Icon } from '~/components/Icon/Icon';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, MenuCard, MenuIcon, MenuText, ScrollContent } from './styles';
@@ -10,6 +11,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const BettingControls = () => {
   const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,7 +21,7 @@ export const BettingControls = () => {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <ScrollContent>
           <MenuCard onPress={() => navigation.navigate('SetLimits')} activeOpacity={0.7}>

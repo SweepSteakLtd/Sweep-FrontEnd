@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
+import { TabBar } from '~/components/TabBar/TabBar';
 import type { RootStackParamList } from '~/navigation/types';
 import {
   ButtonContainer,
@@ -15,9 +16,6 @@ import {
   RemoveButtonText,
   ScrollContent,
   Section,
-  Tab,
-  TabContainer,
-  TabText,
 } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -47,60 +45,74 @@ export const SetLimits = () => {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.colors.backgroundLight }}
-      edges={['bottom']}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <ScrollContent style={{ flex: 1 }}>
-          <TabContainer>
-            <Tab active={activeTab === 'deposit'} onPress={() => setActiveTab('deposit')}>
-              <TabText active={activeTab === 'deposit'}>Deposit</TabText>
-            </Tab>
-            <Tab active={activeTab === 'stake'} onPress={() => setActiveTab('stake')}>
-              <TabText active={activeTab === 'stake'}>Stake</TabText>
-            </Tab>
-          </TabContainer>
+          <TabBar
+            tabs={[
+              { id: 'deposit', label: 'Deposit' },
+              { id: 'stake', label: 'Stake' },
+            ]}
+            activeTab={activeTab}
+            onTabPress={(tabId) => setActiveTab(tabId as 'deposit' | 'stake')}
+          />
 
           <Section>
-            <InputRow>
-              <LimitLabel>{activeTab === 'deposit' ? 'Monthly limit' : 'Stake limit'}</LimitLabel>
-              <Input
-                variant="currency"
-                value={monthlyLimit}
-                onChangeText={setMonthlyLimit}
-                placeholder="0"
-              />
-              <RemoveButton onPress={() => handleRemove('monthly')}>
-                <RemoveButtonText>Remove</RemoveButtonText>
-              </RemoveButton>
-            </InputRow>
+            {activeTab === 'deposit' ? (
+              <>
+                <InputRow>
+                  <LimitLabel>Monthly limit</LimitLabel>
+                  <Input
+                    variant="currency"
+                    value={monthlyLimit}
+                    onChangeText={setMonthlyLimit}
+                    placeholder="0"
+                  />
+                  <RemoveButton onPress={() => handleRemove('monthly')}>
+                    <RemoveButtonText>Remove</RemoveButtonText>
+                  </RemoveButton>
+                </InputRow>
 
-            <InputRow>
-              <LimitLabel>Weekly limit</LimitLabel>
-              <Input
-                variant="currency"
-                value={weeklyLimit}
-                onChangeText={setWeeklyLimit}
-                placeholder="0"
-              />
-              <RemoveButton onPress={() => handleRemove('weekly')}>
-                <RemoveButtonText>Remove</RemoveButtonText>
-              </RemoveButton>
-            </InputRow>
+                <InputRow>
+                  <LimitLabel>Weekly limit</LimitLabel>
+                  <Input
+                    variant="currency"
+                    value={weeklyLimit}
+                    onChangeText={setWeeklyLimit}
+                    placeholder="0"
+                  />
+                  <RemoveButton onPress={() => handleRemove('weekly')}>
+                    <RemoveButtonText>Remove</RemoveButtonText>
+                  </RemoveButton>
+                </InputRow>
 
-            <InputRow>
-              <LimitLabel>Daily limit</LimitLabel>
-              <Input
-                variant="currency"
-                value={dailyLimit}
-                onChangeText={setDailyLimit}
-                placeholder="0"
-              />
-              <RemoveButton onPress={() => handleRemove('daily')}>
-                <RemoveButtonText>Remove</RemoveButtonText>
-              </RemoveButton>
-            </InputRow>
+                <InputRow>
+                  <LimitLabel>Daily limit</LimitLabel>
+                  <Input
+                    variant="currency"
+                    value={dailyLimit}
+                    onChangeText={setDailyLimit}
+                    placeholder="0"
+                  />
+                  <RemoveButton onPress={() => handleRemove('daily')}>
+                    <RemoveButtonText>Remove</RemoveButtonText>
+                  </RemoveButton>
+                </InputRow>
+              </>
+            ) : (
+              <InputRow>
+                <LimitLabel>Stake limit</LimitLabel>
+                <Input
+                  variant="currency"
+                  value={monthlyLimit}
+                  onChangeText={setMonthlyLimit}
+                  placeholder="0"
+                />
+                <RemoveButton onPress={() => handleRemove('stake')}>
+                  <RemoveButtonText>Remove</RemoveButtonText>
+                </RemoveButton>
+              </InputRow>
+            )}
           </Section>
         </ScrollContent>
         <ButtonContainer>
