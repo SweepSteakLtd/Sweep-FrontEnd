@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
+import { api } from '../apiClient';
 import { User } from './types';
 
 // Query Keys
@@ -16,25 +17,9 @@ export const fetchUser = async (): Promise<User | null> => {
   }
 
   try {
-    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users/me`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json', 'x-auth-id': token },
-    });
-
-    // 404 means user profile doesn't exist - this is expected for new users
-    if (res.status === 404) {
-      return null;
-    }
-
-    // Any other non-200 status (like 500 server error) should throw an error
-    // so the caller knows something went wrong vs user simply not existing
-    if (res.status !== 200) {
-      const errorText = await res.text();
-      throw new Error(`Failed to fetch user: ${res.status} - ${errorText}`);
-    }
-
-    const data = (await res.json()).data as User;
-    return data;
+    // allow404 returns null if user doesn't exist (expected for new users)
+    const data = await api.get<{ data: User }>('/api/users/me', { allow404: true });
+    return data?.data ?? null;
   } catch (error) {
     // Re-throw the error so the caller can handle it appropriately
     // Network errors, 500s, etc. should not be treated as "user doesn't exist"

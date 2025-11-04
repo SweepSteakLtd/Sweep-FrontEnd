@@ -15,6 +15,8 @@ import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/C
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
+import { MyLeagues } from '~/features/my-leagues/screens/MyLeagues/MyLeagues';
+import { MyTeams } from '~/features/my-teams/screens/MyTeams/MyTeams';
 import { Landing } from '~/features/onboarding/screens/Landing/Landing';
 import { Splash } from '~/features/onboarding/screens/Splash/Splash';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
@@ -69,6 +71,8 @@ export const RootNavigator = () => {
         <Stack.Screen name="SelfExclusion" component={SelfExclusion} />
         <Stack.Screen name="TournamentGames" component={TournamentGames} />
         <Stack.Screen name="CreateLeague" component={CreateLeague} />
+        <Stack.Screen name="MyTeams" component={MyTeams} />
+        <Stack.Screen name="MyLeagues" component={MyLeagues} />
         <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
     </NavigationContainer>

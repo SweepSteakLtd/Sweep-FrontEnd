@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { firebaseAuth } from '~/lib/firebase';
+import { api } from '../apiClient';
 import { User } from './types';
 import { userQueryKeys } from './useGetUser';
 
@@ -15,23 +15,7 @@ export interface CreateUserProfileParams {
 
 // API Function
 const createUserProfile = async (params: CreateUserProfileParams): Promise<User> => {
-  const token = await firebaseAuth.currentUser?.getIdToken();
-
-  const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/users`, {
-    method: 'POST',
-    body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-      'x-auth-id': token || '',
-    },
-  });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Failed to create profile' }));
-    throw new Error(error.message || 'Failed to create profile');
-  }
-
-  return response.json();
+  return api.post<User>('/api/users', params);
 };
 
 /**

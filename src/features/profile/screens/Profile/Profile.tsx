@@ -49,8 +49,8 @@ export const Profile = () => {
   };
 
   const menuItems = [
-    { icon: '👥', label: 'My Teams', onPress: () => {} },
-    { icon: '🏆', label: 'My Leagues', onPress: () => {} },
+    { icon: '👥', label: 'My Teams', onPress: () => navigation.navigate('MyTeams') },
+    { icon: '🏆', label: 'My Leagues', onPress: () => navigation.navigate('MyLeagues') },
     { icon: '👤', label: 'Account details', onPress: () => navigation.navigate('AccountDetails') },
     { icon: '🔒', label: 'Security', onPress: () => navigation.navigate('Security') },
     {

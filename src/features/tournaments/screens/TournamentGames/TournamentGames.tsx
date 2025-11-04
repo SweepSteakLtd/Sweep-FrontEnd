@@ -39,18 +39,21 @@ export const TournamentGames = () => {
   const currentTournament = tournaments.find((t) => t.id === tournamentId);
 
   const {
-    data: leagues = [],
+    data: allLeagues = [],
     isLoading: leaguesLoading,
     isFetching: leaguesFetching,
     error: leaguesError,
     refetch: refetchLeagues,
-  } = useGetLeagues(
-    {
-      searchTerm: debouncedSearchQuery || undefined,
-      tournamentId: tournamentId || undefined,
-    },
-    true,
-  );
+  } = useGetLeagues(true);
+
+  // Filter leagues by tournament and search term on client side
+  const leagues = allLeagues.filter((league) => {
+    const matchesTournament = league.tournament_id === tournamentId;
+    const matchesSearch =
+      !debouncedSearchQuery ||
+      league.name?.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+    return matchesTournament && matchesSearch;
+  });
 
   // Calculate total pot from current leagues
   const totalPotForTournament = leagues.reduce(

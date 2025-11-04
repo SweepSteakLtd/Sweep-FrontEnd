@@ -18,6 +18,8 @@ export type RootStackParamList = {
   SetLimits: undefined;
   SpendLimit: undefined;
   SelfExclusion: undefined;
+  MyTeams: undefined;
+  MyLeagues: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

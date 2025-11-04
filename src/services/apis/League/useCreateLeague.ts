@@ -1,34 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { firebaseAuth } from '~/lib/firebase';
+import { api } from '../apiClient';
 import { CreateLeagueRequest, CreateLeagueResponse } from './types';
 
 // API Function
 export const createLeague = async (
   leagueData: CreateLeagueRequest,
 ): Promise<CreateLeagueResponse> => {
-  const token = await firebaseAuth.currentUser?.getIdToken();
-
-  if (!token) {
-    throw new Error('Not authenticated');
-  }
-
   try {
-    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/leagues`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-auth-id': token,
-      },
-      body: JSON.stringify(leagueData),
-    });
-
-    if (res.status !== 201) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || `Failed to create league: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return data.data as CreateLeagueResponse;
+    const data = await api.post<{ data: CreateLeagueResponse }>('/api/leagues', leagueData);
+    return data.data;
   } catch (error) {
     console.error('Error creating league:', error);
     throw error;

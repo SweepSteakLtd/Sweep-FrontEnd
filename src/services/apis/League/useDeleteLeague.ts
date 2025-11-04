@@ -1,26 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { firebaseAuth } from '~/lib/firebase';
+import { api } from '../apiClient';
 
 // API Function
 export const deleteLeague = async (leagueId: string): Promise<void> => {
-  const token = await firebaseAuth.currentUser?.getIdToken();
-
-  if (!token) {
-    throw new Error('Not authenticated');
-  }
-
   try {
-    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/leagues/${leagueId}`, {
-      method: 'DELETE',
-      headers: {
-        'x-auth-id': token,
-      },
-    });
-
-    if (res.status !== 204 && res.status !== 200) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || `Failed to delete league: ${res.status}`);
-    }
+    await api.delete(`/api/leagues/${leagueId}`);
   } catch (error) {
     console.error('Error deleting league:', error);
     throw error;
