@@ -85,7 +85,11 @@ export const Input: React.FC<InputProps> = ({
       )}
       {variant === 'currency' ? (
         <CurrencyWrapper>
-          <CurrencyPrefix isFocused={isFocused} hasError={!!error}>
+          <CurrencyPrefix
+            isFocused={isFocused}
+            hasError={!!error}
+            disabled={props.editable === false}
+          >
             <Typography variant="body" color={theme.colors.text.primary}>
               £
             </Typography>

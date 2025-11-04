@@ -15,7 +15,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({ checked, label, children, ..
   const theme = useTheme();
   return (
     <Container {...props}>
-      <CheckboxBox checked={checked}>{checked && <Icon name="✓" size={16} />}</CheckboxBox>
+      <CheckboxBox checked={checked}>
+        {checked && <Icon name="✓" size={16} style={{ color: theme.colors.white }} />}
+      </CheckboxBox>
       <LabelContainer>
         {label && (
           <Typography variant="caption" color={theme.colors.white}>

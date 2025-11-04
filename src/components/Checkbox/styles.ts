@@ -4,9 +4,8 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled(TouchableOpacity)`
   flex-direction: row;
-  align-items: flex-start;
-  padding: 15px;
-  background-color: rgba(255, 255, 255, 0.1);
+  align-items: center;
+  padding: 4px;
   border-radius: 8px;
 `;
 
@@ -19,15 +18,16 @@ export const CheckboxBox = styled.View<CheckboxBoxProps>`
   height: 24px;
   border-radius: 4px;
   border-width: 2px;
-  border-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  border-color: ${({ theme, checked }: { theme: Theme; checked: boolean }) =>
+    checked ? theme.colors.primary : theme.colors.border};
   background-color: ${({ theme, checked }: { theme: Theme; checked: boolean }) =>
-    checked ? theme.colors.white : 'transparent'};
+    checked ? theme.colors.primary : 'transparent'};
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
+  margin-right: 8px;
   flex-shrink: 0;
 `;
 
 export const LabelContainer = styled.View`
-  flex: 1;
+  flex-shrink: 1;
 `;

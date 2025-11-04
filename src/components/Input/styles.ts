@@ -28,13 +28,15 @@ export const EyeIconButton = styled.TouchableOpacity`
 interface CurrencyPrefixProps {
   isFocused: boolean;
   hasError: boolean;
+  disabled?: boolean;
 }
 
 export const CurrencyPrefix = styled.View<CurrencyPrefixProps>`
   position: absolute;
   left: 16px;
   z-index: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.input.background};
+  background-color: ${({ theme, disabled }: { theme: Theme; disabled?: boolean }) =>
+    disabled ? theme.colors.backgroundLight : theme.colors.input.background};
   padding-vertical: 4px;
 `;
 
