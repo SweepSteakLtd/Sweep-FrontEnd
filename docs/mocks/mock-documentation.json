@@ -1,7 +1,7 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-11-03T14:21:57.467Z",
+  "generatedAt": "2025-11-04T10:20:35.386Z",
   "endpoints": [
     {
       "id": "create-bet",
@@ -47,7 +47,7 @@
       "id": "get-leagues",
       "name": "Get Leagues List",
       "method": "GET",
-      "path": "/api/games",
+      "path": "/api/leagues",
       "description": "Get Leagues List endpoint",
       "defaultScenario": "Success",
       "scenarios": [

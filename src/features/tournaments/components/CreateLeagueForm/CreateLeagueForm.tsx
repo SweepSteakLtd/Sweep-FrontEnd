@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { Button } from '~/components/Button/Button';
 import { Dropdown } from '~/components/Dropdown/Dropdown';
 import { Input } from '~/components/Input/Input';
 import { Switch } from '~/components/Switch/Switch';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import { useCreateLeague } from '~/services/apis/League/useCreateLeague';
 import type { Tournament } from '~/services/apis/Tournament/types';
-import { ButtonContainer, ErrorText, LeagueTypeRow, InputLabel, SwitchLabel } from './styles';
+import { ErrorText, InputLabel, LeagueTypeRow, SwitchLabel } from './styles';
 import { createLeagueSchema } from './validation';
 
 interface CreateLeagueFormProps {
@@ -17,6 +16,7 @@ interface CreateLeagueFormProps {
   defaultLeagueType?: 'public' | 'private';
   onSuccess?: () => void;
   onPrivateLeagueCreated?: (joinCode: string, leagueName: string) => void;
+  onSubmit?: (handleCreateLeague: () => Promise<void>) => void;
 }
 
 interface FieldErrors extends Record<string, string | undefined> {
@@ -32,6 +32,7 @@ export const CreateLeagueForm = ({
   defaultLeagueType = 'public',
   onSuccess,
   onPrivateLeagueCreated,
+  onSubmit,
 }: CreateLeagueFormProps) => {
   const theme = useTheme();
   const createLeagueMutation = useCreateLeague();
@@ -104,8 +105,13 @@ export const CreateLeagueForm = ({
     }
   };
 
+  // Expose the handler to parent component
+  useEffect(() => {
+    onSubmit?.(handleCreateLeague);
+  }, [leagueName, selectedTournamentId, entryFee, maxEntries, leagueType]);
+
   return (
-    <View style={{ padding: 20 }}>
+    <View style={{ paddingHorizontal: 20 }}>
       <Input
         label="League Name"
         value={leagueName}
@@ -177,17 +183,6 @@ export const CreateLeagueForm = ({
       />
 
       {createError ? <ErrorText>{createError}</ErrorText> : null}
-
-      <ButtonContainer>
-        <Button
-          variant="primary"
-          onPress={handleCreateLeague}
-          disabled={createLeagueMutation.isPending}
-          loading={createLeagueMutation.isPending}
-        >
-          CREATE LEAGUE
-        </Button>
-      </ButtonContainer>
     </View>
   );
 };

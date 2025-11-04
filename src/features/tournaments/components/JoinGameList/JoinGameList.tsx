@@ -3,7 +3,7 @@ import { SearchInput } from '~/components/SearchInput/SearchInput';
 import { TabBar } from '~/components/TabBar/TabBar';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
 import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
-import type { Game } from '~/services/apis/League/types';
+import type { League } from '~/services/apis/League/types';
 import {
   CreateButton,
   CreateButtonText,
@@ -15,8 +15,8 @@ import {
 } from './styles';
 
 interface JoinGameListProps {
-  games: Game[];
-  onGamePress?: (game: Game) => void;
+  games: League[];
+  onGamePress?: (game: League) => void;
   onGameDelete?: (gameId: string) => void;
   onCreateGame?: () => void;
   loading?: boolean;
@@ -53,7 +53,7 @@ export const JoinGameList = ({
     return true;
   });
 
-  const handleGamePress = (game: Game) => {
+  const handleGamePress = (game: League) => {
     onGamePress?.(game);
   };
 

@@ -6,17 +6,17 @@ export const Container = styled.View`
 `;
 
 export const Label = styled.Text`
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 400;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 `;
 
 export const DropdownButton = styled.TouchableOpacity<{ hasError: boolean }>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 12px 16px;
   border-radius: 8px;
   border-width: 1px;
   border-color: ${({ theme, hasError }: { theme: Theme; hasError: boolean }) =>
@@ -25,7 +25,7 @@ export const DropdownButton = styled.TouchableOpacity<{ hasError: boolean }>`
 `;
 
 export const DropdownText = styled.Text<{ hasValue: boolean }>`
-  font-size: 16px;
+  font-size: 14px;
   color: ${({ theme, hasValue }: { theme: Theme; hasValue: boolean }) =>
     hasValue ? theme.colors.text.primary : theme.colors.text.secondary};
 `;

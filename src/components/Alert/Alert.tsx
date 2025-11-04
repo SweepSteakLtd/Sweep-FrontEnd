@@ -84,7 +84,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                         ))
                       ) : (
                         <Button variant="primary" onPress={hideAlert} style={{ flex: 1 }}>
-                          OK
+                          Ok
                         </Button>
                       )}
                     </ButtonContainer>

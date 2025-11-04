@@ -4,8 +4,8 @@ export type RootStackParamList = {
   Splash: undefined;
   Landing: undefined;
   Login: undefined;
-  TermsAndConditions: { nextScreen: 'Login' | 'CreateAccount' };
-  CreateAccount: undefined;
+  TermsAndConditions: { nextScreen: 'Login' | 'CreateAccount'; email?: string; password?: string };
+  CreateAccount: { email?: string; password?: string } | undefined;
   CreateProfile: undefined;
   Dashboard: undefined;
   Profile: undefined;
@@ -14,6 +14,10 @@ export type RootStackParamList = {
   Settings: undefined;
   TournamentGames: { tournamentId: string };
   CreateLeague: { tournamentId: string; defaultLeagueType?: 'public' | 'private' };
+  BettingControls: undefined;
+  SetLimits: undefined;
+  SpendLimit: undefined;
+  SelfExclusion: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

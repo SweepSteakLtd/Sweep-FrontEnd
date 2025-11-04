@@ -47,7 +47,7 @@ export const Dropdown = ({
           {selectedOption ? selectedOption.label : placeholder}
         </DropdownText>
         <Typography variant="body" color={theme.colors.text.secondary}>
-          ▼
+          ▶
         </Typography>
       </DropdownButton>
 

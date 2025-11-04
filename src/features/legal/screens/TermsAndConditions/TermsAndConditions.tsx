@@ -21,11 +21,16 @@ export const TermsAndConditions = () => {
   const route = useRoute<RouteProp>();
   const [accepted, setAccepted] = useState(false);
 
-  const { nextScreen } = route.params;
+  const { nextScreen, email, password } = route.params;
 
   const handleAccept = () => {
     if (accepted) {
-      navigation.navigate(nextScreen);
+      if (nextScreen === 'CreateAccount' && email && password) {
+        // Pass credentials back to CreateAccount to complete the signup
+        navigation.navigate('CreateAccount', { email, password });
+      } else {
+        navigation.navigate(nextScreen);
+      }
     }
   };
 

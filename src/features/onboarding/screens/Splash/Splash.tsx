@@ -64,14 +64,14 @@ export const Splash = () => {
           } catch (error) {
             console.error('[DEBUG]: Failed to check user profile:', error);
             // If there was a server error (500), network error, etc.
-            // Sign out the user and send them back to Landing
+            // Sign out the user and send them back to Login
             // Don't send them to CreateProfile as we don't know if profile exists
             await firebaseAuth.signOut();
-            targetScreen = 'Landing';
+            targetScreen = 'Login';
           }
         } else {
-          // Not authenticated - go to Landing
-          targetScreen = 'Landing';
+          // Not authenticated - go to Login
+          targetScreen = 'Login';
         }
 
         // Navigate immediately once ready

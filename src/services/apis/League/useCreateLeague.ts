@@ -13,7 +13,7 @@ export const createLeague = async (
   }
 
   try {
-    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/games`, {
+    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/leagues`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,8 +44,8 @@ export const useCreateLeague = () => {
   return useMutation({
     mutationFn: createLeague,
     onSuccess: () => {
-      // Invalidate games query to refetch the list
-      queryClient.invalidateQueries({ queryKey: ['games'] });
+      // Invalidate leagues query to refetch the list
+      queryClient.invalidateQueries({ queryKey: ['leagues'] });
     },
   });
 };

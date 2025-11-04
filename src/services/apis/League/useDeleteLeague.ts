@@ -10,7 +10,7 @@ export const deleteLeague = async (leagueId: string): Promise<void> => {
   }
 
   try {
-    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/games/${leagueId}`, {
+    const res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/leagues/${leagueId}`, {
       method: 'DELETE',
       headers: {
         'x-auth-id': token,
@@ -36,8 +36,8 @@ export const useDeleteLeague = () => {
   return useMutation({
     mutationFn: deleteLeague,
     onSuccess: () => {
-      // Invalidate games query to refetch the list
-      queryClient.invalidateQueries({ queryKey: ['games'] });
+      // Invalidate leagues query to refetch the list
+      queryClient.invalidateQueries({ queryKey: ['leagues'] });
     },
   });
 };

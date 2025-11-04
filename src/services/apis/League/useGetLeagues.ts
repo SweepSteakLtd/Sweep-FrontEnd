@@ -9,8 +9,8 @@ interface FetchLeaguesParams {
 
 // Query Keys
 export const leagueQueryKeys = {
-  leagues: (params?: FetchLeaguesParams) => ['games', params] as const,
-  league: (id: string) => ['games', id] as const,
+  leagues: (params?: FetchLeaguesParams) => ['leagues', params] as const,
+  league: (id: string) => ['leagues', id] as const,
 };
 
 // API Function - exported for use outside of hook
@@ -31,7 +31,7 @@ export const fetchLeagues = async (params?: FetchLeaguesParams): Promise<League[
       queryParams.append('tournament_id', params.tournamentId);
     }
 
-    const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/games${
+    const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/leagues${
       queryParams.toString() ? `?${queryParams.toString()}` : ''
     }`;
 

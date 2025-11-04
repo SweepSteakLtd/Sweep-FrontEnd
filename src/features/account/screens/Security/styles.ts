@@ -41,3 +41,7 @@ export const UpdateButtonText = styled.Text`
   font-weight: 600;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
 `;
+
+export const ButtonContainer = styled.View`
+  padding: 0 20px;
+`;

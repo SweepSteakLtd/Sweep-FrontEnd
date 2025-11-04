@@ -89,7 +89,7 @@
         }
       }
     },
-    "/api/games": {
+    "/api/leagues": {
       "get": {
         "summary": "Get Leagues List",
         "description": "Get Leagues List endpoint",

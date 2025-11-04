@@ -4,7 +4,7 @@ import type { Theme } from '~/theme/theme';
 export const Container = styled.View<{ theme: Theme }>`
   flex: 1;
   background-color: ${(props: { theme: Theme }) => props.theme.colors.primary};
-  padding: 60px 30px 30px 30px;
+  padding: 20px 30px 30px 30px;
 `;
 
 export const LogoContainer = styled.View<{ theme: Theme }>`

@@ -3,11 +3,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from 'styled-components/native';
 import { AuthGuard } from '~/components/AuthGuard';
 import { BackButton } from '~/components/BackButton/BackButton';
-import { FloatingMockButton } from '~/components/FloatingMockButton/FloatingMockButton';
 import { AccountDetails } from '~/features/account/screens/AccountDetails/AccountDetails';
 import { Security } from '~/features/account/screens/Security/Security';
 import { CreateAccount } from '~/features/authentication/screens/CreateAccount/CreateAccount';
 import { Login } from '~/features/authentication/screens/Login/Login';
+import { BettingControls } from '~/features/betting-controls/screens/BettingControls/BettingControls';
+import { SelfExclusion } from '~/features/betting-controls/screens/SelfExclusion/SelfExclusion';
+import { SetLimits } from '~/features/betting-controls/screens/SetLimits/SetLimits';
+import { SpendLimit } from '~/features/betting-controls/screens/SpendLimit/SpendLimit';
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
@@ -60,11 +63,14 @@ export const RootNavigator = () => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="AccountDetails" component={AccountDetails} />
         <Stack.Screen name="Security" component={Security} />
+        <Stack.Screen name="BettingControls" component={BettingControls} />
+        <Stack.Screen name="SetLimits" component={SetLimits} />
+        <Stack.Screen name="SpendLimit" component={SpendLimit} />
+        <Stack.Screen name="SelfExclusion" component={SelfExclusion} />
         <Stack.Screen name="TournamentGames" component={TournamentGames} />
         <Stack.Screen name="CreateLeague" component={CreateLeague} />
         <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
-      <FloatingMockButton />
     </NavigationContainer>
   );
 };

@@ -17,85 +17,7 @@
  * - Manual verification
  */
 
-const OPENAPI_URL =
-  'https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json';
-
-interface OpenAPISchema {
-  type?: string;
-  properties?: Record<string, any>;
-  required?: string[];
-}
-
-interface SchemaInfo {
-  properties: Set<string>;
-  endpoints: Set<string>;
-}
-
-function extractSchemasFromPaths(spec: any): Record<string, SchemaInfo> {
-  const schemas: Record<string, SchemaInfo> = {};
-  const paths = spec.paths || {};
-
-  for (const [path, pathData] of Object.entries(paths as Record<string, any>)) {
-    for (const [method, methodData] of Object.entries(pathData as Record<string, any>)) {
-      if (typeof methodData !== 'object' || !methodData.responses) continue;
-
-      for (const [statusCode, response] of Object.entries(
-        methodData.responses as Record<string, any>,
-      )) {
-        if (
-          (statusCode === '200' || statusCode === '201') &&
-          response.content?.['application/json']?.schema
-        ) {
-          const schema = response.content['application/json'].schema;
-
-          const pathParts = path.split('/').filter(Boolean);
-          if (pathParts.length >= 2 && pathParts[0] === 'api') {
-            // For admin endpoints like /api/admin/player-profiles, use the resource after 'admin'
-            // For regular endpoints like /api/users, use pathParts[1]
-            let resourceName: string;
-            if (pathParts[1] === 'admin' && pathParts.length >= 3) {
-              resourceName = pathParts[2];
-            } else {
-              resourceName = pathParts[1];
-            }
-
-            // Convert to PascalCase and singularize
-            // player-profiles -> PlayerProfile, users -> User, games -> Game
-            let schemaName = resourceName
-              .split('-')
-              .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-              .join('');
-
-            // Remove trailing 's' if it's there (but not for 'ss' endings)
-            if (schemaName.endsWith('s') && !schemaName.endsWith('ss')) {
-              schemaName = schemaName.slice(0, -1);
-            }
-
-            // Extract properties from schema
-            let itemSchema: OpenAPISchema | undefined;
-            if (schema.properties?.data?.type === 'array' && schema.properties.data.items) {
-              itemSchema = schema.properties.data.items;
-            } else if (schema.type === 'object' && schema.properties) {
-              itemSchema = schema;
-            }
-
-            if (itemSchema?.properties) {
-              if (!schemas[schemaName]) {
-                schemas[schemaName] = { properties: new Set(), endpoints: new Set() };
-              }
-              Object.keys(itemSchema.properties).forEach((prop) =>
-                schemas[schemaName].properties.add(prop),
-              );
-              schemas[schemaName].endpoints.add(`${method.toUpperCase()} ${path}`);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return schemas;
-}
+import { extractSchemasFromPaths, fetchOpenAPISpec } from './schemaUtils';
 
 function extractPropertiesFromSchemaFile(content: string): Record<string, Set<string>> {
   const schemas: Record<string, Set<string>> = {};
@@ -129,16 +51,20 @@ async function verifySchemas() {
   try {
     // Fetch OpenAPI spec
     console.log('📥 Fetching OpenAPI specification...');
-    const response = await fetch(OPENAPI_URL);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch OpenAPI spec: ${response.statusText}`);
-    }
-
-    const spec = await response.json();
+    const spec = await fetchOpenAPISpec();
     console.log('✅ OpenAPI spec fetched\n');
 
-    // Extract properties from OpenAPI spec
-    const apiSchemas = extractSchemasFromPaths(spec);
+    // Extract properties from OpenAPI spec using shared utility
+    const apiSchemaInfos = extractSchemasFromPaths(spec);
+
+    // Convert properties object to Set for comparison
+    const apiSchemas: Record<string, { properties: Set<string>; endpoints: Set<string> }> = {};
+    for (const [schemaName, schemaInfo] of Object.entries(apiSchemaInfos)) {
+      apiSchemas[schemaName] = {
+        properties: new Set(Object.keys(schemaInfo.properties)),
+        endpoints: schemaInfo.endpoints,
+      };
+    }
 
     // Read current schema file
     const fs = await import('fs/promises');

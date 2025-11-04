@@ -1,14 +1,13 @@
 import { z } from 'zod';
-import { gameSchema, type Game } from '../schemas';
+import { leagueSchema, type League as LeagueSchema } from '../schemas';
 
-// League is an alias for Game since the API uses /games endpoint
-// but we call them "leagues" in the frontend for clarity
-export type League = Game;
-export type LeaguesResponse = Game[];
-export type { Game, GamesResponse } from '../schemas';
+// Re-export League from the auto-generated schemas
+export type League = LeagueSchema;
+export type LeaguesResponse = LeagueSchema[];
+export type { LeaguesResponse as LeaguesResponseType, League as LeagueType } from '../schemas';
 
-// Extend the auto-generated Game schema to include join_code for private leagues
-export const createLeagueResponseSchema = gameSchema.extend({
+// Extend the auto-generated League schema to include join_code for private leagues
+export const createLeagueResponseSchema = leagueSchema.extend({
   join_code: z.string().optional(), // Only present for private leagues
 });
 

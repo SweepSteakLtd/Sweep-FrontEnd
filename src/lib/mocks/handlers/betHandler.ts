@@ -6,7 +6,7 @@
  *
  * Endpoints:
  * - POST /api/bets/ - Places a new bet
- * - GET /api/bets/ - Retrieves bets (optionally filtered by game_id)
+ * - GET /api/bets/ - Retrieves bets (optionally filtered by league_id)
  * - PUT /api/bets/:id - Modifies existing bet
  * - DELETE /api/bets/:id - Cancels a bet
  *
@@ -20,7 +20,7 @@ import type { MockHandler } from '../types';
  * Places a new bet
  *
  * Request body:
- * - game_id: string (required)
+ * - league_id: string (required)
  * - player_ids: string[] (required)
  * - amount: number (required)
  *
@@ -38,7 +38,7 @@ export const createBetHandler: MockHandler = {
       status: 201,
       data: {
         id: 'bet-123',
-        game_id: 'game-456',
+        league_id: 'league-456',
         owner_id: 'user-789',
         player_ids: ['player-1', 'player-2'],
         amount: 50,
@@ -70,7 +70,7 @@ export const createBetHandler: MockHandler = {
  * Retrieves bets
  *
  * Query Parameters:
- * - game_id?: string (optional filter)
+ * - league_id?: string (optional filter)
  *
  * Response: 200 OK with array of bet objects
  */
@@ -88,7 +88,7 @@ export const getBetsHandler: MockHandler = {
         data: [
           {
             id: 'bet-123',
-            game_id: 'game-456',
+            league_id: 'league-456',
             owner_id: 'user-789',
             player_ids: ['player-1', 'player-2'],
             amount: 50,
@@ -97,7 +97,7 @@ export const getBetsHandler: MockHandler = {
           },
           {
             id: 'bet-124',
-            game_id: 'game-456',
+            league_id: 'league-456',
             owner_id: 'user-789',
             player_ids: ['player-3'],
             amount: 100,
@@ -143,7 +143,7 @@ export const updateBetHandler: MockHandler = {
       status: 200,
       data: {
         id: 'bet-123',
-        game_id: 'game-456',
+        league_id: 'league-456',
         owner_id: 'user-789',
         player_ids: ['player-1', 'player-3'],
         amount: 75,

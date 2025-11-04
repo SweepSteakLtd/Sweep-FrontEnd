@@ -3,7 +3,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Typography } from '~/components/Typography/Typography';
-import type { Game } from '~/services/apis/League/types';
+import type { League } from '~/services/apis/League/types';
 import {
   AmountText,
   Card,
@@ -18,7 +18,7 @@ import {
 } from './styles';
 
 interface GameCardProps {
-  game: Game;
+  game: League;
   tournamentName?: string;
   index: number;
   onPress: () => void;

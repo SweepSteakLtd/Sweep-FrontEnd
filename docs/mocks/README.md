@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-11-03T14:21:57.467Z
+Generated: 2025-11-04T10:20:35.386Z
 
 ## Files
 
@@ -32,7 +32,7 @@ Create Bet endpoint
 - Server Error (500) - 1000ms
 
 
-### GET /api/games
+### GET /api/leagues
 **Get Leagues List**
 
 Get Leagues List endpoint

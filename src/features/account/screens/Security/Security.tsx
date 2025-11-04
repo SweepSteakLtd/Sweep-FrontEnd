@@ -6,7 +6,14 @@ import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
 import type { RootStackParamList } from '~/navigation/types';
 import { useChangePassword } from '../../hooks/useChangePassword';
-import { Container, InputRow, ScrollContent, Section, SectionTitle } from './styles';
+import {
+  ButtonContainer,
+  Container,
+  InputRow,
+  ScrollContent,
+  Section,
+  SectionTitle,
+} from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -43,7 +50,7 @@ export const Security = () => {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
       <Container>
-        <ScrollContent>
+        <ScrollContent style={{ flex: 1 }}>
           <Section>
             <SectionTitle>Password</SectionTitle>
             <InputRow>
@@ -79,11 +86,13 @@ export const Security = () => {
                 error={errors.confirmPassword}
               />
             </InputRow>
-            <Button variant="secondary" onPress={handleUpdate} loading={loading}>
-              Update
-            </Button>
           </Section>
         </ScrollContent>
+        <ButtonContainer>
+          <Button variant="secondary" onPress={handleUpdate} loading={loading}>
+            Update
+          </Button>
+        </ButtonContainer>
       </Container>
     </SafeAreaView>
   );

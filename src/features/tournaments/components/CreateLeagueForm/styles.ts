@@ -24,11 +24,6 @@ export const SwitchLabel = styled.Text<{ isActive: boolean }>`
     isActive ? theme.colors.primary : theme.colors.text.secondary};
 `;
 
-export const ButtonContainer = styled.View`
-  margin-top: 32px;
-  margin-bottom: 100px;
-`;
-
 export const ErrorText = styled.Text`
   font-size: 14px;
   color: ${({ theme }: { theme: Theme }) => theme.colors.error};

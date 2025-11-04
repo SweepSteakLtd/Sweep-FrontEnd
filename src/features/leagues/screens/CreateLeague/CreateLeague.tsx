@@ -2,12 +2,14 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from 'styled-components/native';
+import { Button } from '~/components/Button/Button';
 import { CreateLeagueForm } from '~/features/tournaments/components/CreateLeagueForm/CreateLeagueForm';
 import { JoinCodeDisplay } from '~/features/tournaments/components/JoinCodeDisplay/JoinCodeDisplay';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
-import { Container } from './styles';
+import { ButtonContainer, Container, ScrollContent } from './styles';
 
 type CreateLeagueRouteProp = RouteProp<RootStackParamList, 'CreateLeague'>;
 type CreateLeagueNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -16,10 +18,13 @@ export const CreateLeague = () => {
   const route = useRoute<CreateLeagueRouteProp>();
   const navigation = useNavigation<CreateLeagueNavigationProp>();
   const { data: tournaments = [] } = useGetTournaments();
+  const theme = useTheme();
 
   const [showJoinCode, setShowJoinCode] = useState(false);
   const [joinCode, setJoinCode] = useState('');
   const [createdLeagueName, setCreatedLeagueName] = useState('');
+  const [submitHandler, setSubmitHandler] = useState<(() => Promise<void>) | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Configure navigation header
   useLayoutEffect(() => {
@@ -40,28 +45,53 @@ export const CreateLeague = () => {
     setShowJoinCode(true);
   };
 
+  const handleSubmit = (handler: () => Promise<void>) => {
+    setSubmitHandler(() => handler);
+  };
+
+  const handleCreateLeague = async () => {
+    if (submitHandler) {
+      setIsLoading(true);
+      try {
+        await submitHandler();
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
   const activeTournament = tournaments.find((t) => t.id === route.params.tournamentId);
 
   return (
-    <Container>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {showJoinCode ? (
-          <JoinCodeDisplay
-            leagueName={createdLeagueName}
-            tournamentName={activeTournament?.name || ''}
-            joinCode={joinCode}
-          />
-        ) : (
-          <CreateLeagueForm
-            key={`${route.params.tournamentId}-${route.params.defaultLeagueType}`}
-            activeTournamentId={route.params.tournamentId}
-            tournaments={tournaments}
-            defaultLeagueType={route.params.defaultLeagueType}
-            onSuccess={handleSuccess}
-            onPrivateLeagueCreated={handlePrivateLeagueCreated}
-          />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+      <Container>
+        <ScrollContent showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+          {showJoinCode ? (
+            <JoinCodeDisplay
+              leagueName={createdLeagueName}
+              tournamentName={activeTournament?.name || ''}
+              joinCode={joinCode}
+            />
+          ) : (
+            <CreateLeagueForm
+              key={`${route.params.tournamentId}-${route.params.defaultLeagueType}`}
+              activeTournamentId={route.params.tournamentId}
+              tournaments={tournaments}
+              defaultLeagueType={route.params.defaultLeagueType}
+              onSuccess={handleSuccess}
+              onPrivateLeagueCreated={handlePrivateLeagueCreated}
+              onSubmit={handleSubmit}
+            />
+          )}
+        </ScrollContent>
+        {!showJoinCode && (
+          <ButtonContainer>
+            <Button variant="secondary" onPress={handleCreateLeague} loading={isLoading}>
+              Create League
+            </Button>
+          </ButtonContainer>
         )}
-      </ScrollView>
-    </Container>
+      </Container>
+    </SafeAreaView>
   );
 };

@@ -1,7 +1,7 @@
 /**
  * Admin API Handlers
  *
- * Admin endpoints for managing games, player profiles, players, tournaments, transactions, and users.
+ * Admin endpoints for managing leagues, player profiles, players, tournaments, transactions, and users.
  * These endpoints have elevated permissions compared to regular user endpoints.
  *
  * Based on Swagger API documentation from:
@@ -11,13 +11,13 @@
 import type { MockHandler } from '../types';
 
 export const adminHandlers: MockHandler[] = [
-  // Admin Games - GET
+  // Admin Leagues - GET
   {
-    id: 'admin-get-games',
-    name: 'Admin: Get All Games',
+    id: 'admin-get-leagues',
+    name: 'Admin: Get All Leagues',
     group: 'League',
     method: 'GET',
-    urlPattern: '/api/admin/games',
+    urlPattern: '/api/admin/leagues',
     defaultScenario: 'Success',
     isAdmin: true,
     scenarios: {
@@ -29,31 +29,31 @@ export const adminHandlers: MockHandler[] = [
     },
   },
 
-  // Admin Games - PUT
+  // Admin Leagues - PUT
   {
-    id: 'admin-update-game',
-    name: 'Admin: Update Game',
+    id: 'admin-update-league',
+    name: 'Admin: Update League',
     group: 'League',
     method: 'PUT',
-    urlPattern: '/api/admin/games/:id',
+    urlPattern: '/api/admin/leagues/:id',
     defaultScenario: 'Success',
     isAdmin: true,
     scenarios: {
       Success: {
         status: 200,
-        data: { message: 'Game updated successfully' },
+        data: { message: 'League updated successfully' },
         delay: 500,
       },
     },
   },
 
-  // Admin Games - DELETE
+  // Admin Leagues - DELETE
   {
-    id: 'admin-delete-game',
-    name: 'Admin: Delete Game',
+    id: 'admin-delete-league',
+    name: 'Admin: Delete League',
     group: 'League',
     method: 'DELETE',
-    urlPattern: '/api/admin/games/:id',
+    urlPattern: '/api/admin/leagues/:id',
     defaultScenario: 'Success',
     isAdmin: true,
     scenarios: {

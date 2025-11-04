@@ -5,11 +5,11 @@
  * https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
  *
  * Endpoints:
- * - GET /api/games/ - Retrieves all leagues
- * - GET /api/games/:id - Fetches specific league by ID
- * - POST /api/games/ - Creates a new league
- * - PUT /api/games/:id - Updates league details
- * - DELETE /api/games/:id - Removes a league
+ * - GET /api/leagues/ - Retrieves all leagues
+ * - GET /api/leagues/:id - Fetches specific league by ID
+ * - POST /api/leagues/ - Creates a new league
+ * - PUT /api/leagues/:id - Updates league details
+ * - DELETE /api/leagues/:id - Removes a league
  *
  * All endpoints require "X-Auth-Id" header authentication.
  */
@@ -24,7 +24,7 @@ import {
 import type { MockHandler } from '../types';
 
 /**
- * GET /api/games/
+ * GET /api/leagues/
  * Retrieves all leagues
  */
 export const getLeaguesHandler: MockHandler = {
@@ -32,7 +32,7 @@ export const getLeaguesHandler: MockHandler = {
   name: 'Get Leagues List',
   group: 'League',
   method: 'GET',
-  urlPattern: '/api/games',
+  urlPattern: '/api/leagues',
   defaultScenario: 'Success',
   scenarios: {
     Success: {
@@ -54,7 +54,7 @@ export const getLeaguesHandler: MockHandler = {
 };
 
 /**
- * GET /api/games/:id
+ * GET /api/leagues/:id
  * Fetches specific league by ID
  */
 export const getLeagueByIdHandler: MockHandler = {
@@ -62,7 +62,7 @@ export const getLeagueByIdHandler: MockHandler = {
   name: 'Get League By ID',
   group: 'League',
   method: 'GET',
-  urlPattern: '/api/games/',
+  urlPattern: '/api/leagues/',
   defaultScenario: 'Success',
   scenarios: {
     Success: {
@@ -84,7 +84,7 @@ export const getLeagueByIdHandler: MockHandler = {
 };
 
 /**
- * POST /api/games/
+ * POST /api/leagues/
  * Creates a new league
  *
  * Request body:
@@ -110,7 +110,7 @@ export const createLeagueHandler: MockHandler = {
   name: 'Create League',
   group: 'League',
   method: 'POST',
-  urlPattern: '/api/games',
+  urlPattern: '/api/leagues',
   defaultScenario: 'Success',
   scenarios: {
     Success: {
@@ -132,7 +132,7 @@ export const createLeagueHandler: MockHandler = {
 };
 
 /**
- * PUT /api/games/:id
+ * PUT /api/leagues/:id
  * Updates league details
  *
  * Request body:
@@ -150,7 +150,7 @@ export const updateLeagueHandler: MockHandler = {
   name: 'Update League',
   group: 'League',
   method: 'PUT',
-  urlPattern: '/api/games/',
+  urlPattern: '/api/leagues/',
   defaultScenario: 'Success',
   scenarios: {
     Success: {
@@ -177,7 +177,7 @@ export const updateLeagueHandler: MockHandler = {
 };
 
 /**
- * DELETE /api/games/:id
+ * DELETE /api/leagues/:id
  * Removes a league
  *
  * Response: 204 No Content
@@ -187,7 +187,7 @@ export const deleteLeagueHandler: MockHandler = {
   name: 'Delete League',
   group: 'League',
   method: 'DELETE',
-  urlPattern: '/api/games/',
+  urlPattern: '/api/leagues/',
   defaultScenario: 'Success',
   scenarios: {
     Success: {

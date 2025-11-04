@@ -45,7 +45,7 @@ export const Profile = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigation.navigate('Landing');
+    navigation.navigate('Login');
   };
 
   const menuItems = [
@@ -53,11 +53,16 @@ export const Profile = () => {
     { icon: '🏆', label: 'My Leagues', onPress: () => {} },
     { icon: '👤', label: 'Account details', onPress: () => navigation.navigate('AccountDetails') },
     { icon: '🔒', label: 'Security', onPress: () => navigation.navigate('Security') },
-    { icon: '🎰', label: 'Betting Controls', onPress: () => {} },
+    {
+      icon: '🎰',
+      label: 'Betting Controls',
+      onPress: () => navigation.navigate('BettingControls'),
+    },
     { icon: '📊', label: 'Activity', onPress: () => {} },
     { icon: '❓', label: 'Support', onPress: () => {} },
     { icon: '📄', label: 'Legal', onPress: () => {} },
     { icon: '🚪', label: 'Sign out', onPress: handleLogout },
+    { icon: '⚙️', label: 'API Mocks', onPress: () => navigation.navigate('Settings') },
   ];
 
   return (

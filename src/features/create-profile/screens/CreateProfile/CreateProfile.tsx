@@ -97,7 +97,7 @@ export const CreateProfile = () => {
         </Typography>
       </Header>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <FormContainer>
           <Input
             variant="light"
@@ -189,12 +189,12 @@ export const CreateProfile = () => {
             keyboardType="numeric"
             error={fieldErrors.bettingLimit}
           />
-
-          <Button disabled={loading} loading={loading} onPress={onSubmit} style={{ marginTop: 20 }}>
-            Create Account
-          </Button>
         </FormContainer>
       </ScrollView>
+
+      <Button disabled={loading} loading={loading} onPress={onSubmit}>
+        Create Account
+      </Button>
     </Container>
   );
 };

@@ -77,7 +77,7 @@ export const Login = () => {
         </Typography>
       </Header>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <FormContainer>
           <Input
             variant="light"
@@ -110,20 +110,20 @@ export const Login = () => {
             autoCapitalize="none"
             error={fieldErrors.password}
           />
-
-          <Button
-            disabled={loading}
-            loading={loading}
-            onPress={handleSignIn}
-            style={{ marginTop: 20 }}
-          >
-            Sign In
-          </Button>
         </FormContainer>
       </ScrollView>
 
-      <Button variant="link" onPress={() => navigation.goBack()} fullWidth={false}>
-        {'< Back to Home'}
+      <Button
+        disabled={loading}
+        loading={loading}
+        onPress={handleSignIn}
+        style={{ marginBottom: 10 }}
+      >
+        Sign In
+      </Button>
+
+      <Button variant="link" onPress={() => navigation.navigate('CreateAccount')} fullWidth={false}>
+        Don't have an account? Create one
       </Button>
     </Container>
   );
