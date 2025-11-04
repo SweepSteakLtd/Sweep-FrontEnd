@@ -1,27 +1,25 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatar } from '~/components/Avatar/Avatar';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
-import { Switch } from '~/components/Switch/Switch';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
+import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import {
   AvatarContainer,
   AvatarSection,
+  ButtonContainer,
   Container,
-  DeleteButton,
-  DeleteButtonText,
   EditButton,
   InputRow,
   ScrollContent,
   Section,
   SectionTitle,
-  ToggleLabel,
-  ToggleRow,
 } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -29,10 +27,16 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const AccountDetails = () => {
   const navigation = useNavigation<NavigationProp>();
   const { data: user } = useGetUser();
+  const updateUserMutation = useUpdateUser();
 
   const [nickName, setNickName] = useState('');
-  const [emailMarketing, setEmailMarketing] = useState(false);
-  const [notifications, setNotifications] = useState(false);
+
+  // Initialize form values when user data loads
+  useEffect(() => {
+    if (user) {
+      setNickName(user.nickname || '');
+    }
+  }, [user]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -48,9 +52,16 @@ export const AccountDetails = () => {
     console.log('Change photo');
   };
 
-  const handleDeleteAccount = () => {
-    // TODO: Implement delete account
-    console.log('Delete account');
+  const handleUpdate = async () => {
+    try {
+      await updateUserMutation.mutateAsync({
+        nickname: nickName,
+      });
+      Alert.alert('Success', 'Account details updated successfully');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update account details');
+      console.error('Update error:', error);
+    }
   };
 
   return (
@@ -122,23 +133,16 @@ export const AccountDetails = () => {
               <Input label="Address" value="" editable={false} placeholder="Address" />
             </InputRow>
           </Section>
-
-          <Section>
-            <SectionTitle>Marketing preferences</SectionTitle>
-            <ToggleRow>
-              <ToggleLabel>Email</ToggleLabel>
-              <Switch value={emailMarketing} onValueChange={setEmailMarketing} />
-            </ToggleRow>
-            <ToggleRow>
-              <ToggleLabel>Notifications</ToggleLabel>
-              <Switch value={notifications} onValueChange={setNotifications} />
-            </ToggleRow>
-          </Section>
-
-          <DeleteButton onPress={handleDeleteAccount}>
-            <DeleteButtonText>Delete account</DeleteButtonText>
-          </DeleteButton>
         </ScrollContent>
+        <ButtonContainer>
+          <Button
+            variant="secondary"
+            onPress={handleUpdate}
+            disabled={updateUserMutation.isPending}
+          >
+            {updateUserMutation.isPending ? 'Updating...' : 'Update'}
+          </Button>
+        </ButtonContainer>
       </Container>
     </SafeAreaView>
   );

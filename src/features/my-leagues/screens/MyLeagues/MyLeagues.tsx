@@ -31,7 +31,10 @@ export const MyLeagues = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { data: user } = useGetUser();
-  const { data: leagues, isLoading } = useGetLeagues();
+  const { data: leagues, isLoading } = useGetLeagues(
+    user?.id ? { owner_id: user.id } : undefined,
+    !!user?.id,
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,8 +43,8 @@ export const MyLeagues = () => {
     });
   }, [navigation]);
 
-  // Calculate stats - API already returns user's leagues
-  const leaguesCreatedCount = leagues?.filter((league) => league.owner_id === user?.id).length || 0;
+  // Calculate stats
+  const leaguesCreatedCount = leagues?.length || 0;
 
   if (isLoading) {
     return (

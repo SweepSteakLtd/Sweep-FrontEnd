@@ -65,7 +65,7 @@ export const CreateLeague = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
-        <ScrollContent showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+        <ScrollContent showsVerticalScrollIndicator={false} style={{ flex: 1, paddingTop: 20 }}>
           {showJoinCode ? (
             <JoinCodeDisplay
               leagueName={createdLeagueName}

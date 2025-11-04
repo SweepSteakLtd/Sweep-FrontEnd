@@ -8,8 +8,10 @@ export const Container = styled.View`
 
 export const ScrollContent = styled.ScrollView.attrs({
   showsVerticalScrollIndicator: false,
-  contentContainerStyle: { paddingBottom: 20, paddingHorizontal: 16 },
-})``;
+  contentContainerStyle: { paddingTop: 20, paddingBottom: 20, paddingHorizontal: 16 },
+})`
+  flex: 1;
+`;
 
 export const Section = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
@@ -64,16 +66,7 @@ export const ToggleLabel = styled.Text`
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
 `;
 
-export const DeleteButton = styled.TouchableOpacity`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.error};
-  padding: 16px;
-  border-radius: 12px;
-  align-items: center;
-  margin: 20px 0;
-`;
-
-export const DeleteButtonText = styled.Text`
-  font-size: 16px;
-  font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+export const ButtonContainer = styled.View`
+  padding: 0 16px;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
 `;
