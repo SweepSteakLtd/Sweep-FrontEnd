@@ -153,7 +153,18 @@ import { z } from 'zod';
     await fs.writeFile(OUTPUT_PATH, output);
 
     console.log('✅ Zod schemas generated successfully!');
-    console.log(`📝 Output: ${OUTPUT_PATH}\n`);
+    console.log(`📝 Output: ${OUTPUT_PATH}`);
+
+    // Run Prettier to format the generated file
+    console.log('✨ Formatting with Prettier...');
+    const { execSync } = await import('child_process');
+    try {
+      execSync(`npx prettier --write ${OUTPUT_PATH}`, { stdio: 'inherit' });
+      console.log('✅ File formatted with Prettier\n');
+    } catch (error) {
+      console.warn('⚠️  Prettier formatting failed, but file was generated\n');
+    }
+
     console.log('✨ Schema generation complete!');
   } catch (error) {
     console.error('❌ Error generating schemas:', error);

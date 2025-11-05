@@ -31,12 +31,18 @@ function extractPropertiesFromSchemaFile(content: string): Record<string, Set<st
     const schemaName = match[1].charAt(0).toUpperCase() + match[1].slice(1);
     const properties = match[2];
 
-    // Extract property names (property: type,)
-    const propRegex = /^\s*(\w+):/gm;
+    // Extract only top-level property names (not nested properties)
+    // Split by lines and only match properties at the first indentation level (2 spaces)
+    const lines = properties.split('\n');
     const props = new Set<string>();
-    let propMatch;
-    while ((propMatch = propRegex.exec(properties)) !== null) {
-      props.add(propMatch[1]);
+
+    for (const line of lines) {
+      // Match properties that start with exactly 2 spaces (top-level in z.object)
+      // This excludes nested properties which have 4+ spaces
+      const topLevelPropMatch = /^  (\w+):\s/.exec(line);
+      if (topLevelPropMatch) {
+        props.add(topLevelPropMatch[1]);
+      }
     }
 
     schemas[schemaName] = props;
