@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-11-05T14:07:37.013Z
+ * Generated: 2025-11-05T15:54:34.722Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
