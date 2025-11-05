@@ -50,7 +50,20 @@ function convertToZod(schema: OpenAPISchema, name: string, required: boolean = t
       }
       break;
     case 'object':
-      if (schema.additionalProperties) {
+      if (schema.properties && Object.keys(schema.properties).length > 0) {
+        // Handle objects with defined properties
+        const propsCode = Object.entries(schema.properties)
+          .map(([propName, propSchema]) => {
+            const propType = convertToZod(
+              propSchema as OpenAPISchema,
+              `${name}_${propName}`,
+              false,
+            );
+            return `${propName}: ${propType}`;
+          })
+          .join(', ');
+        zodType = `z.object({ ${propsCode} })`;
+      } else if (schema.additionalProperties) {
         const valueType = convertToZod(schema.additionalProperties, `${name}Value`, true);
         zodType = `z.record(${valueType})`;
       } else {

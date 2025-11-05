@@ -10,6 +10,7 @@ import type { RootStackParamList } from '~/navigation/types';
 import type { Tournament } from '~/services/apis/schemas';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { useGetUser } from '~/services/apis/User/useGetUser';
+import { formatCurrency } from '~/utils/currency';
 import {
   Container,
   EmptyState,
@@ -33,11 +34,6 @@ export const Dashboard = () => {
     refetch,
   } = useGetTournaments();
 
-  const formatBalance = (balance?: number) => {
-    if (balance === undefined || balance === null) return '£0.00';
-    return `£${balance.toFixed(2)}`;
-  };
-
   const handleRefresh = async () => {
     await refetch();
   };
@@ -55,7 +51,7 @@ export const Dashboard = () => {
       headerLeft: () => null,
       headerRight: () => (
         <ProfileButton onPress={handleProfilePress}>
-          <ProfileBalance>{formatBalance(user?.current_balance)}</ProfileBalance>
+          <ProfileBalance>{formatCurrency(user?.current_balance)}</ProfileBalance>
           <Avatar size={32} />
         </ProfileButton>
       ),

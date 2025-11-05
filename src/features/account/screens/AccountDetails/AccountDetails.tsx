@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useLayoutEffect, useState } from 'react';
+import { RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
@@ -29,10 +30,11 @@ export const AccountDetails = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { showAlert } = useAlert();
-  const { data: user } = useGetUser();
+  const { data: user, refetch } = useGetUser();
   const updateUserMutation = useUpdateUser();
 
   const [nickName, setNickName] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   // Initialize form values when user data loads
   useEffect(() => {
@@ -47,6 +49,12 @@ export const AccountDetails = () => {
       title: 'Account Details',
     });
   }, [navigation]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   console.log('User data:', user);
 
@@ -76,7 +84,15 @@ export const AccountDetails = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
-        <ScrollContent>
+        <ScrollContent
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.colors.primary}
+            />
+          }
+        >
           <AvatarSection>
             <AvatarContainer>
               <Avatar size={80} />

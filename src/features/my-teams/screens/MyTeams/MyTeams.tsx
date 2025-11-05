@@ -1,11 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
+import { RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetTeams } from '~/services/apis/Team/useGetTeams';
 import { useGetUser } from '~/services/apis/User/useGetUser';
+import { formatCurrency } from '~/utils/currency';
 import { MyTeamsSkeleton } from './MyTeamsSkeleton';
 import {
   BalanceAmount,
@@ -35,8 +37,9 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const MyTeams = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
-  const { data: user } = useGetUser();
-  const { data: teams, isLoading } = useGetTeams();
+  const { data: user, refetch: refetchUser } = useGetUser();
+  const { data: teams, isLoading, refetch: refetchTeams } = useGetTeams();
+  const [refreshing, setRefreshing] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,6 +47,12 @@ export const MyTeams = () => {
       title: 'My Teams',
     });
   }, [navigation]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([refetchUser(), refetchTeams()]);
+    setRefreshing(false);
+  };
 
   // Calculate stats
   const teamsCount = teams?.length || 0;
@@ -65,13 +74,21 @@ export const MyTeams = () => {
       edges={['bottom', 'left', 'right']}
     >
       <Container>
-        <ScrollContent>
+        <ScrollContent
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.colors.primary}
+            />
+          }
+        >
           <Header>
             <BalanceRow>
               <BalanceLabel>Current Balance</BalanceLabel>
             </BalanceRow>
             <BalanceRow style={{ marginTop: 8 }}>
-              <BalanceAmount>£{user?.current_balance?.toFixed(2) || '0.00'}</BalanceAmount>
+              <BalanceAmount>{formatCurrency(user?.current_balance)}</BalanceAmount>
             </BalanceRow>
 
             <StatsRow>

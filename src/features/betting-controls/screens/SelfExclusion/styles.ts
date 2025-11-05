@@ -61,3 +61,24 @@ export const ButtonContainer = styled.View`
   padding: 0 20px;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;
+
+export const CurrentExclusionBox = styled.View`
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border-width: 1px;
+  border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
+`;
+
+export const CurrentExclusionTitle = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+  margin-bottom: 8px;
+`;
+
+export const CurrentExclusionDate = styled.Text`
+  font-size: 14px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+`;

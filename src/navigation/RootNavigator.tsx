@@ -5,19 +5,20 @@ import { AuthGuard } from '~/components/AuthGuard';
 import { BackButton } from '~/components/BackButton/BackButton';
 import { AccountDetails } from '~/features/account/screens/AccountDetails/AccountDetails';
 import { Security } from '~/features/account/screens/Security/Security';
+import { Activity } from '~/features/activity/screens/Activity/Activity';
 import { CreateAccount } from '~/features/authentication/screens/CreateAccount/CreateAccount';
 import { Login } from '~/features/authentication/screens/Login/Login';
 import { BettingControls } from '~/features/betting-controls/screens/BettingControls/BettingControls';
+import { DepositLimits } from '~/features/betting-controls/screens/DepositLimits/DepositLimits';
 import { SelfExclusion } from '~/features/betting-controls/screens/SelfExclusion/SelfExclusion';
-import { SetLimits } from '~/features/betting-controls/screens/SetLimits/SetLimits';
 import { SpendLimit } from '~/features/betting-controls/screens/SpendLimit/SpendLimit';
+import { StakeLimits } from '~/features/betting-controls/screens/StakeLimits/StakeLimits';
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
 import { MyLeagues } from '~/features/my-leagues/screens/MyLeagues/MyLeagues';
 import { MyTeams } from '~/features/my-teams/screens/MyTeams/MyTeams';
-import { Landing } from '~/features/onboarding/screens/Landing/Landing';
 import { Splash } from '~/features/onboarding/screens/Splash/Splash';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
@@ -56,7 +57,6 @@ export const RootNavigator = () => {
         })}
       >
         <Stack.Screen name="Splash" component={Splash} />
-        <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
@@ -65,8 +65,10 @@ export const RootNavigator = () => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="AccountDetails" component={AccountDetails} />
         <Stack.Screen name="Security" component={Security} />
+        <Stack.Screen name="Activity" component={Activity} />
         <Stack.Screen name="BettingControls" component={BettingControls} />
-        <Stack.Screen name="SetLimits" component={SetLimits} />
+        <Stack.Screen name="DepositLimits" component={DepositLimits} />
+        <Stack.Screen name="StakeLimits" component={StakeLimits} />
         <Stack.Screen name="SpendLimit" component={SpendLimit} />
         <Stack.Screen name="SelfExclusion" component={SelfExclusion} />
         <Stack.Screen name="TournamentLeagues" component={TournamentLeagues} />

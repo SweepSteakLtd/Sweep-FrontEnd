@@ -1,3 +1,4 @@
+import type { ViewStyle } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useBottomSheet } from '~/contexts/BottomSheetContext';
 import { Typography } from '../Typography/Typography';
@@ -15,6 +16,7 @@ interface DropdownProps {
   options: DropdownOption[];
   onValueChange: (value: string) => void;
   error?: string;
+  style?: ViewStyle;
 }
 
 export const Dropdown = ({
@@ -24,9 +26,10 @@ export const Dropdown = ({
   options,
   onValueChange,
   error,
+  style,
 }: DropdownProps) => {
   const theme = useTheme();
-  const { showBottomSheet } = useBottomSheet();
+  const { showBottomSheet, isOpen } = useBottomSheet();
 
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -40,14 +43,14 @@ export const Dropdown = ({
   };
 
   return (
-    <Container>
+    <Container style={style}>
       {label && <Label>{label}</Label>}
       <DropdownButton onPress={handleOpen} activeOpacity={0.7} hasError={!!error}>
         <DropdownText hasValue={!!selectedOption}>
           {selectedOption ? selectedOption.label : placeholder}
         </DropdownText>
         <Typography variant="body" color={theme.colors.text.secondary}>
-          ▶
+          {isOpen ? '▼' : '▶'}
         </Typography>
       </DropdownButton>
 

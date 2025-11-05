@@ -36,8 +36,13 @@ export const BettingControls = () => {
   const menuItems: MenuItemConfig[] = [
     {
       icon: '💰',
-      label: 'Set Limits',
-      onPress: () => navigation.navigate('SetLimits'),
+      label: 'Deposit Limits',
+      onPress: () => navigation.navigate('DepositLimits'),
+    },
+    {
+      icon: '🎯',
+      label: 'Stake Limits',
+      onPress: () => navigation.navigate('StakeLimits'),
     },
     {
       icon: 'ℹ️',

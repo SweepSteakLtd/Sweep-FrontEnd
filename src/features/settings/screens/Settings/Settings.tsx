@@ -3,7 +3,7 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Switch } from '~/components/Switch/Switch';
 import { mockHandlers } from '~/lib/mocks/handlers/registry';
@@ -63,6 +63,7 @@ export const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<MockConfig | null>(null);
   const [handlers, setHandlers] = useState<HandlerWithConfig[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     User: true,
     Tournament: true,
@@ -148,6 +149,12 @@ export const Settings = () => {
   useEffect(() => {
     loadConfig();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadConfig();
+    setRefreshing(false);
+  };
 
   const handleGlobalToggle = async (value: boolean) => {
     if (!config) return;
@@ -304,7 +311,15 @@ export const Settings = () => {
 
   return (
     <Container>
-      <ScrollContent>
+      <ScrollContent
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={theme.colors.primary}
+          />
+        }
+      >
         <Section>
           <ToggleRow>
             <ToggleLabel>Enable Mock APIs</ToggleLabel>

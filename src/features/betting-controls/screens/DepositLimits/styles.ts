@@ -12,7 +12,7 @@ export const ScrollContent = styled.ScrollView.attrs({
 })``;
 
 export const Section = styled.View`
-  margin-top: 20px;
+  margin-bottom: 8px;
 `;
 
 export const InputRow = styled.View`

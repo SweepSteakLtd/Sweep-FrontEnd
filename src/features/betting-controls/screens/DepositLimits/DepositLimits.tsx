@@ -1,0 +1,195 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useLayoutEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from 'styled-components/native';
+import { useAlert } from '~/components/Alert/Alert';
+import { Button } from '~/components/Button/Button';
+import { Checkbox } from '~/components/Checkbox/Checkbox';
+import { Input } from '~/components/Input/Input';
+import { Typography } from '~/components/Typography/Typography';
+import type { RootStackParamList } from '~/navigation/types';
+import { useGetUser } from '~/services/apis/User/useGetUser';
+import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
+import {
+  ButtonContainer,
+  CheckboxContainer,
+  Container,
+  CurrentLimitText,
+  InputRow,
+  LimitLabel,
+  LimitTitle,
+  ScrollContent,
+  Section,
+  TitleRow,
+} from './styles';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+type LimitConfig = {
+  id: string;
+  title: string;
+  currentLimit: string;
+  newLimit: string;
+  noLimit: boolean;
+  setNewLimit: (value: string) => void;
+  setNoLimit: (value: boolean) => void;
+};
+
+export const DepositLimits = () => {
+  const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme();
+  const { data: user } = useGetUser();
+  const { mutate: updateUser, isPending } = useUpdateUser();
+  const { showAlert } = useAlert();
+
+  const [monthlyLimit, setMonthlyLimit] = useState('');
+  const [weeklyLimit, setWeeklyLimit] = useState('');
+  const [dailyLimit, setDailyLimit] = useState('');
+
+  const [monthlyNoLimit, setMonthlyNoLimit] = useState(false);
+  const [weeklyNoLimit, setWeeklyNoLimit] = useState(false);
+  const [dailyNoLimit, setDailyNoLimit] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      title: 'Deposit Limits',
+    });
+  }, [navigation]);
+
+  const depositLimits: LimitConfig[] = [
+    {
+      id: 'monthly',
+      title: 'Monthly Limit',
+      currentLimit: user?.deposit_limit?.monthly?.toString() || '0',
+      newLimit: monthlyLimit,
+      noLimit: monthlyNoLimit,
+      setNewLimit: setMonthlyLimit,
+      setNoLimit: setMonthlyNoLimit,
+    },
+    {
+      id: 'weekly',
+      title: 'Weekly Limit',
+      currentLimit: user?.deposit_limit?.weekly?.toString() || '0',
+      newLimit: weeklyLimit,
+      noLimit: weeklyNoLimit,
+      setNewLimit: setWeeklyLimit,
+      setNoLimit: setWeeklyNoLimit,
+    },
+    {
+      id: 'daily',
+      title: 'Daily Limit',
+      currentLimit: user?.deposit_limit?.daily?.toString() || '0',
+      newLimit: dailyLimit,
+      noLimit: dailyNoLimit,
+      setNewLimit: setDailyLimit,
+      setNoLimit: setDailyNoLimit,
+    },
+  ];
+
+  const handleUpdate = () => {
+    // Build the deposit_limit object
+    const depositLimit: {
+      daily?: number;
+      weekly?: number;
+      monthly?: number;
+    } = {};
+
+    // Only include fields that have values (not "No Limit")
+    if (!dailyNoLimit && dailyLimit) {
+      depositLimit.daily = parseFloat(dailyLimit);
+    }
+    if (!weeklyNoLimit && weeklyLimit) {
+      depositLimit.weekly = parseFloat(weeklyLimit);
+    }
+    if (!monthlyNoLimit && monthlyLimit) {
+      depositLimit.monthly = parseFloat(monthlyLimit);
+    }
+
+    // Check if user made any changes
+    if (Object.keys(depositLimit).length === 0 && !dailyNoLimit && !weeklyNoLimit && !monthlyNoLimit) {
+      showAlert({
+        title: 'No Changes',
+        message: 'Please enter new limits or select "No Limit" options.',
+      });
+      return;
+    }
+
+    updateUser(
+      { deposit_limit: depositLimit },
+      {
+        onSuccess: () => {
+          showAlert({
+            title: 'Success',
+            message: 'Deposit limits updated successfully',
+          });
+          // Clear the input fields
+          setDailyLimit('');
+          setWeeklyLimit('');
+          setMonthlyLimit('');
+          setDailyNoLimit(false);
+          setWeeklyNoLimit(false);
+          setMonthlyNoLimit(false);
+        },
+        onError: (error) => {
+          showAlert({
+            title: 'Error',
+            message: 'Failed to update deposit limits. Please try again.',
+          });
+          console.error('Update deposit limits error:', error);
+        },
+      },
+    );
+  };
+
+  const handleNoLimitToggle = (limit: LimitConfig) => {
+    const newNoLimitValue = !limit.noLimit;
+    limit.setNoLimit(newNoLimitValue);
+    if (newNoLimitValue) {
+      // Clear the input when No Limit is checked
+      limit.setNewLimit('');
+    }
+  };
+
+  const renderLimitCard = (limit: LimitConfig) => (
+    <InputRow key={limit.id}>
+      <TitleRow>
+        <LimitTitle>{limit.title}</LimitTitle>
+        <CurrentLimitText>Current: £{limit.currentLimit || 'No Limit'}</CurrentLimitText>
+      </TitleRow>
+
+      <LimitLabel>New Limit</LimitLabel>
+      <Input
+        variant="currency"
+        value={limit.newLimit}
+        onChangeText={limit.setNewLimit}
+        placeholder="Amount"
+        editable={!limit.noLimit}
+      />
+
+      <CheckboxContainer>
+        <Checkbox checked={limit.noLimit} onPress={() => handleNoLimitToggle(limit)}>
+          <Typography variant="body" color={theme.colors.text.primary}>
+            No Limit
+          </Typography>
+        </Checkbox>
+      </CheckboxContainer>
+    </InputRow>
+  );
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+      <Container>
+        <ScrollContent style={{ flex: 1 }}>
+          <Section>{depositLimits.map(renderLimitCard)}</Section>
+        </ScrollContent>
+        <ButtonContainer>
+          <Button variant="secondary" onPress={handleUpdate} disabled={isPending}>
+            {isPending ? 'Updating...' : 'Update'}
+          </Button>
+        </ButtonContainer>
+      </Container>
+    </SafeAreaView>
+  );
+};

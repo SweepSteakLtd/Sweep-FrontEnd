@@ -14,7 +14,7 @@ export const AlertContainer = styled.View`
   border-radius: 16px;
   padding: 24px;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   shadow-color: #000;
   shadow-offset: 0px 4px;
   shadow-opacity: 0.3;

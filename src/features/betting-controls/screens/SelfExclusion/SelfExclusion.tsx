@@ -5,32 +5,36 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
+import { Dropdown } from '~/components/Dropdown/Dropdown';
 import type { RootStackParamList } from '~/navigation/types';
+import { useGetUser } from '~/services/apis/User/useGetUser';
+import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import {
   ButtonContainer,
   Container,
+  CurrentExclusionBox,
+  CurrentExclusionDate,
+  CurrentExclusionTitle,
   Description,
-  OptionButton,
-  OptionText,
-  OptionsContainer,
   ScrollContent,
-  SelectText,
   Title,
 } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const EXCLUSION_PERIODS = [
-  { label: '6 months', value: '6m' },
-  { label: '1 year', value: '1y' },
-  { label: '3 years', value: '3y' },
-  { label: '5 years', value: '5y' },
+  { label: '6 months', value: '6m', months: 6 },
+  { label: '1 year', value: '1y', months: 12 },
+  { label: '3 years', value: '3y', months: 36 },
+  { label: '5 years', value: '5y', months: 60 },
 ];
 
 export const SelfExclusion = () => {
   const navigation = useNavigation<NavigationProp>();
   const { showAlert } = useAlert();
   const theme = useTheme();
+  const { data: user } = useGetUser();
+  const { mutate: updateUser, isPending } = useUpdateUser();
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
 
   useLayoutEffect(() => {
@@ -39,6 +43,17 @@ export const SelfExclusion = () => {
       title: 'Self Exclusion',
     });
   }, [navigation]);
+
+  // Format the exclusion end date if it exists
+  const exclusionEndDate = user?.exclusion_ending
+    ? new Date(user.exclusion_ending).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null;
+
+  const isCurrentlyExcluded = user?.is_self_exclusion && exclusionEndDate;
 
   const handleContinue = () => {
     if (!selectedPeriod) {
@@ -49,11 +64,12 @@ export const SelfExclusion = () => {
       return;
     }
 
+    const period = EXCLUSION_PERIODS.find((p) => p.value === selectedPeriod);
+    if (!period) return;
+
     showAlert({
       title: 'Confirm Self-Exclusion',
-      message: `Are you sure you want to self-exclude for ${
-        EXCLUSION_PERIODS.find((p) => p.value === selectedPeriod)?.label
-      }? This action cannot be undone.`,
+      message: `Are you sure you want to self-exclude for ${period.label}? This action cannot be undone.`,
       buttons: [
         {
           text: 'Cancel',
@@ -63,13 +79,31 @@ export const SelfExclusion = () => {
           text: 'Confirm',
           style: 'destructive',
           onPress: () => {
-            console.log('Self-exclusion confirmed for:', selectedPeriod);
-            // TODO: Implement self-exclusion API call
-            showAlert({
-              title: 'Self-Exclusion Active',
-              message: 'Your account has been self-excluded.',
-            });
-            navigation.goBack();
+            // Calculate exclusion ending date
+            const exclusionEndingDate = new Date();
+            exclusionEndingDate.setMonth(exclusionEndingDate.getMonth() + period.months);
+
+            updateUser(
+              {
+                is_self_exclusion: true,
+                exclusion_ending: exclusionEndingDate.toISOString(),
+              },
+              {
+                onSuccess: () => {
+                  showAlert({
+                    title: 'Self-Exclusion Active',
+                    message: `Your account has been self-excluded until ${exclusionEndingDate.toLocaleDateString()}.`,
+                  });
+                  navigation.goBack();
+                },
+                onError: () => {
+                  showAlert({
+                    title: 'Error',
+                    message: 'Failed to activate self-exclusion. Please try again.',
+                  });
+                },
+              },
+            );
           },
         },
       ],
@@ -85,30 +119,34 @@ export const SelfExclusion = () => {
             You are agreeing to self-exclude yourself from our services for a minimum of 6 months.
           </Description>
 
-          <Title style={{ marginTop: 24 }}>Self Exclusion</Title>
+          {isCurrentlyExcluded && (
+            <CurrentExclusionBox>
+              <CurrentExclusionTitle>Current Self-Exclusion Active</CurrentExclusionTitle>
+              <CurrentExclusionDate>
+                Your account is self-excluded until {exclusionEndDate}
+              </CurrentExclusionDate>
+            </CurrentExclusionBox>
+          )}
+
+          <Title style={{ marginTop: 16 }}>Self Exclusion</Title>
           <Description>
             Self-exclusion prevents you from using your account for a minimum of 6 months and up to
             5 years. Once you do, we&apos;ll automatically make changes until the set period
             elapses.
           </Description>
 
-          <SelectText>Select Period</SelectText>
-          <OptionsContainer>
-            {EXCLUSION_PERIODS.map((period) => (
-              <OptionButton
-                key={period.value}
-                selected={selectedPeriod === period.value}
-                onPress={() => setSelectedPeriod(period.value)}
-                activeOpacity={0.7}
-              >
-                <OptionText selected={selectedPeriod === period.value}>{period.label}</OptionText>
-              </OptionButton>
-            ))}
-          </OptionsContainer>
+          <Dropdown
+            label="Select Period"
+            placeholder="Choose exclusion period"
+            value={selectedPeriod || ''}
+            options={EXCLUSION_PERIODS}
+            onValueChange={setSelectedPeriod}
+            style={{ marginTop: 24 }}
+          />
         </ScrollContent>
         <ButtonContainer>
-          <Button variant="primary" onPress={handleContinue}>
-            Continue
+          <Button variant="primary" onPress={handleContinue} disabled={isPending}>
+            {isPending ? 'Processing...' : 'Continue'}
           </Button>
         </ButtonContainer>
       </Container>

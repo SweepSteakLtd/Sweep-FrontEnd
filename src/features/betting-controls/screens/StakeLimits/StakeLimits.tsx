@@ -3,12 +3,14 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
+import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
 import { Checkbox } from '~/components/Checkbox/Checkbox';
 import { Input } from '~/components/Input/Input';
-import { TabBar } from '~/components/TabBar/TabBar';
 import { Typography } from '~/components/Typography/Typography';
 import type { RootStackParamList } from '~/navigation/types';
+import { useGetUser } from '~/services/apis/User/useGetUser';
+import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import {
   ButtonContainer,
   CheckboxContainer,
@@ -34,63 +36,28 @@ type LimitConfig = {
   setNoLimit: (value: boolean) => void;
 };
 
-export const SetLimits = () => {
+export const StakeLimits = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
-  const [activeTab, setActiveTab] = useState<'deposit' | 'stake'>('deposit');
+  const { data: user } = useGetUser();
+  const { mutate: updateUser, isPending } = useUpdateUser();
+  const { showAlert } = useAlert();
 
-  const [monthlyLimit, setMonthlyLimit] = useState('');
-  const [weeklyLimit, setWeeklyLimit] = useState('');
-  const [dailyLimit, setDailyLimit] = useState('');
   const [stakeLimit, setStakeLimit] = useState('');
-
-  const [monthlyNoLimit, setMonthlyNoLimit] = useState(false);
-  const [weeklyNoLimit, setWeeklyNoLimit] = useState(false);
-  const [dailyNoLimit, setDailyNoLimit] = useState(false);
   const [stakeNoLimit, setStakeNoLimit] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: 'Set Limits',
+      title: 'Stake Limits',
     });
   }, [navigation]);
-
-  const depositLimits: LimitConfig[] = [
-    {
-      id: 'monthly',
-      title: 'Monthly Limit',
-      currentLimit: '0',
-      newLimit: monthlyLimit,
-      noLimit: monthlyNoLimit,
-      setNewLimit: setMonthlyLimit,
-      setNoLimit: setMonthlyNoLimit,
-    },
-    {
-      id: 'weekly',
-      title: 'Weekly Limit',
-      currentLimit: '0',
-      newLimit: weeklyLimit,
-      noLimit: weeklyNoLimit,
-      setNewLimit: setWeeklyLimit,
-      setNoLimit: setWeeklyNoLimit,
-    },
-    {
-      id: 'daily',
-      title: 'Daily Limit',
-      currentLimit: '0',
-      newLimit: dailyLimit,
-      noLimit: dailyNoLimit,
-      setNewLimit: setDailyLimit,
-      setNoLimit: setDailyNoLimit,
-    },
-  ];
 
   const stakeLimits: LimitConfig[] = [
     {
       id: 'stake',
       title: 'Stake Limit',
-      currentLimit: '0',
+      currentLimit: user?.betting_limit?.toString() || '0',
       newLimit: stakeLimit,
       noLimit: stakeNoLimit,
       setNewLimit: setStakeLimit,
@@ -99,13 +66,38 @@ export const SetLimits = () => {
   ];
 
   const handleUpdate = () => {
-    console.log('Update limits:', {
-      activeTab,
-      monthlyLimit: monthlyNoLimit ? null : monthlyLimit,
-      weeklyLimit: weeklyNoLimit ? null : weeklyLimit,
-      dailyLimit: dailyNoLimit ? null : dailyLimit,
-      stakeLimit: stakeNoLimit ? null : stakeLimit,
-    });
+    // Check if user made any changes
+    if (!stakeNoLimit && !stakeLimit) {
+      showAlert({
+        title: 'No Changes',
+        message: 'Please enter a new stake limit or select "No Limit".',
+      });
+      return;
+    }
+
+    const bettingLimit = stakeNoLimit ? undefined : parseFloat(stakeLimit);
+
+    updateUser(
+      { betting_limit: bettingLimit },
+      {
+        onSuccess: () => {
+          showAlert({
+            title: 'Success',
+            message: 'Stake limit updated successfully',
+          });
+          // Clear the input fields
+          setStakeLimit('');
+          setStakeNoLimit(false);
+        },
+        onError: (error) => {
+          showAlert({
+            title: 'Error',
+            message: 'Failed to update stake limit. Please try again.',
+          });
+          console.error('Update stake limit error:', error);
+        },
+      },
+    );
   };
 
   const handleNoLimitToggle = (limit: LimitConfig) => {
@@ -143,26 +135,15 @@ export const SetLimits = () => {
     </InputRow>
   );
 
-  const limits = activeTab === 'deposit' ? depositLimits : stakeLimits;
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <ScrollContent style={{ flex: 1 }}>
-          <TabBar
-            tabs={[
-              { id: 'deposit', label: 'Deposit' },
-              { id: 'stake', label: 'Stake' },
-            ]}
-            activeTab={activeTab}
-            onTabPress={(tabId) => setActiveTab(tabId as 'deposit' | 'stake')}
-          />
-
-          <Section>{limits.map(renderLimitCard)}</Section>
+          <Section>{stakeLimits.map(renderLimitCard)}</Section>
         </ScrollContent>
         <ButtonContainer>
-          <Button variant="secondary" onPress={handleUpdate}>
-            Update
+          <Button variant="secondary" onPress={handleUpdate} disabled={isPending}>
+            {isPending ? 'Updating...' : 'Update'}
           </Button>
         </ButtonContainer>
       </Container>

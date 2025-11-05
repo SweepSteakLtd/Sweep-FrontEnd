@@ -1,13 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect } from 'react';
-import { ScrollView } from 'react-native';
+import { useLayoutEffect, useState } from 'react';
+import { RefreshControl, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { Avatar } from '~/components/Avatar/Avatar';
 import { useAuth } from '~/contexts/AuthContext';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
+import { formatCurrency } from '~/utils/currency';
 import {
   ActionButton,
   ActionButtonText,
@@ -30,7 +31,8 @@ export const Profile = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { signOut } = useAuth();
-  const { data: user } = useGetUser();
+  const { data: user, refetch } = useGetUser();
+  const [refreshing, setRefreshing] = useState(false);
 
   // Configure navigation header
   useLayoutEffect(() => {
@@ -40,9 +42,10 @@ export const Profile = () => {
     });
   }, [navigation]);
 
-  const formatBalance = (balance?: number) => {
-    if (balance === undefined || balance === null) return '£0.00';
-    return `£${balance.toFixed(2)}`;
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
   };
 
   const handleLogout = async () => {
@@ -54,7 +57,7 @@ export const Profile = () => {
     { icon: '👤', label: 'Account details', onPress: () => navigation.navigate('AccountDetails') },
     { icon: '👥', label: 'My Teams', onPress: () => navigation.navigate('MyTeams') },
     { icon: '🏆', label: 'My Leagues', onPress: () => navigation.navigate('MyLeagues') },
-    { icon: '📊', label: 'Activity', onPress: () => {} },
+    { icon: '📊', label: 'Activity', onPress: () => navigation.navigate('Activity') },
     { icon: '🔒', label: 'Change Password', onPress: () => navigation.navigate('Security') },
     {
       icon: '🎰',
@@ -73,11 +76,18 @@ export const Profile = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.colors.primary}
+            />
+          }
         >
           <BalanceCard>
             <Avatar size={80} />
             <BalanceContainer>
-              <BalanceAmount>{formatBalance(user?.current_balance)}</BalanceAmount>
+              <BalanceAmount>{formatCurrency(user?.current_balance)}</BalanceAmount>
               <BalanceLabel>Balance</BalanceLabel>
             </BalanceContainer>
             <ButtonRow>

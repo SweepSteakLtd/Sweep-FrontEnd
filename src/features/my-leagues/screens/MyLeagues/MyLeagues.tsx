@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
+import { RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
@@ -8,6 +9,7 @@ import type { RootStackParamList } from '~/navigation/types';
 import { useDeleteLeague } from '~/services/apis/League/useDeleteLeague';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetUser } from '~/services/apis/User/useGetUser';
+import { formatCurrency } from '~/utils/currency';
 import { MyLeaguesSkeleton } from './MyLeaguesSkeleton';
 import {
   BalanceAmount,
@@ -31,12 +33,14 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const MyLeagues = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
-  const { data: user } = useGetUser();
-  const { data: leagues, isLoading } = useGetLeagues(
-    user?.id ? { owner_id: user.id } : undefined,
-    !!user?.id,
-  );
+  const { data: user, refetch: refetchUser } = useGetUser();
+  const {
+    data: leagues,
+    isLoading,
+    refetch: refetchLeagues,
+  } = useGetLeagues(user?.id ? { owner_id: user.id } : undefined, !!user?.id);
   const deleteLeagueMutation = useDeleteLeague();
+  const [refreshing, setRefreshing] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,6 +48,12 @@ export const MyLeagues = () => {
       title: 'My Leagues',
     });
   }, [navigation]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([refetchUser(), refetchLeagues()]);
+    setRefreshing(false);
+  };
 
   // Calculate stats
   const leaguesCreatedCount = leagues?.length || 0;
@@ -73,13 +83,21 @@ export const MyLeagues = () => {
       edges={['bottom', 'left', 'right']}
     >
       <Container>
-        <ScrollContent>
+        <ScrollContent
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.colors.primary}
+            />
+          }
+        >
           <Header>
             <BalanceRow>
               <BalanceLabel>Current Balance</BalanceLabel>
             </BalanceRow>
             <BalanceRow style={{ marginTop: 8 }}>
-              <BalanceAmount>£{user?.current_balance?.toFixed(2) || '0.00'}</BalanceAmount>
+              <BalanceAmount>{formatCurrency(user?.current_balance)}</BalanceAmount>
             </BalanceRow>
 
             <StatsRow>

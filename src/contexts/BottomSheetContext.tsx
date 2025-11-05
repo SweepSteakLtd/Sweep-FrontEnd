@@ -15,6 +15,7 @@ interface BottomSheetOptions {
 interface BottomSheetContextType {
   showBottomSheet: (options: BottomSheetOptions) => void;
   hideBottomSheet: () => void;
+  isOpen: boolean;
 }
 
 const BottomSheetContext = createContext<BottomSheetContextType | undefined>(undefined);
@@ -23,15 +24,21 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const theme = useTheme();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [options, setOptions] = useState<BottomSheetOptions | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const snapPoints = useMemo(() => ['50%', '70%'], []);
 
   const showBottomSheet = useCallback((sheetOptions: BottomSheetOptions) => {
     setOptions(sheetOptions);
+    setIsOpen(true);
     bottomSheetRef.current?.expand();
   }, []);
 
   const hideBottomSheet = useCallback(() => {
     bottomSheetRef.current?.close();
+  }, []);
+
+  const handleSheetChange = useCallback((index: number) => {
+    setIsOpen(index !== -1);
   }, []);
 
   const handleSelect = useCallback(
@@ -73,7 +80,7 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({ c
   );
 
   return (
-    <BottomSheetContext.Provider value={{ showBottomSheet, hideBottomSheet }}>
+    <BottomSheetContext.Provider value={{ showBottomSheet, hideBottomSheet, isOpen }}>
       {children}
       <BottomSheet
         ref={bottomSheetRef}
@@ -83,6 +90,7 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({ c
         backdropComponent={renderBackdrop}
         backgroundStyle={{ backgroundColor: theme.colors.background }}
         handleIndicatorStyle={{ backgroundColor: theme.colors.border }}
+        onChange={handleSheetChange}
       >
         <SheetContainer>
           <SheetHeader>

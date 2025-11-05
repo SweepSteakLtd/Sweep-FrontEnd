@@ -3,17 +3,8 @@ import { api } from '../apiClient';
 import { User } from './types';
 import { userQueryKeys } from './useGetUser';
 
-export interface UpdateUserParams {
-  nickname?: string;
-  first_name?: string;
-  last_name?: string;
-  bio?: string;
-  profile_picture?: string;
-  phone_number?: string;
-  email?: string;
-  deposit_limit?: number;
-  betting_limit?: number;
-}
+// Use Partial<User> to allow updating any user field
+export type UpdateUserParams = Partial<User>;
 
 // API Function
 const updateUser = async (params: UpdateUserParams): Promise<User> => {

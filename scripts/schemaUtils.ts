@@ -109,7 +109,26 @@ export function extractSchemasFromPaths(spec: any): Record<string, SchemaInfo> {
           }
 
           // Merge properties from this endpoint (aggregating across all endpoints)
-          Object.assign(schemas[schemaName].properties, properties);
+          // Prioritize more complex types (objects with properties) over simple types
+          for (const [propName, propSchema] of Object.entries(properties)) {
+            const existing = schemas[schemaName].properties[propName];
+
+            // If property doesn't exist yet, add it
+            if (!existing) {
+              schemas[schemaName].properties[propName] = propSchema;
+              continue;
+            }
+
+            // If new schema is an object with properties and existing is not, prefer the new one
+            if (
+              propSchema.type === 'object' &&
+              propSchema.properties &&
+              Object.keys(propSchema.properties).length > 0
+            ) {
+              schemas[schemaName].properties[propName] = propSchema;
+            }
+            // Otherwise keep existing (first one wins, or more specific one if it was an object)
+          }
 
           // Track which endpoint this came from
           schemas[schemaName].endpoints.add(`${method.toUpperCase()} ${path}`);

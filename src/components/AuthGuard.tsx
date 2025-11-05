@@ -19,10 +19,10 @@ export const AuthGuard = () => {
     // If user was authenticated but is now not authenticated
     // (token expired, signed out remotely, etc.)
     if (previouslyAuthenticated.current && !isAuthenticated) {
-      // Navigate back to Landing and clear stack
+      // Navigate back to Login and clear stack
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Landing' }],
+        routes: [{ name: 'Login' }],
       });
     }
 

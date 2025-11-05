@@ -39,7 +39,9 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const handleButtonPress = useCallback(
     (onPress?: () => void) => {
       hideAlert();
-      onPress?.();
+      if (onPress) {
+        setTimeout(() => onPress(), 300);
+      }
     },
     [hideAlert],
   );
@@ -50,48 +52,46 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       <Modal visible={visible} transparent animationType="fade" onRequestClose={hideAlert}>
         <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={hideAlert}>
           <Overlay>
-            <TouchableOpacity activeOpacity={1}>
-              <AlertContainer>
-                {alertOptions && (
-                  <>
-                    <AlertTitle>
-                      <Typography
-                        variant="subheading"
-                        color={theme.colors.text.secondary}
-                        weight="bold"
-                      >
-                        {alertOptions.title}
-                      </Typography>
-                    </AlertTitle>
+            <AlertContainer>
+              {alertOptions && (
+                <>
+                  <AlertTitle>
+                    <Typography
+                      variant="subheading"
+                      color={theme.colors.text.secondary}
+                      weight="bold"
+                    >
+                      {alertOptions.title}
+                    </Typography>
+                  </AlertTitle>
 
-                    <AlertMessage>
-                      <Typography variant="body" color={theme.colors.text.secondary}>
-                        {alertOptions.message}
-                      </Typography>
-                    </AlertMessage>
+                  <AlertMessage>
+                    <Typography variant="body" color={theme.colors.text.secondary}>
+                      {alertOptions.message}
+                    </Typography>
+                  </AlertMessage>
 
-                    <ButtonContainer>
-                      {alertOptions.buttons && alertOptions.buttons.length > 0 ? (
-                        alertOptions.buttons.map((button, index) => (
-                          <Button
-                            key={index}
-                            variant={button.style === 'destructive' ? 'primary' : 'secondary'}
-                            onPress={() => handleButtonPress(button.onPress)}
-                            style={{ flex: 1, marginLeft: index > 0 ? 12 : 0 }}
-                          >
-                            {button.text}
-                          </Button>
-                        ))
-                      ) : (
-                        <Button variant="primary" onPress={hideAlert} style={{ flex: 1 }}>
-                          Ok
+                  <ButtonContainer>
+                    {alertOptions.buttons && alertOptions.buttons.length > 0 ? (
+                      alertOptions.buttons.map((button, index) => (
+                        <Button
+                          key={index}
+                          variant={button.style === 'destructive' ? 'primary' : 'secondary'}
+                          onPress={() => handleButtonPress(button.onPress)}
+                          style={{ flex: 1, marginLeft: index > 0 ? 12 : 0 }}
+                        >
+                          {button.text}
                         </Button>
-                      )}
-                    </ButtonContainer>
-                  </>
-                )}
-              </AlertContainer>
-            </TouchableOpacity>
+                      ))
+                    ) : (
+                      <Button variant="primary" onPress={hideAlert} style={{ flex: 1 }}>
+                        Ok
+                      </Button>
+                    )}
+                  </ButtonContainer>
+                </>
+              )}
+            </AlertContainer>
           </Overlay>
         </TouchableOpacity>
       </Modal>
