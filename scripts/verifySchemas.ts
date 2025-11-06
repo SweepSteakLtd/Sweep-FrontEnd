@@ -19,6 +19,14 @@
 
 import { extractSchemasFromPaths, fetchOpenAPISpec } from './schemaUtils';
 
+/**
+ * Convert camelCase to snake_case to match actual API responses
+ * Must match the conversion in generateSchemas.ts
+ */
+function toSnakeCase(str: string): string {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
 function extractPropertiesFromSchemaFile(content: string): Record<string, Set<string>> {
   const schemas: Record<string, Set<string>> = {};
 
@@ -64,10 +72,11 @@ async function verifySchemas() {
     const apiSchemaInfos = extractSchemasFromPaths(spec);
 
     // Convert properties object to Set for comparison
+    // Apply snake_case conversion to match what generateSchemas.ts does
     const apiSchemas: Record<string, { properties: Set<string>; endpoints: Set<string> }> = {};
     for (const [schemaName, schemaInfo] of Object.entries(apiSchemaInfos)) {
       apiSchemas[schemaName] = {
-        properties: new Set(Object.keys(schemaInfo.properties)),
+        properties: new Set(Object.keys(schemaInfo.properties).map(toSnakeCase)),
         endpoints: schemaInfo.endpoints,
       };
     }

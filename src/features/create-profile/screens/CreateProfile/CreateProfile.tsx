@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { ScrollView } from 'react-native';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
@@ -75,29 +75,33 @@ export const CreateProfile = () => {
 
   return (
     <Container>
-      <LogoContainer>
-        <LogoCircle>
-          <Icon name="⛳" size={20} />
-        </LogoCircle>
-        <Typography variant="heading" color={theme.colors.white}>
-          Sweepsteak
-        </Typography>
-      </LogoContainer>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        bottomOffset={10}
+      >
+        <LogoContainer>
+          <LogoCircle>
+            <Icon name="⛳" size={20} />
+          </LogoCircle>
+          <Typography variant="heading" color={theme.colors.white}>
+            Sweepsteak
+          </Typography>
+        </LogoContainer>
 
-      <Header>
-        <Typography variant="heading" color={theme.colors.white}>
-          Complete Your Profile
-        </Typography>
-        <Typography
-          variant="body"
-          color={theme.colors.white}
-          style={{ opacity: 0.8, marginTop: 5 }}
-        >
-          Almost there! Tell us about yourself
-        </Typography>
-      </Header>
+        <Header>
+          <Typography variant="heading" color={theme.colors.white}>
+            Complete Your Profile
+          </Typography>
+          <Typography
+            variant="body"
+            color={theme.colors.white}
+            style={{ opacity: 0.8, marginTop: 5 }}
+          >
+            Almost there! Tell us about yourself
+          </Typography>
+        </Header>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <FormContainer>
           <Input
             variant="light"
@@ -190,11 +194,13 @@ export const CreateProfile = () => {
             error={fieldErrors.bettingLimit}
           />
         </FormContainer>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
-      <Button disabled={loading} loading={loading} onPress={onSubmit}>
-        Create Account
-      </Button>
+      <KeyboardStickyView>
+        <Button disabled={loading} loading={loading} onPress={onSubmit}>
+          Create Account
+        </Button>
+      </KeyboardStickyView>
     </Container>
   );
 };

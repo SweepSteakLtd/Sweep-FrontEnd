@@ -1,18 +1,23 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
+export const CardWrapper = styled.View`
+  width: 100%;
+  margin-bottom: 20px;
+  padding-bottom: 4px;
+  elevation: 5;
+  shadow-color: #000;
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.2;
+  shadow-radius: 8px;
+`;
+
 export const Card = styled.TouchableOpacity`
   width: 100%;
   height: 160px;
-  margin-bottom: 16px;
   border-radius: 12px;
   overflow: hidden;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.card};
-  elevation: 2;
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.1;
-  shadow-radius: 4px;
 `;
 
 export const TournamentImage = styled.Image`

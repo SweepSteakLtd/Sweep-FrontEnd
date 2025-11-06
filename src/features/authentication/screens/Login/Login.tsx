@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { ScrollView } from 'react-native';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
@@ -59,25 +59,30 @@ export const Login = () => {
 
   return (
     <Container>
-      <LogoContainer>
-        <LogoCircle>
-          <Icon name="⛳" size={20} />
-        </LogoCircle>
-        <Typography variant="heading" color={theme.colors.white}>
-          Sweepsteak
-        </Typography>
-      </LogoContainer>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        bottomOffset={10}
+      >
+        <LogoContainer>
+          <LogoCircle>
+            <Icon name="⛳" size={20} />
+          </LogoCircle>
+          <Typography variant="heading" color={theme.colors.white}>
+            Sweepsteak
+          </Typography>
+        </LogoContainer>
 
-      <Header>
-        <Typography variant="heading" color={theme.colors.white}>
-          Welcome to SweepSteak
-        </Typography>
-        <Typography variant="body" color={theme.colors.white} style={{ marginTop: 5 }}>
-          Sign in to your account
-        </Typography>
-      </Header>
+        <Header>
+          <Typography variant="heading" color={theme.colors.white}>
+            Welcome to SweepSteak
+          </Typography>
+          <Typography variant="body" color={theme.colors.white} style={{ marginTop: 5 }}>
+            Sign in to your account
+          </Typography>
+        </Header>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <FormContainer>
           <Input
             variant="light"
@@ -111,31 +116,26 @@ export const Login = () => {
             error={fieldErrors.password}
           />
         </FormContainer>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
-      <Button
-        disabled={loading}
-        loading={loading}
-        onPress={handleSignIn}
-        style={{ marginBottom: 10 }}
-      >
-        Sign In
-      </Button>
+      <KeyboardStickyView>
+        <Button
+          disabled={loading}
+          loading={loading}
+          onPress={handleSignIn}
+          style={{ marginBottom: 10 }}
+        >
+          Sign In
+        </Button>
 
-      <Button variant="link" onPress={() => navigation.navigate('CreateAccount')} fullWidth={false}>
-        Don't have an account? Create one
-      </Button>
-
-      <Button
-        variant="link"
-        onPress={() => {
-          navigation.navigate('Settings');
-        }}
-        fullWidth={false}
-        style={{ marginTop: 5 }}
-      >
-        Mock API Settings
-      </Button>
+        <Button
+          variant="link"
+          onPress={() => navigation.navigate('CreateAccount')}
+          fullWidth={false}
+        >
+          Don't have an account? Create one
+        </Button>
+      </KeyboardStickyView>
     </Container>
   );
 };

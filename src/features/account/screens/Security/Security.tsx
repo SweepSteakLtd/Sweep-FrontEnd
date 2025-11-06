@@ -1,35 +1,17 @@
 import { useState } from 'react';
-import { RefreshControl } from 'react-native';
-import { useTheme } from 'styled-components/native';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useChangePassword } from '../../hooks/useChangePassword';
-import {
-  ButtonContainer,
-  Container,
-  InputRow,
-  ScrollContent,
-  Section,
-  SectionTitle,
-} from './styles';
+import { ButtonContainer, Container, InputRow, Section, SectionTitle } from './styles';
 
 export const Security = () => {
-  const theme = useTheme();
   const { changePassword, loading, errors } = useChangePassword();
-  const { refetch } = useGetUser();
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
 
   const handleUpdate = async () => {
     const result = await changePassword({
@@ -49,15 +31,10 @@ export const Security = () => {
   return (
     <ScreenWrapper title="Security">
       <Container>
-        <ScrollContent
+        <KeyboardAwareScrollView
           style={{ flex: 1 }}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor={theme.colors.primary}
-            />
-          }
+          showsVerticalScrollIndicator={false}
+          bottomOffset={10}
         >
           <Section>
             <SectionTitle>Password</SectionTitle>
@@ -95,12 +72,14 @@ export const Security = () => {
               />
             </InputRow>
           </Section>
-        </ScrollContent>
-        <ButtonContainer>
-          <Button variant="secondary" onPress={handleUpdate} loading={loading}>
-            Update
-          </Button>
-        </ButtonContainer>
+        </KeyboardAwareScrollView>
+        <KeyboardStickyView>
+          <ButtonContainer>
+            <Button variant="secondary" onPress={handleUpdate} loading={loading}>
+              Update
+            </Button>
+          </ButtonContainer>
+        </KeyboardStickyView>
       </Container>
     </ScreenWrapper>
   );

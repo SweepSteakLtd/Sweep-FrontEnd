@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Avatar } from '~/components/Avatar/Avatar';
@@ -16,7 +17,6 @@ import {
   Container,
   EditButton,
   InputRow,
-  ScrollContent,
   Section,
   SectionTitle,
 } from './styles';
@@ -71,7 +71,10 @@ export const AccountDetails = () => {
   return (
     <ScreenWrapper title="Account Details">
       <Container>
-        <ScrollContent
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          bottomOffset={10}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -145,16 +148,18 @@ export const AccountDetails = () => {
               <Input label="Address" value="" editable={false} placeholder="Address" />
             </InputRow>
           </Section>
-        </ScrollContent>
-        <ButtonContainer>
-          <Button
-            variant="secondary"
-            onPress={handleUpdate}
-            disabled={updateUserMutation.isPending}
-          >
-            {updateUserMutation.isPending ? 'Updating...' : 'Update'}
-          </Button>
-        </ButtonContainer>
+        </KeyboardAwareScrollView>
+        <KeyboardStickyView>
+          <ButtonContainer>
+            <Button
+              variant="secondary"
+              onPress={handleUpdate}
+              disabled={updateUserMutation.isPending}
+            >
+              {updateUserMutation.isPending ? 'Updating...' : 'Update'}
+            </Button>
+          </ButtonContainer>
+        </KeyboardStickyView>
       </Container>
     </ScreenWrapper>
   );

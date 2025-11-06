@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
 import { Dropdown } from '~/components/Dropdown/Dropdown';
@@ -15,7 +16,6 @@ import {
   CurrentExclusionDate,
   CurrentExclusionTitle,
   Description,
-  ScrollContent,
   Title,
 } from './styles';
 
@@ -44,7 +44,7 @@ export const SelfExclusion = () => {
       })
     : null;
 
-  const isCurrentlyExcluded = user?.is_self_exclusion && exclusionEndDate;
+  const isCurrentlyExcluded = user?.is_self_excluded && exclusionEndDate;
 
   const handleContinue = () => {
     if (!selectedPeriod) {
@@ -76,7 +76,7 @@ export const SelfExclusion = () => {
 
             updateUser(
               {
-                is_self_exclusion: true,
+                is_self_excluded: true,
                 exclusion_ending: exclusionEndingDate.toISOString(),
               },
               {
@@ -104,7 +104,12 @@ export const SelfExclusion = () => {
   return (
     <ScreenWrapper title="Self Exclusion">
       <Container>
-        <ScrollContent style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 20 }}
+          showsVerticalScrollIndicator={false}
+          bottomOffset={10}
+        >
           <Title>Self Exclusions Policy</Title>
           <Description>
             You are agreeing to self-exclude yourself from our services for a minimum of 6 months.
@@ -134,12 +139,14 @@ export const SelfExclusion = () => {
             onValueChange={setSelectedPeriod}
             style={{ marginTop: 24 }}
           />
-        </ScrollContent>
-        <ButtonContainer>
-          <Button variant="primary" onPress={handleContinue} disabled={isPending}>
-            {isPending ? 'Processing...' : 'Continue'}
-          </Button>
-        </ButtonContainer>
+        </KeyboardAwareScrollView>
+        <KeyboardStickyView>
+          <ButtonContainer>
+            <Button variant="primary" onPress={handleContinue} disabled={isPending}>
+              {isPending ? 'Processing...' : 'Continue'}
+            </Button>
+          </ButtonContainer>
+        </KeyboardStickyView>
       </Container>
     </ScreenWrapper>
   );

@@ -25,7 +25,12 @@
       "package": "com.sweepsteak.app",
       "versionCode": 1,
       "edgeToEdgeEnabled": false,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "statusBar": {
+        "barStyle": "light-content",
+        "backgroundColor": "#2d5016",
+        "translucent": false
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,8 +41,6 @@
       }
     },
     "owner": "karamvir.mangat",
-    "plugins": [
-      "expo-secure-store"
-    ]
+    "plugins": ["expo-secure-store"]
   }
 }

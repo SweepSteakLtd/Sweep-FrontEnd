@@ -27,6 +27,16 @@
         "EXPO_PUBLIC_ENV": "staging"
       }
     },
+    "test-simulator": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true,
+        "resourceClass": "m-medium"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "staging"
+      }
+    },
     "production": {
       "distribution": "store",
       "ios": {

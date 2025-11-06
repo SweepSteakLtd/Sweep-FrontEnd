@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { useEffect } from 'react';
+import { BackHandler, FlatList, RefreshControl, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { TournamentCard } from '~/features/dashboard/components/TournamentCard/TournamentCard';
@@ -22,6 +23,16 @@ export const Dashboard = () => {
     error,
     refetch,
   } = useGetTournaments();
+
+  // Disable back button on Android
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Return true to prevent default back behavior
+      return true;
+    });
+
+    return () => backHandler.remove();
+  }, []);
 
   const handleRefresh = async () => {
     await refetch();

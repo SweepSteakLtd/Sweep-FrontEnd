@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
@@ -80,7 +80,11 @@ export const CreateAccount = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.primary }} edges={['bottom']}>
       <Container>
-        <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+          bottomOffset={10}
+        >
           <FormContainer>
             <Input
               label="Email"
@@ -130,11 +134,13 @@ export const CreateAccount = () => {
               error={fieldErrors.confirmPassword}
             />
           </FormContainer>
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
-        <Button disabled={loading} loading={loading} onPress={handleContinue}>
-          Continue
-        </Button>
+        <KeyboardStickyView>
+          <Button disabled={loading} loading={loading} onPress={handleContinue}>
+            Continue
+          </Button>
+        </KeyboardStickyView>
       </Container>
     </SafeAreaView>
   );

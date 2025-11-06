@@ -46,7 +46,8 @@ export const JoinGameList = ({
   // Client-side filtering only by game tab, search is handled by API
   const filteredGames = games.filter((game) => {
     // Filter by game tab (Featured/Public/Private)
-    if (activeGameTab === 'featured' && !game.is_featured) return false;
+    // Note: is_featured was removed from API, featured tab now shows all games
+    // if (activeGameTab === 'featured' && !game.is_featured) return false;
     if (activeGameTab === 'public' && game.type === 'private') return false;
     if (activeGameTab === 'private' && game.type !== 'private') return false;
 

@@ -8,10 +8,10 @@ export const Card = styled.TouchableOpacity`
   margin-horizontal: 16px;
   margin-bottom: 12px;
   shadow-color: #000;
-  shadow-offset: 0px 4px;
-  shadow-opacity: 0.1;
-  shadow-radius: 8px;
-  elevation: 4;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.15;
+  shadow-radius: 6px;
+  elevation: 3;
 `;
 
 export const CardContainer = styled.View`

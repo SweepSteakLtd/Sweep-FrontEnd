@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
@@ -16,7 +17,6 @@ import {
   InputRow,
   LimitLabel,
   LimitTitle,
-  ScrollContent,
   Section,
   TitleRow,
 } from './styles';
@@ -125,14 +125,21 @@ export const StakeLimits = () => {
   return (
     <ScreenWrapper title="Stake Limits">
       <Container>
-        <ScrollContent style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 16 }}
+          showsVerticalScrollIndicator={false}
+          bottomOffset={10}
+        >
           <Section>{stakeLimits.map(renderLimitCard)}</Section>
-        </ScrollContent>
-        <ButtonContainer>
-          <Button variant="secondary" onPress={handleUpdate} disabled={isPending}>
-            {isPending ? 'Updating...' : 'Update'}
-          </Button>
-        </ButtonContainer>
+        </KeyboardAwareScrollView>
+        <KeyboardStickyView>
+          <ButtonContainer>
+            <Button variant="secondary" onPress={handleUpdate} disabled={isPending}>
+              {isPending ? 'Updating...' : 'Update'}
+            </Button>
+          </ButtonContainer>
+        </KeyboardStickyView>
       </Container>
     </ScreenWrapper>
   );

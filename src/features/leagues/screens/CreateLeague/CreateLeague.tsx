@@ -2,13 +2,14 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { CreateLeagueForm } from '~/features/tournaments/components/CreateLeagueForm/CreateLeagueForm';
 import { JoinCodeDisplay } from '~/features/tournaments/components/JoinCodeDisplay/JoinCodeDisplay';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
-import { ButtonContainer, Container, ScrollContent } from './styles';
+import { ButtonContainer, Container } from './styles';
 
 type CreateLeagueRouteProp = RouteProp<RootStackParamList, 'CreateLeague'>;
 type CreateLeagueNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -55,7 +56,11 @@ export const CreateLeague = () => {
   return (
     <ScreenWrapper title={showJoinCode ? 'League Created' : 'Create League'}>
       <Container>
-        <ScrollContent showsVerticalScrollIndicator={false} style={{ flex: 1, paddingTop: 20 }}>
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1, paddingTop: 20 }}
+          bottomOffset={10}
+        >
           {showJoinCode ? (
             <JoinCodeDisplay
               leagueName={createdLeagueName}
@@ -73,13 +78,15 @@ export const CreateLeague = () => {
               onSubmit={handleSubmit}
             />
           )}
-        </ScrollContent>
+        </KeyboardAwareScrollView>
         {!showJoinCode && (
-          <ButtonContainer>
-            <Button variant="secondary" onPress={handleCreateLeague} loading={isLoading}>
-              Create League
-            </Button>
-          </ButtonContainer>
+          <KeyboardStickyView>
+            <ButtonContainer>
+              <Button variant="secondary" onPress={handleCreateLeague} loading={isLoading}>
+                Create League
+              </Button>
+            </ButtonContainer>
+          </KeyboardStickyView>
         )}
       </Container>
     </ScreenWrapper>

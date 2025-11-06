@@ -1,7 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Platform, StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-url-polyfill/auto';
-import { ThemeProvider } from 'styled-components/native';
+import { ThemeProvider, useTheme } from 'styled-components/native';
 import { AlertProvider } from './src/components/Alert/Alert';
 import { AuthProvider } from './src/contexts/AuthContext';
 import { BottomSheetProvider } from './src/contexts/BottomSheetContext';
@@ -23,20 +25,42 @@ const queryClient = new QueryClient({
   },
 });
 
+// Component to access theme for StatusBar
+const ThemedStatusBar = () => {
+  const styledTheme = useTheme();
+  // Cast to our Theme type since App.tsx is outside src/ and may not pick up styled.d.ts
+  const appTheme = styledTheme as typeof theme;
+
+  if (Platform.OS !== 'android') {
+    return null;
+  }
+
+  return (
+    <StatusBar
+      barStyle="light-content"
+      backgroundColor={appTheme.colors.primary}
+      translucent={false}
+    />
+  );
+};
+
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <BottomSheetProvider>
-            <AlertProvider>
-              <AuthProvider>
-                <RootNavigator />
-              </AuthProvider>
-            </AlertProvider>
-          </BottomSheetProvider>
-        </QueryClientProvider>
-      </ThemeProvider>
+      <KeyboardProvider>
+        <ThemeProvider theme={theme}>
+          <QueryClientProvider client={queryClient}>
+            <BottomSheetProvider>
+              <AlertProvider>
+                <AuthProvider>
+                  <ThemedStatusBar />
+                  <RootNavigator />
+                </AuthProvider>
+              </AlertProvider>
+            </BottomSheetProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </KeyboardProvider>
     </GestureHandlerRootView>
   );
 }

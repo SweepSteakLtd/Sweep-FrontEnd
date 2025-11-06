@@ -64,7 +64,15 @@ export function extractProperties(schema: any): Record<string, any> | null {
   if (schema.properties?.data?.type === 'array' && schema.properties.data.items) {
     return schema.properties.data.items.properties || null;
   }
-  // Handle single object responses
+  // Handle single object responses wrapped in a "data" property
+  else if (
+    schema.type === 'object' &&
+    schema.properties?.data?.type === 'object' &&
+    schema.properties.data.properties
+  ) {
+    return schema.properties.data.properties;
+  }
+  // Handle unwrapped single object responses
   else if (schema.type === 'object' && schema.properties) {
     return schema.properties;
   }

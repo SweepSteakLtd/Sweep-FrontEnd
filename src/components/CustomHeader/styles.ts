@@ -1,24 +1,20 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-// Fixed header height (excluding safe area and status bar)
-export const HEADER_HEIGHT = 56;
-
 export const SafeAreaContainer = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
 `;
 
 export const Container = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  height: ${HEADER_HEIGHT}px;
 `;
 
 export const HeaderContent = styled.View`
-  flex: 1;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding-horizontal: 16px;
+  min-height: 48px;
 `;
 
 export const LeftSection = styled.View`
@@ -47,9 +43,8 @@ export const Title = styled.Text`
 export const BackButton = styled.Pressable`
   padding-left: 0;
   padding-right: 16px;
-  padding-vertical: 8px;
   min-width: 44px;
-  min-height: 44px;
+  height: 44px;
   justify-content: center;
   align-items: flex-start;
 `;

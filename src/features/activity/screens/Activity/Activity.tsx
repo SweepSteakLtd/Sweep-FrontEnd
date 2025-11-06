@@ -160,25 +160,28 @@ export const Activity = () => {
                 </EmptyState>
               ) : (
                 activity?.transactions &&
-                activity.transactions.id && (
+                activity.transactions.length > 0 &&
+                activity.transactions[0].id && (
                   <>
                     <EmptyStateTitle style={{ marginTop: 16 }}>Recent Transaction</EmptyStateTitle>
                     <StatCard style={{ marginTop: 12 }}>
-                      <EmptyStateText>{activity.transactions.name || 'Transaction'}</EmptyStateText>
+                      <EmptyStateText>
+                        {activity.transactions[0].name || 'Transaction'}
+                      </EmptyStateText>
                       <StatValue
                         style={{
                           color:
-                            activity.transactions.type === 'deposit'
+                            activity.transactions[0].type === 'deposit'
                               ? theme.colors.primary
                               : theme.colors.error,
                         }}
                       >
-                        {activity.transactions.type === 'deposit' ? '+' : '-'}
-                        {formatCurrency(activity.transactions.value).replace('£', '')}
+                        {activity.transactions[0].type === 'deposit' ? '+' : '-'}
+                        {formatCurrency(activity.transactions[0].value).replace('£', '')}
                       </StatValue>
                       <EmptyStateText>
-                        {activity.transactions.created_at
-                          ? new Date(activity.transactions.created_at).toLocaleDateString()
+                        {activity.transactions[0].created_at
+                          ? new Date(activity.transactions[0].created_at).toLocaleDateString()
                           : ''}
                       </EmptyStateText>
                     </StatCard>

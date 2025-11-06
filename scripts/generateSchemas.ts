@@ -23,6 +23,14 @@ import {
 const OUTPUT_PATH =
   process.env.SCHEMA_OUTPUT_PATH || path.join(process.cwd(), 'src/services/apis/schemas.ts');
 
+/**
+ * Convert camelCase to snake_case to match actual API responses
+ * The OpenAPI spec may have camelCase but the actual API returns snake_case
+ */
+function toSnakeCase(str: string): string {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
 function convertToZod(schema: OpenAPISchema, name: string, required: boolean = true): string {
   if (!schema.type) {
     return 'z.unknown()';
@@ -65,7 +73,7 @@ function convertToZod(schema: OpenAPISchema, name: string, required: boolean = t
         zodType = `z.object({ ${propsCode} })`;
       } else if (schema.additionalProperties) {
         const valueType = convertToZod(schema.additionalProperties, `${name}Value`, true);
-        zodType = `z.record(${valueType})`;
+        zodType = `z.record(z.string(), ${valueType})`;
       } else {
         zodType = 'z.object({})';
       }
@@ -127,7 +135,9 @@ import { z } from 'zod';
         for (const [propName, propSchema] of Object.entries(schemaInfo.properties)) {
           // All fields are optional for relaxed validation
           const zodType = convertToZod(propSchema as OpenAPISchema, propName, false);
-          output += `  ${propName}: ${zodType},\n`;
+          // Convert to snake_case to match actual API responses
+          const snakeCaseName = toSnakeCase(propName);
+          output += `  ${snakeCaseName}: ${zodType},\n`;
         }
 
         output += `});\n\n`;

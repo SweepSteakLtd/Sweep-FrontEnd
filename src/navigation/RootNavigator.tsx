@@ -31,7 +31,37 @@ export const RootNavigator = () => {
   const theme = useTheme();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        dark: false,
+        colors: {
+          primary: theme.colors.primary,
+          background: theme.colors.background,
+          card: theme.colors.primary,
+          text: theme.colors.text.primary,
+          border: theme.colors.primary,
+          notification: theme.colors.primary,
+        },
+        fonts: {
+          regular: {
+            fontFamily: 'System',
+            fontWeight: '400',
+          },
+          medium: {
+            fontFamily: 'System',
+            fontWeight: '500',
+          },
+          bold: {
+            fontFamily: 'System',
+            fontWeight: '700',
+          },
+          heavy: {
+            fontFamily: 'System',
+            fontWeight: '900',
+          },
+        },
+      }}
+    >
       <AuthGuard />
       <Stack.Navigator
         initialRouteName="Splash"
@@ -54,6 +84,11 @@ export const RootNavigator = () => {
             }
             return null;
           },
+          contentStyle: {
+            backgroundColor: theme.colors.background,
+          },
+          animation: 'slide_from_right',
+          animationTypeForReplace: 'push',
         })}
       >
         <Stack.Screen name="Splash" component={Splash} />
