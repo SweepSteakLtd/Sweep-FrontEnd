@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native';
+import { Pressable } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { BackIcon } from './styles';
 
@@ -21,8 +21,8 @@ export const BackButton = ({ onPress, tintColor }: BackButtonProps) => {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} style={{ paddingLeft: 8, paddingRight: 16 }}>
+    <Pressable onPress={handlePress} style={{ paddingLeft: 8, paddingRight: 16 }}>
       <BackIcon color={tintColor || theme.colors.white}>‹</BackIcon>
-    </TouchableOpacity>
+    </Pressable>
   );
 };

@@ -6,7 +6,7 @@ export const Container = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
 `;
 
-export const ProfileButton = styled.TouchableOpacity`
+export const ProfileButton = styled.Pressable`
   flex-direction: row;
   align-items: center;
   margin-right: 12px;
