@@ -125,6 +125,17 @@ export const Login = () => {
       <Button variant="link" onPress={() => navigation.navigate('CreateAccount')} fullWidth={false}>
         Don't have an account? Create one
       </Button>
+
+      <Button
+        variant="link"
+        onPress={() => {
+          navigation.navigate('Settings');
+        }}
+        fullWidth={false}
+        style={{ marginTop: 5 }}
+      >
+        Mock API Settings
+      </Button>
     </Container>
   );
 };

@@ -1,20 +1,16 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-export const Overlay = styled.View`
+export const Container = styled.View`
   flex: 1;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
 `;
 
 export const AlertContainer = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   border-radius: 16px;
   padding: 24px;
-  width: 100%;
-  max-width: 500px;
+  width: 85%;
+  max-width: 400px;
   shadow-color: #000;
   shadow-offset: 0px 4px;
   shadow-opacity: 0.3;

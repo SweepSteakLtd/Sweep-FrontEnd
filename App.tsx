@@ -28,13 +28,13 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <AlertProvider>
-            <BottomSheetProvider>
+          <BottomSheetProvider>
+            <AlertProvider>
               <AuthProvider>
                 <RootNavigator />
               </AuthProvider>
-            </BottomSheetProvider>
-          </AlertProvider>
+            </AlertProvider>
+          </BottomSheetProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
