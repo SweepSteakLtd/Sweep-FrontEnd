@@ -1,10 +1,11 @@
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { JoinGameList } from '~/features/tournaments/components/JoinGameList/JoinGameList';
 import { useDebouncedValue } from '~/hooks/useDebouncedValue';
 import type { RootStackParamList } from '~/navigation/types';
@@ -71,14 +72,6 @@ export const TournamentLeagues = () => {
     });
   }, [activeGameTab, tournamentId, navigation]);
 
-  // Configure navigation header
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: currentTournament?.name || 'Tournament',
-    });
-  }, [navigation, currentTournament]);
-
   const handleLeaguePress = (league: League) => {
     // Navigate to league details
     console.log('League pressed:', league.id);
@@ -87,55 +80,63 @@ export const TournamentLeagues = () => {
   // Show full skeleton only on true initial load (isLoading means no cached data)
   // isFetching can be true even with cached data (background refetch)
   if (leaguesLoading) {
-    return <TournamentLeaguesSkeleton />;
+    return (
+      <ScreenWrapper title={currentTournament?.name || 'Tournament'}>
+        <TournamentLeaguesSkeleton />
+      </ScreenWrapper>
+    );
   }
 
   if (leaguesError) {
     return (
-      <Container>
-        <EmptyState>
-          <PotLabel>Failed to load data</PotLabel>
-          <PotLabel style={{ fontSize: 14, marginTop: 8 }}>
-            {leaguesError?.message || 'Please try again later'}
-          </PotLabel>
-        </EmptyState>
-      </Container>
+      <ScreenWrapper title={currentTournament?.name || 'Tournament'}>
+        <Container>
+          <EmptyState>
+            <PotLabel>Failed to load data</PotLabel>
+            <PotLabel style={{ fontSize: 14, marginTop: 8 }}>
+              {leaguesError?.message || 'Please try again later'}
+            </PotLabel>
+          </EmptyState>
+        </Container>
+      </ScreenWrapper>
     );
   }
 
   return (
-    <Container>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={leaguesFetching && leagues.length > 0}
-            onRefresh={handleRefresh}
-            tintColor={theme.colors.primary}
+    <ScreenWrapper title={currentTournament?.name || 'Tournament'}>
+      <Container>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={leaguesFetching && leagues.length > 0}
+              onRefresh={handleRefresh}
+              tintColor={theme.colors.primary}
+            />
+          }
+        >
+          <PotInfo>
+            <PotLabel>Total Staked</PotLabel>
+            <AnimatedAmount
+              value={totalPotForTournament}
+              variant="title"
+              color={theme.colors.text.secondary}
+              align="center"
+              weight="bold"
+            />
+          </PotInfo>
+          <JoinGameList
+            games={leagues}
+            onGamePress={handleLeaguePress}
+            onCreateGame={handleCreateLeague}
+            loading={leaguesFetching}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            activeGameTab={activeGameTab}
+            onGameTabChange={handleGameTabChange}
           />
-        }
-      >
-        <PotInfo>
-          <PotLabel>Total Staked</PotLabel>
-          <AnimatedAmount
-            value={totalPotForTournament}
-            variant="title"
-            color={theme.colors.text.secondary}
-            align="center"
-            weight="bold"
-          />
-        </PotInfo>
-        <JoinGameList
-          games={leagues}
-          onGamePress={handleLeaguePress}
-          onCreateGame={handleCreateLeague}
-          loading={leaguesFetching}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          activeGameTab={activeGameTab}
-          onGameTabChange={handleGameTabChange}
-        />
-      </ScrollView>
-    </Container>
+        </ScrollView>
+      </Container>
+    </ScreenWrapper>
   );
 };

@@ -1,14 +1,11 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from 'react';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
 import { Checkbox } from '~/components/Checkbox/Checkbox';
 import { Input } from '~/components/Input/Input';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Typography } from '~/components/Typography/Typography';
-import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import {
@@ -24,8 +21,6 @@ import {
   TitleRow,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 type LimitConfig = {
   id: string;
   title: string;
@@ -37,7 +32,6 @@ type LimitConfig = {
 };
 
 export const DepositLimits = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { data: user } = useGetUser();
   const { mutate: updateUser, isPending } = useUpdateUser();
@@ -50,13 +44,6 @@ export const DepositLimits = () => {
   const [monthlyNoLimit, setMonthlyNoLimit] = useState(false);
   const [weeklyNoLimit, setWeeklyNoLimit] = useState(false);
   const [dailyNoLimit, setDailyNoLimit] = useState(false);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Deposit Limits',
-    });
-  }, [navigation]);
 
   const depositLimits: LimitConfig[] = [
     {
@@ -108,7 +95,12 @@ export const DepositLimits = () => {
     }
 
     // Check if user made any changes
-    if (Object.keys(depositLimit).length === 0 && !dailyNoLimit && !weeklyNoLimit && !monthlyNoLimit) {
+    if (
+      Object.keys(depositLimit).length === 0 &&
+      !dailyNoLimit &&
+      !weeklyNoLimit &&
+      !monthlyNoLimit
+    ) {
       showAlert({
         title: 'No Changes',
         message: 'Please enter new limits or select "No Limit" options.',
@@ -179,7 +171,7 @@ export const DepositLimits = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Deposit Limits">
       <Container>
         <ScrollContent style={{ flex: 1 }}>
           <Section>{depositLimits.map(renderLimitCard)}</Section>
@@ -190,6 +182,6 @@ export const DepositLimits = () => {
           </Button>
         </ButtonContainer>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

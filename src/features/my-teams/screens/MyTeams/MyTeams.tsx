@@ -1,10 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { RefreshControl } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
-import type { RootStackParamList } from '~/navigation/types';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useGetTeams } from '~/services/apis/Team/useGetTeams';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { formatCurrency } from '~/utils/currency';
@@ -32,21 +29,11 @@ import {
   TeamName,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 export const MyTeams = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { data: user, refetch: refetchUser } = useGetUser();
   const { data: teams, isLoading, refetch: refetchTeams } = useGetTeams();
   const [refreshing, setRefreshing] = useState(false);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'My Teams',
-    });
-  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -59,20 +46,14 @@ export const MyTeams = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: theme.colors.white }}
-        edges={['bottom', 'left', 'right']}
-      >
+      <ScreenWrapper title="My Teams">
         <MyTeamsSkeleton />
-      </SafeAreaView>
+      </ScreenWrapper>
     );
   }
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.colors.white }}
-      edges={['bottom', 'left', 'right']}
-    >
+    <ScreenWrapper title="My Teams">
       <Container>
         <ScrollContent
           refreshControl={
@@ -132,6 +113,6 @@ export const MyTeams = () => {
           )}
         </ScrollContent>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

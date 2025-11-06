@@ -1,12 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { RefreshControl } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
-import type { RootStackParamList } from '~/navigation/types';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useChangePassword } from '../../hooks/useChangePassword';
 import {
@@ -18,10 +15,7 @@ import {
   SectionTitle,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 export const Security = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { changePassword, loading, errors } = useChangePassword();
   const { refetch } = useGetUser();
@@ -30,13 +24,6 @@ export const Security = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Security',
-    });
-  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -60,7 +47,7 @@ export const Security = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Security">
       <Container>
         <ScrollContent
           style={{ flex: 1 }}
@@ -115,6 +102,6 @@ export const Security = () => {
           </Button>
         </ButtonContainer>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

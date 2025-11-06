@@ -1,9 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from 'styled-components/native';
-import type { RootStackParamList } from '~/navigation/types';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import {
   Container,
   Description,
@@ -18,26 +13,14 @@ import {
   Title,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 export const SpendLimit = () => {
-  const navigation = useNavigation<NavigationProp>();
-  const theme = useTheme();
-
   // Mock data
   const remainingSpend = 5000;
   const rollingLimit = 5000;
   const progress = (remainingSpend / rollingLimit) * 100;
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Spend Limit',
-    });
-  }, [navigation]);
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Spend Limit">
       <Container>
         <ScrollContent>
           <Title>Spend Limit</Title>
@@ -71,6 +54,6 @@ export const SpendLimit = () => {
           </InfoSection>
         </ScrollContent>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

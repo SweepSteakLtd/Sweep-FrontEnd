@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { Avatar } from '~/components/Avatar/Avatar';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useAuth } from '~/contexts/AuthContext';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
@@ -33,14 +33,6 @@ export const Profile = () => {
   const { signOut } = useAuth();
   const { data: user, refetch } = useGetUser();
   const [refreshing, setRefreshing] = useState(false);
-
-  // Configure navigation header
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Profile',
-    });
-  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -71,7 +63,7 @@ export const Profile = () => {
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Profile">
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -116,6 +108,6 @@ export const Profile = () => {
           </MenuSection>
         </ScrollView>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

@@ -1,11 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Skeleton } from '~/components/Skeleton/Skeleton';
-import type { RootStackParamList } from '~/navigation/types';
 import { useGetActivity } from '~/services/apis/Activity/useGetActivity';
 import { formatCurrency } from '~/utils/currency';
 import {
@@ -24,8 +21,6 @@ import {
   TabsContainer,
   TitleRow,
 } from './styles';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 type TimePeriod = 'all' | '7d' | '30d' | '3m' | '6m' | '12m';
 
@@ -68,7 +63,6 @@ const ActivitySkeleton = () => (
 );
 
 export const Activity = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('all');
   const [refreshing, setRefreshing] = useState(false);
@@ -78,13 +72,6 @@ export const Activity = () => {
 
   const { data: activity, isLoading, isError, refetch } = useGetActivity(selectedTimestamp);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Activity',
-    });
-  }, [navigation]);
-
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
@@ -93,19 +80,19 @@ export const Activity = () => {
 
   if (isError) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+      <ScreenWrapper title="Activity">
         <ErrorState>
           <EmptyStateTitle>Error</EmptyStateTitle>
           <EmptyStateText>Failed to load activity. Please try again.</EmptyStateText>
         </ErrorState>
-      </SafeAreaView>
+      </ScreenWrapper>
     );
   }
 
   const hasActivity = activity && (activity.deposited || activity.withdrawn || activity.net_profit);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Activity">
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -202,6 +189,6 @@ export const Activity = () => {
           )}
         </ScrollView>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

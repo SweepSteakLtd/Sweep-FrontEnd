@@ -1,14 +1,11 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from 'react';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
 import { Checkbox } from '~/components/Checkbox/Checkbox';
 import { Input } from '~/components/Input/Input';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Typography } from '~/components/Typography/Typography';
-import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import {
@@ -24,8 +21,6 @@ import {
   TitleRow,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 type LimitConfig = {
   id: string;
   title: string;
@@ -37,7 +32,6 @@ type LimitConfig = {
 };
 
 export const StakeLimits = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { data: user } = useGetUser();
   const { mutate: updateUser, isPending } = useUpdateUser();
@@ -45,13 +39,6 @@ export const StakeLimits = () => {
 
   const [stakeLimit, setStakeLimit] = useState('');
   const [stakeNoLimit, setStakeNoLimit] = useState(false);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Stake Limits',
-    });
-  }, [navigation]);
 
   const stakeLimits: LimitConfig[] = [
     {
@@ -136,7 +123,7 @@ export const StakeLimits = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Stake Limits">
       <Container>
         <ScrollContent style={{ flex: 1 }}>
           <Section>{stakeLimits.map(renderLimitCard)}</Section>
@@ -147,6 +134,6 @@ export const StakeLimits = () => {
           </Button>
         </ButtonContainer>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

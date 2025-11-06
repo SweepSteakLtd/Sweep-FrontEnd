@@ -1,11 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { RefreshControl } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
-import type { RootStackParamList } from '~/navigation/types';
 import { useDeleteLeague } from '~/services/apis/League/useDeleteLeague';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetUser } from '~/services/apis/User/useGetUser';
@@ -28,10 +25,7 @@ import {
   StatValue,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 export const MyLeagues = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { data: user, refetch: refetchUser } = useGetUser();
   const {
@@ -41,13 +35,6 @@ export const MyLeagues = () => {
   } = useGetLeagues(user?.id ? { owner_id: user.id } : undefined, !!user?.id);
   const deleteLeagueMutation = useDeleteLeague();
   const [refreshing, setRefreshing] = useState(false);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'My Leagues',
-    });
-  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -68,20 +55,14 @@ export const MyLeagues = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: theme.colors.white }}
-        edges={['bottom', 'left', 'right']}
-      >
+      <ScreenWrapper title="My Leagues">
         <MyLeaguesSkeleton />
-      </SafeAreaView>
+      </ScreenWrapper>
     );
   }
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.colors.white }}
-      edges={['bottom', 'left', 'right']}
-    >
+    <ScreenWrapper title="My Leagues">
       <Container>
         <ScrollContent
           refreshControl={
@@ -134,6 +115,6 @@ export const MyLeagues = () => {
           )}
         </ScrollContent>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

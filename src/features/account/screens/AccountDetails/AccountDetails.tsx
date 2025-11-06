@@ -1,15 +1,12 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Avatar } from '~/components/Avatar/Avatar';
 import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
-import type { RootStackParamList } from '~/navigation/types';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import {
@@ -24,10 +21,7 @@ import {
   SectionTitle,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 export const AccountDetails = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { showAlert } = useAlert();
   const { data: user, refetch } = useGetUser();
@@ -42,13 +36,6 @@ export const AccountDetails = () => {
       setNickName(user.nickname || '');
     }
   }, [user]);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Account Details',
-    });
-  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -82,7 +69,7 @@ export const AccountDetails = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Account Details">
       <Container>
         <ScrollContent
           refreshControl={
@@ -169,6 +156,6 @@ export const AccountDetails = () => {
           </Button>
         </ButtonContainer>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

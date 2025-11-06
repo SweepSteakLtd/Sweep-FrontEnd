@@ -1,10 +1,9 @@
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Switch } from '~/components/Switch/Switch';
 import { mockHandlers } from '~/lib/mocks/handlers/registry';
 import { refreshMockConfig } from '~/lib/mocks/interceptor';
@@ -16,7 +15,6 @@ import {
   toggleMockHandler,
 } from '~/lib/mocks/storage';
 import type { MockConfig, MockHandler } from '~/lib/mocks/types';
-import type { RootStackParamList } from '~/navigation/types';
 import {
   BottomSheetContainer,
   BottomSheetTitle,
@@ -50,15 +48,12 @@ import {
   ToggleRow,
 } from './styles';
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 interface HandlerWithConfig extends MockHandler {
   configEnabled: boolean;
   configSelectedScenario: string;
 }
 
 export const Settings = () => {
-  const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<MockConfig | null>(null);
@@ -82,14 +77,6 @@ export const Settings = () => {
     ),
     [],
   );
-
-  // Configure navigation header
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Mock APIs',
-    });
-  }, [navigation]);
 
   // Load mock configuration
   const loadConfig = async () => {
@@ -291,172 +278,178 @@ export const Settings = () => {
 
   if (loading) {
     return (
-      <Container>
-        <EmptyState>
-          <ActivityIndicator size="large" color={theme.colors.primary} />
-        </EmptyState>
-      </Container>
+      <ScreenWrapper title="Mock APIs">
+        <Container>
+          <EmptyState>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </EmptyState>
+        </Container>
+      </ScreenWrapper>
     );
   }
 
   if (!config) {
     return (
-      <Container>
-        <EmptyState>
-          <EmptyStateText>Failed to load mock configuration</EmptyStateText>
-        </EmptyState>
-      </Container>
+      <ScreenWrapper title="Mock APIs">
+        <Container>
+          <EmptyState>
+            <EmptyStateText>Failed to load mock configuration</EmptyStateText>
+          </EmptyState>
+        </Container>
+      </ScreenWrapper>
     );
   }
 
   return (
-    <Container>
-      <ScrollContent
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={theme.colors.primary}
-          />
-        }
-      >
-        <Section>
-          <ToggleRow>
-            <ToggleLabel>Enable Mock APIs</ToggleLabel>
-            <Switch value={config.globalEnabled} onValueChange={handleGlobalToggle} />
-          </ToggleRow>
+    <ScreenWrapper title="Mock APIs">
+      <Container>
+        <ScrollContent
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.colors.primary}
+            />
+          }
+        >
+          <Section>
+            <ToggleRow>
+              <ToggleLabel>Enable Mock APIs</ToggleLabel>
+              <Switch value={config.globalEnabled} onValueChange={handleGlobalToggle} />
+            </ToggleRow>
 
-          {handlers.length === 0 ? (
-            <EmptyStateText>No mock handlers configured</EmptyStateText>
-          ) : (
-            <>
-              {/* User Endpoints Section */}
-              {Object.keys(groupedUserHandlers).length > 0 && (
-                <>
-                  <GroupHeader style={{ marginTop: 20, marginBottom: 10 }}>
-                    User Endpoints
-                  </GroupHeader>
-                  {Object.entries(groupedUserHandlers).map(([group, groupHandlers]) => {
-                    const isExpanded = expandedGroups[group] ?? false;
-                    const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
-                    const enabledCount = enabledHandlers.length;
-                    const totalCount = groupHandlers.length;
-
-                    return (
-                      <GroupContainer key={group} expanded={isExpanded}>
-                        <GroupHeaderContainer
-                          onPress={() => toggleGroup(group)}
-                          activeOpacity={0.7}
-                        >
-                          <GroupHeader>{group}</GroupHeader>
-                          <GroupChevron expanded={isExpanded}>▶</GroupChevron>
-                        </GroupHeaderContainer>
-                        {!isExpanded && enabledCount > 0 && (
-                          <GroupSummary>
-                            {enabledCount} of {totalCount} enabled
-                          </GroupSummary>
-                        )}
-                        {isExpanded && groupHandlers.map(renderHandler)}
-                      </GroupContainer>
-                    );
-                  })}
-                </>
-              )}
-
-              {/* Admin Endpoints Section */}
-              {Object.keys(groupedAdminHandlers).length > 0 && (
-                <>
-                  <GroupHeader style={{ marginTop: 20, marginBottom: 10 }}>
-                    Admin Endpoints
-                  </GroupHeader>
-                  {Object.entries(groupedAdminHandlers).map(([group, groupHandlers]) => {
-                    const groupKey = `admin-${group}`;
-                    const isExpanded = expandedGroups[groupKey] ?? false;
-                    const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
-                    const enabledCount = enabledHandlers.length;
-                    const totalCount = groupHandlers.length;
-
-                    return (
-                      <GroupContainer key={groupKey} expanded={isExpanded}>
-                        <GroupHeaderContainer
-                          onPress={() => toggleGroup(groupKey)}
-                          activeOpacity={0.7}
-                        >
-                          <GroupHeader>{group}</GroupHeader>
-                          <GroupChevron expanded={isExpanded}>▶</GroupChevron>
-                        </GroupHeaderContainer>
-                        {!isExpanded && enabledCount > 0 && (
-                          <GroupSummary>
-                            {enabledCount} of {totalCount} enabled
-                          </GroupSummary>
-                        )}
-                        {isExpanded && groupHandlers.map(renderHandler)}
-                      </GroupContainer>
-                    );
-                  })}
-                </>
-              )}
-            </>
-          )}
-        </Section>
-      </ScrollContent>
-
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={snapPoints}
-        enablePanDownToClose
-        backdropComponent={renderBackdrop}
-      >
-        <BottomSheetScrollView>
-          <BottomSheetContainer>
-            <BottomSheetTitle>
-              {selectedHandler ? `${selectedHandler.name}` : 'Select Scenario'}
-            </BottomSheetTitle>
-
-            {selectedHandler && (
+            {handlers.length === 0 ? (
+              <EmptyStateText>No mock handlers configured</EmptyStateText>
+            ) : (
               <>
-                <DelaySection>
-                  <DelayLabel>Response Delay</DelayLabel>
-                  <DelayButtonsRow>
-                    {DELAY_OPTIONS.map((option) => {
-                      const currentDelay = config?.handlers[selectedHandler.id]?.delay;
-                      const isSelected = currentDelay === option.value;
+                {/* User Endpoints Section */}
+                {Object.keys(groupedUserHandlers).length > 0 && (
+                  <>
+                    <GroupHeader style={{ marginTop: 20, marginBottom: 10 }}>
+                      User Endpoints
+                    </GroupHeader>
+                    {Object.entries(groupedUserHandlers).map(([group, groupHandlers]) => {
+                      const isExpanded = expandedGroups[group] ?? false;
+                      const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
+                      const enabledCount = enabledHandlers.length;
+                      const totalCount = groupHandlers.length;
+
                       return (
-                        <DelayButton
-                          key={option.label}
-                          selected={isSelected}
-                          onPress={() => handleDelaySelect(option.value)}
-                        >
-                          <DelayButtonText selected={isSelected}>{option.label}</DelayButtonText>
-                        </DelayButton>
+                        <GroupContainer key={group} expanded={isExpanded}>
+                          <GroupHeaderContainer
+                            onPress={() => toggleGroup(group)}
+                            activeOpacity={0.7}
+                          >
+                            <GroupHeader>{group}</GroupHeader>
+                            <GroupChevron expanded={isExpanded}>▶</GroupChevron>
+                          </GroupHeaderContainer>
+                          {!isExpanded && enabledCount > 0 && (
+                            <GroupSummary>
+                              {enabledCount} of {totalCount} enabled
+                            </GroupSummary>
+                          )}
+                          {isExpanded && groupHandlers.map(renderHandler)}
+                        </GroupContainer>
                       );
                     })}
-                  </DelayButtonsRow>
-                </DelaySection>
+                  </>
+                )}
 
-                <DelayLabel>Scenarios</DelayLabel>
-                {Object.keys(selectedHandler.scenarios).map((scenarioName) => (
-                  <ScenarioOption
-                    key={scenarioName}
-                    selected={scenarioName === selectedHandler.configSelectedScenario}
-                    onPress={() => handleScenarioSelect(scenarioName)}
-                  >
-                    <ScenarioText
-                      selected={scenarioName === selectedHandler.configSelectedScenario}
-                    >
-                      {scenarioName}
-                    </ScenarioText>
-                    {scenarioName === selectedHandler.configSelectedScenario && (
-                      <CheckIcon>✓</CheckIcon>
-                    )}
-                  </ScenarioOption>
-                ))}
+                {/* Admin Endpoints Section */}
+                {Object.keys(groupedAdminHandlers).length > 0 && (
+                  <>
+                    <GroupHeader style={{ marginTop: 20, marginBottom: 10 }}>
+                      Admin Endpoints
+                    </GroupHeader>
+                    {Object.entries(groupedAdminHandlers).map(([group, groupHandlers]) => {
+                      const groupKey = `admin-${group}`;
+                      const isExpanded = expandedGroups[groupKey] ?? false;
+                      const enabledHandlers = groupHandlers.filter((h) => h.configEnabled);
+                      const enabledCount = enabledHandlers.length;
+                      const totalCount = groupHandlers.length;
+
+                      return (
+                        <GroupContainer key={groupKey} expanded={isExpanded}>
+                          <GroupHeaderContainer
+                            onPress={() => toggleGroup(groupKey)}
+                            activeOpacity={0.7}
+                          >
+                            <GroupHeader>{group}</GroupHeader>
+                            <GroupChevron expanded={isExpanded}>▶</GroupChevron>
+                          </GroupHeaderContainer>
+                          {!isExpanded && enabledCount > 0 && (
+                            <GroupSummary>
+                              {enabledCount} of {totalCount} enabled
+                            </GroupSummary>
+                          )}
+                          {isExpanded && groupHandlers.map(renderHandler)}
+                        </GroupContainer>
+                      );
+                    })}
+                  </>
+                )}
               </>
             )}
-          </BottomSheetContainer>
-        </BottomSheetScrollView>
-      </BottomSheet>
-    </Container>
+          </Section>
+        </ScrollContent>
+
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={-1}
+          snapPoints={snapPoints}
+          enablePanDownToClose
+          backdropComponent={renderBackdrop}
+        >
+          <BottomSheetScrollView>
+            <BottomSheetContainer>
+              <BottomSheetTitle>
+                {selectedHandler ? `${selectedHandler.name}` : 'Select Scenario'}
+              </BottomSheetTitle>
+
+              {selectedHandler && (
+                <>
+                  <DelaySection>
+                    <DelayLabel>Response Delay</DelayLabel>
+                    <DelayButtonsRow>
+                      {DELAY_OPTIONS.map((option) => {
+                        const currentDelay = config?.handlers[selectedHandler.id]?.delay;
+                        const isSelected = currentDelay === option.value;
+                        return (
+                          <DelayButton
+                            key={option.label}
+                            selected={isSelected}
+                            onPress={() => handleDelaySelect(option.value)}
+                          >
+                            <DelayButtonText selected={isSelected}>{option.label}</DelayButtonText>
+                          </DelayButton>
+                        );
+                      })}
+                    </DelayButtonsRow>
+                  </DelaySection>
+
+                  <DelayLabel>Scenarios</DelayLabel>
+                  {Object.keys(selectedHandler.scenarios).map((scenarioName) => (
+                    <ScenarioOption
+                      key={scenarioName}
+                      selected={scenarioName === selectedHandler.configSelectedScenario}
+                      onPress={() => handleScenarioSelect(scenarioName)}
+                    >
+                      <ScenarioText
+                        selected={scenarioName === selectedHandler.configSelectedScenario}
+                      >
+                        {scenarioName}
+                      </ScenarioText>
+                      {scenarioName === selectedHandler.configSelectedScenario && (
+                        <CheckIcon>✓</CheckIcon>
+                      )}
+                    </ScenarioOption>
+                  ))}
+                </>
+              )}
+            </BottomSheetContainer>
+          </BottomSheetScrollView>
+        </BottomSheet>
+      </Container>
+    </ScreenWrapper>
   );
 };

@@ -1,9 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect } from 'react';
 import { ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from 'styled-components/native';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import type { RootStackParamList } from '~/navigation/types';
 import {
   Container,
@@ -24,14 +22,6 @@ type MenuItemConfig = {
 
 export const BettingControls = () => {
   const navigation = useNavigation<NavigationProp>();
-  const theme = useTheme();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Betting Controls',
-    });
-  }, [navigation]);
 
   const menuItems: MenuItemConfig[] = [
     {
@@ -57,7 +47,7 @@ export const BettingControls = () => {
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Betting Controls">
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -79,6 +69,6 @@ export const BettingControls = () => {
           </MenuSection>
         </ScrollView>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

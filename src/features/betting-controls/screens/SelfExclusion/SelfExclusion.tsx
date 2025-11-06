@@ -1,11 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from 'styled-components/native';
+import { useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
 import { Dropdown } from '~/components/Dropdown/Dropdown';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
@@ -32,17 +31,9 @@ const EXCLUSION_PERIODS = [
 export const SelfExclusion = () => {
   const navigation = useNavigation<NavigationProp>();
   const { showAlert } = useAlert();
-  const theme = useTheme();
   const { data: user } = useGetUser();
   const { mutate: updateUser, isPending } = useUpdateUser();
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Self Exclusion',
-    });
-  }, [navigation]);
 
   // Format the exclusion end date if it exists
   const exclusionEndDate = user?.exclusion_ending
@@ -111,7 +102,7 @@ export const SelfExclusion = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Self Exclusion">
       <Container>
         <ScrollContent style={{ flex: 1 }}>
           <Title>Self Exclusions Policy</Title>
@@ -150,6 +141,6 @@ export const SelfExclusion = () => {
           </Button>
         </ButtonContainer>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };
