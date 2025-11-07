@@ -13,6 +13,7 @@ export const HeaderContent = styled.View`
   flex-direction: row;
   align-items: center;
   min-height: 48px;
+  padding-left: 8px;
 `;
 
 export const LeftSection = styled.View`

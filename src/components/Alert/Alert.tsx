@@ -90,16 +90,13 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     <Button
                       key={index}
                       variant={button.style === 'destructive' ? 'primary' : 'secondary'}
+                      title={button.text}
                       onPress={() => handleButtonPress(button.onPress)}
                       style={{ flex: 1, marginLeft: index > 0 ? 12 : 0 }}
-                    >
-                      {button.text}
-                    </Button>
+                    />
                   ))
                 ) : (
-                  <Button variant="primary" onPress={hideAlert} style={{ flex: 1 }}>
-                    Ok
-                  </Button>
+                  <Button variant="primary" title="Ok" onPress={hideAlert} style={{ flex: 1 }} />
                 )}
               </ButtonContainer>
             </AlertContainer>
