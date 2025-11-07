@@ -124,17 +124,15 @@ export const Login = () => {
           loading={loading}
           onPress={handleSignIn}
           style={{ marginBottom: 10 }}
-        >
-          Sign In
-        </Button>
+          title="Sign In"
+        />
 
         <Button
           variant="link"
           onPress={() => navigation.navigate('CreateAccount')}
           fullWidth={false}
-        >
-          Don't have an account? Create one
-        </Button>
+          title="Don't have an account? Create one"
+        />
       </KeyboardStickyView>
     </Container>
   );

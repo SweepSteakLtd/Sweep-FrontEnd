@@ -197,9 +197,7 @@ export const CreateProfile = () => {
       </KeyboardAwareScrollView>
 
       <KeyboardStickyView>
-        <Button disabled={loading} loading={loading} onPress={onSubmit}>
-          Create Account
-        </Button>
+        <Button disabled={loading} loading={loading} onPress={onSubmit} title="Create Account" />
       </KeyboardStickyView>
     </Container>
   );

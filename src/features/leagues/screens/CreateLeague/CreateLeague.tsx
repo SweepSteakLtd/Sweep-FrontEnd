@@ -82,9 +82,12 @@ export const CreateLeague = () => {
         {!showJoinCode && (
           <KeyboardStickyView>
             <ButtonContainer>
-              <Button variant="secondary" onPress={handleCreateLeague} loading={isLoading}>
-                Create League
-              </Button>
+              <Button
+                variant="secondary"
+                onPress={handleCreateLeague}
+                loading={isLoading}
+                title="Create League"
+              />
             </ButtonContainer>
           </KeyboardStickyView>
         )}

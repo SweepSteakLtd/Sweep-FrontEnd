@@ -137,9 +137,7 @@ export const CreateAccount = () => {
         </KeyboardAwareScrollView>
 
         <KeyboardStickyView>
-          <Button disabled={loading} loading={loading} onPress={handleContinue}>
-            Continue
-          </Button>
+          <Button disabled={loading} loading={loading} onPress={handleContinue} title="Continue" />
         </KeyboardStickyView>
       </Container>
     </SafeAreaView>

@@ -3,7 +3,9 @@ import React from 'react';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { formatCurrency } from '~/utils/currency';
 import { Avatar } from '../Avatar/Avatar';
+import { Button } from '../Button/Button';
 import { CustomHeader } from '../CustomHeader/CustomHeader';
+import { BackArrowIcon } from '../Icon/BackArrowIcon';
 import { Container, ProfileBalance, ProfileButton } from './styles';
 
 interface ScreenWrapperProps {
@@ -31,8 +33,24 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
     navigation.navigate('Profile' as never);
   };
 
+  const handleBackPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
+  };
+
   // Default title from route name if not provided
   const headerTitle = title || route.name;
+
+  // Back button component
+  const backButtonComponent = showBackButton ? (
+    <Button
+      variant="link"
+      onPress={handleBackPress}
+      fullWidth={false}
+      icon={<BackArrowIcon size={18} color="white" />}
+    />
+  ) : null;
 
   // Profile component for Dashboard
   const profileComponent = showProfile ? (
@@ -47,7 +65,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
       {showHeader && (
         <CustomHeader
           title={headerTitle}
-          showBackButton={showBackButton}
+          leftComponent={backButtonComponent}
           rightComponent={rightComponent || profileComponent}
         />
       )}

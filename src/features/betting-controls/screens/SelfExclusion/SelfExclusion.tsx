@@ -142,9 +142,12 @@ export const SelfExclusion = () => {
         </KeyboardAwareScrollView>
         <KeyboardStickyView>
           <ButtonContainer>
-            <Button variant="primary" onPress={handleContinue} disabled={isPending}>
-              {isPending ? 'Processing...' : 'Continue'}
-            </Button>
+            <Button
+              variant="primary"
+              onPress={handleContinue}
+              disabled={isPending}
+              title={isPending ? 'Processing...' : 'Continue'}
+            />
           </ButtonContainer>
         </KeyboardStickyView>
       </Container>

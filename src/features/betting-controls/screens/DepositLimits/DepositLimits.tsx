@@ -185,9 +185,12 @@ export const DepositLimits = () => {
         </KeyboardAwareScrollView>
         <KeyboardStickyView>
           <ButtonContainer>
-            <Button variant="secondary" onPress={handleUpdate} disabled={isPending}>
-              {isPending ? 'Updating...' : 'Update'}
-            </Button>
+            <Button
+              variant="secondary"
+              onPress={handleUpdate}
+              disabled={isPending}
+              title={isPending ? 'Updating...' : 'Update'}
+            />
           </ButtonContainer>
         </KeyboardStickyView>
       </Container>

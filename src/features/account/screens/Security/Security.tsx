@@ -75,9 +75,7 @@ export const Security = () => {
         </KeyboardAwareScrollView>
         <KeyboardStickyView>
           <ButtonContainer>
-            <Button variant="secondary" onPress={handleUpdate} loading={loading}>
-              Update
-            </Button>
+            <Button variant="secondary" onPress={handleUpdate} loading={loading} title="Update" />
           </ButtonContainer>
         </KeyboardStickyView>
       </Container>

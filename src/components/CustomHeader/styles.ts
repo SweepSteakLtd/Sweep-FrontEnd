@@ -12,46 +12,32 @@ export const Container = styled.View`
 export const HeaderContent = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding-horizontal: 16px;
   min-height: 48px;
 `;
 
 export const LeftSection = styled.View`
-  min-width: 60px;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  z-index: 10;
+  elevation: 10;
 `;
 
 export const RightSection = styled.View`
-  min-width: 60px;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  z-index: 10;
+  elevation: 10;
+  margin-left: auto;
 `;
 
 export const Title = styled.Text`
-  flex: 1;
+  position: absolute;
+  left: 0;
+  right: 0;
   font-size: 18px;
   font-weight: 600;
   color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   text-align: center;
   padding-horizontal: 8px;
-`;
-
-export const BackButton = styled.Pressable`
-  padding-left: 0;
-  padding-right: 16px;
-  min-width: 44px;
-  height: 44px;
-  justify-content: center;
-  align-items: flex-start;
-`;
-
-export const BackButtonText = styled.Text`
-  font-size: 36px;
-  font-weight: 300;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
-  line-height: 36px;
+  pointer-events: none;
 `;

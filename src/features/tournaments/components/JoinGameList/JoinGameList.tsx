@@ -1,12 +1,14 @@
 import { View } from 'react-native';
+import { useTheme } from 'styled-components/native';
+import { Button } from '~/components/Button/Button';
+import { PlusIcon } from '~/components/Icon/PlusIcon';
 import { SearchInput } from '~/components/SearchInput/SearchInput';
 import { TabBar } from '~/components/TabBar/TabBar';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
 import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
 import type { League } from '~/services/apis/League/types';
+
 import {
-  CreateButton,
-  CreateButtonText,
   EmptyState,
   EmptyStateText,
   SearchAndCreateRow,
@@ -43,6 +45,7 @@ export const JoinGameList = ({
   activeGameTab = 'featured',
   onGameTabChange,
 }: JoinGameListProps) => {
+  const theme = useTheme();
   // Client-side filtering only by game tab, search is handled by API
   const filteredGames = games.filter((game) => {
     // Filter by game tab (Featured/Public/Private)
@@ -85,9 +88,12 @@ export const JoinGameList = ({
           />
         </SearchWrapper>
         {onCreateGame && (
-          <CreateButton onPress={onCreateGame}>
-            <CreateButtonText>+</CreateButtonText>
-          </CreateButton>
+          <Button
+            icon={<PlusIcon size={24} color="white" />}
+            onPress={onCreateGame}
+            fullWidth={false}
+            backgroundColor={theme.colors.primary}
+          />
         )}
       </SearchAndCreateRow>
 

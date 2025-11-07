@@ -290,13 +290,18 @@ export const TermsAndConditions = () => {
           </Typography>
         </Checkbox>
 
-        <Button disabled={!accepted} onPress={handleAccept} style={{ marginTop: 15 }}>
-          {accepted
-            ? nextScreen === 'CreateAccount'
-              ? 'Accept & Create Account'
-              : 'Accept & Continue to Login'
-            : 'Please Accept Terms to Continue'}
-        </Button>
+        <Button
+          disabled={!accepted}
+          onPress={handleAccept}
+          style={{ marginTop: 15 }}
+          title={
+            accepted
+              ? nextScreen === 'CreateAccount'
+                ? 'Accept & Create Account'
+                : 'Accept & Continue to Login'
+              : 'Please Accept Terms to Continue'
+          }
+        />
       </Footer>
     </Container>
   );

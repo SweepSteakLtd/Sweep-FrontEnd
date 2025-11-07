@@ -46,11 +46,17 @@ interface StyledButtonProps {
   variant: ButtonVariant;
   disabled: boolean;
   fullWidth: boolean;
+  backgroundColor?: string;
 }
 
 export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
-  background-color: ${({ theme, variant, disabled }: StyledButtonProps & { theme: Theme }) =>
-    getBackgroundColor(variant, disabled, theme)};
+  background-color: ${({
+    theme,
+    variant,
+    disabled,
+    backgroundColor,
+  }: StyledButtonProps & { theme: Theme }) =>
+    backgroundColor || getBackgroundColor(variant, disabled, theme)};
   padding: ${({ variant }: StyledButtonProps) => {
     if (variant === 'link') return '8px';
     if (variant === 'circular') return '8px';
@@ -58,7 +64,7 @@ export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
   }};
   border-radius: ${({ variant }: StyledButtonProps) => {
     if (variant === 'link') return '0px';
-    if (variant === 'circular') return '50%';
+    if (variant === 'circular') return '100px';
     return '25px';
   }};
   align-items: center;

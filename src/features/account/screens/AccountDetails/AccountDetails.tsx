@@ -87,9 +87,7 @@ export const AccountDetails = () => {
             <AvatarContainer>
               <Avatar size={80} />
               <EditButton>
-                <Button variant="circular" onPress={handleChangePhoto}>
-                  <Icon name="✏️" size={16} />
-                </Button>
+                <Button icon={<Icon name="✏️" size={16} />} onPress={handleChangePhoto} />
               </EditButton>
             </AvatarContainer>
           </AvatarSection>
@@ -155,9 +153,8 @@ export const AccountDetails = () => {
               variant="secondary"
               onPress={handleUpdate}
               disabled={updateUserMutation.isPending}
-            >
-              {updateUserMutation.isPending ? 'Updating...' : 'Update'}
-            </Button>
+              title={updateUserMutation.isPending ? 'Updating...' : 'Update'}
+            />
           </ButtonContainer>
         </KeyboardStickyView>
       </Container>

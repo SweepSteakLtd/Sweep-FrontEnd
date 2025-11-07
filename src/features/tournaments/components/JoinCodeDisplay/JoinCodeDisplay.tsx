@@ -38,9 +38,11 @@ export const JoinCodeDisplay = ({ leagueName, tournamentName, joinCode }: JoinCo
       </CodeContainer>
 
       <CopyButton>
-        <Button variant="secondary" onPress={handleCopyCode}>
-          {copied ? 'COPIED!' : 'COPY AUTO JOIN LINK'}
-        </Button>
+        <Button
+          variant="secondary"
+          onPress={handleCopyCode}
+          title={copied ? 'COPIED!' : 'COPY AUTO JOIN LINK'}
+        />
       </CopyButton>
     </Container>
   );
