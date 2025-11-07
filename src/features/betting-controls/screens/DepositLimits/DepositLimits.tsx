@@ -9,6 +9,7 @@ import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Typography } from '~/components/Typography/Typography';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
+import { penceToPounds, poundsToPence } from '~/utils/currency';
 import {
   ButtonContainer,
   CheckboxContainer,
@@ -49,7 +50,7 @@ export const DepositLimits = () => {
     {
       id: 'monthly',
       title: 'Monthly Limit',
-      currentLimit: user?.deposit_limit?.monthly?.toString() || '0',
+      currentLimit: penceToPounds(user?.deposit_limit?.monthly).toFixed(2),
       newLimit: monthlyLimit,
       noLimit: monthlyNoLimit,
       setNewLimit: setMonthlyLimit,
@@ -58,7 +59,7 @@ export const DepositLimits = () => {
     {
       id: 'weekly',
       title: 'Weekly Limit',
-      currentLimit: user?.deposit_limit?.weekly?.toString() || '0',
+      currentLimit: penceToPounds(user?.deposit_limit?.weekly).toFixed(2),
       newLimit: weeklyLimit,
       noLimit: weeklyNoLimit,
       setNewLimit: setWeeklyLimit,
@@ -67,7 +68,7 @@ export const DepositLimits = () => {
     {
       id: 'daily',
       title: 'Daily Limit',
-      currentLimit: user?.deposit_limit?.daily?.toString() || '0',
+      currentLimit: penceToPounds(user?.deposit_limit?.daily).toFixed(2),
       newLimit: dailyLimit,
       noLimit: dailyNoLimit,
       setNewLimit: setDailyLimit,
@@ -84,14 +85,15 @@ export const DepositLimits = () => {
     } = {};
 
     // Only include fields that have values (not "No Limit")
+    // Convert pounds to pence for API
     if (!dailyNoLimit && dailyLimit) {
-      depositLimit.daily = parseFloat(dailyLimit);
+      depositLimit.daily = poundsToPence(dailyLimit);
     }
     if (!weeklyNoLimit && weeklyLimit) {
-      depositLimit.weekly = parseFloat(weeklyLimit);
+      depositLimit.weekly = poundsToPence(weeklyLimit);
     }
     if (!monthlyNoLimit && monthlyLimit) {
-      depositLimit.monthly = parseFloat(monthlyLimit);
+      depositLimit.monthly = poundsToPence(monthlyLimit);
     }
 
     // Check if user made any changes

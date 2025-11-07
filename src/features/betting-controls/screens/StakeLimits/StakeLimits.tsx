@@ -9,6 +9,7 @@ import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Typography } from '~/components/Typography/Typography';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
+import { penceToPounds, poundsToPence } from '~/utils/currency';
 import {
   ButtonContainer,
   CheckboxContainer,
@@ -44,7 +45,7 @@ export const StakeLimits = () => {
     {
       id: 'stake',
       title: 'Stake Limit',
-      currentLimit: user?.betting_limit?.toString() || '0',
+      currentLimit: penceToPounds(user?.betting_limit).toFixed(2),
       newLimit: stakeLimit,
       noLimit: stakeNoLimit,
       setNewLimit: setStakeLimit,
@@ -62,7 +63,7 @@ export const StakeLimits = () => {
       return;
     }
 
-    const bettingLimit = stakeNoLimit ? undefined : parseFloat(stakeLimit);
+    const bettingLimit = stakeNoLimit ? undefined : poundsToPence(stakeLimit);
 
     updateUser(
       { betting_limit: bettingLimit },

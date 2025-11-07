@@ -4,6 +4,7 @@ import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Typography } from '~/components/Typography/Typography';
 import type { League } from '~/services/apis/League/types';
+import { formatCurrency } from '~/utils/currency';
 import {
   AmountText,
   Card,
@@ -28,10 +29,6 @@ interface GameCardProps {
 export const GameCard = ({ game, tournamentName = '', onPress, onDelete }: GameCardProps) => {
   const theme = useTheme();
   const { showAlert } = useAlert();
-
-  const formatCurrency = (amount: number) => {
-    return `£${amount.toLocaleString()}`;
-  };
 
   const handleDelete = () => {
     if (!game.id) return;

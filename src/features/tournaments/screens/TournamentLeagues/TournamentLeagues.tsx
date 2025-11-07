@@ -12,6 +12,7 @@ import type { RootStackParamList } from '~/navigation/types';
 import type { League } from '~/services/apis/League/types';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
+import { penceToPounds } from '~/utils/currency';
 import { Container, EmptyState, PotInfo, PotLabel } from './styles';
 import { TournamentLeaguesSkeleton } from './TournamentLeaguesSkeleton';
 
@@ -118,11 +119,12 @@ export const TournamentLeagues = () => {
           <PotInfo>
             <PotLabel>Total Staked</PotLabel>
             <AnimatedAmount
-              value={totalPotForTournament}
+              value={penceToPounds(totalPotForTournament)}
               variant="title"
               color={theme.colors.text.secondary}
               align="center"
               weight="bold"
+              decimals={2}
             />
           </PotInfo>
           <JoinGameList

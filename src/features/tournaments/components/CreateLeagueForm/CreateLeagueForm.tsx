@@ -7,6 +7,7 @@ import { Switch } from '~/components/Switch/Switch';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import { useCreateLeague } from '~/services/apis/League/useCreateLeague';
 import type { Tournament } from '~/services/apis/Tournament/types';
+import { poundsToPence } from '~/utils/currency';
 import { ErrorText, InputLabel, LeagueTypeRow, SwitchLabel } from './styles';
 import { createLeagueSchema } from './validation';
 
@@ -74,7 +75,7 @@ export const CreateLeagueForm = ({
       const response = await createLeagueMutation.mutateAsync({
         name: leagueName,
         description: '',
-        entry_fee: parseFloat(entryFee),
+        entry_fee: poundsToPence(entryFee),
         max_participants: parseInt(maxEntries),
         rewards: [],
         start_time: new Date().toISOString(),

@@ -13,10 +13,24 @@ export const penceToPounds = (pence?: number | null): number => {
 
 /**
  * Convert pounds to pence
- * @param pounds - Amount in pounds (e.g., 99.99)
- * @returns Amount in pence (e.g., 9999)
+ * @param pounds - Amount in pounds (e.g., 99.99) as number or string
+ * @returns Amount in pence (e.g., 9999), or 0 if invalid
  */
-export const poundsToPence = (pounds: number): number => {
+export const poundsToPence = (pounds: number | string): number => {
+  // Handle string input
+  if (typeof pounds === 'string') {
+    const parsed = parseFloat(pounds);
+    if (isNaN(parsed)) {
+      return 0;
+    }
+    return Math.round(parsed * 100);
+  }
+
+  // Handle number input
+  if (typeof pounds !== 'number' || isNaN(pounds)) {
+    return 0;
+  }
+
   return Math.round(pounds * 100);
 };
 
