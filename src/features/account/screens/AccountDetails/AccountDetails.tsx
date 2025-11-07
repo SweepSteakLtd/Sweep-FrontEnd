@@ -75,6 +75,7 @@ export const AccountDetails = () => {
           style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
           bottomOffset={10}
+          contentContainerStyle={{ paddingBottom: 40 }}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
