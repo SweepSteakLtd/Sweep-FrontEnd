@@ -1,57 +1,21 @@
 import { useState } from 'react';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
-import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
-import { Checkbox } from '~/components/Checkbox/Checkbox';
-import { Input } from '~/components/Input/Input';
+import { LimitInput } from '~/components/LimitInput/LimitInput';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import { Typography } from '~/components/Typography/Typography';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import { penceToPounds, poundsToPence } from '~/utils/currency';
-import {
-  ButtonContainer,
-  CheckboxContainer,
-  Container,
-  CurrentLimitText,
-  InputRow,
-  LimitLabel,
-  LimitTitle,
-  Section,
-  TitleRow,
-} from './styles';
-
-type LimitConfig = {
-  id: string;
-  title: string;
-  currentLimit: string;
-  newLimit: string;
-  noLimit: boolean;
-  setNewLimit: (value: string) => void;
-  setNoLimit: (value: boolean) => void;
-};
+import { ButtonContainer, Container, Section } from './styles';
 
 export const StakeLimits = () => {
-  const theme = useTheme();
   const { data: user } = useGetUser();
   const { mutate: updateUser, isPending } = useUpdateUser();
   const { showAlert } = useAlert();
 
   const [stakeLimit, setStakeLimit] = useState('');
   const [stakeNoLimit, setStakeNoLimit] = useState(false);
-
-  const stakeLimits: LimitConfig[] = [
-    {
-      id: 'stake',
-      title: 'Stake Limit',
-      currentLimit: penceToPounds(user?.betting_limit).toFixed(2),
-      newLimit: stakeLimit,
-      noLimit: stakeNoLimit,
-      setNewLimit: setStakeLimit,
-      setNoLimit: setStakeNoLimit,
-    },
-  ];
 
   const handleUpdate = () => {
     // Check if user made any changes
@@ -88,41 +52,6 @@ export const StakeLimits = () => {
     );
   };
 
-  const handleNoLimitToggle = (limit: LimitConfig) => {
-    const newNoLimitValue = !limit.noLimit;
-    limit.setNoLimit(newNoLimitValue);
-    if (newNoLimitValue) {
-      // Clear the input when No Limit is checked
-      limit.setNewLimit('');
-    }
-  };
-
-  const renderLimitCard = (limit: LimitConfig) => (
-    <InputRow key={limit.id}>
-      <TitleRow>
-        <LimitTitle>{limit.title}</LimitTitle>
-        <CurrentLimitText>Current: £{limit.currentLimit || 'No Limit'}</CurrentLimitText>
-      </TitleRow>
-
-      <LimitLabel>New Limit</LimitLabel>
-      <Input
-        variant="currency"
-        value={limit.newLimit}
-        onChangeText={limit.setNewLimit}
-        placeholder="Amount"
-        editable={!limit.noLimit}
-      />
-
-      <CheckboxContainer>
-        <Checkbox checked={limit.noLimit} onPress={() => handleNoLimitToggle(limit)}>
-          <Typography variant="body" color={theme.colors.text.primary}>
-            No Limit
-          </Typography>
-        </Checkbox>
-      </CheckboxContainer>
-    </InputRow>
-  );
-
   return (
     <ScreenWrapper title="Stake Limits">
       <Container>
@@ -132,7 +61,21 @@ export const StakeLimits = () => {
           showsVerticalScrollIndicator={false}
           bottomOffset={10}
         >
-          <Section>{stakeLimits.map(renderLimitCard)}</Section>
+          <Section>
+            <LimitInput
+              title="Stake Limit"
+              currentLimit={
+                user?.betting_limit ? penceToPounds(user.betting_limit).toFixed(2) : undefined
+              }
+              value={stakeLimit}
+              onChangeText={setStakeLimit}
+              noLimit={stakeNoLimit}
+              onNoLimitToggle={() => {
+                setStakeNoLimit(!stakeNoLimit);
+                if (!stakeNoLimit) setStakeLimit('');
+              }}
+            />
+          </Section>
         </KeyboardAwareScrollView>
         <KeyboardStickyView>
           <ButtonContainer>

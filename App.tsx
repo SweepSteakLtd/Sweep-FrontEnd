@@ -14,6 +14,13 @@ import { theme } from './src/theme/theme';
 // Install mock interceptor globally
 installMockInterceptor();
 
+// Clear all mock configurations on app start (run once)
+// (async () => {
+//   await resetMockConfig();
+//   await refreshMockConfig();
+//   console.log('[App]: API mock config cleared on startup');
+// })();
+
 // Create a React Query client
 const queryClient = new QueryClient({
   defaultOptions: {
