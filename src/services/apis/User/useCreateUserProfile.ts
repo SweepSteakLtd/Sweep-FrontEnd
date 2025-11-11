@@ -4,18 +4,33 @@ import { User } from './types';
 import { userQueryKeys } from './useGetUser';
 
 export interface CreateUserProfileParams {
-  first_name?: string;
-  last_name?: string;
+  first_name: string;
+  last_name: string;
+  nickname?: string;
+  phone_number: string;
+  date_of_birth: string; // yyyy-mm-dd format
   bio?: string;
   profile_picture?: string;
-  phone_number?: string;
-  deposit_limit?: number;
+  deposit_limit?: {
+    daily?: number;
+    weekly?: number;
+    monthly?: number;
+  };
   betting_limit?: number;
+  address: {
+    line1: string;
+    line2?: string;
+    line3?: string;
+    town: string;
+    county?: string;
+    postcode: string;
+    country: string;
+  };
 }
 
-// API Function
+// API Function - Profile creation can take 10-15 seconds
 const createUserProfile = async (params: CreateUserProfileParams): Promise<User> => {
-  return api.post<User>('/api/users', params);
+  return api.post<User>('/api/users', params, undefined, 20000); // 20 second timeout
 };
 
 /**

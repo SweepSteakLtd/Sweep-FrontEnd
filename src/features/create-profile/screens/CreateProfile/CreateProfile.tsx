@@ -7,21 +7,28 @@ import { AnimatedStepContainer } from '~/features/create-profile/components/Anim
 import { BasicInfoStep } from '~/features/create-profile/components/BasicInfoStep/BasicInfoStep';
 import { BioStep } from '~/features/create-profile/components/BioStep/BioStep';
 import { DepositLimitStep } from '~/features/create-profile/components/DepositLimitStep/DepositLimitStep';
+import { ErrorState } from '~/features/create-profile/components/ErrorState/ErrorState';
+import { LoadingState } from '~/features/create-profile/components/LoadingState/LoadingState';
 import { PersonalDetailsStep } from '~/features/create-profile/components/PersonalDetailsStep/PersonalDetailsStep';
 import { PhoneNumberStep } from '~/features/create-profile/components/PhoneNumberStep/PhoneNumberStep';
 import { StakeLimitStep } from '~/features/create-profile/components/StakeLimitStep/StakeLimitStep';
+import { SuccessState } from '~/features/create-profile/components/SuccessState/SuccessState';
 import { VerificationCodeStep } from '~/features/create-profile/components/VerificationCodeStep/VerificationCodeStep';
 import { useCreateProfileForm } from '~/features/create-profile/hooks/useCreateProfileForm';
 import { ButtonGroup, Container, StepsContainer, Title } from './styles';
 
 export const CreateProfile = () => {
   const theme = useTheme();
+
   const {
     currentStep,
     totalSteps,
     formData,
     fieldErrors,
     loading,
+    screenState,
+    errorMessage,
+    loadingComplete,
     phoneNumberRef,
     verificationCodeRef,
     phoneVerification,
@@ -31,6 +38,7 @@ export const CreateProfile = () => {
     handlePhoneVerified,
     handlePhoneNumberChange,
     handleSubmit,
+    handleRetry,
   } = useCreateProfileForm();
 
   const renderStep = (step: number) => {
@@ -40,10 +48,13 @@ export const CreateProfile = () => {
           <BasicInfoStep
             firstName={formData.firstName}
             lastName={formData.lastName}
+            nickname={formData.nickname}
             onFirstNameChange={(text) => updateField('firstName', text)}
             onLastNameChange={(text) => updateField('lastName', text)}
+            onNicknameChange={(text) => updateField('nickname', text)}
             firstNameError={fieldErrors.firstName}
             lastNameError={fieldErrors.lastName}
+            nicknameError={fieldErrors.nickname}
           />
         );
 
@@ -57,6 +68,7 @@ export const CreateProfile = () => {
             sendVerificationCode={phoneVerification.sendVerificationCode}
             verificationError={phoneVerification.error}
             clearError={phoneVerification.clearError}
+            sending={phoneVerification.sending}
           />
         );
 
@@ -69,6 +81,7 @@ export const CreateProfile = () => {
             verifyCode={phoneVerification.verifyCode}
             verificationError={phoneVerification.error}
             clearError={phoneVerification.clearError}
+            verifying={phoneVerification.verifying}
           />
         );
 
@@ -79,11 +92,15 @@ export const CreateProfile = () => {
             onDateOfBirthChange={(date) => updateField('dateOfBirth', date)}
             address1={formData.address1}
             address2={formData.address2}
+            address3={formData.address3}
             city={formData.city}
+            county={formData.county}
             postcode={formData.postcode}
             onAddress1Change={(text) => updateField('address1', text)}
             onAddress2Change={(text) => updateField('address2', text)}
+            onAddress3Change={(text) => updateField('address3', text)}
             onCityChange={(text) => updateField('city', text)}
+            onCountyChange={(text) => updateField('county', text)}
             onPostcodeChange={(text) => updateField('postcode', text)}
             dateOfBirthError={fieldErrors.dateOfBirth}
             address1Error={fieldErrors.address1}
@@ -130,6 +147,22 @@ export const CreateProfile = () => {
     }
   };
 
+  // Loading state
+  if (screenState === 'loading') {
+    return <LoadingState complete={loadingComplete} />;
+  }
+
+  // Success state
+  if (screenState === 'success') {
+    return <SuccessState />;
+  }
+
+  // Error state
+  if (screenState === 'error') {
+    return <ErrorState errorMessage={errorMessage} onRetry={handleRetry} />;
+  }
+
+  // Form state
   return (
     <Container>
       <KeyboardAwareScrollView
@@ -179,7 +212,14 @@ export const CreateProfile = () => {
             }}
           />
           {currentStep < totalSteps ? (
-            <Button variant="secondary" title="Next" onPress={handleNext} style={{ flex: 1 }} />
+            <Button
+              variant="secondary"
+              title="Next"
+              onPress={handleNext}
+              loading={phoneVerification.sending || phoneVerification.verifying}
+              disabled={phoneVerification.sending || phoneVerification.verifying}
+              style={{ flex: 1 }}
+            />
           ) : (
             <Button
               variant="secondary"

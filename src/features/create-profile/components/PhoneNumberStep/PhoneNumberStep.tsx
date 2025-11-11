@@ -11,6 +11,7 @@ interface PhoneNumberStepProps {
   sendVerificationCode: (phone: string) => Promise<boolean>;
   verificationError: string | null;
   clearError: () => void;
+  sending?: boolean;
 }
 
 export interface PhoneNumberStepHandle {
@@ -27,6 +28,7 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
       sendVerificationCode,
       verificationError,
       clearError,
+      sending,
     },
     ref,
   ) => {
@@ -88,6 +90,7 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
           error={phoneError || phoneNumberError}
           placeholder="7123 456789"
           onCountryChange={handleCountryChange}
+          editable={!sending}
         />
       </StepContainer>
     );

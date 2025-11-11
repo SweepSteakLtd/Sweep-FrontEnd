@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 
 export const StepContainer = styled.View`
+  padding-bottom: 40px;
   width: 100%;
 `;
 

@@ -1,9 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { format } from 'date-fns';
 import { useRef, useState } from 'react';
 import type { Address } from '~/components/AddressLookup/AddressLookup';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
+import { poundsToPence } from '~/utils/currency';
 import type { PhoneNumberStepHandle } from '../components/PhoneNumberStep/PhoneNumberStep';
 import type { VerificationCodeStepHandle } from '../components/VerificationCodeStep/VerificationCodeStep';
 import {
@@ -19,6 +21,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 interface FieldErrors extends Record<string, string | undefined> {
   firstName?: string;
   lastName?: string;
+  nickname?: string;
   phoneNumber?: string;
   dateOfBirth?: string;
   address1?: string;
@@ -35,6 +38,7 @@ interface FormData {
   // Step 1: Basic Info
   firstName: string;
   lastName: string;
+  nickname: string;
   // Step 2 & 3: Phone Verification
   phoneNumber: string;
   verifiedPhoneNumber: string;
@@ -43,7 +47,9 @@ interface FormData {
   dateOfBirth?: Date;
   address1: string;
   address2: string;
+  address3: string;
   city: string;
+  county: string;
   postcode: string;
   // Step 5: Bio
   bio: string;
@@ -60,13 +66,16 @@ const TOTAL_STEPS = 7;
 const initialFormData: FormData = {
   firstName: '',
   lastName: '',
+  nickname: '',
   phoneNumber: '',
   verifiedPhoneNumber: '',
   phoneVerified: false,
   dateOfBirth: undefined,
   address1: '',
   address2: '',
+  address3: '',
   city: '',
+  county: '',
   postcode: '',
   bio: '',
   depositLimitDaily: '',
@@ -74,6 +83,8 @@ const initialFormData: FormData = {
   depositLimitMonthly: '',
   bettingLimit: '',
 };
+
+export type ScreenState = 'form' | 'loading' | 'success' | 'error';
 
 export const useCreateProfileForm = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -83,9 +94,32 @@ export const useCreateProfileForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [screenState, setScreenState] = useState<ScreenState>('form');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loadingComplete, setLoadingComplete] = useState(false);
 
   const { createProfile, loading } = useCreateProfile();
   const phoneVerification = usePhoneVerification();
+
+  // Map field names to their corresponding steps
+  const getStepForField = (fieldName: string): number | null => {
+    const fieldToStepMap: Record<string, number> = {
+      firstName: 1,
+      lastName: 1,
+      nickname: 1,
+      phoneNumber: 2,
+      dateOfBirth: 4,
+      address1: 4,
+      city: 4,
+      postcode: 4,
+      bio: 5,
+      depositLimitDaily: 6,
+      depositLimitWeekly: 6,
+      depositLimitMonthly: 6,
+      bettingLimit: 7,
+    };
+    return fieldToStepMap[fieldName] ?? null;
+  };
 
   // Field update helpers
   const updateField = <K extends keyof FormData>(field: K, value: FormData[K]) => {
@@ -100,7 +134,9 @@ export const useCreateProfileForm = () => {
       ...prev,
       address1: address.address1,
       address2: address.address2,
+      address3: address.address3,
       city: address.city,
+      county: address.county,
       postcode: address.postcode,
     }));
     // Clear address-related errors
@@ -213,7 +249,7 @@ export const useCreateProfileForm = () => {
   };
 
   // Form submission
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     const validation = validateWithZod<FieldErrors>(createProfileSchema, {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -227,25 +263,69 @@ export const useCreateProfileForm = () => {
 
     if (!validation.success) {
       setFieldErrors(validation.errors);
+
+      // Navigate to the first step with an error
+      const errorField = Object.keys(validation.errors)[0];
+      const stepForField = getStepForField(errorField);
+      if (stepForField) {
+        setCurrentStep(stepForField);
+      }
       return;
     }
 
     setFieldErrors({});
+    setScreenState('loading');
+    setLoadingComplete(false);
 
-    const success = await createProfile({
+    const result = await createProfile({
       first_name: formData.firstName,
       last_name: formData.lastName,
+      nickname: formData.nickname || undefined,
       phone_number: formData.phoneNumber,
+      date_of_birth: formData.dateOfBirth ? format(formData.dateOfBirth, 'yyyy-MM-dd') : '',
       bio: formData.bio || undefined,
-      deposit_limit: formData.depositLimitDaily
-        ? parseInt(formData.depositLimitDaily, 10)
-        : undefined,
-      betting_limit: formData.bettingLimit ? parseInt(formData.bettingLimit, 10) : undefined,
+      deposit_limit: {
+        daily: formData.depositLimitDaily ? poundsToPence(formData.depositLimitDaily) : undefined,
+        weekly: formData.depositLimitWeekly
+          ? poundsToPence(formData.depositLimitWeekly)
+          : undefined,
+        monthly: formData.depositLimitMonthly
+          ? poundsToPence(formData.depositLimitMonthly)
+          : undefined,
+      },
+      betting_limit: formData.bettingLimit ? poundsToPence(formData.bettingLimit) : undefined,
+      address: {
+        line1: formData.address1,
+        line2: formData.address2 || undefined,
+        line3: formData.address3 || undefined,
+        town: formData.city,
+        county: formData.county || undefined,
+        postcode: formData.postcode,
+        country: 'GB',
+      },
     });
 
-    if (success) {
-      navigation.navigate('Dashboard');
+    if (result.success) {
+      // Signal loading complete so progress bar completes to 100%
+      setLoadingComplete(true);
+      // Wait for progress bar to reach 100%, then show success
+      setTimeout(() => {
+        setScreenState('success');
+        // Navigate to dashboard after celebration
+        setTimeout(() => {
+          navigation.navigate('Dashboard');
+        }, 3000);
+      }, 500);
+    } else if (result.error) {
+      setErrorMessage(result.error);
+      setScreenState('error');
     }
+  };
+
+  const handleRetry = () => {
+    setScreenState('form');
+    setErrorMessage('');
+    setLoadingComplete(false);
   };
 
   return {
@@ -255,6 +335,9 @@ export const useCreateProfileForm = () => {
     formData,
     fieldErrors,
     loading,
+    screenState,
+    errorMessage,
+    loadingComplete,
 
     // Refs
     phoneNumberRef,
@@ -271,5 +354,7 @@ export const useCreateProfileForm = () => {
     handlePhoneVerified,
     handlePhoneNumberChange,
     handleSubmit,
+    handleRetry,
+    navigation,
   };
 };

@@ -40,7 +40,7 @@ export const createProfileHandler: MockHandler = {
   name: 'Create User Profile',
   group: 'User',
   method: 'POST',
-  urlPattern: '/api/users/',
+  urlPattern: '/api/users',
   defaultScenario: 'Success',
   scenarios: {
     Success: {

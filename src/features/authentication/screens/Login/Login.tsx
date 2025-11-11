@@ -133,6 +133,13 @@ export const Login = () => {
           fullWidth={false}
           title="Don't have an account? Create one"
         />
+
+        <Button
+          variant="link"
+          onPress={() => navigation.navigate('Settings')}
+          fullWidth={false}
+          title="Mock API Settings"
+        />
       </KeyboardStickyView>
     </Container>
   );

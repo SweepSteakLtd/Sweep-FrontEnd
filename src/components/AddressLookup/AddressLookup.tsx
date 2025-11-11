@@ -14,14 +14,18 @@ import {
 export interface Address {
   address1: string;
   address2: string;
+  address3: string;
   city: string;
+  county: string;
   postcode: string;
 }
 
 interface AddressLookupProps {
   address1: string;
   address2: string;
+  address3: string;
   city: string;
+  county: string;
   postcode: string;
   onAddressChange: (address: Address) => void;
   address1Error?: string;
@@ -38,7 +42,9 @@ interface PlaceSuggestion {
 export const AddressLookup = ({
   address1,
   address2,
+  address3,
   city,
+  county,
   postcode,
   onAddressChange,
   address1Error,
@@ -127,6 +133,7 @@ export const AddressLookup = ({
     let postalTown = '';
     let postalCode = '';
     let sublocality = '';
+    let administrativeAreaLevel2 = '';
 
     components.forEach((component) => {
       const types = component.types;
@@ -142,6 +149,8 @@ export const AddressLookup = ({
         sublocality = component.long_name;
       } else if (types.includes('postal_code')) {
         postalCode = component.long_name;
+      } else if (types.includes('administrative_area_level_2')) {
+        administrativeAreaLevel2 = component.long_name;
       }
     });
 
@@ -151,7 +160,9 @@ export const AddressLookup = ({
     return {
       address1: address1Line,
       address2: '',
+      address3: '',
       city: cityName,
+      county: administrativeAreaLevel2,
       postcode: postalCode,
     };
   };
@@ -169,7 +180,9 @@ export const AddressLookup = ({
           variant="light"
           label="Address Line 1"
           value={address1}
-          onChangeText={(text) => onAddressChange({ address1: text, address2, city, postcode })}
+          onChangeText={(text) =>
+            onAddressChange({ address1: text, address2, address3, city, county, postcode })
+          }
           placeholder="123 Main Street"
           error={address1Error}
         />
@@ -178,17 +191,41 @@ export const AddressLookup = ({
           variant="light"
           label="Address Line 2 (Optional)"
           value={address2}
-          onChangeText={(text) => onAddressChange({ address1, address2: text, city, postcode })}
+          onChangeText={(text) =>
+            onAddressChange({ address1, address2: text, address3, city, county, postcode })
+          }
           placeholder="Apartment, suite, etc."
         />
 
         <Input
           variant="light"
-          label="City"
+          label="Address Line 3 (Optional)"
+          value={address3}
+          onChangeText={(text) =>
+            onAddressChange({ address1, address2, address3: text, city, county, postcode })
+          }
+          placeholder="Building, floor, etc."
+        />
+
+        <Input
+          variant="light"
+          label="City/Town"
           value={city}
-          onChangeText={(text) => onAddressChange({ address1, address2, city: text, postcode })}
+          onChangeText={(text) =>
+            onAddressChange({ address1, address2, address3, city: text, county, postcode })
+          }
           placeholder="London"
           error={cityError}
+        />
+
+        <Input
+          variant="light"
+          label="County (Optional)"
+          value={county}
+          onChangeText={(text) =>
+            onAddressChange({ address1, address2, address3, city, county: text, postcode })
+          }
+          placeholder="Greater London"
         />
 
         <Input
@@ -196,7 +233,7 @@ export const AddressLookup = ({
           label="Postcode"
           value={postcode}
           onChangeText={(text) => {
-            onAddressChange({ address1, address2, city, postcode: text });
+            onAddressChange({ address1, address2, address3, city, county, postcode: text });
             setSearchQuery(text);
           }}
           placeholder="SW1A 1AA"
@@ -204,7 +241,7 @@ export const AddressLookup = ({
           error={postcodeError}
         />
 
-        <ManualEntryLink onPress={() => setIsManualEntry(false)}>
+        <ManualEntryLink onPress={() => setIsManualEntry(false)} style={{ marginBottom: 40 }}>
           <ManualEntryText>Use address lookup</ManualEntryText>
         </ManualEntryLink>
       </Container>
@@ -242,7 +279,7 @@ export const AddressLookup = ({
             </AddressSuggestionsList>
           )}
 
-          <ManualEntryLink onPress={handleManualEntry}>
+          <ManualEntryLink onPress={handleManualEntry} style={{ marginBottom: 40 }}>
             <ManualEntryText>Enter address manually</ManualEntryText>
           </ManualEntryLink>
         </>
@@ -255,7 +292,9 @@ export const AddressLookup = ({
             variant="light"
             label="Address Line 1"
             value={address1}
-            onChangeText={(text) => onAddressChange({ address1: text, address2, city, postcode })}
+            onChangeText={(text) =>
+              onAddressChange({ address1: text, address2, address3, city, county, postcode })
+            }
             placeholder="123 Main Street"
             error={address1Error}
           />
@@ -264,24 +303,51 @@ export const AddressLookup = ({
             variant="light"
             label="Address Line 2 (Optional)"
             value={address2}
-            onChangeText={(text) => onAddressChange({ address1, address2: text, city, postcode })}
+            onChangeText={(text) =>
+              onAddressChange({ address1, address2: text, address3, city, county, postcode })
+            }
             placeholder="Apartment, suite, etc."
           />
 
           <Input
             variant="light"
-            label="City"
+            label="Address Line 3 (Optional)"
+            value={address3}
+            onChangeText={(text) =>
+              onAddressChange({ address1, address2, address3: text, city, county, postcode })
+            }
+            placeholder="Building, floor, etc."
+          />
+
+          <Input
+            variant="light"
+            label="City/Town"
             value={city}
-            onChangeText={(text) => onAddressChange({ address1, address2, city: text, postcode })}
+            onChangeText={(text) =>
+              onAddressChange({ address1, address2, address3, city: text, county, postcode })
+            }
             placeholder="London"
             error={cityError}
           />
 
           <Input
             variant="light"
+            label="County (Optional)"
+            value={county}
+            onChangeText={(text) =>
+              onAddressChange({ address1, address2, address3, city, county: text, postcode })
+            }
+            placeholder="Greater London"
+          />
+
+          <Input
+            variant="light"
             label="Postcode"
             value={postcode}
-            onChangeText={(text) => onAddressChange({ address1, address2, city, postcode: text })}
+            onChangeText={(text) => {
+              onAddressChange({ address1, address2, address3, city, county, postcode: text });
+              setSearchQuery(text);
+            }}
             placeholder="SW1A 1AA"
             autoCapitalize="characters"
             error={postcodeError}
@@ -290,9 +356,17 @@ export const AddressLookup = ({
           <ManualEntryLink
             onPress={() => {
               // Clear the address to show the search bar again
-              onAddressChange({ address1: '', address2: '', city: '', postcode: '' });
+              onAddressChange({
+                address1: '',
+                address2: '',
+                address3: '',
+                city: '',
+                county: '',
+                postcode: '',
+              });
               setSearchQuery('');
             }}
+            style={{ marginBottom: 40 }}
           >
             <ManualEntryText>Use address lookup</ManualEntryText>
           </ManualEntryLink>

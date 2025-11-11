@@ -10,6 +10,7 @@ interface VerificationCodeStepProps {
   verifyCode: (code: string) => Promise<boolean>;
   verificationError: string | null;
   clearError: () => void;
+  verifying?: boolean;
 }
 
 export interface VerificationCodeStepHandle {
@@ -19,7 +20,7 @@ export interface VerificationCodeStepHandle {
 export const VerificationCodeStep = forwardRef<
   VerificationCodeStepHandle,
   VerificationCodeStepProps
->(({ isVerified, onVerified, verifyCode, verificationError, clearError }, ref) => {
+>(({ isVerified, onVerified, verifyCode, verificationError, clearError, verifying }, ref) => {
   const theme = useTheme();
   const [otpCode, setOtpCode] = useState('');
   const [otpError, setOtpError] = useState<string | undefined>();
@@ -74,7 +75,7 @@ export const VerificationCodeStep = forwardRef<
         keyboardType="number-pad"
         maxLength={6}
         error={otpError}
-        editable={!isVerified}
+        editable={!isVerified && !verifying}
       />
       {isVerified && (
         <Typography variant="body" color={theme.colors.primary} style={{ marginTop: 8 }}>

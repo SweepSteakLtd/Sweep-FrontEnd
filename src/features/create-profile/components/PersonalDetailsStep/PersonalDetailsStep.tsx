@@ -10,11 +10,15 @@ interface PersonalDetailsStepProps {
   onDateOfBirthChange: (date: Date) => void;
   address1: string;
   address2: string;
+  address3: string;
   city: string;
+  county: string;
   postcode: string;
   onAddress1Change: (text: string) => void;
   onAddress2Change: (text: string) => void;
+  onAddress3Change: (text: string) => void;
   onCityChange: (text: string) => void;
+  onCountyChange: (text: string) => void;
   onPostcodeChange: (text: string) => void;
   dateOfBirthError?: string;
   address1Error?: string;
@@ -27,11 +31,15 @@ export const PersonalDetailsStep = ({
   onDateOfBirthChange,
   address1,
   address2,
+  address3,
   city,
+  county,
   postcode,
   onAddress1Change,
   onAddress2Change,
+  onAddress3Change,
   onCityChange,
+  onCountyChange,
   onPostcodeChange,
   dateOfBirthError,
   address1Error,
@@ -107,12 +115,16 @@ export const PersonalDetailsStep = ({
       <AddressLookup
         address1={address1}
         address2={address2}
+        address3={address3}
         city={city}
+        county={county}
         postcode={postcode}
         onAddressChange={(address: Address) => {
           onAddress1Change(address.address1);
           onAddress2Change(address.address2);
+          onAddress3Change(address.address3);
           onCityChange(address.city);
+          onCountyChange(address.county);
           onPostcodeChange(address.postcode);
         }}
         address1Error={address1Error}

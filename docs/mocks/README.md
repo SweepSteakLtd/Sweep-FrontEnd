@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-11-04T10:20:35.386Z
+Generated: 2025-11-11T16:20:55.661Z
 
 ## Files
 
@@ -46,7 +46,22 @@ Get Leagues List endpoint
 - Server Error (500) - 1000ms
 
 
-### POST /api/users/
+### POST /api/phone-verification/send
+**Send Verification Code**
+
+Send Verification Code endpoint
+
+**Default Scenario:** Success
+
+**Scenarios:** 5
+- Success (200) - 500ms
+- data (200) - 500ms
+- Rate Limited (429) - 500ms
+- Invalid Phone (400) - 500ms
+- Server Error (500) - 1000ms
+
+
+### POST /api/users
 **Create User Profile**
 
 Create User Profile endpoint

@@ -1,56 +1,57 @@
 import { useState } from 'react';
+import { useSendVerificationCode } from '~/services/apis/PhoneVerification/useSendVerificationCode';
+import { useVerifyCode } from '~/services/apis/PhoneVerification/useVerifyCode';
 
 export const usePhoneVerification = () => {
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const [codeSent, setCodeSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [verificationId, setVerificationId] = useState<string | null>(null);
+
+  const sendMutation = useSendVerificationCode();
+  const verifyMutation = useVerifyCode();
 
   const sendVerificationCode = async (phone: string): Promise<boolean> => {
-    setSending(true);
-    setError(null);
+    try {
+      const result = await sendMutation.mutateAsync({ phoneNumber: phone });
 
-    // Simulate sending delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+      setVerificationId(result.verificationId || null);
+      setPhoneNumber(phone);
+      setCodeSent(true);
 
-    setPhoneNumber(phone);
-    setCodeSent(true);
-    setSending(false);
-
-    return true;
+      return true;
+    } catch (err) {
+      console.error('Error sending verification code:', err);
+      return false;
+    }
   };
 
-  const verifyCode = async (_code: string): Promise<boolean> => {
-    if (!phoneNumber) {
-      setError('Please request a verification code first');
+  const verifyCode = async (code: string): Promise<boolean> => {
+    if (!verificationId) {
       return false;
     }
 
-    setVerifying(true);
-    setError(null);
-
-    // Simulate verification delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    setVerifying(false);
-
-    // Accept any code for now (mock implementation)
-    return true;
+    try {
+      await verifyMutation.mutateAsync({ verificationId, code });
+      return true;
+    } catch (err) {
+      console.error('Error verifying code:', err);
+      return false;
+    }
   };
 
   const clearError = () => {
-    setError(null);
+    sendMutation.reset();
+    verifyMutation.reset();
   };
 
   return {
     sendVerificationCode,
     verifyCode,
-    sending,
-    verifying,
+    sending: sendMutation.isPending,
+    verifying: verifyMutation.isPending,
     codeSent,
-    error,
+    error: sendMutation.error?.message || verifyMutation.error?.message || null,
     clearError,
-    verificationId: phoneNumber,
+    verificationId: verificationId || phoneNumber,
   };
 };

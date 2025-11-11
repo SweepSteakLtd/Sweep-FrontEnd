@@ -8,6 +8,7 @@ import {
   getLeaguesHandler,
   updateLeagueHandler,
 } from './leagueHandler';
+import { sendVerificationCodeHandler, verifyCodeHandler } from './phoneVerificationHandler';
 import { createProfileHandler, updateProfileHandler } from './profileHandler';
 import { getTournamentByIdHandler, getTournamentsHandler } from './tournamentHandler';
 import { getUserHandler } from './userHandler';
@@ -21,6 +22,8 @@ export const mockHandlers: MockHandler[] = [
   getUserHandler,
   createProfileHandler,
   updateProfileHandler,
+  sendVerificationCodeHandler,
+  verifyCodeHandler,
 
   // Tournament endpoints
   getTournamentsHandler,

@@ -1,19 +1,24 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useAlert } from '~/components/Alert/Alert';
 import {
   CreateUserProfileParams,
   useCreateUserProfile,
 } from '~/services/apis/User/useCreateUserProfile';
 import { userQueryKeys } from '~/services/apis/User/useGetUser';
 
+export interface CreateProfileResult {
+  success: boolean;
+  error?: string;
+}
+
 export const useCreateProfile = () => {
-  const { showAlert } = useAlert();
   const queryClient = useQueryClient();
   const createProfileMutation = useCreateUserProfile();
   const [loading, setLoading] = useState(false);
 
-  const createProfile = async (profileData: CreateUserProfileParams): Promise<boolean> => {
+  const createProfile = async (
+    profileData: CreateUserProfileParams,
+  ): Promise<CreateProfileResult> => {
     setLoading(true);
 
     try {
@@ -21,15 +26,16 @@ export const useCreateProfile = () => {
       // Invalidate user query to trigger refetch
       await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
       setLoading(false);
-      return true;
+      return { success: true };
     } catch (error: unknown) {
       setLoading(false);
-      const errorMessage = error instanceof Error ? error.message : 'Please try again.';
-      showAlert({
-        title: 'Failed to create profile',
-        message: errorMessage,
-      });
-      return false;
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      return { success: false, error: errorMessage };
     }
   };
 

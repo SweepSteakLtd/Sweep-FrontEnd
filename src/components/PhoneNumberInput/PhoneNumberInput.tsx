@@ -11,6 +11,7 @@ interface PhoneNumberInputProps {
   error?: string;
   placeholder?: string;
   onCountryChange?: (countryCode: string, callingCode: string) => void;
+  editable?: boolean;
 }
 
 // Helper to safely get calling code from ICountry
@@ -26,6 +27,7 @@ export const PhoneNumberInput = ({
   error,
   placeholder = '7123 456789',
   onCountryChange,
+  editable = true,
 }: PhoneNumberInputProps) => {
   const theme = useTheme();
   const [selectedCountry, setSelectedCountry] = useState<ICountry | undefined>(undefined);
@@ -58,6 +60,7 @@ export const PhoneNumberInput = ({
         onChangeSelectedCountry={handleCountryChange}
         placeholder={placeholder}
         defaultCountry="GB"
+        disabled={!editable}
         phoneInputStyles={{
           container: {
             backgroundColor: theme.colors.input.background,
@@ -65,6 +68,7 @@ export const PhoneNumberInput = ({
             borderColor: error ? theme.colors.error : theme.colors.input.border,
             borderRadius: 8,
             height: 56,
+            opacity: editable ? 1 : 0.6,
           },
           flagContainer: {
             backgroundColor: 'transparent',

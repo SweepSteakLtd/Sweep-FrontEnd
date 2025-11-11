@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 
 export const StepContainer = styled.View`
   width: 100%;
+  padding-bottom: 40px;
 `;
 
 export const StepTitle = styled.View`
