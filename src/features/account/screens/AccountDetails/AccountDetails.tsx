@@ -8,6 +8,7 @@ import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { useDeleteUser } from '~/services/apis/User/useDeleteUser';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import {
@@ -26,6 +27,7 @@ export const AccountDetails = () => {
   const { showAlert } = useAlert();
   const { data: user, refetch } = useGetUser();
   const updateUserMutation = useUpdateUser();
+  const { isPending: isDeleting, handleDeleteAccount } = useDeleteUser();
 
   const [nickName, setNickName] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -42,8 +44,6 @@ export const AccountDetails = () => {
     await refetch();
     setRefreshing(false);
   };
-
-  console.log('User data:', user);
 
   const handleChangePhoto = () => {
     // TODO: Implement photo picker
@@ -70,7 +70,9 @@ export const AccountDetails = () => {
 
   return (
     <ScreenWrapper title="Account Details">
-      <Container>
+      <Container
+        style={{ opacity: isDeleting ? 0.5 : 1, pointerEvents: isDeleting ? 'none' : 'auto' }}
+      >
         <KeyboardAwareScrollView
           style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
@@ -147,6 +149,21 @@ export const AccountDetails = () => {
               <Input label="Address" value="" editable={false} placeholder="Address" />
             </InputRow>
           </Section>
+
+          {/* Delete Account Button - without card styling */}
+          <InputRow style={{ marginTop: 32, paddingHorizontal: 16 }}>
+            <Button
+              variant="secondary"
+              onPress={handleDeleteAccount}
+              disabled={isDeleting}
+              loading={isDeleting}
+              title="Delete Account"
+              backgroundColor={theme.colors.error}
+              style={{
+                borderColor: theme.colors.error,
+              }}
+            />
+          </InputRow>
         </KeyboardAwareScrollView>
         <KeyboardStickyView>
           <ButtonContainer>

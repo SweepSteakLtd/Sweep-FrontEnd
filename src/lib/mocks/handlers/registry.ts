@@ -11,7 +11,7 @@ import {
 import { sendVerificationCodeHandler, verifyCodeHandler } from './phoneVerificationHandler';
 import { createProfileHandler, updateProfileHandler } from './profileHandler';
 import { getTournamentByIdHandler, getTournamentsHandler } from './tournamentHandler';
-import { getUserHandler } from './userHandler';
+import { deleteUserHandler, getUserHandler } from './userHandler';
 
 /**
  * Registry of all mock handlers
@@ -20,6 +20,7 @@ import { getUserHandler } from './userHandler';
 export const mockHandlers: MockHandler[] = [
   // User endpoints
   getUserHandler,
+  deleteUserHandler,
   createProfileHandler,
   updateProfileHandler,
   sendVerificationCodeHandler,

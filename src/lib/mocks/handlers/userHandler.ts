@@ -30,3 +30,29 @@ export const getUserHandler: MockHandler = {
     },
   },
 };
+
+export const deleteUserHandler: MockHandler = {
+  id: 'delete-user',
+  name: 'Delete User Account',
+  group: 'User',
+  method: 'DELETE',
+  urlPattern: '/api/users/me',
+  defaultScenario: 'Success',
+  scenarios: {
+    Success: {
+      status: 204,
+      data: undefined,
+      delay: 1000,
+    },
+    'Unauthorized (401)': {
+      status: 401,
+      data: { error: 'Unauthorized', message: 'Invalid email provided' },
+      delay: 500,
+    },
+    'Server Error (500)': {
+      status: 500,
+      data: { error: 'Internal Server Error', message: 'Failed to delete account' },
+      delay: 1000,
+    },
+  },
+};
