@@ -31,7 +31,7 @@ export const BasicInfoStep = ({
       </StepTitle>
       <StepDescription>
         <Typography variant="body" color={theme.colors.text.secondary}>
-          Tell us your name to personalize your experience
+          Tell us your legal name, this is needed to verify your identity.
         </Typography>
       </StepDescription>
 

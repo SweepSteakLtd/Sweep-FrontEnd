@@ -16,7 +16,7 @@ export const StakeLimitStep = ({
   bettingLimitError,
 }: StakeLimitStepProps) => {
   const theme = useTheme();
-  const [noLimit, setNoLimit] = useState(false);
+  const [noLimit, setNoLimit] = useState(true);
 
   const handleNoLimitToggle = () => {
     setNoLimit(!noLimit);
@@ -39,13 +39,13 @@ export const StakeLimitStep = ({
       </StepDescription>
 
       <LimitInput
-        title="Daily Stake Limit"
+        title="Stake Limit"
         value={bettingLimit}
         onChangeText={onBettingLimitChange}
         noLimit={noLimit}
         onNoLimitToggle={handleNoLimitToggle}
-        placeholder="100"
         label="Set Limit"
+        showCurrentLimit={false}
       />
 
       {bettingLimitError && (

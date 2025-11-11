@@ -10,7 +10,7 @@ export const ProgressText = styled.Text`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
-  margin-bottom: 8px;
+  margin-top: 8px;
   text-align: center;
 `;
 

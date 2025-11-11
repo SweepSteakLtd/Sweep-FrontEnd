@@ -21,6 +21,7 @@ interface LimitInputProps {
   onNoLimitToggle: () => void;
   placeholder?: string;
   label?: string;
+  showCurrentLimit?: boolean;
 }
 
 export const LimitInput = ({
@@ -32,6 +33,7 @@ export const LimitInput = ({
   onNoLimitToggle,
   placeholder = 'Amount',
   label = 'New Limit',
+  showCurrentLimit = true,
 }: LimitInputProps) => {
   const theme = useTheme();
 
@@ -39,7 +41,9 @@ export const LimitInput = ({
     <LimitCard>
       <TitleRow>
         <LimitTitle>{title}</LimitTitle>
-        <CurrentLimitText>Current: £{currentLimit || 'No Limit'}</CurrentLimitText>
+        {showCurrentLimit && (
+          <CurrentLimitText>Current: £{currentLimit || 'No Limit'}</CurrentLimitText>
+        )}
       </TitleRow>
 
       <InputRow>

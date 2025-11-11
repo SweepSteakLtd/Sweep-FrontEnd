@@ -7,6 +7,10 @@ export const Container = styled.View<{ theme: Theme }>`
   padding: 60px 30px 30px 30px;
 `;
 
+export const Title = styled.View<{ theme: Theme }>`
+  margin-top: 12px;
+`;
+
 export const StepsContainer = styled.View<{ theme: Theme }>`
   width: 100%;
   flex: 1;

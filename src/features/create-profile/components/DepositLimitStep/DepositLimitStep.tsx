@@ -28,9 +28,9 @@ export const DepositLimitStep = ({
   monthlyLimitError,
 }: DepositLimitStepProps) => {
   const theme = useTheme();
-  const [noDailyLimit, setNoDailyLimit] = useState(false);
-  const [noWeeklyLimit, setNoWeeklyLimit] = useState(false);
-  const [noMonthlyLimit, setNoMonthlyLimit] = useState(false);
+  const [noDailyLimit, setNoDailyLimit] = useState(true);
+  const [noWeeklyLimit, setNoWeeklyLimit] = useState(true);
+  const [noMonthlyLimit, setNoMonthlyLimit] = useState(true);
 
   const handleNoDailyLimitToggle = () => {
     setNoDailyLimit(!noDailyLimit);
@@ -67,13 +67,13 @@ export const DepositLimitStep = ({
       </StepDescription>
 
       <LimitInput
-        title="Daily Deposit Limit"
+        title="Daily"
         value={dailyLimit}
         onChangeText={onDailyLimitChange}
         noLimit={noDailyLimit}
         onNoLimitToggle={handleNoDailyLimitToggle}
-        placeholder="500"
         label="Set Limit"
+        showCurrentLimit={false}
       />
 
       {dailyLimitError && (
@@ -83,13 +83,13 @@ export const DepositLimitStep = ({
       )}
 
       <LimitInput
-        title="Weekly Deposit Limit"
+        title="Weekly"
         value={weeklyLimit}
         onChangeText={onWeeklyLimitChange}
         noLimit={noWeeklyLimit}
         onNoLimitToggle={handleNoWeeklyLimitToggle}
-        placeholder="2000"
         label="Set Limit"
+        showCurrentLimit={false}
       />
 
       {weeklyLimitError && (
@@ -99,13 +99,13 @@ export const DepositLimitStep = ({
       )}
 
       <LimitInput
-        title="Monthly Deposit Limit"
+        title="Monthly"
         value={monthlyLimit}
         onChangeText={onMonthlyLimitChange}
         noLimit={noMonthlyLimit}
         onNoLimitToggle={handleNoMonthlyLimitToggle}
-        placeholder="5000"
         label="Set Limit"
+        showCurrentLimit={false}
       />
 
       {monthlyLimitError && (

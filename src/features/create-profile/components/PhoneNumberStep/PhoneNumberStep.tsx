@@ -72,7 +72,7 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
       <StepContainer>
         <StepTitle>
           <Typography variant="heading" color={theme.colors.text.primary}>
-            Verify your phone number
+            Enter your phone number
           </Typography>
         </StepTitle>
         <StepDescription>

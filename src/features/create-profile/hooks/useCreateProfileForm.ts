@@ -69,10 +69,10 @@ const initialFormData: FormData = {
   city: '',
   postcode: '',
   bio: '',
-  depositLimitDaily: '500',
-  depositLimitWeekly: '2000',
-  depositLimitMonthly: '5000',
-  bettingLimit: '100',
+  depositLimitDaily: '',
+  depositLimitWeekly: '',
+  depositLimitMonthly: '',
+  bettingLimit: '',
 };
 
 export const useCreateProfileForm = () => {

@@ -1,6 +1,8 @@
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
+import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ProgressIndicator } from '~/components/ProgressIndicator/ProgressIndicator';
+import { Typography } from '~/components/Typography/Typography';
 import { AnimatedStepContainer } from '~/features/create-profile/components/AnimatedStepContainer/AnimatedStepContainer';
 import { BasicInfoStep } from '~/features/create-profile/components/BasicInfoStep/BasicInfoStep';
 import { BioStep } from '~/features/create-profile/components/BioStep/BioStep';
@@ -10,9 +12,10 @@ import { PhoneNumberStep } from '~/features/create-profile/components/PhoneNumbe
 import { StakeLimitStep } from '~/features/create-profile/components/StakeLimitStep/StakeLimitStep';
 import { VerificationCodeStep } from '~/features/create-profile/components/VerificationCodeStep/VerificationCodeStep';
 import { useCreateProfileForm } from '~/features/create-profile/hooks/useCreateProfileForm';
-import { ButtonGroup, Container, StepsContainer } from './styles';
+import { ButtonGroup, Container, StepsContainer, Title } from './styles';
 
 export const CreateProfile = () => {
+  const theme = useTheme();
   const {
     currentStep,
     totalSteps,
@@ -134,6 +137,20 @@ export const CreateProfile = () => {
         style={{ flex: 1 }}
         bottomOffset={10}
       >
+        <Title>
+          <Typography variant="title" color={theme.colors.text.primary} align="center">
+            The boring stuff!
+          </Typography>
+          <Typography
+            variant="body"
+            color={theme.colors.text.secondary}
+            align="center"
+            style={{ marginTop: 4 }}
+          >
+            Let's get you set up!
+          </Typography>
+        </Title>
+
         <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
 
         <StepsContainer>
