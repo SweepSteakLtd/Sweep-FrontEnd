@@ -20,6 +20,7 @@ interface FieldErrors extends Record<string, string | undefined> {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
+  dateOfBirth?: string;
   address1?: string;
   city?: string;
   postcode?: string;

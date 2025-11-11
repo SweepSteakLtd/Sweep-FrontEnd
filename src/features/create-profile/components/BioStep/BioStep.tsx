@@ -1,5 +1,5 @@
 import { useTheme } from 'styled-components/native';
-import { Input } from '~/components/Input/Input';
+import { TextAreaInput } from '~/components/TextAreaInput/TextAreaInput';
 import { Typography } from '~/components/Typography/Typography';
 import { StepContainer, StepDescription, StepTitle } from './styles';
 
@@ -25,14 +25,14 @@ export const BioStep = ({ bio, onBioChange, bioError }: BioStepProps) => {
         </Typography>
       </StepDescription>
 
-      <Input
+      <TextAreaInput
         variant="light"
         label="Bio"
         value={bio}
         onChangeText={onBioChange}
         placeholder="Tell us about yourself..."
-        multiline
-        numberOfLines={4}
+        maxLength={500}
+        showCharacterCount
         error={bioError}
       />
     </StepContainer>

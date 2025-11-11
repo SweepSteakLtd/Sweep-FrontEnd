@@ -222,6 +222,7 @@ export const AddressLookup = ({
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="e.g. 10 Downing Street, London"
+            error={address1Error}
           />
 
           {isLoading && (

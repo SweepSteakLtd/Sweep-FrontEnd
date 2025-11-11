@@ -16,6 +16,7 @@ interface PersonalDetailsStepProps {
   onAddress2Change: (text: string) => void;
   onCityChange: (text: string) => void;
   onPostcodeChange: (text: string) => void;
+  dateOfBirthError?: string;
   address1Error?: string;
   cityError?: string;
   postcodeError?: string;
@@ -32,6 +33,7 @@ export const PersonalDetailsStep = ({
   onAddress2Change,
   onCityChange,
   onPostcodeChange,
+  dateOfBirthError,
   address1Error,
   cityError,
   postcodeError,
@@ -68,9 +70,18 @@ export const PersonalDetailsStep = ({
       >
         Date of Birth
       </Typography>
-      <DateButton onPress={() => setShowDatePicker(true)}>
+      <DateButton onPress={() => setShowDatePicker(true)} hasError={!!dateOfBirthError}>
         <DateButtonText hasValue={!!dateOfBirth}>{formatDate(dateOfBirth)}</DateButtonText>
       </DateButton>
+      {dateOfBirthError && (
+        <Typography
+          variant="body"
+          color={theme.colors.error}
+          style={{ marginTop: 4, fontSize: 12 }}
+        >
+          {dateOfBirthError}
+        </Typography>
+      )}
 
       <DatePicker
         modal

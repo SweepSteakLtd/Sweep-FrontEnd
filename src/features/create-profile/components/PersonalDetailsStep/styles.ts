@@ -13,12 +13,17 @@ export const StepDescription = styled.View`
   margin-bottom: 24px;
 `;
 
-export const DateButton = styled.Pressable`
+interface DateButtonProps {
+  hasError?: boolean;
+}
+
+export const DateButton = styled.Pressable<DateButtonProps>`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
   padding: 16px;
   border-radius: 8px;
   border-width: 1px;
-  border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
+  border-color: ${({ theme, hasError }: DateButtonProps & { theme: Theme }) =>
+    hasError ? theme.colors.error : theme.colors.border};
 `;
 
 interface DateButtonTextProps {

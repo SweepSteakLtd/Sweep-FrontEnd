@@ -8,9 +8,9 @@ interface ProgressIndicatorProps {
 }
 
 export const ProgressIndicator = ({ currentStep, totalSteps }: ProgressIndicatorProps) => {
-  // Calculate progress based on completed steps, not current step
-  // Step 1 = 0%, Step 2 = 25%, Step 3 = 50%, Step 4 = 75%
-  const progress = ((currentStep - 1) / totalSteps) * 100;
+  // Calculate progress including the current step as completed
+  // Step 1 = 14.3%, Step 2 = 28.6%, ..., Step 7 = 100%
+  const progress = (currentStep / totalSteps) * 100;
 
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
