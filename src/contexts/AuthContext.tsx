@@ -1,4 +1,4 @@
-import { signOut as firebaseSignOut } from 'firebase/auth';
+import { signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { firebaseAuth } from '~/lib/firebase';
 
@@ -13,7 +13,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = firebaseAuth.onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setIsAuthenticated(!!user);
     });
 

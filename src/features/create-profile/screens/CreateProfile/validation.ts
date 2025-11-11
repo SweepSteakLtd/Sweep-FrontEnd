@@ -17,7 +17,7 @@ export const createProfileSchema = z.object({
       'Please enter a valid phone number',
     ),
   bio: z.string().optional(),
-  depositLimit: z
+  depositLimitDaily: z
     .string()
     .optional()
     .refine(
@@ -26,7 +26,29 @@ export const createProfileSchema = z.object({
         const num = parseInt(val);
         return !isNaN(num) && num > 0;
       },
-      { message: 'Deposit limit must be greater than 0' },
+      { message: 'Daily deposit limit must be greater than 0' },
+    ),
+  depositLimitWeekly: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val === '') return true;
+        const num = parseInt(val);
+        return !isNaN(num) && num > 0;
+      },
+      { message: 'Weekly deposit limit must be greater than 0' },
+    ),
+  depositLimitMonthly: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val === '') return true;
+        const num = parseInt(val);
+        return !isNaN(num) && num > 0;
+      },
+      { message: 'Monthly deposit limit must be greater than 0' },
     ),
   bettingLimit: z
     .string()

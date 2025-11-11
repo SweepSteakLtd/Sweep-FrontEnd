@@ -30,7 +30,7 @@ export const getTextColor = (variant: ButtonVariant, theme: Theme) => {
     case 'outline':
       return theme.colors.white;
     case 'link':
-      return theme.colors.white;
+      return theme.colors.primary;
     default:
       return theme.colors.button.text;
   }

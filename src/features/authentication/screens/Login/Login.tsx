@@ -69,16 +69,16 @@ export const Login = () => {
           <LogoCircle>
             <Icon name="⛳" size={20} />
           </LogoCircle>
-          <Typography variant="heading" color={theme.colors.white}>
+          <Typography variant="heading" color={theme.colors.text.primary}>
             Sweepsteak
           </Typography>
         </LogoContainer>
 
         <Header>
-          <Typography variant="heading" color={theme.colors.white}>
+          <Typography variant="heading" color={theme.colors.text.primary}>
             Welcome to SweepSteak
           </Typography>
-          <Typography variant="body" color={theme.colors.white} style={{ marginTop: 5 }}>
+          <Typography variant="body" color={theme.colors.text.secondary} style={{ marginTop: 5 }}>
             Sign in to your account
           </Typography>
         </Header>

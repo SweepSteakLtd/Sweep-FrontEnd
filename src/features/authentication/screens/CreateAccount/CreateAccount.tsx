@@ -78,7 +78,7 @@ export const CreateAccount = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.primary }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
       <Container>
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}

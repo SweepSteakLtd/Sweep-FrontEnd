@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import { firebaseAuth } from '~/lib/firebase';
@@ -22,8 +22,8 @@ export const useLogin = () => {
 
     try {
       // Step 1: Authenticate with Firebase
-      const { user } = await signInWithEmailAndPassword(firebaseAuth, email, password);
-      if (!user) {
+      const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+      if (!userCredential.user) {
         setLoading(false);
         const errorMsg = 'Failed to sign in.';
         showAlert({
@@ -62,7 +62,7 @@ export const useLogin = () => {
         });
 
         // Sign out the user since we couldn't verify their profile
-        await firebaseAuth.signOut();
+        await signOut(firebaseAuth);
 
         return { success: false, error: errorMsg };
       }

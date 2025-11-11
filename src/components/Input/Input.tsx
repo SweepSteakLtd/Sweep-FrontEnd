@@ -52,7 +52,7 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const labelColor = variant === 'light' ? theme.colors.white : theme.colors.text.primary;
+  const labelColor = variant === 'light' ? theme.colors.text.primary : theme.colors.white;
   const hasEyeIcon = secureTextEntry === true;
 
   const inputContent = (

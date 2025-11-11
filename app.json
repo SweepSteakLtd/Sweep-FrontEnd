@@ -41,6 +41,9 @@
       }
     },
     "owner": "karamvir.mangat",
-    "plugins": ["expo-secure-store"]
+    "plugins": [
+      "expo-secure-store",
+      "expo-font"
+    ]
   }
 }
