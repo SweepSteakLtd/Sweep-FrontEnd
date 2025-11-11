@@ -7,7 +7,6 @@ export const Container = styled.View`
 
 export const ManualEntryLink = styled.Pressable`
   padding: 8px 0;
-  align-items: center;
 `;
 
 export const ManualEntryText = styled.Text`

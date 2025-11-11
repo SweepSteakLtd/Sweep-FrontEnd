@@ -205,7 +205,7 @@ export const AddressLookup = ({
         />
 
         <ManualEntryLink onPress={() => setIsManualEntry(false)}>
-          <ManualEntryText>Use postcode lookup</ManualEntryText>
+          <ManualEntryText>Use address lookup</ManualEntryText>
         </ManualEntryLink>
       </Container>
     );
@@ -213,34 +213,39 @@ export const AddressLookup = ({
 
   return (
     <Container>
-      <Input
-        variant="light"
-        label="Address Search"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        placeholder="e.g. 10 Downing Street, London"
-      />
+      {/* Show search bar only if no address has been selected */}
+      {!address1 && (
+        <>
+          <Input
+            variant="light"
+            label="Address Search"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="e.g. 10 Downing Street, London"
+          />
 
-      {isLoading && (
-        <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginTop: 8 }} />
+          {isLoading && (
+            <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginTop: 8 }} />
+          )}
+
+          {showSuggestions && suggestions.length > 0 && (
+            <AddressSuggestionsList>
+              {suggestions.map((suggestion) => (
+                <AddressSuggestion
+                  key={suggestion.place_id}
+                  onPress={() => selectAddress(suggestion.place_id)}
+                >
+                  <AddressSuggestionText>{suggestion.description}</AddressSuggestionText>
+                </AddressSuggestion>
+              ))}
+            </AddressSuggestionsList>
+          )}
+
+          <ManualEntryLink onPress={handleManualEntry}>
+            <ManualEntryText>Enter address manually</ManualEntryText>
+          </ManualEntryLink>
+        </>
       )}
-
-      {showSuggestions && suggestions.length > 0 && (
-        <AddressSuggestionsList>
-          {suggestions.map((suggestion) => (
-            <AddressSuggestion
-              key={suggestion.place_id}
-              onPress={() => selectAddress(suggestion.place_id)}
-            >
-              <AddressSuggestionText>{suggestion.description}</AddressSuggestionText>
-            </AddressSuggestion>
-          ))}
-        </AddressSuggestionsList>
-      )}
-
-      <ManualEntryLink onPress={handleManualEntry}>
-        <ManualEntryText>Enter address manually</ManualEntryText>
-      </ManualEntryLink>
 
       {/* Show filled address fields after selection */}
       {address1 && (
@@ -280,6 +285,16 @@ export const AddressLookup = ({
             autoCapitalize="characters"
             error={postcodeError}
           />
+
+          <ManualEntryLink
+            onPress={() => {
+              // Clear the address to show the search bar again
+              onAddressChange({ address1: '', address2: '', city: '', postcode: '' });
+              setSearchQuery('');
+            }}
+          >
+            <ManualEntryText>Use address lookup</ManualEntryText>
+          </ManualEntryLink>
         </>
       )}
     </Container>
