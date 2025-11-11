@@ -71,14 +71,13 @@ export const AddressLookup = ({
   const searchAddress = async (query: string) => {
     setIsLoading(true);
     try {
+      const autocompleteUrl = process.env.EXPO_PUBLIC_GOOGLE_PLACES_AUTOCOMPLETE_URL;
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
+        `${autocompleteUrl}?input=${encodeURIComponent(
           query,
         )}&components=country:gb&key=${googlePlacesApiKey}`,
       );
       const data = await response.json();
-
-      console.log('Autocomplete API Response:', data);
 
       if (data.status === 'REQUEST_DENIED' || data.status === 'INVALID_REQUEST') {
         console.error('Google Places API Error:', data.error_message);
@@ -98,8 +97,9 @@ export const AddressLookup = ({
   const selectAddress = async (placeId: string) => {
     setIsLoading(true);
     try {
+      const detailsUrl = process.env.EXPO_PUBLIC_GOOGLE_PLACES_DETAILS_URL;
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=address_components&key=${googlePlacesApiKey}`,
+        `${detailsUrl}?place_id=${placeId}&fields=address_components&key=${googlePlacesApiKey}`,
       );
       const data = await response.json();
 
