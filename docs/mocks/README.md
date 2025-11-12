@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-11-11T16:20:55.661Z
+Generated: 2025-11-12T13:10:57.902Z
 
 ## Files
 
@@ -43,21 +43,6 @@ Get Leagues List endpoint
 - Success (200) - 500ms
 - Empty List (200) - 500ms
 - data (200) - 500ms
-- Server Error (500) - 1000ms
-
-
-### POST /api/phone-verification/send
-**Send Verification Code**
-
-Send Verification Code endpoint
-
-**Default Scenario:** Success
-
-**Scenarios:** 5
-- Success (200) - 500ms
-- data (200) - 500ms
-- Rate Limited (429) - 500ms
-- Invalid Phone (400) - 500ms
 - Server Error (500) - 1000ms
 
 

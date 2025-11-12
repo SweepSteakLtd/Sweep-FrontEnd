@@ -1,56 +1,73 @@
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useState } from 'react';
-import { useSendVerificationCode } from '~/services/apis/PhoneVerification/useSendVerificationCode';
-import { useVerifyCode } from '~/services/apis/PhoneVerification/useVerifyCode';
 
 export const usePhoneVerification = () => {
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const [codeSent, setCodeSent] = useState(false);
   const [verificationId, setVerificationId] = useState<string | null>(null);
-
-  const sendMutation = useSendVerificationCode();
-  const verifyMutation = useVerifyCode();
+  const [confirmation, setConfirmation] = useState<FirebaseAuthTypes.ConfirmationResult | null>(
+    null,
+  );
+  const [sending, setSending] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const sendVerificationCode = async (phone: string): Promise<boolean> => {
+    setSending(true);
+    setError(null);
+    setPhoneNumber(phone);
+
     try {
-      const result = await sendMutation.mutateAsync({ phoneNumber: phone });
-
-      setVerificationId(result.verificationId || null);
-      setPhoneNumber(phone);
+      // Use React Native Firebase for phone verification
+      const confirmation = await auth().signInWithPhoneNumber(phone);
+      setConfirmation(confirmation);
+      setVerificationId(confirmation.verificationId);
       setCodeSent(true);
-
+      setSending(false);
       return true;
     } catch (err) {
-      console.error('Error sending verification code:', err);
+      console.error('Firebase phone verification failed:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send verification code';
+      setError(errorMessage);
+      setSending(false);
       return false;
     }
   };
 
   const verifyCode = async (code: string): Promise<boolean> => {
-    if (!verificationId) {
+    if (!confirmation) {
+      setError('No confirmation object available');
       return false;
     }
 
+    setVerifying(true);
+    setError(null);
+
     try {
-      await verifyMutation.mutateAsync({ verificationId, code });
+      // Verify code with Firebase
+      await confirmation.confirm(code);
+      setVerifying(false);
       return true;
     } catch (err) {
-      console.error('Error verifying code:', err);
+      console.error('Firebase code verification failed:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Invalid verification code';
+      setError(errorMessage);
+      setVerifying(false);
       return false;
     }
   };
 
   const clearError = () => {
-    sendMutation.reset();
-    verifyMutation.reset();
+    setError(null);
   };
 
   return {
     sendVerificationCode,
     verifyCode,
-    sending: sendMutation.isPending,
-    verifying: verifyMutation.isPending,
+    sending,
+    verifying,
     codeSent,
-    error: sendMutation.error?.message || verifyMutation.error?.message || null,
+    error,
     clearError,
     verificationId: verificationId || phoneNumber,
   };

@@ -15,7 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sweepsteak.app",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +31,8 @@
         "barStyle": "light-content",
         "backgroundColor": "#2d5016",
         "translucent": false
-      }
+      },
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,7 +45,8 @@
     "owner": "karamvir.mangat",
     "plugins": [
       "expo-secure-store",
-      "expo-font"
+      "expo-font",
+      "@react-native-firebase/app"
     ]
   }
 }

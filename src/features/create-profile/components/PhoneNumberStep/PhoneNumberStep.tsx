@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useTheme } from 'styled-components/native';
 import { PhoneNumberInput } from '~/components/PhoneNumberInput/PhoneNumberInput';
 import { Typography } from '~/components/Typography/Typography';
@@ -36,6 +36,13 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
     const [callingCode, setCallingCode] = useState('44');
     const [phoneError, setPhoneError] = useState<string | undefined>(phoneNumberError);
 
+    // Ensure calling code is set on mount
+    useEffect(() => {
+      if (!callingCode) {
+        setCallingCode('44');
+      }
+    }, [callingCode]);
+
     const handleCountryChange = (_countryCode: string, newCallingCode: string) => {
       setCallingCode(newCallingCode);
     };
@@ -49,8 +56,9 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
         return false;
       }
 
-      // Format phone number with country code
-      const fullPhoneNumber = `+${callingCode}${phoneNumber}`;
+      // Format phone number with country code in E.164 format (remove all non-numeric characters)
+      const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
+      const fullPhoneNumber = `+${callingCode}${cleanPhoneNumber}`;
 
       const success = await sendVerificationCode(fullPhoneNumber);
       if (success) {
@@ -62,7 +70,8 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
     };
 
     const getPhoneNumber = () => {
-      return `+${callingCode}${phoneNumber}`;
+      const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
+      return `+${callingCode}${cleanPhoneNumber}`;
     };
 
     useImperativeHandle(ref, () => ({

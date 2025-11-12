@@ -1,7 +1,7 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-11-11T16:20:55.661Z",
+  "generatedAt": "2025-11-12T13:10:57.902Z",
   "endpoints": [
     {
       "id": "create-bet",
@@ -66,46 +66,6 @@
         {
           "name": "data",
           "status": 200,
-          "delay": "500ms",
-          "response": null
-        },
-        {
-          "name": "Server Error",
-          "status": 500,
-          "delay": "1000ms",
-          "response": null
-        }
-      ]
-    },
-    {
-      "id": "send-verification-code",
-      "name": "Send Verification Code",
-      "method": "POST",
-      "path": "/api/phone-verification/send",
-      "description": "Send Verification Code endpoint",
-      "defaultScenario": "Success",
-      "scenarios": [
-        {
-          "name": "Success",
-          "status": 200,
-          "delay": "500ms",
-          "response": null
-        },
-        {
-          "name": "data",
-          "status": 200,
-          "delay": "500ms",
-          "response": null
-        },
-        {
-          "name": "Rate Limited",
-          "status": 429,
-          "delay": "500ms",
-          "response": null
-        },
-        {
-          "name": "Invalid Phone",
-          "status": 400,
           "delay": "500ms",
           "response": null
         },
