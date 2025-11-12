@@ -12,6 +12,8 @@ interface PhoneNumberStepProps {
   verificationError: string | null;
   clearError: () => void;
   sending?: boolean;
+  phoneVerified?: boolean;
+  verifiedPhoneNumber?: string;
 }
 
 export interface PhoneNumberStepHandle {
@@ -29,6 +31,8 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
       verificationError,
       clearError,
       sending,
+      phoneVerified,
+      verifiedPhoneNumber,
     },
     ref,
   ) => {
@@ -59,6 +63,11 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
       // Format phone number with country code in E.164 format (remove all non-numeric characters)
       const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
       const fullPhoneNumber = `+${callingCode}${cleanPhoneNumber}`;
+
+      // Skip verification if phone number is already verified and hasn't changed
+      if (phoneVerified && verifiedPhoneNumber === fullPhoneNumber) {
+        return true; // Skip to next step without re-verifying
+      }
 
       const success = await sendVerificationCode(fullPhoneNumber);
       if (success) {

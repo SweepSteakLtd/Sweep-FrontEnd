@@ -69,6 +69,8 @@ export const CreateProfile = () => {
             verificationError={phoneVerification.error}
             clearError={phoneVerification.clearError}
             sending={phoneVerification.sending}
+            phoneVerified={formData.phoneVerified}
+            verifiedPhoneNumber={formData.verifiedPhoneNumber}
           />
         );
 
@@ -82,6 +84,7 @@ export const CreateProfile = () => {
             verificationError={phoneVerification.error}
             clearError={phoneVerification.clearError}
             verifying={phoneVerification.verifying}
+            fullPhoneNumber={phoneNumberRef.current?.getPhoneNumber() || ''}
           />
         );
 

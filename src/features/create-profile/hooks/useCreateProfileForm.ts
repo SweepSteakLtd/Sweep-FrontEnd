@@ -228,11 +228,11 @@ export const useCreateProfileForm = () => {
   };
 
   // Phone verification handlers
-  const handlePhoneVerified = () => {
+  const handlePhoneVerified = (fullPhoneNumber: string) => {
     setFormData((prev) => ({
       ...prev,
       phoneVerified: true,
-      verifiedPhoneNumber: prev.phoneNumber,
+      verifiedPhoneNumber: fullPhoneNumber,
     }));
   };
 
@@ -240,8 +240,9 @@ export const useCreateProfileForm = () => {
     setFormData((prev) => ({
       ...prev,
       phoneNumber: text,
+      // Mark as unverified if phone number changes (comparison happens in PhoneNumberStep with full number)
       phoneVerified:
-        prev.verifiedPhoneNumber && text !== prev.verifiedPhoneNumber ? false : prev.phoneVerified,
+        prev.verifiedPhoneNumber && text !== prev.phoneNumber ? false : prev.phoneVerified,
     }));
     if (fieldErrors.phoneNumber) {
       setFieldErrors((prev) => ({ ...prev, phoneNumber: undefined }));
