@@ -23,6 +23,15 @@ export type RootStackParamList = {
   SelfExclusion: undefined;
   MyTeams: undefined;
   MyLeagues: undefined;
+  AlertModal: {
+    title: string;
+    message: string;
+    buttons?: Array<{
+      text: string;
+      onPress?: () => void;
+      style?: 'default' | 'cancel' | 'destructive';
+    }>;
+  };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

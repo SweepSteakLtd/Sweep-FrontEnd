@@ -6,6 +6,7 @@ import { BackButton } from '~/components/BackButton/BackButton';
 import { AccountDetails } from '~/features/account/screens/AccountDetails/AccountDetails';
 import { Security } from '~/features/account/screens/Security/Security';
 import { Activity } from '~/features/activity/screens/Activity/Activity';
+import { AlertModal } from '~/features/alert/screens/AlertModal/AlertModal';
 import { CreateAccount } from '~/features/authentication/screens/CreateAccount/CreateAccount';
 import { Login } from '~/features/authentication/screens/Login/Login';
 import { BettingControls } from '~/features/betting-controls/screens/BettingControls/BettingControls';
@@ -111,6 +112,16 @@ export const RootNavigator = () => {
         <Stack.Screen name="MyTeams" component={MyTeams} />
         <Stack.Screen name="MyLeagues" component={MyLeagues} />
         <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen
+          name="AlertModal"
+          component={AlertModal}
+          options={{
+            presentation: 'containedTransparentModal',
+            animation: 'fade',
+            headerShown: false,
+            contentStyle: { backgroundColor: 'transparent' },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

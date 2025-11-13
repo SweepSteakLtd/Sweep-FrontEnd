@@ -4,7 +4,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-url-polyfill/auto';
 import { ThemeProvider, useTheme } from 'styled-components/native';
-import { AlertProvider } from './src/components/Alert/Alert';
 import { AuthProvider } from './src/contexts/AuthContext';
 import { BottomSheetProvider } from './src/contexts/BottomSheetContext';
 import { installMockInterceptor } from './src/lib/mocks/interceptor';
@@ -58,12 +57,10 @@ export default function App() {
         <ThemeProvider theme={theme}>
           <QueryClientProvider client={queryClient}>
             <BottomSheetProvider>
-              <AlertProvider>
-                <AuthProvider>
-                  <ThemedStatusBar />
-                  <RootNavigator />
-                </AuthProvider>
-              </AlertProvider>
+              <AuthProvider>
+                <ThemedStatusBar />
+                <RootNavigator />
+              </AuthProvider>
             </BottomSheetProvider>
           </QueryClientProvider>
         </ThemeProvider>

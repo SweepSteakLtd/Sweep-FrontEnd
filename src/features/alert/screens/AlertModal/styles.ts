@@ -3,14 +3,17 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
-export const AlertContainer = styled.View`
+export const ContentContainer = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   border-radius: 16px;
   padding: 24px;
-  width: 85%;
-  max-width: 400px;
+  width: 100%;
   shadow-color: #000;
   shadow-offset: 0px 4px;
   shadow-opacity: 0.3;
