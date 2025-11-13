@@ -38,12 +38,13 @@
       }
     },
     "preview": {
-      "distribution": "internal",
       "autoIncrement": true,
       "ios": {
+        "distribution": "store",
         "resourceClass": "m-medium"
       },
       "android": {
+        "distribution": "internal",
         "buildType": "apk"
       },
       "env": {
