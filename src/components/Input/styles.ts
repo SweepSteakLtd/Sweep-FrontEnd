@@ -6,61 +6,17 @@ export const Container = styled.View`
   margin-bottom: 15px;
 `;
 
-export const CurrencyWrapper = styled.View`
-  flex-direction: row;
-  align-items: center;
-  position: relative;
-`;
-
-export const InputWrapper = styled.View`
-  position: relative;
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const EyeIconButton = styled.TouchableOpacity`
-  position: absolute;
-  right: 12px;
-  padding: 4px;
-  z-index: 1;
-`;
-
-interface CurrencyPrefixProps {
+interface InputWrapperProps {
   isFocused: boolean;
   hasError: boolean;
   disabled?: boolean;
 }
 
-export const CurrencyPrefix = styled.View<CurrencyPrefixProps>`
-  position: absolute;
-  left: 16px;
-  z-index: 1;
+export const InputWrapper = styled.View<InputWrapperProps>`
+  flex-direction: row;
+  align-items: center;
   background-color: ${({ theme, disabled }: { theme: Theme; disabled?: boolean }) =>
     disabled ? theme.colors.backgroundLight : theme.colors.input.background};
-  padding-vertical: 4px;
-`;
-
-interface StyledInputProps {
-  isFocused: boolean;
-  hasError: boolean;
-  hasCurrency?: boolean;
-  disabled?: boolean;
-  hasEyeIcon?: boolean;
-}
-
-export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) => ({
-  placeholderTextColor: theme.colors.text.placeholder,
-}))<StyledInputProps>`
-  flex: 1;
-  background-color: ${({ theme, disabled }: { theme: Theme; disabled?: boolean }) =>
-    disabled ? theme.colors.backgroundLight : theme.colors.input.background};
-  color: ${({ theme, disabled }: { theme: Theme; disabled?: boolean }) =>
-    disabled ? theme.colors.text.secondary : theme.colors.input.text};
-  padding: 12px 16px;
-  padding-left: ${({ hasCurrency }: { hasCurrency?: boolean }) => (hasCurrency ? '36px' : '16px')};
-  padding-right: ${({ hasEyeIcon }: { hasEyeIcon?: boolean }) => (hasEyeIcon ? '44px' : '16px')};
-  border-radius: 8px;
-  font-size: 14px;
   border-width: 1px;
   border-color: ${({
     theme,
@@ -77,7 +33,26 @@ export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) 
     if (hasError) return theme.colors.error;
     return isFocused ? theme.colors.primary : theme.colors.border;
   }};
+  border-radius: 8px;
+  padding: 12px 16px;
   opacity: ${({ disabled }: { disabled?: boolean }) => (disabled ? 0.6 : 1)};
+`;
+
+export const Prefix = styled.View`
+  margin-right: 8px;
+`;
+
+export const EyeIconButton = styled.TouchableOpacity`
+  margin-left: 8px;
+`;
+
+export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) => ({
+  placeholderTextColor: theme.colors.text.placeholder,
+}))`
+  flex: 1;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.input.text};
+  font-size: 14px;
+  padding: 0;
 `;
 
 export const ErrorText = styled(Typography)`

@@ -3,20 +3,12 @@ import { NativeSyntheticEvent, TextInputFocusEventData, TextInputProps } from 'r
 import { useTheme } from 'styled-components/native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../Typography/Typography';
-import {
-  Container,
-  CurrencyPrefix,
-  CurrencyWrapper,
-  ErrorText,
-  EyeIconButton,
-  InputWrapper,
-  StyledInput,
-} from './styles';
+import { Container, ErrorText, EyeIconButton, InputWrapper, Prefix, StyledInput } from './styles';
 
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
-  variant?: 'dark' | 'light' | 'currency';
+  variant?: 'dark' | 'light' | 'currency' | 'phone';
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -52,25 +44,8 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const labelColor = variant === 'light' ? theme.colors.text.primary : theme.colors.white;
   const hasEyeIcon = secureTextEntry === true;
-
-  const inputContent = (
-    <StyledInput
-      isFocused={isFocused}
-      hasError={!!error}
-      hasCurrency={variant === 'currency'}
-      hasEyeIcon={hasEyeIcon}
-      disabled={props.editable === false}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      value={value}
-      onChangeText={variant === 'currency' ? handleCurrencyChange : onChangeText}
-      keyboardType={variant === 'currency' ? 'decimal-pad' : props.keyboardType}
-      secureTextEntry={secureTextEntry && !isPasswordVisible}
-      {...props}
-    />
-  );
+  const labelColor = isFocused ? theme.colors.text.primary : theme.colors.text.secondary;
 
   return (
     <Container>
@@ -83,32 +58,32 @@ export const Input: React.FC<InputProps> = ({
           {label}
         </Typography>
       )}
-      {variant === 'currency' ? (
-        <CurrencyWrapper>
-          <CurrencyPrefix
-            isFocused={isFocused}
-            hasError={!!error}
-            disabled={props.editable === false}
-          >
+      <InputWrapper isFocused={isFocused} hasError={!!error} disabled={props.editable === false}>
+        {(variant === 'currency' || variant === 'phone') && (
+          <Prefix>
             <Typography variant="body" color={theme.colors.text.primary}>
-              £
+              {variant === 'phone' ? '+44' : '£'}
             </Typography>
-          </CurrencyPrefix>
-          {inputContent}
-        </CurrencyWrapper>
-      ) : (
-        <InputWrapper>
-          {inputContent}
-          {hasEyeIcon && (
-            <EyeIconButton
-              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              activeOpacity={0.7}
-            >
-              <Icon name={isPasswordVisible ? '👁️' : '👁️‍🗨️'} size={20} />
-            </EyeIconButton>
-          )}
-        </InputWrapper>
-      )}
+          </Prefix>
+        )}
+        <StyledInput
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          value={value}
+          onChangeText={variant === 'currency' ? handleCurrencyChange : onChangeText}
+          keyboardType={variant === 'currency' ? 'decimal-pad' : props.keyboardType}
+          secureTextEntry={secureTextEntry && !isPasswordVisible}
+          {...props}
+        />
+        <EyeIconButton
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          activeOpacity={0.7}
+          disabled={!hasEyeIcon}
+          style={{ opacity: hasEyeIcon ? 1 : 0 }}
+        >
+          <Icon name={isPasswordVisible ? '👁️' : '👁️‍🗨️'} size={20} />
+        </EyeIconButton>
+      </InputWrapper>
       {error && (
         <ErrorText variant="caption" color={theme.colors.error}>
           {error}

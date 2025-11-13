@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import { useTheme } from 'styled-components/native';
 import { PhoneNumberInput } from '~/components/PhoneNumberInput/PhoneNumberInput';
 import { Typography } from '~/components/Typography/Typography';
@@ -37,19 +37,7 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
     ref,
   ) => {
     const theme = useTheme();
-    const [callingCode, setCallingCode] = useState('44');
     const [phoneError, setPhoneError] = useState<string | undefined>(phoneNumberError);
-
-    // Ensure calling code is set on mount
-    useEffect(() => {
-      if (!callingCode) {
-        setCallingCode('44');
-      }
-    }, [callingCode]);
-
-    const handleCountryChange = (_countryCode: string, newCallingCode: string) => {
-      setCallingCode(newCallingCode);
-    };
 
     const handleNext = async (): Promise<boolean> => {
       clearError();
@@ -60,16 +48,14 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
         return false;
       }
 
-      // Format phone number with country code in E.164 format (remove all non-numeric characters)
-      const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
-      const fullPhoneNumber = `+${callingCode}${cleanPhoneNumber}`;
+      console.log('PhoneNumberStep - phoneNumber (E.164):', phoneNumber);
 
       // Skip verification if phone number is already verified and hasn't changed
-      if (phoneVerified && verifiedPhoneNumber === fullPhoneNumber) {
+      if (phoneVerified && verifiedPhoneNumber === phoneNumber) {
         return true; // Skip to next step without re-verifying
       }
 
-      const success = await sendVerificationCode(fullPhoneNumber);
+      const success = await sendVerificationCode(phoneNumber);
       if (success) {
         return true; // Advance to step 3 (verification code)
       } else {
@@ -79,8 +65,8 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
     };
 
     const getPhoneNumber = () => {
-      const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
-      return `+${callingCode}${cleanPhoneNumber}`;
+      // The PhoneNumberInput library already returns E.164 formatted numbers
+      return phoneNumber;
     };
 
     useImperativeHandle(ref, () => ({
@@ -103,11 +89,9 @@ export const PhoneNumberStep = forwardRef<PhoneNumberStepHandle, PhoneNumberStep
 
         <PhoneNumberInput
           label="Phone Number"
-          value={phoneNumber}
           onChangeText={onPhoneNumberChange}
           error={phoneError || phoneNumberError}
           placeholder="7123 456789"
-          onCountryChange={handleCountryChange}
           editable={!sending}
         />
       </StepContainer>

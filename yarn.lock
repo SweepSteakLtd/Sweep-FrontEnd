@@ -5511,11 +5511,6 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libphonenumber-js@1.12.25:
-  version "1.12.25"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.12.25.tgz#1af48b816082100bf88f47d342387fbac1f1a773"
-  integrity sha512-u90tUu/SEF8b+RaDKCoW7ZNFDakyBtFlX1ex3J+VH+ElWes/UaitJLt/w4jGu8uAE41lltV/s+kMVtywcMEg7g==
-
 lighthouse-logger@^1.0.0:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/lighthouse-logger/-/lighthouse-logger-1.4.2.tgz#aef90f9e97cd81db367c7634292ee22079280aaa"
@@ -6684,11 +6679,6 @@ react-native-confetti-cannon@^1.5.2:
   resolved "https://registry.yarnpkg.com/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz#ca1a05edd2a64b080ea8b6238c49277908e1f123"
   integrity sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg==
 
-react-native-country-select@0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/react-native-country-select/-/react-native-country-select-0.3.4.tgz#4ecad23aa1fc00500f9701b0e59bba1033fdf771"
-  integrity sha512-r8KP5hJB9SRsM+VaIKM0F4TjoKEEfXwUNv+6s5JuDfVjWZvsrlXVwchVTro7uWlAlegpbOFuIzuPV1nJ60RGcA==
-
 react-native-date-picker@^5.0.13:
   version "5.0.13"
   resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-5.0.13.tgz#fe05f58652aaeee9e67f73cf7436c32a623ff3a4"
@@ -6713,14 +6703,6 @@ react-native-google-places-autocomplete@^2.5.7:
     prop-types "^15.7.2"
     qs "~6.9.1"
     uuid "^10.0.0"
-
-react-native-international-phone-number@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/react-native-international-phone-number/-/react-native-international-phone-number-0.11.2.tgz#7a2ee32d5bac37cc2859093ebc791961851cbd75"
-  integrity sha512-S1uxsMLXvDROR1NdWqmkOhSPo88MG2Z9pvf+4KwNfH1QeY5P2QTXXB/rrApEnkIeoAcV+wE0UrN4r60Q1EfXfA==
-  dependencies:
-    libphonenumber-js "1.12.25"
-    react-native-country-select "0.3.4"
 
 react-native-is-edge-to-edge@^1.2.1:
   version "1.2.1"

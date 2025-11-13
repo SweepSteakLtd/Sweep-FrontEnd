@@ -15,11 +15,19 @@ export const usePhoneVerification = () => {
   const sendVerificationCode = async (phone: string): Promise<boolean> => {
     setSending(true);
     setError(null);
-    setPhoneNumber(phone);
+
+    // Clean the phone number to ensure E.164 format (only digits after +)
+    const cleanedPhone = phone.startsWith('+')
+      ? `+${phone.substring(1).replace(/\D/g, '')}`
+      : phone.replace(/\D/g, '');
+
+    console.log('Original phone:', phone);
+    console.log('Cleaned phone:', cleanedPhone);
+    setPhoneNumber(cleanedPhone);
 
     try {
       // Use React Native Firebase for phone verification
-      const confirmation = await auth().signInWithPhoneNumber(phone);
+      const confirmation = await auth().signInWithPhoneNumber(cleanedPhone);
       setConfirmation(confirmation);
       setVerificationId(confirmation.verificationId);
       setCodeSent(true);
