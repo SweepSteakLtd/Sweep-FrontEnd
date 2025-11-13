@@ -64,13 +64,21 @@
   },
   "submit": {
     "preview": {
-      "ios": {},
+      "ios": {
+        "appleId": "karamvir.mangat@uvconsulting.net",
+        "ascAppId": "6738724528",
+        "appleTeamId": "743ZL7U46T"
+      },
       "android": {
         "serviceAccountKeyPath": "./google-service-account.json"
       }
     },
     "production": {
-      "ios": {},
+      "ios": {
+        "appleId": "karamvir.mangat@uvconsulting.net",
+        "ascAppId": "6738724528",
+        "appleTeamId": "743ZL7U46T"
+      },
       "android": {
         "serviceAccountKeyPath": "./google-service-account.json"
       }
