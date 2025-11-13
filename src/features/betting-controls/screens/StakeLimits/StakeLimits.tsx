@@ -59,7 +59,7 @@ export const StakeLimits = () => {
           style={{ flex: 1 }}
           contentContainerStyle={{ padding: 16 }}
           showsVerticalScrollIndicator={false}
-          bottomOffset={10}
+          bottomOffset={140}
         >
           <Section>
             <LimitInput

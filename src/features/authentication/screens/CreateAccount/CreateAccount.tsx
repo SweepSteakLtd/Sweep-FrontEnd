@@ -1,19 +1,17 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useCreateFirebaseAccount } from '~/features/authentication/hooks/useCreateFirebaseAccount';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
-import type { RootStackParamList, RootStackScreenProps } from '~/navigation/types';
+import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer } from './styles';
 import { createAccountSchema } from './validation';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-type RouteProps = RootStackScreenProps<'CreateAccount'>['route'];
 
 interface FieldErrors extends Record<string, string | undefined> {
   email?: string;
@@ -22,36 +20,13 @@ interface FieldErrors extends Record<string, string | undefined> {
 }
 
 export const CreateAccount = () => {
-  const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
-  const route = useRoute<RouteProps>();
   const { createAccount, loading } = useCreateFirebaseAccount();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-
-  // Configure navigation header with back button
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: 'Create Account',
-    });
-  }, [navigation]);
-
-  // If coming back from T&C with credentials, create the account automatically
-  useEffect(() => {
-    const createAccountFromTnC = async () => {
-      if (route.params?.email && route.params?.password) {
-        const success = await createAccount(route.params.email, route.params.password);
-        if (success) {
-          navigation.navigate('CreateProfile');
-        }
-      }
-    };
-    createAccountFromTnC();
-  }, [route.params]);
 
   const handleContinue = async () => {
     // Validate using Zod
@@ -68,22 +43,20 @@ export const CreateAccount = () => {
 
     setFieldErrors({});
 
-    // Navigate to T&C screen, passing the credentials
-    // After user accepts T&C, they will create the account
-    navigation.navigate('TermsAndConditions', {
-      nextScreen: 'CreateAccount',
-      email,
-      password,
-    });
+    // Create the account directly (T&C already accepted before getting here)
+    const success = await createAccount(email, password);
+    if (success) {
+      navigation.navigate('CreateProfile');
+    }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }} edges={['bottom']}>
+    <ScreenWrapper title="Create Account">
       <Container>
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1 }}
-          bottomOffset={10}
+          bottomOffset={140}
         >
           <FormContainer>
             <Input
@@ -140,6 +113,6 @@ export const CreateAccount = () => {
           <Button disabled={loading} loading={loading} onPress={handleContinue} title="Continue" />
         </KeyboardStickyView>
       </Container>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };

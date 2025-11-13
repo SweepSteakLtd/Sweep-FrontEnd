@@ -4,13 +4,14 @@ import type {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Checkbox } from '~/components/Checkbox/Checkbox';
-import { Icon } from '~/components/Icon/Icon';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Typography } from '~/components/Typography/Typography';
 import type { RootStackParamList } from '~/navigation/types';
-import { Container, ContentCard, Footer, Header, IconContainer, ScrollContainer } from './styles';
+import { ContentCard, Footer } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'TermsAndConditions'>;
 type RouteProp = NativeStackScreenProps<RootStackParamList, 'TermsAndConditions'>['route'];
@@ -21,31 +22,21 @@ export const TermsAndConditions = () => {
   const route = useRoute<RouteProp>();
   const [accepted, setAccepted] = useState(false);
 
-  const { nextScreen, email, password } = route.params;
+  const { nextScreen } = route.params;
 
   const handleAccept = () => {
     if (accepted) {
-      if (nextScreen === 'CreateAccount' && email && password) {
-        // Pass credentials back to CreateAccount to complete the signup
-        navigation.navigate('CreateAccount', { email, password });
-      } else {
-        navigation.navigate(nextScreen);
-      }
+      navigation.navigate(nextScreen);
     }
   };
 
   return (
-    <Container>
-      <Header>
-        <IconContainer>
-          <Icon name="📄" size={30} />
-        </IconContainer>
-        <Typography variant="heading" color={theme.colors.white}>
-          Terms & Conditions
-        </Typography>
-      </Header>
-
-      <ScrollContainer showsVerticalScrollIndicator={false}>
+    <ScreenWrapper title="Terms & Conditions">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 20 }}
+      >
         <ContentCard>
           <Typography
             variant="subheading"
@@ -264,45 +255,39 @@ export const TermsAndConditions = () => {
             will be subject to the exclusive jurisdiction of the courts of England and Wales.
           </Typography>
         </ContentCard>
-      </ScrollContainer>
 
-      <Footer>
-        <Checkbox checked={accepted} onPress={() => setAccepted(!accepted)}>
-          <Typography variant="caption" color={theme.colors.white}>
-            I confirm that I am 18 years or older and I have read, understand and agree to
-            Sweepsteak Ltd{' '}
-            <Typography
-              variant="caption"
-              color={theme.colors.white}
-              style={{ textDecorationLine: 'underline' }}
-            >
-              Terms and Conditions
+        <Footer>
+          <Checkbox checked={accepted} onPress={() => setAccepted(!accepted)}>
+            <Typography variant="caption" color={theme.colors.text.secondary}>
+              I confirm that I am 18 years or older and I have read, understand and agree to
+              Sweepsteak Ltd{' '}
+              <Typography
+                variant="caption"
+                color={theme.colors.text.secondary}
+                style={{ textDecorationLine: 'underline' }}
+              >
+                Terms and Conditions
+              </Typography>
+              ,{' '}
+              <Typography
+                variant="caption"
+                color={theme.colors.text.secondary}
+                style={{ textDecorationLine: 'underline' }}
+              >
+                Privacy Policy
+              </Typography>
+              . I understand this is a sweepstake platform with skill-based elements.
             </Typography>
-            ,{' '}
-            <Typography
-              variant="caption"
-              color={theme.colors.white}
-              style={{ textDecorationLine: 'underline' }}
-            >
-              Privacy Policy
-            </Typography>
-            . I understand this is a sweepstake platform with skill-based elements.
-          </Typography>
-        </Checkbox>
+          </Checkbox>
 
-        <Button
-          disabled={!accepted}
-          onPress={handleAccept}
-          style={{ marginTop: 15 }}
-          title={
-            accepted
-              ? nextScreen === 'CreateAccount'
-                ? 'Accept & Create Account'
-                : 'Accept & Continue to Login'
-              : 'Please Accept Terms to Continue'
-          }
-        />
-      </Footer>
-    </Container>
+          <Button
+            disabled={!accepted}
+            onPress={handleAccept}
+            style={{ marginTop: 15 }}
+            title={'Accept & Continue'}
+          />
+        </Footer>
+      </ScrollView>
+    </ScreenWrapper>
   );
 };

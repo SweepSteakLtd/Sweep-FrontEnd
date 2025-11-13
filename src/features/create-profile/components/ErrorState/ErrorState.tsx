@@ -15,6 +15,7 @@ export const ErrorState = ({ errorMessage, onRetry }: ErrorStateProps) => {
   return (
     <Container>
       <KeyboardAwareScrollView
+        bottomOffset={140}
         contentContainerStyle={{
           flex: 1,
           justifyContent: 'center',

@@ -59,7 +59,7 @@ export const CreateLeague = () => {
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1, paddingTop: 20 }}
-          bottomOffset={10}
+          bottomOffset={140}
         >
           {showJoinCode ? (
             <JoinCodeDisplay

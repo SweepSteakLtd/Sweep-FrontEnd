@@ -47,11 +47,15 @@ export const Login = () => {
 
     if (loginResult.success) {
       if (loginResult.profileComplete) {
-        // User has profile - go to Dashboard
-        navigation.navigate('Dashboard');
+        // User has profile - show T&C first, then go to Dashboard
+        navigation.navigate('TermsAndConditions', {
+          nextScreen: 'Dashboard',
+        });
       } else {
-        // User needs to complete profile
-        navigation.navigate('CreateProfile');
+        // User needs to complete profile - show T&C first
+        navigation.navigate('TermsAndConditions', {
+          nextScreen: 'CreateProfile',
+        });
       }
     }
     // If failed, error is already shown by useLogin hook
@@ -63,7 +67,7 @@ export const Login = () => {
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 20 }}
-        bottomOffset={10}
+        bottomOffset={220}
       >
         <LogoContainer>
           <LogoCircle>
@@ -129,7 +133,11 @@ export const Login = () => {
 
         <Button
           variant="link"
-          onPress={() => navigation.navigate('CreateAccount')}
+          onPress={() =>
+            navigation.navigate('TermsAndConditions', {
+              nextScreen: 'CreateAccount',
+            })
+          }
           fullWidth={false}
           title="Don't have an account? Create one"
         />

@@ -16,7 +16,7 @@ export const DepositLimits = () => {
           style={{ flex: 1 }}
           contentContainerStyle={{ padding: 16 }}
           showsVerticalScrollIndicator={false}
-          bottomOffset={10}
+          bottomOffset={140}
         >
           <Section>
             {depositLimits.map((limit) => (

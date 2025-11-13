@@ -24,7 +24,7 @@ export const CheckboxBox = styled.View<CheckboxBoxProps>`
     checked ? theme.colors.primary : 'transparent'};
   align-items: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-right: 12px;
   flex-shrink: 0;
 `;
 

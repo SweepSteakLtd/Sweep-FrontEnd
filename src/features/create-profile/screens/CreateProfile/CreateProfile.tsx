@@ -171,7 +171,7 @@ export const CreateProfile = () => {
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
-        bottomOffset={10}
+        bottomOffset={140}
       >
         <Title>
           <Typography variant="title" color={theme.colors.text.primary} align="center">

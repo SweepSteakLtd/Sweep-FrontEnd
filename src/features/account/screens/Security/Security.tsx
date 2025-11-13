@@ -34,7 +34,7 @@ export const Security = () => {
         <KeyboardAwareScrollView
           style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
-          bottomOffset={10}
+          bottomOffset={140}
         >
           <Section>
             <SectionTitle>Password</SectionTitle>

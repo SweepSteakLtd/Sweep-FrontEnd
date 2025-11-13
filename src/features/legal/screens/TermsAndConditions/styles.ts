@@ -35,5 +35,4 @@ export const ContentCard = styled.View<{ theme: Theme }>`
 
 export const Footer = styled.View<{ theme: Theme }>`
   padding: 20px;
-  background-color: ${(props: { theme: Theme }) => props.theme.colors.primary};
 `;

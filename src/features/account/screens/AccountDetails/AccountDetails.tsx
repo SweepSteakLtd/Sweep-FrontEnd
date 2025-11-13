@@ -76,7 +76,7 @@ export const AccountDetails = () => {
         <KeyboardAwareScrollView
           style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
-          bottomOffset={10}
+          bottomOffset={140}
           contentContainerStyle={{ paddingBottom: 40 }}
           refreshControl={
             <RefreshControl
