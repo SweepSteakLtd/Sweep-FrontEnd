@@ -38,12 +38,12 @@
       }
     },
     "preview": {
-      "distribution": "store",
+      "distribution": "internal",
       "ios": {
         "resourceClass": "m-medium"
       },
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "apk"
       },
       "env": {
         "EXPO_PUBLIC_ENV": "staging"
