@@ -37,6 +37,18 @@
         "EXPO_PUBLIC_ENV": "staging"
       }
     },
+    "preview": {
+      "distribution": "store",
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "staging"
+      }
+    },
     "production": {
       "distribution": "store",
       "ios": {
@@ -51,12 +63,14 @@
     }
   },
   "submit": {
+    "preview": {
+      "ios": {},
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json"
+      }
+    },
     "production": {
-      "ios": {
-        "appleId": "your-apple-id@example.com",
-        "ascAppId": "placeholder",
-        "appleTeamId": "placeholder"
-      },
+      "ios": {},
       "android": {
         "serviceAccountKeyPath": "./google-service-account.json"
       }

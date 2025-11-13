@@ -16,7 +16,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.sweepsteak.app",
       "buildNumber": "1",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -42,11 +45,12 @@
         "projectId": "beb39d44-bd25-4231-81ae-578a80713cbf"
       }
     },
-    "owner": "karamvir.mangat",
+    "owner": "sweepstake",
     "plugins": [
       "expo-secure-store",
       "expo-font",
-      "@react-native-firebase/app"
+      "@react-native-firebase/app",
+      "./plugins/withModularHeaders.js"
     ]
   }
 }

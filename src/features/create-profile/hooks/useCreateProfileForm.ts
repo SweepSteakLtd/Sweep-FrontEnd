@@ -282,7 +282,7 @@ export const useCreateProfileForm = () => {
       first_name: formData.firstName,
       last_name: formData.lastName,
       nickname: formData.nickname || undefined,
-      phone_number: formData.phoneNumber,
+      phone_number: formData.verifiedPhoneNumber,
       date_of_birth: formData.dateOfBirth ? format(formData.dateOfBirth, 'yyyy-MM-dd') : '',
       bio: formData.bio || undefined,
       deposit_limit: {
@@ -297,7 +297,7 @@ export const useCreateProfileForm = () => {
       betting_limit: formData.bettingLimit ? poundsToPence(formData.bettingLimit) : undefined,
       address: {
         line1: formData.address1,
-        line2: formData.address2 || undefined,
+        line2: formData.address2,
         line3: formData.address3 || undefined,
         town: formData.city,
         county: formData.county || undefined,

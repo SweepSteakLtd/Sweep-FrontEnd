@@ -133,6 +133,9 @@ export const AddressLookup = ({
     let postalTown = '';
     let postalCode = '';
     let sublocality = '';
+    let sublocalityLevel1 = '';
+    let sublocalityLevel2 = '';
+    let neighborhood = '';
     let administrativeAreaLevel2 = '';
 
     components.forEach((component) => {
@@ -145,8 +148,14 @@ export const AddressLookup = ({
         postalTown = component.long_name;
       } else if (types.includes('locality')) {
         locality = component.long_name;
+      } else if (types.includes('sublocality_level_1')) {
+        sublocalityLevel1 = component.long_name;
+      } else if (types.includes('sublocality_level_2')) {
+        sublocalityLevel2 = component.long_name;
       } else if (types.includes('sublocality')) {
         sublocality = component.long_name;
+      } else if (types.includes('neighborhood')) {
+        neighborhood = component.long_name;
       } else if (types.includes('postal_code')) {
         postalCode = component.long_name;
       } else if (types.includes('administrative_area_level_2')) {
@@ -155,11 +164,14 @@ export const AddressLookup = ({
     });
 
     const address1Line = [streetNumber, route].filter(Boolean).join(' ');
-    const cityName = postalTown || locality || sublocality;
+    // Use sublocality or neighborhood for address line 2
+    const address2Line =
+      sublocalityLevel2 || sublocalityLevel1 || sublocality || neighborhood || '';
+    const cityName = postalTown || locality;
 
     return {
       address1: address1Line,
-      address2: '',
+      address2: address2Line,
       address3: '',
       city: cityName,
       county: administrativeAreaLevel2,
@@ -189,7 +201,7 @@ export const AddressLookup = ({
 
         <Input
           variant="light"
-          label="Address Line 2 (Optional)"
+          label="Address Line 2"
           value={address2}
           onChangeText={(text) =>
             onAddressChange({ address1, address2: text, address3, city, county, postcode })
@@ -301,7 +313,7 @@ export const AddressLookup = ({
 
           <Input
             variant="light"
-            label="Address Line 2 (Optional)"
+            label="Address Line 2"
             value={address2}
             onChangeText={(text) =>
               onAddressChange({ address1, address2: text, address3, city, county, postcode })
