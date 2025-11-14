@@ -43,7 +43,9 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
 
   const poll = useCallback(async () => {
     const instanceId = instanceIdRef.current;
-    if (!instanceId) return;
+    if (!instanceId) {
+      return;
+    }
 
     const currentAttempt = attemptCountRef.current + 1;
 

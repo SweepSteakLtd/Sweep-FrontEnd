@@ -160,7 +160,8 @@ export const CreateProfile = () => {
     return <SuccessState />;
   }
 
-  // Error state
+  // Error state - only for profile creation failures
+  // Verification failures navigate to VerificationPending screen instead
   if (screenState === 'error') {
     return <ErrorState errorMessage={errorMessage} onRetry={handleRetry} />;
   }

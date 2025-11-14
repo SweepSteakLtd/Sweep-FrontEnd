@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { firebaseAuth } from '~/lib/firebase';
-import { api } from '../apiClient';
+import { api, ApiError } from '../apiClient';
 import { User } from './types';
 
 // Query Keys
@@ -41,7 +41,14 @@ export const useGetUser = (enabled: boolean = true) => {
     queryKey: userQueryKeys.user,
     queryFn: fetchUser,
     enabled: enabled && !!firebaseAuth.currentUser, // Only fetch if user is authenticated
-    retry: 3, // Retry failed requests 3 times (helps with transient network issues)
+    retry: (failureCount, error) => {
+      // Don't retry on 403 (user doesn't exist) or 404 (profile not found)
+      if (error instanceof ApiError && (error.status === 403 || error.status === 404)) {
+        return false;
+      }
+      // Retry other errors up to 3 times (network issues, 500s, etc.)
+      return failureCount < 3;
+    },
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
   });
 };

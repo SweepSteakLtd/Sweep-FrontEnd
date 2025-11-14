@@ -1,10 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Address } from '~/components/AddressLookup/AddressLookup';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
+import { userQueryKeys } from '~/services/apis/User/useGetUser';
 import { poundsToPence } from '~/utils/currency';
 import type { PhoneNumberStepHandle } from '../components/PhoneNumberStep/PhoneNumberStep';
 import type { VerificationCodeStepHandle } from '../components/VerificationCodeStep/VerificationCodeStep';
@@ -14,6 +16,7 @@ import {
   personalDetailsSchema,
 } from '../screens/CreateProfile/validation';
 import { useCreateProfile } from './useCreateProfile';
+import { useGBGVerification } from './useGBGVerification';
 import { usePhoneVerification } from './usePhoneVerification';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -88,6 +91,7 @@ export type ScreenState = 'form' | 'loading' | 'success' | 'error';
 
 export const useCreateProfileForm = () => {
   const navigation = useNavigation<NavigationProp>();
+  const queryClient = useQueryClient();
   const phoneNumberRef = useRef<PhoneNumberStepHandle>(null);
   const verificationCodeRef = useRef<VerificationCodeStepHandle>(null);
 
@@ -100,6 +104,41 @@ export const useCreateProfileForm = () => {
 
   const { createProfile, loading } = useCreateProfile();
   const phoneVerification = usePhoneVerification();
+  const gbgVerification = useGBGVerification();
+
+  // Helper to show success state and navigate to Dashboard
+  const showSuccessAndNavigate = async () => {
+    // Invalidate user query to fetch updated user data with verification status
+    await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
+
+    setLoadingComplete(true);
+    setTimeout(() => {
+      setScreenState('success');
+      setTimeout(() => {
+        navigation.navigate('Dashboard');
+      }, 3000);
+    }, 500);
+  };
+
+  // Monitor GBG verification status
+  useEffect(() => {
+    const { status } = gbgVerification.result;
+
+    if (!status) return;
+
+    if (status === 'PASS') {
+      // Verification passed - show success and navigate to dashboard
+      showSuccessAndNavigate();
+    } else if (status === 'MANUAL' || status === 'FAIL') {
+      // Verification failed or requires manual review - navigate to VerificationPending screen
+      gbgVerification.stopPolling();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'VerificationPending' }],
+      });
+    }
+    // IN_PROGRESS - keep showing loading screen
+  }, [gbgVerification.result, navigation]);
 
   // Map field names to their corresponding steps
   const getStepForField = (fieldName: string): number | null => {
@@ -306,18 +345,21 @@ export const useCreateProfileForm = () => {
       },
     });
 
-    if (result.success) {
-      // Signal loading complete so progress bar completes to 100%
-      setLoadingComplete(true);
-      // Wait for progress bar to reach 100%, then show success
-      setTimeout(() => {
-        setScreenState('success');
-        // Navigate to dashboard after celebration
-        setTimeout(() => {
-          navigation.navigate('Dashboard');
-        }, 3000);
-      }, 500);
+    if (result.success && result.user) {
+      // Check if we have a kyc_instance_id to start GBG verification polling
+      // API returns {data: {...}} structure
+      const instanceId = result.user.data.kyc_instance_id;
+
+      if (instanceId) {
+        // Start polling for GBG verification
+        gbgVerification.startPolling(instanceId);
+        // Keep loading state while polling
+      } else {
+        // If no instance ID, proceed to success directly
+        showSuccessAndNavigate();
+      }
     } else if (result.error) {
+      // Profile creation failed - show error with retry button
       setErrorMessage(result.error);
       setScreenState('error');
     }

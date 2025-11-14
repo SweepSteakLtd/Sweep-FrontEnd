@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { api } from '../apiClient';
-import { User } from './types';
-import { userQueryKeys } from './useGetUser';
+import { UserResponse } from './types';
 
 export interface CreateUserProfileParams {
   first_name: string;
@@ -29,21 +28,18 @@ export interface CreateUserProfileParams {
 }
 
 // API Function - Profile creation can take 10-15 seconds
-const createUserProfile = async (params: CreateUserProfileParams): Promise<User> => {
-  return api.post<User>('/api/users', params, undefined, 20000); // 20 second timeout
+const createUserProfile = async (params: CreateUserProfileParams): Promise<UserResponse> => {
+  return api.post<UserResponse>('/api/users', params, undefined, 20000); // 20 second timeout
 };
 
 /**
- * Hook to update user profile via PUT /api/users/me
+ * Hook to create user profile via POST /api/users
+ *
+ * Note: Does NOT invalidate user query on success - this is handled by the caller
+ * after GBG verification polling completes to prevent premature navigation
  */
 export const useCreateUserProfile = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: createUserProfile,
-    onSuccess: () => {
-      // Invalidate user query to refetch updated data
-      queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
-    },
   });
 };

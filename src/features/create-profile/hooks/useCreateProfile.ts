@@ -1,20 +1,17 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { UserResponse } from '~/services/apis/User/types';
 import {
   CreateUserProfileParams,
   useCreateUserProfile,
 } from '~/services/apis/User/useCreateUserProfile';
-import { userQueryKeys } from '~/services/apis/User/useGetUser';
-import { User } from '~/services/apis/schemas';
 
 export interface CreateProfileResult {
   success: boolean;
   error?: string;
-  user?: User;
+  user?: UserResponse;
 }
 
 export const useCreateProfile = () => {
-  const queryClient = useQueryClient();
   const createProfileMutation = useCreateUserProfile();
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +22,8 @@ export const useCreateProfile = () => {
 
     try {
       const user = await createProfileMutation.mutateAsync(profileData);
-      // Invalidate user query to trigger refetch
-      await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
+      // DON'T invalidate user query here - let the GBG verification polling complete first
+      // The query will be invalidated when the user navigates away or verification completes
       setLoading(false);
       return { success: true, user };
     } catch (error: unknown) {
