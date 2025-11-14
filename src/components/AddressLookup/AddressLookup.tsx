@@ -201,7 +201,7 @@ export const AddressLookup = ({
 
         <Input
           variant="light"
-          label="Address Line 2"
+          label="Address Line 2 (Optional)"
           value={address2}
           onChangeText={(text) =>
             onAddressChange({ address1, address2: text, address3, city, county, postcode })
@@ -313,7 +313,7 @@ export const AddressLookup = ({
 
           <Input
             variant="light"
-            label="Address Line 2"
+            label="Address Line 2 (Optional)"
             value={address2}
             onChangeText={(text) =>
               onAddressChange({ address1, address2: text, address3, city, county, postcode })

@@ -1,6 +1,8 @@
 // Firebase Web SDK for authentication
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+// @ts-ignore - getReactNativePersistence exists in the React Native bundle but is missing from TypeScript definitions
+import { getReactNativePersistence, initializeAuth } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,5 +17,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication and get a reference to the service
-export const firebaseAuth = getAuth(app);
+// Initialize Firebase Authentication with AsyncStorage persistence for React Native
+export const firebaseAuth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});

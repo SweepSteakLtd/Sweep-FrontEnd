@@ -47,10 +47,16 @@ export const Login = () => {
 
     if (loginResult.success) {
       if (loginResult.profileComplete) {
-        // User has profile - show T&C first, then go to Dashboard
-        navigation.navigate('TermsAndConditions', {
-          nextScreen: 'Dashboard',
-        });
+        // User has profile - check if verified
+        if (!loginResult.isVerified) {
+          // User is not verified - show verification pending screen
+          navigation.navigate('VerificationPending');
+        } else {
+          // User is verified - show T&C first, then go to Dashboard
+          navigation.navigate('TermsAndConditions', {
+            nextScreen: 'Dashboard',
+          });
+        }
       } else {
         // User needs to complete profile - show T&C first
         navigation.navigate('TermsAndConditions', {

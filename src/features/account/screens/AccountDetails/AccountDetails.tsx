@@ -146,7 +146,27 @@ export const AccountDetails = () => {
           <Section>
             <SectionTitle>Residential Address</SectionTitle>
             <InputRow>
-              <Input label="Address" value="" editable={false} placeholder="Address" />
+              <Input
+                label="Address"
+                value={
+                  user?.address
+                    ? [
+                        user.address.line1,
+                        user.address.line2,
+                        user.address.line3,
+                        user.address.town,
+                        user.address.county,
+                        user.address.postcode,
+                      ]
+                        .filter(Boolean)
+                        .join('\n')
+                    : ''
+                }
+                editable={false}
+                multiline
+                numberOfLines={6}
+                placeholder="Address"
+              />
             </InputRow>
           </Section>
 

@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-11-06T23:13:41.207Z
+ * Generated: 2025-11-14T19:14:30.777Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -43,17 +43,18 @@ export const userSchema = z.object({
   exclusion_ending: z.string().optional(),
   address: z
     .object({
-      street_name: z.string().optional(),
-      street_number: z.number().optional(),
-      unit: z.string().optional(),
-      postal_code: z.string().optional(),
-      city: z.string().optional(),
-      state_province: z.string().optional(),
-      country_code: z.string().optional(),
+      line1: z.string().optional(),
+      line2: z.string().optional(),
+      line3: z.string().optional(),
+      town: z.string().optional(),
+      county: z.string().optional(),
+      postcode: z.string().optional(),
+      country: z.string().optional(),
     })
     .optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
+  status: z.string().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;
@@ -123,6 +124,16 @@ export const tournamentSchema = z.object({
     .default([]),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
+  colours: z
+    .object({
+      primary: z.string().optional(),
+      secondary: z.string().optional(),
+      highlight: z.string().optional(),
+    })
+    .optional(),
+  sport: z.string().optional(),
+  rules: z.array(z.string()).optional().default([]),
+  instructions: z.array(z.string()).optional().default([]),
 });
 
 export type Tournament = z.infer<typeof tournamentSchema>;
@@ -265,6 +276,16 @@ export const leagueSchema = z.object({
       maximum_cut_amount: z.number().optional(),
       maximum_score_generator: z.number().optional(),
       players: z.array(z.string()).optional().default([]),
+      colours: z
+        .object({
+          primary: z.string().optional(),
+          secondary: z.string().optional(),
+          highlight: z.string().optional(),
+        })
+        .optional(),
+      sport: z.string().optional(),
+      rules: z.array(z.string()).optional().default([]),
+      instructions: z.array(z.string()).optional().default([]),
       created_at: z.string().optional(),
       updated_at: z.string().optional(),
     })

@@ -15,6 +15,7 @@ export const AuthGuard = () => {
   const { isAuthenticated } = useAuth();
   const previouslyAuthenticated = useRef(false);
 
+  // Handle auth state changes (logout/token expiry)
   useEffect(() => {
     // If user was authenticated but is now not authenticated
     // (token expired, signed out remotely, etc.)

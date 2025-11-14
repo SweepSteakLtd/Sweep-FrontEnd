@@ -6,7 +6,7 @@ import { useGetUser } from '~/services/apis/User/useGetUser';
 import { getAuthErrorMessage } from './utils/authErrors';
 
 export type LoginResult =
-  | { success: true; profileComplete: true }
+  | { success: true; profileComplete: true; isVerified: boolean }
   | { success: true; profileComplete: false }
   | { success: false; error: string };
 
@@ -40,8 +40,9 @@ export const useLogin = () => {
         setLoading(false);
 
         if (userData) {
-          // Profile exists - full success
-          return { success: true, profileComplete: true };
+          // Profile exists - check verification status
+          const isVerified = userData.is_identity_verified === true;
+          return { success: true, profileComplete: true, isVerified };
         } else {
           // No profile (404 response) - needs profile setup
           return { success: true, profileComplete: false };

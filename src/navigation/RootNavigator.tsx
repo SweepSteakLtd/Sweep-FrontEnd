@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from 'styled-components/native';
 import { AuthGuard } from '~/components/AuthGuard';
 import { BackButton } from '~/components/BackButton/BackButton';
+import { IdentityGuard } from '~/components/IdentityGuard';
 import { AccountDetails } from '~/features/account/screens/AccountDetails/AccountDetails';
 import { Security } from '~/features/account/screens/Security/Security';
 import { Activity } from '~/features/activity/screens/Activity/Activity';
@@ -24,6 +25,7 @@ import { Splash } from '~/features/onboarding/screens/Splash/Splash';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
 import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
+import { VerificationPending } from '~/features/verification/screens/VerificationPending/VerificationPending';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -64,6 +66,7 @@ export const RootNavigator = () => {
       }}
     >
       <AuthGuard />
+      <IdentityGuard />
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={({ navigation }) => ({
@@ -97,6 +100,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="CreateProfile" component={CreateProfile} />
+        <Stack.Screen name="VerificationPending" component={VerificationPending} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="AccountDetails" component={AccountDetails} />

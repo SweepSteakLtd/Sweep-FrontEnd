@@ -5,10 +5,12 @@ import {
   useCreateUserProfile,
 } from '~/services/apis/User/useCreateUserProfile';
 import { userQueryKeys } from '~/services/apis/User/useGetUser';
+import { User } from '~/services/apis/schemas';
 
 export interface CreateProfileResult {
   success: boolean;
   error?: string;
+  user?: User;
 }
 
 export const useCreateProfile = () => {
@@ -22,11 +24,11 @@ export const useCreateProfile = () => {
     setLoading(true);
 
     try {
-      await createProfileMutation.mutateAsync(profileData);
+      const user = await createProfileMutation.mutateAsync(profileData);
       // Invalidate user query to trigger refetch
       await queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
       setLoading(false);
-      return { success: true };
+      return { success: true, user };
     } catch (error: unknown) {
       setLoading(false);
       let errorMessage = 'An unexpected error occurred. Please try again.';

@@ -8,6 +8,7 @@ export type RootStackParamList = {
   };
   CreateAccount: { email?: string; password?: string } | undefined;
   CreateProfile: undefined;
+  VerificationPending: undefined;
   Dashboard: undefined;
   Profile: undefined;
   AccountDetails: undefined;
