@@ -1,4 +1,5 @@
 import { firebaseAuth } from '~/lib/firebase';
+import { navigationRef } from '~/navigation/navigationRef';
 
 /**
  * Centralized API client for making authenticated requests
@@ -79,6 +80,18 @@ export async function apiClient<T, TBody = unknown>(
       } catch {
         // If response is not JSON, use default message
       }
+
+      // Handle 401 Unauthorized - sign out and redirect to Login
+      if (response.status === 401) {
+        await firebaseAuth.signOut();
+        if (navigationRef.isReady()) {
+          navigationRef.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          });
+        }
+      }
+
       throw new ApiError(response.status, errorMessage);
     }
 

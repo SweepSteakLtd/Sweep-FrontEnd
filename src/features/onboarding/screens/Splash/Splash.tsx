@@ -59,8 +59,16 @@ export const Splash = () => {
               queryFn: fetchUser,
             });
 
-            // userData is null only for 404 (profile doesn't exist)
-            targetScreen = userData ? 'Dashboard' : 'CreateProfile';
+            if (!userData) {
+              // No profile exists (404) - go to CreateProfile
+              targetScreen = 'CreateProfile';
+            } else if (userData.is_identity_verified === false) {
+              // Profile exists but not verified - go to VerificationPending
+              targetScreen = 'VerificationPending';
+            } else {
+              // Profile exists and verified - go to Dashboard
+              targetScreen = 'Dashboard';
+            }
           } catch (error) {
             console.error('[DEBUG]: Failed to check user profile:', error);
             // If there was a server error (500), network error, etc.
