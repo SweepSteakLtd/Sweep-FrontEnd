@@ -23,28 +23,22 @@ const formatJSON = (data: unknown): string => {
 export const logApiRequest = (url: string, method: string, init?: RequestInit) => {
   if (!DEBUG_API || !url.includes('/api/')) return;
 
-  console.log('\n┌─────────────────────────────────────────────────────────────');
-  console.log(`│ 🔵 API REQUEST: ${method} ${url}`);
-  console.log('├─────────────────────────────────────────────────────────────');
+  const parts = [`🔵 API REQUEST: ${method} ${url}`];
 
   if (init?.headers) {
-    console.log('│ Headers:');
-    const formattedHeaders = formatJSON(init.headers);
-    formattedHeaders.split('\n').forEach((line) => console.log(`│   ${line}`));
+    parts.push(`Headers: ${formatJSON(init.headers)}`);
   }
 
   if (init?.body) {
     try {
       const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
-      console.log('│ Body:');
-      const formattedBody = formatJSON(body);
-      formattedBody.split('\n').forEach((line) => console.log(`│   ${line}`));
+      parts.push(`Body: ${formatJSON(body)}`);
     } catch {
-      console.log('│ Body:', init.body);
+      parts.push(`Body: ${init.body}`);
     }
   }
 
-  console.log('└─────────────────────────────────────────────────────────────\n');
+  console.log(parts.join('\n'));
 };
 
 /**
@@ -64,21 +58,18 @@ export const logApiResponse = async (
   const statusIcon = response.ok ? '🟢' : '🔴';
   const typeLabel = isMocked ? '📦 MOCKED' : '🌐 REAL';
 
-  console.log('\n┌─────────────────────────────────────────────────────────────');
-  console.log(`│ ${statusIcon} API RESPONSE: ${method} ${url}`);
-  console.log('├─────────────────────────────────────────────────────────────');
-  console.log(`│ Status: ${response.status} ${response.statusText}`);
-  console.log(`│ Type: ${typeLabel}`);
-  console.log('├─────────────────────────────────────────────────────────────');
+  const parts = [
+    `${statusIcon} API RESPONSE: ${method} ${url}`,
+    `Status: ${response.status} ${response.statusText}`,
+    `Type: ${typeLabel}`,
+  ];
 
   try {
     const data = await clonedResponse.json();
-    console.log('│ Response Data:');
-    const formattedData = formatJSON(data);
-    formattedData.split('\n').forEach((line) => console.log(`│   ${line}`));
+    parts.push(`Response Data: ${formatJSON(data)}`);
   } catch (error) {
-    console.log('│ Body: (not JSON or empty)');
+    parts.push('Body: (not JSON or empty)');
   }
 
-  console.log('└─────────────────────────────────────────────────────────────\n');
+  console.log(parts.join('\n'));
 };

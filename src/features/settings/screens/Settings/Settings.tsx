@@ -8,8 +8,10 @@ import { Switch } from '~/components/Switch/Switch';
 import { mockHandlers } from '~/lib/mocks/handlers/registry';
 import { refreshMockConfig } from '~/lib/mocks/interceptor';
 import {
+  getBypassVerification,
   getMockConfig,
   selectMockScenario,
+  setBypassVerification,
   setHandlerDelay,
   toggleGlobalMock,
   toggleMockHandler,
@@ -59,6 +61,7 @@ export const Settings = () => {
   const [config, setConfig] = useState<MockConfig | null>(null);
   const [handlers, setHandlers] = useState<HandlerWithConfig[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [bypassVerification, setBypassVerificationState] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     User: true,
     Tournament: true,
@@ -83,6 +86,10 @@ export const Settings = () => {
     setLoading(true);
     const mockConfig = await getMockConfig();
     setConfig(mockConfig);
+
+    // Load bypass verification flag
+    const bypassFlag = await getBypassVerification();
+    setBypassVerificationState(bypassFlag);
 
     // Merge handlers with config
     const handlersWithConfig: HandlerWithConfig[] = mockHandlers.map((handler) => ({
@@ -149,6 +156,11 @@ export const Settings = () => {
     await toggleGlobalMock(value);
     await refreshMockConfig();
     setConfig({ ...config, globalEnabled: value });
+  };
+
+  const handleBypassVerificationToggle = async (value: boolean) => {
+    await setBypassVerification(value);
+    setBypassVerificationState(value);
   };
 
   const handleHandlerToggle = async (handlerId: string, value: boolean) => {
@@ -313,6 +325,11 @@ export const Settings = () => {
           }
         >
           <Section>
+            <ToggleRow style={{ marginTop: 16 }}>
+              <ToggleLabel>Bypass Verification</ToggleLabel>
+              <Switch value={bypassVerification} onValueChange={handleBypassVerificationToggle} />
+            </ToggleRow>
+
             <ToggleRow>
               <ToggleLabel>Enable Mock APIs</ToggleLabel>
               <Switch value={config.globalEnabled} onValueChange={handleGlobalToggle} />

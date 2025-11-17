@@ -1,5 +1,6 @@
 import { logApiRequest, logApiResponse } from '~/lib/debug/apiLogger';
 import { mockHandlers } from './handlers/registry';
+import { processResponse } from './postRequestProcessors';
 import { getMockConfig } from './storage';
 import type { MockConfig, MockHandler } from './types';
 
@@ -153,8 +154,12 @@ const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promis
 
   // No mock matched or error occurred - use original fetch
   const response = await originalFetch(input, init);
-  await logApiResponse(url, method, response, false);
-  return response;
+
+  // Process the response through post-request processors (for real API responses only)
+  const processedResponse = await processResponse(url, response);
+
+  await logApiResponse(url, method, processedResponse, false);
+  return processedResponse;
 };
 
 /**

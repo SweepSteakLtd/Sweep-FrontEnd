@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { MockConfig } from './types';
 
 const MOCK_CONFIG_KEY = '@sweepsteak:mock_config';
+const BYPASS_VERIFICATION_KEY = '@sweepsteak:bypass_verification';
 
 /**
  * Get the current mock configuration
@@ -99,5 +100,30 @@ export const resetMockConfig = async (): Promise<void> => {
     console.log('[MockStorage]: Mock config reset to defaults');
   } catch (error) {
     console.error('[MockStorage]: Error resetting mock config:', error);
+  }
+};
+
+/**
+ * Get bypass verification flag
+ */
+export const getBypassVerification = async (): Promise<boolean> => {
+  try {
+    const stored = await AsyncStorage.getItem(BYPASS_VERIFICATION_KEY);
+    return stored === 'true';
+  } catch (error) {
+    console.error('[MockStorage]: Error loading bypass verification flag:', error);
+    return false;
+  }
+};
+
+/**
+ * Set bypass verification flag
+ */
+export const setBypassVerification = async (enabled: boolean): Promise<void> => {
+  try {
+    await AsyncStorage.setItem(BYPASS_VERIFICATION_KEY, enabled.toString());
+    console.log(`[MockStorage]: Bypass verification ${enabled ? 'enabled' : 'disabled'}`);
+  } catch (error) {
+    console.error('[MockStorage]: Error saving bypass verification flag:', error);
   }
 };
