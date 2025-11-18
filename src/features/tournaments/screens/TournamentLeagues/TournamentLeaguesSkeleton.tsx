@@ -2,8 +2,8 @@ import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { TabBar } from '~/components/TabBar/TabBar';
-import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
-import { SearchAndTabsWrapper } from '~/features/tournaments/components/JoinGameList/styles';
+import { SearchAndTabsWrapper } from '~/features/tournaments/components/JoinLeagueList/styles';
+import { LeagueCardSkeleton } from '~/features/tournaments/components/LeagueCard/LeagueCardSkeleton';
 import { Container, PotInfo, PotLabel } from './styles';
 
 const gameTabs = [
@@ -36,7 +36,7 @@ export const TournamentLeaguesSkeleton = () => {
 
         {/* Show 3 skeleton cards while loading */}
         {[...Array(3)].map((_, index) => (
-          <GameCardSkeleton key={index} />
+          <LeagueCardSkeleton key={index} />
         ))}
       </ScrollView>
     </Container>

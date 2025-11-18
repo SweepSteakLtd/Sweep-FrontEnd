@@ -1,7 +1,7 @@
 import { useTheme } from 'styled-components/native';
 import { Skeleton } from '~/components/Skeleton/Skeleton';
 
-export const GameCardSkeleton = () => {
+export const LeagueCardSkeleton = () => {
   const theme = useTheme();
 
   return (

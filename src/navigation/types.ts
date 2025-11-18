@@ -17,6 +17,7 @@ export type RootStackParamList = {
   Activity: undefined;
   TournamentLeagues: { tournamentId: string };
   CreateLeague: { tournamentId: string; defaultLeagueType?: 'public' | 'private' };
+  LeagueHome: { leagueId: string };
   BettingControls: undefined;
   DepositLimits: undefined;
   StakeLimits: undefined;

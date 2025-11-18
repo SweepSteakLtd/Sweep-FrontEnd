@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { leagueSchema, type League as LeagueSchema } from '../schemas';
+import { betSchema, leagueSchema, tournamentSchema, type League as LeagueSchema } from '../schemas';
 
 // Re-export League from the auto-generated schemas
 export type League = LeagueSchema;
@@ -12,6 +12,15 @@ export const createLeagueResponseSchema = leagueSchema.extend({
 });
 
 export type CreateLeagueResponse = z.infer<typeof createLeagueResponseSchema>;
+
+// League detail response from GET /api/leagues/:id includes tournament and user_bets
+export const leagueDetailResponseSchema = z.object({
+  league: leagueSchema,
+  tournament: tournamentSchema.optional(),
+  user_bets: z.array(betSchema).optional().default([]),
+});
+
+export type LeagueDetailResponse = z.infer<typeof leagueDetailResponseSchema>;
 
 // These types are not in OpenAPI spec yet, defining them locally
 export interface CreateLeagueRequest {

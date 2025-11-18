@@ -6,7 +6,7 @@ import { RefreshControl, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import { JoinGameList } from '~/features/tournaments/components/JoinGameList/JoinGameList';
+import { JoinLeagueList } from '~/features/tournaments/components/JoinLeagueList/JoinLeagueList';
 import { useDebouncedValue } from '~/hooks/useDebouncedValue';
 import type { RootStackParamList } from '~/navigation/types';
 import type { League } from '~/services/apis/League/types';
@@ -74,8 +74,9 @@ export const TournamentLeagues = () => {
   }, [activeGameTab, tournamentId, navigation]);
 
   const handleLeaguePress = (league: League) => {
-    // Navigate to league details
-    console.log('League pressed:', league.id);
+    if (league.id) {
+      navigation.navigate('LeagueHome', { leagueId: league.id });
+    }
   };
 
   // Show full skeleton only on true initial load (isLoading means no cached data)
@@ -127,15 +128,15 @@ export const TournamentLeagues = () => {
               decimals={2}
             />
           </PotInfo>
-          <JoinGameList
-            games={leagues}
-            onGamePress={handleLeaguePress}
-            onCreateGame={handleCreateLeague}
+          <JoinLeagueList
+            leagues={leagues}
+            onLeaguePress={handleLeaguePress}
+            onCreateLeague={handleCreateLeague}
             loading={leaguesFetching}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            activeGameTab={activeGameTab}
-            onGameTabChange={handleGameTabChange}
+            activeLeagueTab={activeGameTab}
+            onLeagueTabChange={handleGameTabChange}
           />
         </ScrollView>
       </Container>

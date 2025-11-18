@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native';
 import { Skeleton } from '~/components/Skeleton/Skeleton';
-import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
+import { LeagueCardSkeleton } from '~/features/tournaments/components/LeagueCard/LeagueCardSkeleton';
 import { Container, Header } from './styles';
 
 export const MyTeamsSkeleton = () => {
@@ -45,7 +45,7 @@ export const MyTeamsSkeleton = () => {
 
         {/* Team Cards Skeleton - Show 3 cards */}
         {[...Array(3)].map((_, index) => (
-          <GameCardSkeleton key={index} />
+          <LeagueCardSkeleton key={index} />
         ))}
       </ScrollView>
     </Container>

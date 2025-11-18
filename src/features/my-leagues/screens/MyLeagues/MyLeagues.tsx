@@ -1,8 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
+import { LeagueCard } from '~/features/tournaments/components/LeagueCard/LeagueCard';
+import type { RootStackParamList } from '~/navigation/types';
 import { useDeleteLeague } from '~/services/apis/League/useDeleteLeague';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetUser } from '~/services/apis/User/useGetUser';
@@ -25,8 +28,11 @@ import {
   StatValue,
 } from './styles';
 
+type MyLeaguesNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const MyLeagues = () => {
   const theme = useTheme();
+  const navigation = useNavigation<MyLeaguesNavigationProp>();
   const { data: user, refetch: refetchUser } = useGetUser();
   const {
     data: leagues,
@@ -95,13 +101,14 @@ export const MyLeagues = () => {
 
           {leagues && leagues.length > 0 ? (
             leagues.map((league, index) => (
-              <GameCard
+              <LeagueCard
                 key={league.id || index}
-                game={league}
+                league={league}
                 index={index}
                 onPress={() => {
-                  // TODO: Navigate to league details
-                  console.log('Navigate to league:', league.id);
+                  if (league.id) {
+                    navigation.navigate('LeagueHome', { leagueId: league.id });
+                  }
                 }}
                 onDelete={handleLeagueDelete}
               />
