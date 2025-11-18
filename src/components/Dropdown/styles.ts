@@ -6,9 +6,9 @@ export const Container = styled.View`
 `;
 
 export const Label = styled.Text`
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
   margin-bottom: 4px;
 `;
 

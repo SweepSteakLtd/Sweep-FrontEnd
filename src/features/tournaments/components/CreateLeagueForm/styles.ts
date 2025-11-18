@@ -1,19 +1,14 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-export const InputLabel = styled.Text`
-  font-size: 13px;
-  font-weight: 400;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
-  margin-bottom: 8px;
-  margin-top: 16px;
+export const FormContainer = styled.View`
+  padding: 20px;
 `;
 
 export const LeagueTypeRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
   margin-bottom: 16px;
 `;
 

@@ -45,15 +45,14 @@ export const Input: React.FC<InputProps> = ({
   };
 
   const hasEyeIcon = secureTextEntry === true;
-  const labelColor = isFocused ? theme.colors.text.primary : theme.colors.text.secondary;
 
   return (
     <Container>
       {label && (
         <Typography
           variant="label"
-          color={labelColor}
-          style={{ marginBottom: 4, fontSize: 13, fontWeight: '400' }}
+          color={theme.colors.text.tertiary}
+          style={{ marginBottom: 4, fontSize: 12, fontWeight: '400' }}
         >
           {label}
         </Typography>

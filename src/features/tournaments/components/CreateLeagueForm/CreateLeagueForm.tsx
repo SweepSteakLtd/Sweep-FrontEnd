@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Dropdown } from '~/components/Dropdown/Dropdown';
 import { Input } from '~/components/Input/Input';
 import { Switch } from '~/components/Switch/Switch';
+import { Typography } from '~/components/Typography/Typography';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import { useCreateLeague } from '~/services/apis/League/useCreateLeague';
 import type { Tournament } from '~/services/apis/Tournament/types';
 import { poundsToPence } from '~/utils/currency';
-import { ErrorText, InputLabel, LeagueTypeRow, SwitchLabel } from './styles';
+import { TimeSelectField } from '../TimeSelectField/TimeSelectField';
+import { ErrorText, FormContainer, LeagueTypeRow, SwitchLabel } from './styles';
 import { createLeagueSchema } from './validation';
 
 interface CreateLeagueFormProps {
@@ -22,9 +24,12 @@ interface CreateLeagueFormProps {
 
 interface FieldErrors extends Record<string, string | undefined> {
   leagueName?: string;
+  description?: string;
   tournamentId?: string;
   entryFee?: string;
   maxEntries?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export const CreateLeagueForm = ({
@@ -39,10 +44,13 @@ export const CreateLeagueForm = ({
   const createLeagueMutation = useCreateLeague();
 
   const [leagueName, setLeagueName] = useState('');
-  const [selectedTournamentId, setSelectedTournamentId] = useState(activeTournamentId);
+  const [description, setDescription] = useState('');
   const [leagueType, setLeagueType] = useState<'public' | 'private'>(defaultLeagueType);
+  const [selectedTournamentId, setSelectedTournamentId] = useState(activeTournamentId);
   const [entryFee, setEntryFee] = useState('');
   const [maxEntries, setMaxEntries] = useState('');
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [endTime, setEndTime] = useState<Date>(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [createError, setCreateError] = useState('');
 
@@ -54,12 +62,15 @@ export const CreateLeagueForm = ({
     }));
 
   const handleCreateLeague = async () => {
-    // Validate using Zod
+    // Validate all fields
     const validation = validateWithZod<FieldErrors>(createLeagueSchema, {
       leagueName,
+      description,
       tournamentId: selectedTournamentId,
       entryFee,
       maxEntries,
+      startTime,
+      endTime,
     });
 
     if (!validation.success) {
@@ -70,26 +81,31 @@ export const CreateLeagueForm = ({
     setFieldErrors({});
     setCreateError('');
 
-    // TODO: Add proper owner_id from auth context and other required fields
+    // Ensure start time is not in the past
+    const now = new Date();
+    const adjustedStartTime = startTime < now ? now : startTime;
+
     try {
       const response = await createLeagueMutation.mutateAsync({
         name: leagueName,
-        description: '',
+        description: description || undefined,
         entry_fee: poundsToPence(entryFee),
         max_participants: parseInt(maxEntries),
         rewards: [],
-        start_time: new Date().toISOString(),
-        end_time: new Date().toISOString(),
-        owner_id: 'current-user-id', // TODO: Get from auth context
+        start_time: adjustedStartTime.toISOString(),
+        end_time: endTime.toISOString(),
         tournament_id: selectedTournamentId,
         type: leagueType,
       });
 
       // Reset form on success
       setLeagueName('');
+      setDescription('');
       setSelectedTournamentId(activeTournamentId);
       setEntryFee('');
       setMaxEntries('');
+      setStartTime(new Date());
+      setEndTime(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
 
       // If private league, call the callback to show join code
       if (leagueType === 'private' && response.join_code) {
@@ -109,81 +125,140 @@ export const CreateLeagueForm = ({
   // Expose the handler to parent component
   useEffect(() => {
     onSubmit?.(handleCreateLeague);
-  }, [leagueName, selectedTournamentId, entryFee, maxEntries, leagueType]);
+  }, [
+    leagueName,
+    description,
+    selectedTournamentId,
+    entryFee,
+    maxEntries,
+    startTime,
+    endTime,
+    leagueType,
+  ]);
 
   return (
-    <View style={{ paddingHorizontal: 20 }}>
-      <Input
-        label="League Name"
-        value={leagueName}
-        onChangeText={(text) => {
-          setLeagueName(text);
-          if (fieldErrors.leagueName) {
-            setFieldErrors((prev) => ({ ...prev, leagueName: undefined }));
-          }
-        }}
-        placeholder="League Name"
-        placeholderTextColor={theme.colors.text.secondary}
-        error={fieldErrors.leagueName}
-      />
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <FormContainer>
+        <LeagueTypeRow>
+          <Typography
+            variant="label"
+            color={theme.colors.text.tertiary}
+            style={{ fontSize: 12, fontWeight: '400' }}
+          >
+            League Type
+          </Typography>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <SwitchLabel isActive={leagueType === 'public'}>Public</SwitchLabel>
+            <Switch
+              value={leagueType === 'private'}
+              onValueChange={(value) => setLeagueType(value ? 'private' : 'public')}
+            />
+            <SwitchLabel isActive={leagueType === 'private'}>Private</SwitchLabel>
+          </View>
+        </LeagueTypeRow>
 
-      <Dropdown
-        label="Tournament"
-        value={selectedTournamentId}
-        options={tournamentOptions}
-        onValueChange={(value) => {
-          setSelectedTournamentId(value);
-          if (fieldErrors.tournamentId) {
-            setFieldErrors((prev) => ({ ...prev, tournamentId: undefined }));
-          }
-        }}
-        placeholder="Select a tournament"
-        error={fieldErrors.tournamentId}
-      />
+        <Input
+          label="League Name"
+          value={leagueName}
+          onChangeText={(text) => {
+            setLeagueName(text);
+            if (fieldErrors.leagueName) {
+              setFieldErrors((prev) => ({ ...prev, leagueName: undefined }));
+            }
+          }}
+          placeholder="Enter league name"
+          placeholderTextColor={theme.colors.text.secondary}
+          error={fieldErrors.leagueName}
+        />
 
-      <LeagueTypeRow>
-        <InputLabel>League Type</InputLabel>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <SwitchLabel isActive={leagueType === 'public'}>Public</SwitchLabel>
-          <Switch
-            value={leagueType === 'private'}
-            onValueChange={(value) => setLeagueType(value ? 'private' : 'public')}
-          />
-          <SwitchLabel isActive={leagueType === 'private'}>Private</SwitchLabel>
-        </View>
-      </LeagueTypeRow>
+        <Input
+          label="Description (Optional)"
+          value={description}
+          onChangeText={(text) => {
+            setDescription(text);
+            if (fieldErrors.description) {
+              setFieldErrors((prev) => ({ ...prev, description: undefined }));
+            }
+          }}
+          placeholder="Enter a description for your league"
+          placeholderTextColor={theme.colors.text.secondary}
+          error={fieldErrors.description}
+          multiline
+          numberOfLines={3}
+        />
 
-      <Input
-        label="Entry Fee (min £20 max £1500)"
-        variant="currency"
-        value={entryFee}
-        onChangeText={(text) => {
-          setEntryFee(text);
-          if (fieldErrors.entryFee) {
-            setFieldErrors((prev) => ({ ...prev, entryFee: undefined }));
-          }
-        }}
-        placeholder="40"
-        placeholderTextColor={theme.colors.text.secondary}
-        error={fieldErrors.entryFee}
-      />
+        <Dropdown
+          label="Tournament"
+          value={selectedTournamentId}
+          options={tournamentOptions}
+          onValueChange={(value) => {
+            setSelectedTournamentId(value);
+            if (fieldErrors.tournamentId) {
+              setFieldErrors((prev) => ({ ...prev, tournamentId: undefined }));
+            }
+          }}
+          placeholder="Select a tournament"
+          error={fieldErrors.tournamentId}
+        />
 
-      <Input
-        label="Max ENTRIES per user"
-        value={maxEntries}
-        onChangeText={(text) => {
-          setMaxEntries(text);
-          if (fieldErrors.maxEntries) {
-            setFieldErrors((prev) => ({ ...prev, maxEntries: undefined }));
-          }
-        }}
-        placeholder="=3"
-        keyboardType="numeric"
-        placeholderTextColor={theme.colors.text.secondary}
-        error={fieldErrors.maxEntries}
-      />
+        <Input
+          label="Entry Fee (min £20 max £1500)"
+          variant="currency"
+          value={entryFee}
+          onChangeText={(text) => {
+            setEntryFee(text);
+            if (fieldErrors.entryFee) {
+              setFieldErrors((prev) => ({ ...prev, entryFee: undefined }));
+            }
+          }}
+          placeholder="40"
+          placeholderTextColor={theme.colors.text.secondary}
+          error={fieldErrors.entryFee}
+        />
 
-      {createError ? <ErrorText>{createError}</ErrorText> : null}
-    </View>
+        <Input
+          label="Max entries per user"
+          value={maxEntries}
+          onChangeText={(text) => {
+            setMaxEntries(text);
+            if (fieldErrors.maxEntries) {
+              setFieldErrors((prev) => ({ ...prev, maxEntries: undefined }));
+            }
+          }}
+          placeholder="3"
+          keyboardType="numeric"
+          placeholderTextColor={theme.colors.text.secondary}
+          error={fieldErrors.maxEntries}
+        />
+
+        <TimeSelectField
+          label="Start Time"
+          value={startTime}
+          onValueChange={(date) => {
+            setStartTime(date);
+            if (fieldErrors.startTime) {
+              setFieldErrors((prev) => ({ ...prev, startTime: undefined }));
+            }
+          }}
+          minimumDate={new Date()}
+          error={fieldErrors.startTime}
+        />
+
+        <TimeSelectField
+          label="End Time"
+          value={endTime}
+          onValueChange={(date) => {
+            setEndTime(date);
+            if (fieldErrors.endTime) {
+              setFieldErrors((prev) => ({ ...prev, endTime: undefined }));
+            }
+          }}
+          minimumDate={startTime}
+          error={fieldErrors.endTime}
+        />
+
+        {createError ? <ErrorText style={{ marginTop: 16 }}>{createError}</ErrorText> : null}
+      </FormContainer>
+    </ScrollView>
   );
 };
