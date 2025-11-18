@@ -37,7 +37,7 @@ export type LeagueData = {
   currentParticipants: number;
   maxParticipants: number;
   isLoading: boolean;
-  error: any;
+  error: Error | null;
 };
 
 const mergeHolesAndAds = (tournament: Tournament | undefined): CarouselItem[] => {
