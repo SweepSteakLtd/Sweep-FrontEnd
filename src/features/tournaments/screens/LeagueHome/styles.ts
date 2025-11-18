@@ -61,40 +61,6 @@ export const InfoValue = styled.Text`
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
 `;
 
-export const TournamentBanner = styled.View`
-  margin: 16px;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
-`;
-
-export const TournamentImage = styled.Image`
-  width: 100%;
-  height: 180px;
-`;
-
-export const TournamentOverlay = styled.View`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px;
-  background-color: rgba(0, 0, 0, 0.6);
-`;
-
-export const TournamentName = styled.Text`
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 4px;
-`;
-
-export const TournamentLocation = styled.Text`
-  font-size: 14px;
-  font-weight: 400;
-  color: #ffffff;
-`;
-
 export const ButtonsContainer = styled.View`
   padding: 0 16px;
   gap: 12px;

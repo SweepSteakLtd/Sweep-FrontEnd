@@ -3,6 +3,7 @@ import { useRoute } from '@react-navigation/native';
 import { View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
+import { CoverCard } from '~/components/CoverCard/CoverCard';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Typography } from '~/components/Typography/Typography';
 import type { RootStackParamList } from '~/navigation/types';
@@ -24,11 +25,6 @@ import {
   TimeRow,
   TimeSection,
   TimeValue,
-  TournamentBanner,
-  TournamentImage,
-  TournamentLocation,
-  TournamentName,
-  TournamentOverlay,
 } from './styles';
 
 type LeagueHomeRouteProp = RouteProp<RootStackParamList, 'LeagueHome'>;
@@ -111,22 +107,14 @@ export const LeagueHome = () => {
 
           {/* Tournament Banner */}
           {tournament && (
-            <TournamentBanner>
-              <TournamentImage
-                source={{
-                  uri:
-                    tournament.cover_picture ||
-                    'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=800&h=400&fit=crop',
-                }}
-                resizeMode="cover"
+            <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
+              <CoverCard
+                imageUri={tournament.cover_picture}
+                title={tournament.name || 'Tournament'}
+                subtitle={tournament.description}
+                height={180}
               />
-              <TournamentOverlay>
-                <TournamentName>{tournament.name || 'Tournament'}</TournamentName>
-                {tournament.description && (
-                  <TournamentLocation>{tournament.description}</TournamentLocation>
-                )}
-              </TournamentOverlay>
-            </TournamentBanner>
+            </View>
           )}
 
           {/* Action Buttons */}

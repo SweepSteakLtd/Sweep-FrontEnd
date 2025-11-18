@@ -1,5 +1,5 @@
+import { CoverCard } from '~/components/CoverCard/CoverCard';
 import type { Tournament } from '~/services/apis/schemas';
-import { Card, CardWrapper, TournamentImage, TournamentOverlay, TournamentTitle } from './styles';
 
 interface TournamentCardProps {
   tournament: Tournament;
@@ -10,15 +10,15 @@ export const TournamentCard = ({ tournament, onPress }: TournamentCardProps) => 
   const year = tournament.starts_at ? new Date(tournament.starts_at).getFullYear() : '';
 
   return (
-    <CardWrapper>
-      <Card onPress={onPress} activeOpacity={0.8}>
-        <TournamentImage source={{ uri: tournament.cover_picture }} />
-        <TournamentOverlay>
-          <TournamentTitle>
-            {tournament.name} {year}
-          </TournamentTitle>
-        </TournamentOverlay>
-      </Card>
-    </CardWrapper>
+    <CoverCard
+      imageUri={tournament.cover_picture}
+      title={`${tournament.name} ${year}`}
+      subtitle={tournament.description}
+      onPress={onPress}
+      height={180}
+      titleSize={18}
+      titleWeight="700"
+      overlayPadding={16}
+    />
   );
 };
