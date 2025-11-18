@@ -16,13 +16,13 @@ import { StakeLimits } from '~/features/betting-controls/screens/StakeLimits/Sta
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
+import { LeagueHome } from '~/features/leagues/screens/LeagueHome/LeagueHome';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
 import { MyLeagues } from '~/features/my-leagues/screens/MyLeagues/MyLeagues';
 import { MyTeams } from '~/features/my-teams/screens/MyTeams/MyTeams';
 import { Splash } from '~/features/onboarding/screens/Splash/Splash';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
-import { LeagueHome } from '~/features/tournaments/screens/LeagueHome/LeagueHome';
 import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
 import { VerificationPending } from '~/features/verification/screens/VerificationPending/VerificationPending';
 import { navigationRef } from './navigationRef';

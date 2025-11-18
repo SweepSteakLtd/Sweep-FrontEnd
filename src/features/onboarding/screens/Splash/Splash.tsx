@@ -13,6 +13,7 @@ import Animated, {
 import { Icon } from '~/components/Icon/Icon';
 import { firebaseAuth } from '~/lib/firebase';
 import type { RootStackParamList } from '~/navigation/types';
+import { ApiError } from '~/services/apis/apiClient';
 import { fetchUser, userQueryKeys } from '~/services/apis/User/useGetUser';
 import { AppName, Container, GoldCircle, LogoContainer } from './styles';
 
@@ -71,11 +72,16 @@ export const Splash = () => {
             }
           } catch (error) {
             console.error('[DEBUG]: Failed to check user profile:', error);
-            // If there was a server error (500), network error, etc.
-            // Sign out the user and send them back to Login
-            // Don't send them to CreateProfile as we don't know if profile exists
-            await firebaseAuth.signOut();
-            targetScreen = 'Login';
+            // Only sign out for 401 Unauthorized errors
+            // For network errors, 500s, etc., let them through to Dashboard
+            if (error instanceof ApiError && error.status === 401) {
+              await firebaseAuth.signOut();
+              targetScreen = 'Login';
+            } else {
+              // For other errors (network, 500, etc.), still go to Dashboard
+              // The dashboard can show an error state if needed
+              targetScreen = 'Dashboard';
+            }
           }
         } else {
           // Not authenticated - go to Login

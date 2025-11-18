@@ -7,7 +7,6 @@ export const useGetLeague = (leagueId: string) => {
     queryKey: ['league', leagueId],
     queryFn: async () => {
       const response = await api.get<{ data: LeagueDetailResponse }>(`/api/leagues/${leagueId}`);
-      console.log('League API Response:', JSON.stringify(response, null, 2));
       return response.data;
     },
     enabled: !!leagueId,
