@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-export const Card = styled.TouchableOpacity`
+export const Card = styled.TouchableOpacity<{ isFinished?: boolean }>`
   padding: 10px 20px;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
   border-radius: 12px;
@@ -12,6 +12,7 @@ export const Card = styled.TouchableOpacity`
   shadow-opacity: 0.15;
   shadow-radius: 6px;
   elevation: 3;
+  opacity: ${({ isFinished }: { isFinished?: boolean }) => (isFinished ? 0.5 : 1)};
 `;
 
 export const CardContainer = styled.View`
@@ -31,10 +32,11 @@ export const RightSection = styled.View`
   gap: 6px;
 `;
 
-export const GameName = styled.Text`
+export const GameName = styled.Text<{ isLive?: boolean }>`
   font-size: 17px;
   font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+  color: ${({ theme, isLive }: { theme: Theme; isLive?: boolean }) =>
+    isLive ? theme.colors.primary : theme.colors.text.primary};
   line-height: 24px;
 `;
 
@@ -43,6 +45,34 @@ export const TournamentInfo = styled.Text`
   font-weight: 400;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
   line-height: 20px;
+`;
+
+export const StatusContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+`;
+
+export const LiveDot = styled.View`
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
+`;
+
+export const StatusText = styled.Text<{ isLive?: boolean }>`
+  font-size: 13px;
+  font-weight: 500;
+  color: ${({ theme, isLive }: { theme: Theme; isLive?: boolean }) =>
+    isLive ? theme.colors.primary : theme.colors.text.secondary};
+`;
+
+export const TimeText = styled.Text`
+  font-size: 13px;
+  font-weight: 400;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  line-height: 18px;
 `;
 
 export const PlayersText = styled.View``;

@@ -7,6 +7,7 @@ import { TabBar } from '~/components/TabBar/TabBar';
 import { GameCard } from '~/features/tournaments/components/GameCard/GameCard';
 import { GameCardSkeleton } from '~/features/tournaments/components/GameCard/GameCardSkeleton';
 import type { League } from '~/services/apis/League/types';
+import { sortLeaguesByStatus } from '~/utils/leagueStatus';
 
 import {
   EmptyState,
@@ -57,6 +58,9 @@ export const JoinGameList = ({
     return true;
   });
 
+  // Sort leagues by status: live first, then upcoming, then finished
+  const sortedGames = sortLeaguesByStatus(filteredGames);
+
   const handleGamePress = (game: League) => {
     onGamePress?.(game);
   };
@@ -97,15 +101,15 @@ export const JoinGameList = ({
         )}
       </SearchAndCreateRow>
 
-      {loading && filteredGames.length === 0 ? (
+      {loading && sortedGames.length === 0 ? (
         <GameCardSkeleton />
-      ) : filteredGames.length === 0 ? (
+      ) : sortedGames.length === 0 ? (
         <EmptyState>
           <EmptyStateText>No games found</EmptyStateText>
         </EmptyState>
       ) : (
         <View>
-          {filteredGames.map((item, index) => (
+          {sortedGames.map((item, index) => (
             <GameCard
               key={item.id}
               game={item}

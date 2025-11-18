@@ -5,6 +5,7 @@ import { useAlert } from '~/components/Alert/Alert';
 import { Typography } from '~/components/Typography/Typography';
 import type { League } from '~/services/apis/League/types';
 import { formatCurrency } from '~/utils/currency';
+import { getLeagueStatus } from '~/utils/leagueStatus';
 import {
   AmountText,
   Card,
@@ -13,8 +14,12 @@ import {
   GameName,
   InfoLabel,
   LeftSection,
+  LiveDot,
   PlayersText,
   RightSection,
+  StatusContainer,
+  StatusText,
+  TimeText,
   TournamentInfo,
 } from './styles';
 
@@ -53,14 +58,26 @@ export const GameCard = ({ game, tournamentName = '', onPress, onDelete }: GameC
   const totalPot = (game.entry_fee ?? 0) * (game.max_participants ?? 0);
   const year = game.start_time ? new Date(game.start_time).getFullYear() : new Date().getFullYear();
 
+  const leagueStatus =
+    game.start_time && game.end_time ? getLeagueStatus(game.start_time, game.end_time) : null;
+  const isLive = leagueStatus?.status === 'live';
+  const isFinished = leagueStatus?.status === 'finished';
+
   const cardContent = (
-    <Card onPress={onPress} activeOpacity={0.7}>
+    <Card onPress={onPress} activeOpacity={0.7} isFinished={isFinished}>
       <CardContainer>
         <LeftSection>
-          <GameName>{game.name}</GameName>
+          <GameName isLive={isLive}>{game.name}</GameName>
           <TournamentInfo>
             {tournamentName} {year}
           </TournamentInfo>
+          {leagueStatus && (
+            <StatusContainer>
+              {isLive && <LiveDot />}
+              {isLive && <StatusText isLive>{leagueStatus.status.toUpperCase()}</StatusText>}
+              <TimeText>{leagueStatus.timeText}</TimeText>
+            </StatusContainer>
+          )}
         </LeftSection>
 
         <RightSection>
