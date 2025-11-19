@@ -52,7 +52,7 @@ export const Input: React.FC<InputProps> = ({
         <Typography
           variant="label"
           color={theme.colors.text.tertiary}
-          style={{ marginBottom: 4, fontSize: 12, fontWeight: '400' }}
+          style={{ marginBottom: 6, fontSize: 14, fontWeight: '500' }}
         >
           {label}
         </Typography>

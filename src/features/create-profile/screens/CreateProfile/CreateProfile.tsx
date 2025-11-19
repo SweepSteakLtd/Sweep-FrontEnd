@@ -47,14 +47,14 @@ export const CreateProfile = () => {
         return (
           <BasicInfoStep
             firstName={formData.firstName}
+            middleNames={formData.middleNames}
             lastName={formData.lastName}
-            nickname={formData.nickname}
             onFirstNameChange={(text) => updateField('firstName', text)}
+            onMiddleNamesChange={(text) => updateField('middleNames', text)}
             onLastNameChange={(text) => updateField('lastName', text)}
-            onNicknameChange={(text) => updateField('nickname', text)}
             firstNameError={fieldErrors.firstName}
+            middleNamesError={fieldErrors.middleNames}
             lastNameError={fieldErrors.lastName}
-            nicknameError={fieldErrors.nickname}
           />
         );
 

@@ -3,7 +3,7 @@ import type { Theme } from '~/theme/theme';
 import { Typography } from '../Typography/Typography';
 
 export const Container = styled.View`
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 `;
 
 interface InputWrapperProps {
@@ -34,7 +34,8 @@ export const InputWrapper = styled.View<InputWrapperProps>`
     return isFocused ? theme.colors.primary : theme.colors.border;
   }};
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 16px 18px;
+  min-height: 56px;
   opacity: ${({ disabled }: { disabled?: boolean }) => (disabled ? 0.6 : 1)};
 `;
 
@@ -51,8 +52,9 @@ export const StyledInput = styled.TextInput.attrs(({ theme }: { theme: Theme }) 
 }))`
   flex: 1;
   color: ${({ theme }: { theme: Theme }) => theme.colors.input.text};
-  font-size: 14px;
+  font-size: 16px;
   padding: 0;
+  min-height: 24px;
 `;
 
 export const ErrorText = styled(Typography)`

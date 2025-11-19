@@ -5,13 +5,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
-import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
 import { useLogin } from '~/features/authentication/hooks/useLogin';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
-import { Container, FormContainer, Header, LogoCircle, LogoContainer } from './styles';
+import { Container, ContentWrapper, FormContainer, Header } from './styles';
 import { loginSchema } from './validation';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -73,86 +72,84 @@ export const Login = () => {
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
         bottomOffset={220}
       >
-        <LogoContainer>
-          <LogoCircle>
-            <Icon name="⛳" size={20} />
-          </LogoCircle>
-          <Typography variant="heading" color={theme.colors.text.primary}>
-            Sweepsteak
-          </Typography>
-        </LogoContainer>
+        <ContentWrapper>
+          <Header>
+            <Typography variant="heading" color={theme.colors.text.primary}>
+              Welcome to SweepSteak
+            </Typography>
+          </Header>
 
-        <Header>
-          <Typography variant="heading" color={theme.colors.text.primary}>
-            Welcome to SweepSteak
-          </Typography>
-          <Typography variant="body" color={theme.colors.text.secondary} style={{ marginTop: 5 }}>
-            Sign in to your account
-          </Typography>
-        </Header>
+          <FormContainer>
+            <Typography
+              variant="body"
+              color={theme.colors.text.tertiary}
+              style={{ marginBottom: 10 }}
+            >
+              Sign in to your account
+            </Typography>
 
-        <FormContainer>
-          <Input
-            variant="light"
-            label="Email"
-            value={email}
-            onChangeText={(text) => {
-              setEmail(text);
-              if (fieldErrors.email) {
-                setFieldErrors((prev) => ({ ...prev, email: undefined }));
+            <Input
+              variant="light"
+              label="Email"
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                if (fieldErrors.email) {
+                  setFieldErrors((prev) => ({ ...prev, email: undefined }));
+                }
+              }}
+              placeholder="email@address.com"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              error={fieldErrors.email}
+            />
+
+            <Input
+              variant="light"
+              label="Password"
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                if (fieldErrors.password) {
+                  setFieldErrors((prev) => ({ ...prev, password: undefined }));
+                }
+              }}
+              placeholder="Password"
+              secureTextEntry
+              autoCapitalize="none"
+              error={fieldErrors.password}
+            />
+
+            <Button
+              disabled={loading}
+              loading={loading}
+              onPress={handleSignIn}
+              style={{ marginTop: 16, marginBottom: 10 }}
+              title="Sign In"
+            />
+
+            <Button
+              variant="link"
+              onPress={() =>
+                navigation.navigate('TermsAndConditions', {
+                  nextScreen: 'CreateAccount',
+                })
               }
-            }}
-            placeholder="email@address.com"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            error={fieldErrors.email}
-          />
+              fullWidth={false}
+              title="Don't have an account? Create one"
+            />
 
-          <Input
-            variant="light"
-            label="Password"
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text);
-              if (fieldErrors.password) {
-                setFieldErrors((prev) => ({ ...prev, password: undefined }));
-              }
-            }}
-            placeholder="Password"
-            secureTextEntry
-            autoCapitalize="none"
-            error={fieldErrors.password}
-          />
-
-          <Button
-            disabled={loading}
-            loading={loading}
-            onPress={handleSignIn}
-            style={{ marginTop: 16, marginBottom: 10 }}
-            title="Sign In"
-          />
-
-          <Button
-            variant="link"
-            onPress={() =>
-              navigation.navigate('TermsAndConditions', {
-                nextScreen: 'CreateAccount',
-              })
-            }
-            fullWidth={false}
-            title="Don't have an account? Create one"
-          />
-
-          <Button
-            variant="link"
-            onPress={() => navigation.navigate('Settings')}
-            fullWidth={false}
-            title="Mock API Settings"
-          />
-        </FormContainer>
+            <Button
+              variant="link"
+              onPress={() => navigation.navigate('Settings')}
+              fullWidth={false}
+              title="Mock API Settings"
+            />
+          </FormContainer>
+        </ContentWrapper>
 
         <ComplianceFooter />
       </KeyboardAwareScrollView>

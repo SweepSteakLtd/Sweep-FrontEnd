@@ -23,8 +23,8 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface FieldErrors extends Record<string, string | undefined> {
   firstName?: string;
+  middleNames?: string;
   lastName?: string;
-  nickname?: string;
   phoneNumber?: string;
   dateOfBirth?: string;
   address1?: string;
@@ -40,8 +40,8 @@ interface FieldErrors extends Record<string, string | undefined> {
 interface FormData {
   // Step 1: Basic Info
   firstName: string;
+  middleNames: string;
   lastName: string;
-  nickname: string;
   // Step 2 & 3: Phone Verification
   phoneNumber: string;
   verifiedPhoneNumber: string;
@@ -68,8 +68,8 @@ const TOTAL_STEPS = 7;
 
 const initialFormData: FormData = {
   firstName: '',
+  middleNames: '',
   lastName: '',
-  nickname: '',
   phoneNumber: '',
   verifiedPhoneNumber: '',
   phoneVerified: false,
@@ -144,8 +144,8 @@ export const useCreateProfileForm = () => {
   const getStepForField = (fieldName: string): number | null => {
     const fieldToStepMap: Record<string, number> = {
       firstName: 1,
+      middleNames: 1,
       lastName: 1,
-      nickname: 1,
       phoneNumber: 2,
       dateOfBirth: 4,
       address1: 4,
@@ -319,8 +319,8 @@ export const useCreateProfileForm = () => {
 
     const result = await createProfile({
       first_name: formData.firstName,
+      middle_names: formData.middleNames || undefined,
       last_name: formData.lastName,
-      nickname: formData.nickname || undefined,
       phone_number: formData.verifiedPhoneNumber,
       date_of_birth: formData.dateOfBirth ? format(formData.dateOfBirth, 'yyyy-MM-dd') : '',
       bio: formData.bio || undefined,

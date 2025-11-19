@@ -3,7 +3,6 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   padding: 16px;
-  margin-bottom: 16px;
 `;
 
 export const Divider = styled.View`

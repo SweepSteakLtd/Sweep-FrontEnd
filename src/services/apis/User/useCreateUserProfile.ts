@@ -4,8 +4,8 @@ import { UserResponse } from './types';
 
 export interface CreateUserProfileParams {
   first_name: string;
+  middle_names?: string;
   last_name: string;
-  nickname?: string;
   phone_number: string;
   date_of_birth: string; // yyyy-mm-dd format
   bio?: string;

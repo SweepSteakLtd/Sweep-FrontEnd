@@ -30,3 +30,11 @@ export const Header = styled.View<{ theme: Theme }>`
 export const FormContainer = styled.View<{ theme: Theme }>`
   width: 100%;
 `;
+
+export const ContentWrapper = styled.View<{ theme: Theme }>`
+  flex: 1;
+`;
+
+export const FooterWrapper = styled.View<{ theme: Theme }>`
+  margin-top: 30px;
+`;

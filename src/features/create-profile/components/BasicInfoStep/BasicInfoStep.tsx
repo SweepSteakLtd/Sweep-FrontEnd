@@ -5,26 +5,26 @@ import { StepContainer, StepDescription, StepTitle } from './styles';
 
 interface BasicInfoStepProps {
   firstName: string;
+  middleNames: string;
   lastName: string;
-  nickname: string;
   onFirstNameChange: (text: string) => void;
+  onMiddleNamesChange: (text: string) => void;
   onLastNameChange: (text: string) => void;
-  onNicknameChange: (text: string) => void;
   firstNameError?: string;
+  middleNamesError?: string;
   lastNameError?: string;
-  nicknameError?: string;
 }
 
 export const BasicInfoStep = ({
   firstName,
+  middleNames,
   lastName,
-  nickname,
   onFirstNameChange,
+  onMiddleNamesChange,
   onLastNameChange,
-  onNicknameChange,
   firstNameError,
+  middleNamesError,
   lastNameError,
-  nicknameError,
 }: BasicInfoStepProps) => {
   const theme = useTheme();
 
@@ -53,22 +53,22 @@ export const BasicInfoStep = ({
 
       <Input
         variant="light"
-        label="Last Name"
+        label="Middle Names (Optional)"
+        value={middleNames}
+        onChangeText={onMiddleNamesChange}
+        placeholder="Michael James"
+        autoCapitalize="words"
+        error={middleNamesError}
+      />
+
+      <Input
+        variant="light"
+        label="Surname"
         value={lastName}
         onChangeText={onLastNameChange}
         placeholder="Smith"
         autoCapitalize="words"
         error={lastNameError}
-      />
-
-      <Input
-        variant="light"
-        label="Nickname"
-        value={nickname}
-        onChangeText={onNicknameChange}
-        placeholder="Johnny"
-        autoCapitalize="words"
-        error={nicknameError}
       />
     </StepContainer>
   );
