@@ -25,6 +25,7 @@ export const LogoCircle = styled.View<{ theme: Theme }>`
 
 export const Header = styled.View<{ theme: Theme }>`
   margin-bottom: 30px;
+  margin-top: 40px;
 `;
 
 export const FormContainer = styled.View<{ theme: Theme }>`
