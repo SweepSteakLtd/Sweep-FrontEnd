@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
+import { Typography } from '~/components/Typography/Typography';
+import { useAddressLookup } from './hooks/useAddressLookup';
 import {
   AddressSuggestion,
   AddressSuggestionsList,
@@ -34,11 +37,6 @@ interface AddressLookupProps {
   googlePlacesApiKey: string;
 }
 
-interface PlaceSuggestion {
-  place_id: string;
-  description: string;
-}
-
 export const AddressLookup = ({
   address1,
   address2,
@@ -50,139 +48,28 @@ export const AddressLookup = ({
   address1Error,
   cityError,
   postcodeError,
-  googlePlacesApiKey,
 }: AddressLookupProps) => {
   const theme = useTheme();
   const [isManualEntry, setIsManualEntry] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(postcode);
-  const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Debounced search for postcode
-  useEffect(() => {
-    if (isManualEntry || searchQuery.length < 3) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    const timeoutId = setTimeout(async () => {
-      await searchAddress(searchQuery);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery, isManualEntry]);
-
-  const searchAddress = async (query: string) => {
-    setIsLoading(true);
-    try {
-      const autocompleteUrl = process.env.EXPO_PUBLIC_GOOGLE_PLACES_AUTOCOMPLETE_URL;
-      const response = await fetch(
-        `${autocompleteUrl}?input=${encodeURIComponent(
-          query,
-        )}&components=country:gb&key=${googlePlacesApiKey}`,
-      );
-      const data = await response.json();
-
-      if (data.status === 'REQUEST_DENIED' || data.status === 'INVALID_REQUEST') {
-        console.error('Google Places API Error:', data.error_message);
-      }
-
-      if (data.predictions) {
-        setSuggestions(data.predictions);
-        setShowSuggestions(true);
-      }
-    } catch (error) {
-      console.error('Error searching address:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const selectAddress = async (placeId: string) => {
-    setIsLoading(true);
-    try {
-      const detailsUrl = process.env.EXPO_PUBLIC_GOOGLE_PLACES_DETAILS_URL;
-      const response = await fetch(
-        `${detailsUrl}?place_id=${placeId}&fields=address_components&key=${googlePlacesApiKey}`,
-      );
-      const data = await response.json();
-
-      if (data.result && data.result.address_components) {
-        const components = data.result.address_components;
-        const parsedAddress = parseAddressComponents(components);
-
-        onAddressChange(parsedAddress);
-        setSearchQuery('');
-        setShowSuggestions(false);
-      }
-    } catch (error) {
-      console.error('Error fetching address details:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const parseAddressComponents = (
-    components: { types: string[]; long_name: string }[],
-  ): Address => {
-    let streetNumber = '';
-    let route = '';
-    let locality = '';
-    let postalTown = '';
-    let postalCode = '';
-    let sublocality = '';
-    let sublocalityLevel1 = '';
-    let sublocalityLevel2 = '';
-    let neighborhood = '';
-    let administrativeAreaLevel2 = '';
-
-    components.forEach((component) => {
-      const types = component.types;
-      if (types.includes('street_number')) {
-        streetNumber = component.long_name;
-      } else if (types.includes('route')) {
-        route = component.long_name;
-      } else if (types.includes('postal_town')) {
-        postalTown = component.long_name;
-      } else if (types.includes('locality')) {
-        locality = component.long_name;
-      } else if (types.includes('sublocality_level_1')) {
-        sublocalityLevel1 = component.long_name;
-      } else if (types.includes('sublocality_level_2')) {
-        sublocalityLevel2 = component.long_name;
-      } else if (types.includes('sublocality')) {
-        sublocality = component.long_name;
-      } else if (types.includes('neighborhood')) {
-        neighborhood = component.long_name;
-      } else if (types.includes('postal_code')) {
-        postalCode = component.long_name;
-      } else if (types.includes('administrative_area_level_2')) {
-        administrativeAreaLevel2 = component.long_name;
-      }
-    });
-
-    const address1Line = [streetNumber, route].filter(Boolean).join(' ');
-    // Use sublocality or neighborhood for address line 2
-    const address2Line =
-      sublocalityLevel2 || sublocalityLevel1 || sublocality || neighborhood || '';
-    const cityName = postalTown || locality;
-
-    return {
-      address1: address1Line,
-      address2: address2Line,
-      address3: '',
-      city: cityName,
-      county: administrativeAreaLevel2,
-      postcode: postalCode,
-    };
-  };
+  const {
+    postcodeInput,
+    setPostcodeInput,
+    suggestions,
+    isLoading,
+    showAddresses,
+    lookupError,
+    searchByPostcode,
+    selectAddress,
+    clearSearch,
+  } = useAddressLookup({
+    onAddressChange,
+    initialPostcode: postcode,
+  });
 
   const handleManualEntry = () => {
     setIsManualEntry(true);
-    setShowSuggestions(false);
-    setSuggestions([]);
+    clearSearch();
   };
 
   if (isManualEntry) {
@@ -246,7 +133,7 @@ export const AddressLookup = ({
           value={postcode}
           onChangeText={(text) => {
             onAddressChange({ address1, address2, address3, city, county, postcode: text });
-            setSearchQuery(text);
+            setPostcodeInput(text);
           }}
           placeholder="SW1A 1AA"
           autoCapitalize="characters"
@@ -254,7 +141,7 @@ export const AddressLookup = ({
         />
 
         <ManualEntryLink onPress={() => setIsManualEntry(false)} style={{ marginBottom: 40 }}>
-          <ManualEntryText>Use address lookup</ManualEntryText>
+          <ManualEntryText>Use postcode lookup</ManualEntryText>
         </ManualEntryLink>
       </Container>
     );
@@ -262,33 +149,54 @@ export const AddressLookup = ({
 
   return (
     <Container>
-      {/* Show search bar only if no address has been selected */}
+      {/* Step 1: Enter postcode and search */}
       {!address1 && (
         <>
           <Input
             variant="light"
-            label="Address Search"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="e.g. 10 Downing Street, London"
-            error={address1Error}
+            label="Postcode"
+            value={postcodeInput}
+            onChangeText={setPostcodeInput}
+            placeholder="e.g. SW1A 1AA"
+            autoCapitalize="characters"
+            error={lookupError || postcodeError}
+            onSubmitEditing={searchByPostcode}
+          />
+
+          <Button
+            variant="secondary"
+            title={isLoading ? 'Searching...' : 'Find Address'}
+            onPress={searchByPostcode}
+            disabled={isLoading || !postcodeInput}
+            style={{ marginBottom: 16 }}
           />
 
           {isLoading && (
-            <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginTop: 8 }} />
+            <ActivityIndicator
+              size="small"
+              color={theme.colors.primary}
+              style={{ marginBottom: 16 }}
+            />
           )}
 
-          {showSuggestions && suggestions.length > 0 && (
-            <AddressSuggestionsList>
-              {suggestions.map((suggestion) => (
-                <AddressSuggestion
-                  key={suggestion.place_id}
-                  onPress={() => selectAddress(suggestion.place_id)}
-                >
-                  <AddressSuggestionText>{suggestion.description}</AddressSuggestionText>
-                </AddressSuggestion>
-              ))}
-            </AddressSuggestionsList>
+          {/* Step 2: Show dropdown of full addresses */}
+          {showAddresses && suggestions.length > 0 && (
+            <>
+              <Typography
+                variant="label"
+                color={theme.colors.text.tertiary}
+                style={{ marginBottom: 8, fontSize: 14, fontWeight: '500' }}
+              >
+                Select your address
+              </Typography>
+              <AddressSuggestionsList>
+                {suggestions.map((suggestion) => (
+                  <AddressSuggestion key={suggestion.id} onPress={() => selectAddress(suggestion)}>
+                    <AddressSuggestionText>{suggestion.address}</AddressSuggestionText>
+                  </AddressSuggestion>
+                ))}
+              </AddressSuggestionsList>
+            </>
           )}
 
           <ManualEntryLink onPress={handleManualEntry} style={{ marginBottom: 40 }}>
@@ -297,7 +205,7 @@ export const AddressLookup = ({
         </>
       )}
 
-      {/* Show filled address fields after selection */}
+      {/* Step 3: Show filled address fields after selection (editable for corrections) */}
       {address1 && (
         <>
           <Input
@@ -358,7 +266,7 @@ export const AddressLookup = ({
             value={postcode}
             onChangeText={(text) => {
               onAddressChange({ address1, address2, address3, city, county, postcode: text });
-              setSearchQuery(text);
+              setPostcodeInput(text);
             }}
             placeholder="SW1A 1AA"
             autoCapitalize="characters"
@@ -367,7 +275,7 @@ export const AddressLookup = ({
 
           <ManualEntryLink
             onPress={() => {
-              // Clear the address to show the search bar again
+              // Clear the address to search again
               onAddressChange({
                 address1: '',
                 address2: '',
@@ -376,11 +284,11 @@ export const AddressLookup = ({
                 county: '',
                 postcode: '',
               });
-              setSearchQuery('');
+              clearSearch();
             }}
             style={{ marginBottom: 40 }}
           >
-            <ManualEntryText>Use address lookup</ManualEntryText>
+            <ManualEntryText>Search for different address</ManualEntryText>
           </ManualEntryLink>
         </>
       )}
