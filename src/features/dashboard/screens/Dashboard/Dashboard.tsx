@@ -3,6 +3,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import { BackHandler, FlatList, RefreshControl, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { TournamentCard } from '~/features/dashboard/components/TournamentCard/TournamentCard';
 import { TournamentCardSkeleton } from '~/features/dashboard/components/TournamentCard/TournamentCardSkeleton';
@@ -87,6 +88,7 @@ export const Dashboard = () => {
               <TournamentCard tournament={item} onPress={() => handleTournamentPress(item)} />
             )}
             keyExtractor={(item) => item.id || Math.random().toString()}
+            ListFooterComponent={<ComplianceFooter />}
             contentContainerStyle={{ padding: 20 }}
             showsVerticalScrollIndicator={false}
             refreshControl={

@@ -3,13 +3,14 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { useAlert } from '~/components/Alert/Alert';
 import { firebaseAuth } from '~/lib/firebase';
+import { passwordSchema } from '~/lib/validation/passwordSchema';
 import { getPasswordErrorMessage } from './utils/passwordErrors';
 
 // Zod schema for password change form
 export const changePasswordSchema = z
   .object({
     currentPassword: z.string().min(1, 'Current password is required'),
-    newPassword: z.string().min(6, 'New password must be at least 6 characters long'),
+    newPassword: passwordSchema,
     confirmPassword: z.string().min(1, 'Please confirm your new password'),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {

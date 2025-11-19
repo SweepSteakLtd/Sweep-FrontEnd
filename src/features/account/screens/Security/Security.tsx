@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
+import { PasswordRequirements } from '~/components/PasswordRequirements/PasswordRequirements';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useChangePassword } from '../../hooks/useChangePassword';
 import { ButtonContainer, Container, InputRow, Section, SectionTitle } from './styles';
@@ -59,6 +60,7 @@ export const Security = () => {
                 autoCapitalize="none"
                 error={errors.newPassword}
               />
+              <PasswordRequirements password={newPassword} />
             </InputRow>
             <InputRow>
               <Input

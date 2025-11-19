@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
+import { PasswordRequirements } from '~/components/PasswordRequirements/PasswordRequirements';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useCreateFirebaseAccount } from '~/features/authentication/hooks/useCreateFirebaseAccount';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
@@ -90,6 +91,7 @@ export const CreateAccount = () => {
               autoCapitalize="none"
               error={fieldErrors.password}
             />
+            <PasswordRequirements password={password} />
 
             <Input
               label="Confirm Password"

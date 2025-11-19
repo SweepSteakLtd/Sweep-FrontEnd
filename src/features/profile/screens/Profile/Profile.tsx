@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Avatar } from '~/components/Avatar/Avatar';
+import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useAuth } from '~/contexts/AuthContext';
 import type { RootStackParamList } from '~/navigation/types';
@@ -106,6 +107,8 @@ export const Profile = () => {
               </MenuItem>
             ))}
           </MenuSection>
+
+          <ComplianceFooter />
         </ScrollView>
       </Container>
     </ScreenWrapper>

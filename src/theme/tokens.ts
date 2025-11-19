@@ -21,6 +21,12 @@ export const colorTokens = {
   // Error/Danger
   red500: '#ff4444',
 
+  // Warning
+  orange500: '#FFA500',
+
+  // Success
+  green500: '#22c55e',
+
   // Transparent
   transparent: 'transparent',
 } as const;

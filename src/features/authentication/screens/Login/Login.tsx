@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
+import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
@@ -125,36 +126,36 @@ export const Login = () => {
             autoCapitalize="none"
             error={fieldErrors.password}
           />
+
+          <Button
+            disabled={loading}
+            loading={loading}
+            onPress={handleSignIn}
+            style={{ marginTop: 16, marginBottom: 10 }}
+            title="Sign In"
+          />
+
+          <Button
+            variant="link"
+            onPress={() =>
+              navigation.navigate('TermsAndConditions', {
+                nextScreen: 'CreateAccount',
+              })
+            }
+            fullWidth={false}
+            title="Don't have an account? Create one"
+          />
+
+          <Button
+            variant="link"
+            onPress={() => navigation.navigate('Settings')}
+            fullWidth={false}
+            title="Mock API Settings"
+          />
         </FormContainer>
+
+        <ComplianceFooter />
       </KeyboardAwareScrollView>
-
-      <KeyboardStickyView>
-        <Button
-          disabled={loading}
-          loading={loading}
-          onPress={handleSignIn}
-          style={{ marginBottom: 10 }}
-          title="Sign In"
-        />
-
-        <Button
-          variant="link"
-          onPress={() =>
-            navigation.navigate('TermsAndConditions', {
-              nextScreen: 'CreateAccount',
-            })
-          }
-          fullWidth={false}
-          title="Don't have an account? Create one"
-        />
-
-        <Button
-          variant="link"
-          onPress={() => navigation.navigate('Settings')}
-          fullWidth={false}
-          title="Mock API Settings"
-        />
-      </KeyboardStickyView>
     </Container>
   );
 };
