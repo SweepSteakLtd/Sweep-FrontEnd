@@ -1,7 +1,7 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-11-12T13:10:57.902Z",
+  "generatedAt": "2025-11-20T14:48:57.156Z",
   "endpoints": [
     {
       "id": "create-bet",
@@ -123,82 +123,7 @@
           "name": "Success",
           "status": 200,
           "delay": "500ms",
-          "response": {
-            "data": [
-              {
-                "id": "tournament-1",
-                "name": "The Masters",
-                "starts_at": "2026-04-09T08:00:00.000Z",
-                "finishes_at": "2026-04-12T18:00:00.000Z",
-                "description": "The Masters Tournament, one of golf's four major championships.",
-                "url": "https://example.com/masters",
-                "cover_picture": "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400",
-                "gallery": [],
-                "holes": [],
-                "ads": [],
-                "proposed_entry_fee": 100,
-                "maximum_cut_amount": 50,
-                "maximum_score_generator": 100,
-                "players": [],
-                "created_at": "<timestamp>",
-                "updated_at": "<timestamp>"
-              },
-              {
-                "id": "tournament-2",
-                "name": "The Open Championship",
-                "starts_at": "2025-07-17T08:00:00.000Z",
-                "finishes_at": "2025-07-20T18:00:00.000Z",
-                "description": "The Open Championship, the oldest of golf's major championships.",
-                "url": "https://example.com/open",
-                "cover_picture": "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400",
-                "gallery": [],
-                "holes": [],
-                "ads": [],
-                "proposed_entry_fee": 75,
-                "maximum_cut_amount": 40,
-                "maximum_score_generator": 90,
-                "players": [],
-                "created_at": "<timestamp>",
-                "updated_at": "<timestamp>"
-              },
-              {
-                "id": "tournament-3",
-                "name": "The Players Championship",
-                "starts_at": "2025-03-13T08:00:00.000Z",
-                "finishes_at": "2025-03-16T18:00:00.000Z",
-                "description": "The Players Championship at TPC Sawgrass.",
-                "url": "https://example.com/players",
-                "cover_picture": "https://images.unsplash.com/photo-1592919505780-303950717480?w=400",
-                "gallery": [],
-                "holes": [],
-                "ads": [],
-                "proposed_entry_fee": 50,
-                "maximum_cut_amount": 30,
-                "maximum_score_generator": 80,
-                "players": [],
-                "created_at": "<timestamp>",
-                "updated_at": "<timestamp>"
-              },
-              {
-                "id": "tournament-4",
-                "name": "PGA Championship",
-                "starts_at": "2025-05-15T08:00:00.000Z",
-                "finishes_at": "2025-05-18T18:00:00.000Z",
-                "description": "The PGA Championship, one of golf's four major championships.",
-                "url": "https://example.com/pga",
-                "cover_picture": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=400",
-                "gallery": [],
-                "holes": [],
-                "ads": [],
-                "proposed_entry_fee": 125,
-                "maximum_cut_amount": 60,
-                "maximum_score_generator": 110,
-                "players": [],
-                "created_at": "<timestamp>",
-                "updated_at": "<timestamp>"
-              }
-            ]
-          }
+          "response": null
         },
         {
           "name": "Empty List",
