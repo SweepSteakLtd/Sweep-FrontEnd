@@ -138,6 +138,55 @@
         }
       }
     },
+    "/api/player-profiles/": {
+      "get": {
+        "summary": "Get Player Profiles List",
+        "description": "Get Player Profiles List endpoint",
+        "operationId": "get-player-profiles",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty List": {
+                    "summary": "Empty List",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users": {
       "post": {
         "summary": "Create User Profile",
@@ -190,6 +239,55 @@
                 "examples": {
                   "Server Error (500)": {
                     "summary": "Server Error (500)",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teams": {
+      "get": {
+        "summary": "Get Teams List",
+        "description": "Get Teams List endpoint",
+        "operationId": "get-teams",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty List": {
+                    "summary": "Empty List",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
                     "value": null
                   }
                 }

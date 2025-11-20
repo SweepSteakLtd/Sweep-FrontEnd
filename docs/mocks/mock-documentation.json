@@ -1,7 +1,7 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-11-20T14:48:57.156Z",
+  "generatedAt": "2025-11-20T17:22:20.031Z",
   "endpoints": [
     {
       "id": "create-bet",
@@ -78,6 +78,40 @@
       ]
     },
     {
+      "id": "get-player-profiles",
+      "name": "Get Player Profiles List",
+      "method": "GET",
+      "path": "/api/player-profiles/",
+      "description": "Get Player Profiles List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
       "id": "create-profile",
       "name": "Create User Profile",
       "method": "POST",
@@ -105,6 +139,40 @@
         },
         {
           "name": "Server Error (500)",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "get-teams",
+      "name": "Get Teams List",
+      "method": "GET",
+      "path": "/api/teams",
+      "description": "Get Teams List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
           "status": 500,
           "delay": "1000ms",
           "response": null

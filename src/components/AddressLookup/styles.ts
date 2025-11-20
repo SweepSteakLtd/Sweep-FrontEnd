@@ -15,7 +15,10 @@ export const ManualEntryText = styled.Text`
   font-weight: 500;
 `;
 
-export const AddressSuggestionsList = styled.ScrollView`
+export const AddressSuggestionsList = styled.ScrollView.attrs({
+  showsVerticalScrollIndicator: false,
+  showsHorizontalScrollIndicator: false,
+})`
   max-height: 200px;
   border-width: 1px;
   border-color: ${({ theme }: { theme: Theme }) => theme.colors.border};

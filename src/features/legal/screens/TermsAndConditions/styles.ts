@@ -21,7 +21,10 @@ export const IconContainer = styled.View<{ theme: Theme }>`
   margin-bottom: 15px;
 `;
 
-export const ScrollContainer = styled.ScrollView<{ theme: Theme }>`
+export const ScrollContainer = styled.ScrollView.attrs({
+  showsVerticalScrollIndicator: false,
+  showsHorizontalScrollIndicator: false,
+})<{ theme: Theme }>`
   flex: 1;
   padding: 20px;
 `;

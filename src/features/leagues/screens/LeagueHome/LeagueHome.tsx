@@ -1,5 +1,6 @@
 import type { RouteProp } from '@react-navigation/native';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
@@ -19,6 +20,7 @@ type LeagueHomeRouteProp = RouteProp<RootStackParamList, 'LeagueHome'>;
 
 export const LeagueHome = () => {
   const theme = useTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<LeagueHomeRouteProp>();
   const { leagueId } = route.params;
 
@@ -54,8 +56,7 @@ export const LeagueHome = () => {
               title="Submit your fantasy list of golfers"
               variant="secondary"
               onPress={() => {
-                // TODO: Navigate to submit team
-                console.log('Submit team');
+                navigation.navigate('CreateTeam', { leagueId });
               }}
               fullWidth
             />

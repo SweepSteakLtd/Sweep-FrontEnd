@@ -8,7 +8,15 @@ import {
   getLeaguesHandler,
   updateLeagueHandler,
 } from './leagueHandler';
+import { getPlayerProfileByIdHandler, getPlayerProfilesHandler } from './playerProfileHandler';
 import { createProfileHandler, updateProfileHandler } from './profileHandler';
+import {
+  createTeamHandler,
+  deleteTeamHandler,
+  getTeamByIdHandler,
+  getTeamsHandler,
+  updateTeamHandler,
+} from './teamHandler';
 import { getTournamentByIdHandler, getTournamentsHandler } from './tournamentHandler';
 import { deleteUserHandler, getUserHandler } from './userHandler';
 
@@ -39,6 +47,17 @@ export const mockHandlers: MockHandler[] = [
   getBetsHandler,
   updateBetHandler,
   deleteBetHandler,
+
+  // Player Profile endpoints
+  getPlayerProfilesHandler,
+  getPlayerProfileByIdHandler,
+
+  // Team endpoints
+  getTeamsHandler,
+  getTeamByIdHandler,
+  createTeamHandler,
+  updateTeamHandler,
+  deleteTeamHandler,
 
   // Admin endpoints
   ...adminHandlers,

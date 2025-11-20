@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-11-18T12:58:19.479Z
+ * Generated: 2025-11-20T17:02:59.502Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -140,6 +140,11 @@ export type Tournament = z.infer<typeof tournamentSchema>;
 
 // Team
 export const teamSchema = z.object({
+  id: z.string().optional(),
+  owner_id: z.string().optional(),
+  player_ids: z.array(z.string()).optional().default([]),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
   league: z
     .object({
       id: z.string().optional(),
@@ -332,6 +337,7 @@ export const playerProfileSchema = z.object({
   country: z.string().optional(),
   age: z.number().optional(),
   ranking: z.number().optional(),
+  profile_picture: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });

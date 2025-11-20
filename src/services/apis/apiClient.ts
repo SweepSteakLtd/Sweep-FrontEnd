@@ -13,6 +13,8 @@ interface ApiClientConfig<TBody = unknown> {
   allow404?: boolean;
   /** Custom timeout in milliseconds (default: 30000ms) */
   timeout?: number;
+  /** Query parameters to append to the URL */
+  params?: Record<string, string | number | boolean | undefined>;
 }
 
 export class ApiError extends Error {
@@ -38,7 +40,20 @@ export async function apiClient<T, TBody = unknown>(
     throw new Error('Not authenticated');
   }
 
-  const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}${endpoint}`;
+  // Build URL with query parameters
+  let url = `${process.env.EXPO_PUBLIC_BACKEND_URL}${endpoint}`;
+  if (config?.params) {
+    const searchParams = new URLSearchParams();
+    Object.entries(config.params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        searchParams.append(key, String(value));
+      }
+    });
+    const queryString = searchParams.toString();
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+  }
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -116,7 +131,12 @@ export async function apiClient<T, TBody = unknown>(
 export const api = {
   get: <T>(
     endpoint: string,
-    options?: { headers?: Record<string, string>; allow404?: boolean; timeout?: number },
+    options?: {
+      headers?: Record<string, string>;
+      allow404?: boolean;
+      timeout?: number;
+      params?: Record<string, string | number | boolean | undefined>;
+    },
   ) => apiClient<T>(endpoint, { method: 'GET', ...options }),
 
   post: <T, TBody = unknown>(

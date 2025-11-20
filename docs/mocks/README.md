@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-11-20T14:48:57.156Z
+Generated: 2025-11-20T17:22:20.031Z
 
 ## Files
 
@@ -46,6 +46,20 @@ Get Leagues List endpoint
 - Server Error (500) - 1000ms
 
 
+### GET /api/player-profiles/
+**Get Player Profiles List**
+
+Get Player Profiles List endpoint
+
+**Default Scenario:** Success
+
+**Scenarios:** 4
+- Success (200) - 500ms
+- Empty List (200) - 500ms
+- data (200) - 500ms
+- Server Error (500) - 1000ms
+
+
 ### POST /api/users
 **Create User Profile**
 
@@ -58,6 +72,20 @@ Create User Profile endpoint
 - Username Taken (400) - 500ms
 - Invalid Data (400) - 500ms
 - Server Error (500) (500) - 1000ms
+
+
+### GET /api/teams
+**Get Teams List**
+
+Get Teams List endpoint
+
+**Default Scenario:** Success
+
+**Scenarios:** 4
+- Success (200) - 500ms
+- Empty List (200) - 500ms
+- data (200) - 500ms
+- Server Error (500) - 1000ms
 
 
 ### GET /api/tournaments

@@ -6,7 +6,10 @@ export const Container = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
 `;
 
-export const ScrollContent = styled.ScrollView`
+export const ScrollContent = styled.ScrollView.attrs({
+  showsVerticalScrollIndicator: false,
+  showsHorizontalScrollIndicator: false,
+})`
   flex: 1;
 `;
 
