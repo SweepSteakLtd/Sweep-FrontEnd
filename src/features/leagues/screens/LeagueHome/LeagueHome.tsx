@@ -6,6 +6,7 @@ import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import type { RootStackParamList } from '~/navigation/types';
 import { HolesInfoCarousel } from '../../components/HolesInfoCarousel/HolesInfoCarousel';
+import { HowToPlay } from '../../components/HowToPlay/HowToPlay';
 import { LeagueDates } from '../../components/LeagueDates/LeagueDates';
 import { LeagueDescription } from '../../components/LeagueDescription/LeagueDescription';
 import { LeagueHeader } from '../../components/LeagueHeader/LeagueHeader';
@@ -74,6 +75,8 @@ export const LeagueHome = () => {
           <LeagueDescription description={league?.description} />
 
           <HolesInfoCarousel tournamentName={tournament?.name} carouselData={carouselData} />
+
+          <HowToPlay rules={tournament?.rules} instructions={tournament?.instructions} />
         </ScrollContent>
       </Container>
     </ScreenWrapper>

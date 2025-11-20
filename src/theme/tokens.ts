@@ -8,6 +8,11 @@ export const colorTokens = {
   // Gold/Yellow
   gold500: '#c9b037',
 
+  // Blue shades
+  blue900: '#1a2744',
+  blue800: '#1e40af',
+  blue700: '#1d4ed8',
+
   // Neutrals
   white: '#FFFFFF',
   gray900: '#1a1a1a',

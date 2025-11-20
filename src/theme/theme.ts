@@ -5,6 +5,7 @@ export const theme = {
   colors: {
     primary: colorTokens.green800,
     secondary: colorTokens.gold500,
+    accent: colorTokens.blue900,
     background: colorTokens.white,
     backgroundLight: colorTokens.gray100,
     backgroundDark: colorTokens.gray900,
