@@ -1,6 +1,16 @@
 import React from 'react';
 import { Linking, View } from 'react-native';
-import { CompanyNumber, Container, Divider, LicenceNumber, Link, Logo, Section } from './styles';
+import DeviceInfo from 'react-native-device-info';
+import {
+  BuildNumber,
+  CompanyNumber,
+  Container,
+  Divider,
+  LicenceNumber,
+  Link,
+  Logo,
+  Section,
+} from './styles';
 
 // Import local logo images
 const visaLogo = require('~/assets/images/compliance/visa.png');
@@ -16,6 +26,14 @@ export const ComplianceFooter = () => {
   const handleGamstopPress = () => {
     Linking.openURL('https://www.gamstop.co.uk/');
   };
+
+  const version = DeviceInfo.getVersion();
+  const buildNumber = DeviceInfo.getBuildNumber();
+  const isDevBuild = __DEV__;
+
+  const buildDisplay = isDevBuild
+    ? `Build: v${version} (dev)`
+    : `Build: v${version} (${buildNumber})`;
 
   return (
     <Container>
@@ -38,6 +56,7 @@ export const ComplianceFooter = () => {
       <Section>
         <LicenceNumber>GC Licence: 000-067618-R-341349-001</LicenceNumber>
         <CompanyNumber>Companies House: 16294031</CompanyNumber>
+        <BuildNumber>{buildDisplay}</BuildNumber>
       </Section>
     </Container>
   );

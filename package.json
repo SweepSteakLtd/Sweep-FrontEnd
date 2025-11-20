@@ -53,6 +53,7 @@
     "react-native": "0.76.9",
     "react-native-confetti-cannon": "^1.5.2",
     "react-native-date-picker": "^5.0.13",
+    "react-native-device-info": "^15.0.1",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-google-places-autocomplete": "^2.5.7",
     "react-native-keyboard-controller": "^1.19.5",

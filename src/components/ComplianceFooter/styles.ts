@@ -27,6 +27,13 @@ export const CompanyNumber = styled.Text`
   font-size: 11px;
   font-weight: 500;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  margin-bottom: 4px;
+`;
+
+export const BuildNumber = styled.Text`
+  font-size: 11px;
+  font-weight: 500;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
 `;
 
 export const LogoRow = styled.View`
