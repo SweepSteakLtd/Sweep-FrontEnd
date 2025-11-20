@@ -163,10 +163,10 @@ export const CreateTeam = () => {
               disabled={!teamName.trim() || selectedPlayers.length === 0 || createTeam.isPending}
               loading={createTeam.isPending}
               fullWidth
-              style={{ marginTop: 24 }}
+              style={{ marginTop: 24, marginBottom: 40 }}
             />
           }
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         />
