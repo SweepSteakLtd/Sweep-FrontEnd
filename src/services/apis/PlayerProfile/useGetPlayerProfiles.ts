@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../apiClient';
-import type { PlayerProfilesResponse } from '../schemas';
+import type { PlayerGroup, PlayerProfilesResponse } from '../schemas';
 
 export const useGetPlayerProfiles = (country?: string) => {
   return useQuery({
     queryKey: ['player-profiles', country],
-    queryFn: async () => {
+    queryFn: async (): Promise<PlayerGroup[]> => {
       const params = country ? { country } : undefined;
       const response = await api.get<PlayerProfilesResponse>('/api/player-profiles/', { params });
 
-      // The response should have a 'data' property that contains the array
+      // The response should have a 'data' property that contains the array of groups
       if (response && typeof response === 'object' && 'data' in response) {
         return response.data || [];
       }

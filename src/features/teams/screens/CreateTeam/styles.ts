@@ -47,3 +47,37 @@ export const EmptyText = styled.Text<{ theme: Theme }>`
   margin-top: 40px;
   font-size: 16px;
 `;
+
+export const GroupHeader = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding: 8px 0;
+`;
+
+export const GroupHeaderText = styled.Text<{ theme: Theme }>`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  text-transform: uppercase;
+`;
+
+export const GroupHeaderRight = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const GroupSelectedText = styled.Text<{ theme: Theme }>`
+  font-size: 12px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
+  margin-right: 8px;
+`;
+
+export const HelpText = styled.Text<{ theme: Theme }>`
+  font-size: 12px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  font-style: italic;
+  margin-bottom: 8px;
+`;

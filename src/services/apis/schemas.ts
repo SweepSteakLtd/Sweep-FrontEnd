@@ -338,11 +338,20 @@ export const playerProfileSchema = z.object({
   age: z.number().optional(),
   ranking: z.number().optional(),
   profile_picture: z.string().optional(),
+  group: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });
 
 export type PlayerProfile = z.infer<typeof playerProfileSchema>;
+
+// PlayerGroup
+export const playerGroupSchema = z.object({
+  name: z.string(),
+  players: z.array(playerProfileSchema),
+});
+
+export type PlayerGroup = z.infer<typeof playerGroupSchema>;
 
 // Transaction
 export const transactionSchema = z.object({
@@ -449,7 +458,7 @@ export const betsResponseSchema = z.object({
 export type BetsResponse = z.infer<typeof betsResponseSchema>;
 
 export const playerprofilesResponseSchema = z.object({
-  data: z.array(playerProfileSchema),
+  data: z.array(playerGroupSchema),
 });
 
 export type PlayerProfilesResponse = z.infer<typeof playerprofilesResponseSchema>;
