@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, ImageSourcePropType, ScrollView } from 'react-native';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useGetUser } from '~/services/apis/User/useGetUser';
@@ -22,7 +22,7 @@ import {
 interface PaymentMethod {
   id: string;
   name: string;
-  logoUrl: any;
+  logoUrl: ImageSourcePropType;
   maxLimit: number;
 }
 
