@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar } from '~/components/Avatar/Avatar';
-import type { PlayerProfile } from '~/services/apis/schemas';
+import type { GroupPlayer } from '~/services/apis/schemas';
 import { Container, CountryFlag, CountryText, Info, InfoRow, NameText, OddsText } from './styles';
 
 interface PlayerListItemProps {
-  player: PlayerProfile;
+  player: GroupPlayer;
   isSelected: boolean;
   onPress: () => void;
   showOdds?: boolean;

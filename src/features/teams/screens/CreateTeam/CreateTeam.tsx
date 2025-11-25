@@ -8,7 +8,7 @@ import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { PlayerListItem } from '~/features/players/components/PlayerListItem/PlayerListItem';
 import { PlayerListItemSkeleton } from '~/features/players/components/PlayerListItemSkeleton/PlayerListItemSkeleton';
 import type { RootStackParamList } from '~/navigation/types';
-import type { PlayerProfile } from '~/services/apis/schemas';
+import type { GroupPlayer } from '~/services/apis/schemas';
 import { SelectedPlayersList } from '../../components/SelectedPlayersList/SelectedPlayersList';
 import {
   Container,
@@ -50,7 +50,7 @@ export const CreateTeam = () => {
     isPlayerSelected,
   } = useCreateTeamScreen(leagueId);
 
-  const renderPlayer = ({ item }: { item: PlayerProfile }) => {
+  const renderPlayer = ({ item }: { item: GroupPlayer }) => {
     return (
       <PlayerListItem
         player={item}

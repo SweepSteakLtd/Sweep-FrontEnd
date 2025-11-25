@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-11-20T17:02:59.502Z
+ * Generated: 2025-11-25T21:43:03.214Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -330,6 +330,25 @@ export type Bet = z.infer<typeof betSchema>;
 
 // PlayerProfile
 export const playerProfileSchema = z.object({
+  name: z.string().optional(),
+  players: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        external_id: z.string().optional(),
+        first_name: z.string().optional(),
+        last_name: z.string().optional(),
+        country: z.string().optional(),
+        age: z.number().optional(),
+        ranking: z.number().optional(),
+        profile_picture: z.string().optional(),
+        group: z.string().optional(),
+        created_at: z.string().optional(),
+        updated_at: z.string().optional(),
+      }),
+    )
+    .optional()
+    .default([]),
   id: z.string().optional(),
   external_id: z.string().optional(),
   first_name: z.string().optional(),
@@ -341,17 +360,40 @@ export const playerProfileSchema = z.object({
   group: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
+  data: z
+    .record(
+      z.string(),
+      z.object({
+        players: z
+          .array(
+            z.object({
+              id: z.string().optional(),
+              external_id: z.string().optional(),
+              first_name: z.string().optional(),
+              last_name: z.string().optional(),
+              country: z.string().optional(),
+              age: z.number().optional(),
+              ranking: z.number().optional(),
+              profile_picture: z.string().optional(),
+              group: z.string().optional(),
+              created_at: z.string().optional(),
+              updated_at: z.string().optional(),
+            }),
+          )
+          .optional()
+          .default([]),
+      }),
+    )
+    .optional(),
 });
 
 export type PlayerProfile = z.infer<typeof playerProfileSchema>;
 
-// PlayerGroup
-export const playerGroupSchema = z.object({
-  name: z.string(),
-  players: z.array(playerProfileSchema),
-});
+// Alias for clarity - PlayerProfile represents a group with players
+export type PlayerGroup = PlayerProfile;
 
-export type PlayerGroup = z.infer<typeof playerGroupSchema>;
+// Type for individual player within a group
+export type GroupPlayer = NonNullable<PlayerProfile['players']>[number];
 
 // Transaction
 export const transactionSchema = z.object({
@@ -409,6 +451,28 @@ export const activitieSchema = z.object({
 
 export type Activitie = z.infer<typeof activitieSchema>;
 
+// Leaderboard
+export const leaderboardSchema = z.object({
+  rank: z.number().optional(),
+  name: z.object({ main: z.string().optional(), substring: z.string().optional() }).optional(),
+  total: z.number().optional(),
+  players: z
+    .array(
+      z.object({
+        group: z.string().optional(),
+        player_name: z.string().optional(),
+        score: z.number().optional(),
+        status: z.string().optional(),
+      }),
+    )
+    .optional()
+    .default([]),
+  best_score: z.array(z.number()).optional().default([]),
+  prize: z.string().optional(),
+});
+
+export type Leaderboard = z.infer<typeof leaderboardSchema>;
+
 // Player
 export const playerSchema = z.object({
   id: z.string().optional(),
@@ -458,7 +522,7 @@ export const betsResponseSchema = z.object({
 export type BetsResponse = z.infer<typeof betsResponseSchema>;
 
 export const playerprofilesResponseSchema = z.object({
-  data: z.array(playerGroupSchema),
+  data: z.array(playerProfileSchema),
 });
 
 export type PlayerProfilesResponse = z.infer<typeof playerprofilesResponseSchema>;
@@ -474,6 +538,12 @@ export const activitiesResponseSchema = z.object({
 });
 
 export type ActivitiesResponse = z.infer<typeof activitiesResponseSchema>;
+
+export const leaderboardsResponseSchema = z.object({
+  data: z.array(leaderboardSchema),
+});
+
+export type LeaderboardsResponse = z.infer<typeof leaderboardsResponseSchema>;
 
 export const playersResponseSchema = z.object({
   data: z.array(playerSchema),

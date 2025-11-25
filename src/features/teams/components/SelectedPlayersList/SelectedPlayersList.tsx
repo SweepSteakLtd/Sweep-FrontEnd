@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar } from '~/components/Avatar/Avatar';
-import type { PlayerProfile } from '~/services/apis/schemas';
+import type { GroupPlayer } from '~/services/apis/schemas';
 import { AvatarWrapper, Container, EmptyText, ScrollContainer } from './styles';
 
 interface SelectedPlayersListProps {
-  players: PlayerProfile[];
+  players: GroupPlayer[];
   selectedPlayerIds: string[];
 }
 

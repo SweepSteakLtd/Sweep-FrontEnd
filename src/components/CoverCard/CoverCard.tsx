@@ -39,7 +39,7 @@ export const CoverCard = ({
               <Title fontSize={titleSize} fontWeight={titleWeight}>
                 {title}
               </Title>
-              {subtitle && <Subtitle>{subtitle}</Subtitle>}
+              {subtitle && <Subtitle numberOfLines={2}>{subtitle}</Subtitle>}
             </>
           )}
         </Overlay>

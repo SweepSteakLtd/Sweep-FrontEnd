@@ -2,14 +2,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import { useGetPlayerProfiles } from '~/services/apis/PlayerProfile/useGetPlayerProfiles';
-import type { PlayerProfile } from '~/services/apis/schemas';
+import type { GroupPlayer } from '~/services/apis/schemas';
 import { useCreateTeam } from '~/services/apis/Team/useCreateTeam';
 
 interface Section {
   title: string;
   groupName: string;
   hasSelection: boolean;
-  data: PlayerProfile[];
+  data: GroupPlayer[];
 }
 
 export const useCreateTeamScreen = (leagueId: string) => {
@@ -55,24 +55,26 @@ export const useCreateTeamScreen = (leagueId: string) => {
   const sections = useMemo((): Section[] => {
     const query = searchQuery.toLowerCase();
     return playerGroups
+      .filter((group) => group.name !== undefined)
       .map((group) => {
-        const hasSelection = !!selectedPlayersByGroup[group.name];
-        const expanded = isGroupExpanded(group.name);
+        const groupName = group.name!;
+        const hasSelection = !!selectedPlayersByGroup[groupName];
+        const expanded = isGroupExpanded(groupName);
 
         if (!expanded && hasSelection) {
           return {
-            title: `Group ${group.name}`,
-            groupName: group.name,
+            title: `Group ${groupName}`,
+            groupName,
             hasSelection,
-            data: [] as PlayerProfile[],
+            data: [] as GroupPlayer[],
           };
         }
 
         return {
-          title: `Group ${group.name}`,
-          groupName: group.name,
+          title: `Group ${groupName}`,
+          groupName,
           hasSelection,
-          data: group.players.filter((player) => {
+          data: group.players.filter((player: GroupPlayer) => {
             const fullName = `${player.first_name} ${player.last_name}`.toLowerCase();
             return fullName.includes(query) || player.country?.toLowerCase().includes(query);
           }),
@@ -81,7 +83,7 @@ export const useCreateTeamScreen = (leagueId: string) => {
       .filter((section) => section.data.length > 0 || section.hasSelection);
   }, [playerGroups, searchQuery, selectedPlayersByGroup, isGroupExpanded]);
 
-  const handlePlayerToggle = useCallback((player: PlayerProfile) => {
+  const handlePlayerToggle = useCallback((player: GroupPlayer) => {
     const groupName = player.group;
     if (!groupName || !player.id) return;
     const playerId = player.id;

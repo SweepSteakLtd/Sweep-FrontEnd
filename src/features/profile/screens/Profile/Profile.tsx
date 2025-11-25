@@ -84,10 +84,18 @@ export const Profile = () => {
               <BalanceLabel>Balance</BalanceLabel>
             </BalanceContainer>
             <ButtonRow>
-              <ActionButton variant="primary" activeOpacity={0.8}>
+              <ActionButton
+                variant="primary"
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate('Deposit')}
+              >
                 <ActionButtonText variant="primary">Top Up</ActionButtonText>
               </ActionButton>
-              <ActionButton variant="secondary" activeOpacity={0.8}>
+              <ActionButton
+                variant="secondary"
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate('Withdraw')}
+              >
                 <ActionButtonText variant="secondary">Withdraw</ActionButtonText>
               </ActionButton>
             </ButtonRow>

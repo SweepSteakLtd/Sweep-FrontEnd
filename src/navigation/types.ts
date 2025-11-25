@@ -26,6 +26,8 @@ export type RootStackParamList = {
   SelfExclusion: undefined;
   MyTeams: undefined;
   MyLeagues: undefined;
+  Deposit: undefined;
+  Withdraw: undefined;
   AlertModal: {
     title: string;
     message: string;

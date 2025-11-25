@@ -21,6 +21,8 @@ import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/
 import { MyLeagues } from '~/features/my-leagues/screens/MyLeagues/MyLeagues';
 import { MyTeams } from '~/features/my-teams/screens/MyTeams/MyTeams';
 import { Splash } from '~/features/onboarding/screens/Splash/Splash';
+import { Deposit } from '~/features/payment/screens/Deposit/Deposit';
+import { Withdraw } from '~/features/payment/screens/Withdraw/Withdraw';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
 import { CreateTeam } from '~/features/teams/screens/CreateTeam/CreateTeam';
@@ -117,6 +119,8 @@ export const RootNavigator = () => {
         <Stack.Screen name="CreateTeam" component={CreateTeam} />
         <Stack.Screen name="MyTeams" component={MyTeams} />
         <Stack.Screen name="MyLeagues" component={MyLeagues} />
+        <Stack.Screen name="Deposit" component={Deposit} />
+        <Stack.Screen name="Withdraw" component={Withdraw} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen
           name="AlertModal"

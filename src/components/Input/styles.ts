@@ -3,6 +3,7 @@ import type { Theme } from '~/theme/theme';
 import { Typography } from '../Typography/Typography';
 
 export const Container = styled.View`
+  width: 100%;
   margin-bottom: 18px;
 `;
 

@@ -74,14 +74,14 @@ export const Input: React.FC<InputProps> = ({
           secureTextEntry={secureTextEntry && !isPasswordVisible}
           {...props}
         />
-        <EyeIconButton
-          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-          activeOpacity={0.7}
-          disabled={!hasEyeIcon}
-          style={{ opacity: hasEyeIcon ? 1 : 0 }}
-        >
-          <Icon name={isPasswordVisible ? '👁️' : '👁️‍🗨️'} size={20} />
-        </EyeIconButton>
+        {hasEyeIcon && (
+          <EyeIconButton
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            activeOpacity={0.7}
+          >
+            <Icon name={isPasswordVisible ? '👁️' : '👁️‍🗨️'} size={20} />
+          </EyeIconButton>
+        )}
       </InputWrapper>
       {error && (
         <ErrorText variant="caption" color={theme.colors.error}>
