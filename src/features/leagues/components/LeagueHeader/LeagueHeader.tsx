@@ -2,16 +2,15 @@ import React from 'react';
 import { useTheme } from 'styled-components/native';
 import { Typography } from '~/components/Typography/Typography';
 import { formatCurrency } from '~/utils/currency';
+import { JoinCodeCard } from '../JoinCodeCard/JoinCodeCard';
 import {
+  CodeCardWrapper,
   Container,
   InfoIcon,
   InfoItem,
   InfoLabel,
   InfoRow,
   InfoValue,
-  JoinCodeContainer,
-  JoinCodeLabel,
-  JoinCodeValue,
   LeagueName,
 } from './styles';
 
@@ -42,10 +41,13 @@ export const LeagueHeader = ({
     <Container>
       <LeagueName>{leagueName}</LeagueName>
       {isOwner && joinCode && (
-        <JoinCodeContainer>
-          <JoinCodeLabel>Share this code to invite others:</JoinCodeLabel>
-          <JoinCodeValue>{joinCode}</JoinCodeValue>
-        </JoinCodeContainer>
+        <CodeCardWrapper>
+          <JoinCodeCard
+            joinCode={joinCode}
+            leagueName={leagueName}
+            label="Share this code to invite others:"
+          />
+        </CodeCardWrapper>
       )}
       <InfoRow>
         <InfoItem>

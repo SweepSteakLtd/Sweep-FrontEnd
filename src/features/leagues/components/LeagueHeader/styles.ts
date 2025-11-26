@@ -13,6 +13,10 @@ export const LeagueName = styled.Text`
   margin-bottom: 16px;
 `;
 
+export const CodeCardWrapper = styled.View`
+  margin-bottom: 16px;
+`;
+
 export const InfoRow = styled.View`
   flex-direction: row;
   justify-content: space-around;
@@ -46,26 +50,4 @@ export const InfoValue = styled.Text`
   font-size: 16px;
   font-weight: 600;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
-`;
-
-export const JoinCodeContainer = styled.View`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
-  border-radius: 12px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  align-items: center;
-`;
-
-export const JoinCodeLabel = styled.Text`
-  font-size: 12px;
-  font-weight: 400;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
-  margin-bottom: 4px;
-`;
-
-export const JoinCodeValue = styled.Text`
-  font-size: 20px;
-  font-weight: 700;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  letter-spacing: 2px;
 `;

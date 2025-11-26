@@ -6,34 +6,47 @@ import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboa
 import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { CreateLeagueForm } from '~/features/tournaments/components/CreateLeagueForm/CreateLeagueForm';
-import { JoinCodeDisplay } from '~/features/tournaments/components/JoinCodeDisplay/JoinCodeDisplay';
 import type { RootStackParamList } from '~/navigation/types';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
+import { LeagueCreatedSuccess } from '../../components/LeagueCreatedSuccess/LeagueCreatedSuccess';
 import { ButtonContainer, Container } from './styles';
 
 type CreateLeagueRouteProp = RouteProp<RootStackParamList, 'CreateLeague'>;
 type CreateLeagueNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+type CreatedLeagueState = {
+  leagueId: string;
+  leagueName: string;
+  isPrivate: boolean;
+  joinCode?: string;
+} | null;
 
 export const CreateLeague = () => {
   const route = useRoute<CreateLeagueRouteProp>();
   const navigation = useNavigation<CreateLeagueNavigationProp>();
   const { data: tournaments = [] } = useGetTournaments();
 
-  const [showJoinCode, setShowJoinCode] = useState(false);
-  const [joinCode, setJoinCode] = useState('');
-  const [createdLeagueName, setCreatedLeagueName] = useState('');
+  const [createdLeague, setCreatedLeague] = useState<CreatedLeagueState>(null);
   const [submitHandler, setSubmitHandler] = useState<(() => Promise<void>) | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSuccess = () => {
-    // Navigate back to tournament games after successful creation
-    navigation.goBack();
+  const handleSuccess = (
+    leagueId: string,
+    leagueName: string,
+    isPrivate: boolean,
+    joinCode?: string,
+  ) => {
+    setCreatedLeague({ leagueId, leagueName, isPrivate, joinCode });
   };
 
-  const handlePrivateLeagueCreated = (code: string, leagueName: string) => {
-    setJoinCode(code);
-    setCreatedLeagueName(leagueName);
-    setShowJoinCode(true);
+  const handleViewLeague = () => {
+    if (!createdLeague) return;
+
+    // Navigate to league home, replacing this screen
+    navigation.replace('LeagueHome', {
+      leagueId: createdLeague.leagueId,
+      joinCode: createdLeague.joinCode,
+    });
   };
 
   const handleSubmit = (handler: () => Promise<void>) => {
@@ -53,44 +66,48 @@ export const CreateLeague = () => {
 
   const activeTournament = tournaments.find((t) => t.id === route.params.tournamentId);
 
+  // Show success screen after league is created
+  if (createdLeague) {
+    return (
+      <ScreenWrapper title="League Created">
+        <LeagueCreatedSuccess
+          leagueName={createdLeague.leagueName}
+          tournamentName={activeTournament?.name || ''}
+          joinCode={createdLeague.joinCode}
+          isPrivate={createdLeague.isPrivate}
+          onViewLeague={handleViewLeague}
+        />
+      </ScreenWrapper>
+    );
+  }
+
   return (
-    <ScreenWrapper title={showJoinCode ? 'League Created' : 'Create League'}>
+    <ScreenWrapper title="Create League">
       <Container>
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1, paddingTop: 20 }}
           bottomOffset={140}
         >
-          {showJoinCode ? (
-            <JoinCodeDisplay
-              leagueName={createdLeagueName}
-              tournamentName={activeTournament?.name || ''}
-              joinCode={joinCode}
-            />
-          ) : (
-            <CreateLeagueForm
-              key={`${route.params.tournamentId}-${route.params.defaultLeagueType}`}
-              activeTournamentId={route.params.tournamentId}
-              tournaments={tournaments}
-              defaultLeagueType={route.params.defaultLeagueType}
-              onSuccess={handleSuccess}
-              onPrivateLeagueCreated={handlePrivateLeagueCreated}
-              onSubmit={handleSubmit}
-            />
-          )}
+          <CreateLeagueForm
+            key={`${route.params.tournamentId}-${route.params.defaultLeagueType}`}
+            activeTournamentId={route.params.tournamentId}
+            tournaments={tournaments}
+            defaultLeagueType={route.params.defaultLeagueType}
+            onSuccess={handleSuccess}
+            onSubmit={handleSubmit}
+          />
         </KeyboardAwareScrollView>
-        {!showJoinCode && (
-          <KeyboardStickyView>
-            <ButtonContainer>
-              <Button
-                variant="secondary"
-                onPress={handleCreateLeague}
-                loading={isLoading}
-                title="Create League"
-              />
-            </ButtonContainer>
-          </KeyboardStickyView>
-        )}
+        <KeyboardStickyView>
+          <ButtonContainer>
+            <Button
+              variant="secondary"
+              onPress={handleCreateLeague}
+              loading={isLoading}
+              title="Create League"
+            />
+          </ButtonContainer>
+        </KeyboardStickyView>
       </Container>
     </ScreenWrapper>
   );

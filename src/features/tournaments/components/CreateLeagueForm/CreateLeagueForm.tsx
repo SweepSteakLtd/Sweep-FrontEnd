@@ -17,8 +17,7 @@ interface CreateLeagueFormProps {
   activeTournamentId: string;
   tournaments: Tournament[];
   defaultLeagueType?: 'public' | 'private';
-  onSuccess?: () => void;
-  onPrivateLeagueCreated?: (joinCode: string, leagueName: string) => void;
+  onSuccess?: (leagueId: string, leagueName: string, isPrivate: boolean, joinCode?: string) => void;
   onSubmit?: (handleCreateLeague: () => Promise<void>) => void;
 }
 
@@ -37,7 +36,6 @@ export const CreateLeagueForm = ({
   tournaments,
   defaultLeagueType = 'public',
   onSuccess,
-  onPrivateLeagueCreated,
   onSubmit,
 }: CreateLeagueFormProps) => {
   const theme = useTheme();
@@ -98,6 +96,18 @@ export const CreateLeagueForm = ({
         type: leagueType,
       });
 
+      // Call onSuccess with league details before resetting form
+      // Response could be { id, join_code } or { league: { id }, join_code }
+      const createdLeagueId = response.id || (response as any).league?.id;
+      const createdJoinCode = response.join_code || (response as any).league?.join_code;
+      const createdLeagueName = leagueName;
+      const createdLeagueType = leagueType;
+
+      console.log('League created response:', JSON.stringify(response, null, 2));
+      console.log('createdLeagueId:', createdLeagueId);
+      console.log('createdJoinCode:', createdJoinCode);
+      console.log('createdLeagueType:', createdLeagueType);
+
       // Reset form on success
       setLeagueName('');
       setDescription('');
@@ -107,15 +117,14 @@ export const CreateLeagueForm = ({
       setStartTime(new Date());
       setEndTime(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
 
-      // If private league, call the callback to show join code
-      if (leagueType === 'private' && response.join_code) {
-        onPrivateLeagueCreated?.(response.join_code, leagueName);
-      } else {
-        // For public leagues, call onSuccess immediately
-        onSuccess?.();
+      if (createdLeagueId) {
+        onSuccess?.(
+          createdLeagueId,
+          createdLeagueName,
+          createdLeagueType === 'private',
+          createdJoinCode,
+        );
       }
-
-      console.log('League created successfully');
     } catch (error) {
       setCreateError('Failed to create league. Please try again.');
       console.error('Error creating league:', error);
