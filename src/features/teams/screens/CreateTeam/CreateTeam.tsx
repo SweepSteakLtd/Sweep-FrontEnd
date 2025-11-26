@@ -29,7 +29,7 @@ type CreateTeamRouteProp = RouteProp<RootStackParamList, 'CreateTeam'>;
 export const CreateTeam = () => {
   const theme = useTheme();
   const route = useRoute<CreateTeamRouteProp>();
-  const { leagueId } = route.params;
+  const { leagueId, joinCode } = route.params;
 
   const {
     teamName,
@@ -48,7 +48,7 @@ export const CreateTeam = () => {
     handleCreateTeam,
     getSelectedPlayerForGroup,
     isPlayerSelected,
-  } = useCreateTeamScreen(leagueId);
+  } = useCreateTeamScreen(leagueId, joinCode);
 
   const renderPlayer = ({ item }: { item: GroupPlayer }) => {
     return (

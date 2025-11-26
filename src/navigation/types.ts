@@ -17,8 +17,8 @@ export type RootStackParamList = {
   Activity: undefined;
   TournamentLeagues: { tournamentId: string };
   CreateLeague: { tournamentId: string; defaultLeagueType?: 'public' | 'private' };
-  LeagueHome: { leagueId: string };
-  CreateTeam: { leagueId: string };
+  LeagueHome: { leagueId: string; joinCode?: string };
+  CreateTeam: { leagueId: string; joinCode?: string };
   BettingControls: undefined;
   DepositLimits: undefined;
   StakeLimits: undefined;
@@ -41,6 +41,14 @@ export type RootStackParamList = {
     leagueId: string;
     leagueName: string;
     onSuccess?: () => void;
+  };
+  HoleDetailModal: {
+    number: number;
+    name: string;
+    description: string;
+    par: number;
+    distance: number;
+    imageUri?: string;
   };
 };
 

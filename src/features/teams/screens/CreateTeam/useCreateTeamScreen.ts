@@ -12,7 +12,7 @@ interface Section {
   data: GroupPlayer[];
 }
 
-export const useCreateTeamScreen = (leagueId: string) => {
+export const useCreateTeamScreen = (leagueId: string, joinCode?: string) => {
   const navigation = useNavigation();
   const { showAlert } = useAlert();
 
@@ -124,6 +124,7 @@ export const useCreateTeamScreen = (leagueId: string) => {
         name: teamName,
         league_id: leagueId,
         players: selectedPlayerIds,
+        join_code: joinCode,
       });
 
       showAlert({

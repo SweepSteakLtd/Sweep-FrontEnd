@@ -12,8 +12,17 @@ import {
   BalanceRow,
   Container,
   EmptyState,
+  EmptyStateIcon,
   EmptyStateText,
+  EmptyStateTitle,
   Header,
+  LeagueName,
+  PlayerChip,
+  PlayerName,
+  PlayersContainer,
+  PlayersRow,
+  PositionBadge,
+  PositionText,
   ScrollContent,
   SectionTitle,
   StatCircle,
@@ -22,9 +31,7 @@ import {
   StatsRow,
   StatValue,
   TeamCard,
-  TeamDetails,
-  TeamDetailText,
-  TeamDivider,
+  TeamCardHeader,
   TeamHeader,
   TeamName,
 } from './styles';
@@ -43,6 +50,7 @@ export const MyTeams = () => {
 
   // Calculate stats
   const teamsCount = teams?.length || 0;
+  const leaguesCount = new Set(teams?.map((t) => t.league?.id).filter(Boolean)).size;
 
   if (isLoading) {
     return (
@@ -65,10 +73,8 @@ export const MyTeams = () => {
           }
         >
           <Header>
-            <BalanceRow>
-              <BalanceLabel>Current Balance</BalanceLabel>
-            </BalanceRow>
-            <BalanceRow style={{ marginTop: 8 }}>
+            <BalanceLabel>Current Balance</BalanceLabel>
+            <BalanceRow style={{ marginTop: 4 }}>
               <BalanceAmount>{formatCurrency(user?.current_balance)}</BalanceAmount>
             </BalanceRow>
 
@@ -79,33 +85,62 @@ export const MyTeams = () => {
                 </StatCircle>
                 <StatLabel>Teams</StatLabel>
               </StatItem>
+              <StatItem>
+                <StatCircle>
+                  <StatValue>{leaguesCount}</StatValue>
+                </StatCircle>
+                <StatLabel>Leagues</StatLabel>
+              </StatItem>
             </StatsRow>
           </Header>
 
           <SectionTitle>My Teams</SectionTitle>
 
           {teams && teams.length > 0 ? (
-            teams.map((team, index) => (
-              <TeamCard
-                key={`${team.team?.id || index}`}
-                activeOpacity={0.7}
-                onPress={() => {
-                  // TODO: Navigate to team details
-                  console.log('Navigate to team:', team.team?.id);
-                }}
-              >
-                <TeamHeader>
-                  <TeamName>{team.team?.name || 'Unnamed Team'}</TeamName>
-                </TeamHeader>
-                <TeamDetails>
-                  <TeamDetailText>{team.league?.name || 'Unknown League'}</TeamDetailText>
-                  <TeamDivider>|</TeamDivider>
-                  <TeamDetailText>Position: -</TeamDetailText>
-                </TeamDetails>
-              </TeamCard>
-            ))
+            teams.map((team, index) => {
+              const position = undefined; // TODO: Get from API when available
+              const isTop3 = position !== undefined && position <= 3;
+              const playersCount = team.players?.length || 0;
+
+              return (
+                <TeamCard
+                  key={`${team.team?.id || index}`}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    // TODO: Navigate to team details
+                    console.log('Navigate to team:', team.team?.id);
+                  }}
+                >
+                  <TeamCardHeader>
+                    <TeamHeader>
+                      <TeamName>{team.team?.name || 'Unnamed Team'}</TeamName>
+                      <LeagueName>{team.league?.name || 'Unknown League'}</LeagueName>
+                    </TeamHeader>
+                    <PositionBadge isTop3={isTop3}>
+                      <PositionText isTop3={isTop3}>
+                        {position !== undefined ? `#${position}` : '-'}
+                      </PositionText>
+                    </PositionBadge>
+                  </TeamCardHeader>
+
+                  {playersCount > 0 && (
+                    <PlayersContainer>
+                      <PlayersRow>
+                        <PlayerChip>
+                          <PlayerName>
+                            {playersCount} {playersCount === 1 ? 'player' : 'players'} selected
+                          </PlayerName>
+                        </PlayerChip>
+                      </PlayersRow>
+                    </PlayersContainer>
+                  )}
+                </TeamCard>
+              );
+            })
           ) : (
             <EmptyState>
+              <EmptyStateIcon>🏌️</EmptyStateIcon>
+              <EmptyStateTitle>No Teams Yet</EmptyStateTitle>
               <EmptyStateText>
                 You haven't created any teams yet.{'\n'}Join a league to get started!
               </EmptyStateText>

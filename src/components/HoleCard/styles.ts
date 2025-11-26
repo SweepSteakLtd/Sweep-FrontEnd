@@ -1,12 +1,12 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-export const Card = styled.View`
+export const Card = styled.TouchableOpacity<{ showBorder?: boolean }>`
   width: 100%;
   border-radius: 16px;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
   overflow: hidden;
-  border-width: 1px;
+  border-width: ${({ showBorder }: { showBorder?: boolean }) => (showBorder ? '1px' : '0')};
   border-color: rgba(255, 255, 255, 0.1);
 `;
 

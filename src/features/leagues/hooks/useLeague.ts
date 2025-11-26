@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useGetLeague } from '~/services/apis/League/useGetLeague';
 import type { Tournament } from '~/services/apis/schemas';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
+import { useGetUser } from '~/services/apis/User/useGetUser';
 
 export type CarouselItem = {
   type: 'hole' | 'ad';
@@ -30,6 +31,9 @@ export type LeagueData = {
     start_time?: string;
     end_time?: string;
     tournament_id?: string;
+    type?: string;
+    owner_id?: string;
+    join_code?: string;
   } | null;
   tournament: Tournament | undefined;
   carouselData: CarouselItem[];
@@ -38,6 +42,8 @@ export type LeagueData = {
   maxEntries: number;
   isLoading: boolean;
   error: Error | null;
+  isOwner: boolean;
+  joinCode?: string;
 };
 
 const mergeHolesAndAds = (tournament: Tournament | undefined): CarouselItem[] => {
@@ -71,9 +77,14 @@ const mergeHolesAndAds = (tournament: Tournament | undefined): CarouselItem[] =>
   return merged;
 };
 
-export const useLeague = (leagueId: string): LeagueData => {
-  const { data: leagueData, isLoading: leagueLoading, error: leagueError } = useGetLeague(leagueId);
+export const useLeague = (leagueId: string, joinCode?: string): LeagueData => {
+  const {
+    data: leagueData,
+    isLoading: leagueLoading,
+    error: leagueError,
+  } = useGetLeague(leagueId, joinCode);
   const { data: tournaments = [], isLoading: tournamentsLoading } = useGetTournaments();
+  const { data: user } = useGetUser();
 
   const league = leagueData?.league || null;
 
@@ -90,6 +101,9 @@ export const useLeague = (leagueId: string): LeagueData => {
   const totalEntryFees = (league?.entry_fee ?? 0) * currentEntries;
   const totalPot = Math.floor(totalEntryFees * 0.9);
 
+  // Check if current user is the owner of this league
+  const isOwner = !!(user?.id && league?.owner_id && user.id === league.owner_id);
+
   return {
     league,
     tournament,
@@ -99,5 +113,7 @@ export const useLeague = (leagueId: string): LeagueData => {
     maxEntries,
     isLoading: leagueLoading || tournamentsLoading,
     error: leagueError,
+    isOwner,
+    joinCode: league?.join_code,
   };
 };

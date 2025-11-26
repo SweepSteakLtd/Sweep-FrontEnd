@@ -13,9 +13,14 @@ export const createLeagueResponseSchema = leagueSchema.extend({
 
 export type CreateLeagueResponse = z.infer<typeof createLeagueResponseSchema>;
 
+// Extended league schema with join_code for detail response
+export const leagueDetailSchema = leagueSchema.extend({
+  join_code: z.string().optional(), // Only returned for private leagues when user is owner or has access
+});
+
 // League detail response from GET /api/leagues/:id includes user_bets
 export const leagueDetailResponseSchema = z.object({
-  league: leagueSchema,
+  league: leagueDetailSchema,
   user_bets: z.array(betSchema).optional().default([]),
 });
 

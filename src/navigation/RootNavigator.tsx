@@ -15,6 +15,7 @@ import { SpendLimit } from '~/features/betting-controls/screens/SpendLimit/Spend
 import { StakeLimits } from '~/features/betting-controls/screens/StakeLimits/StakeLimits';
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
+import { HoleDetailModal } from '~/features/holes/screens/HoleDetailModal/HoleDetailModal';
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
 import { JoinCodeModal } from '~/features/leagues/screens/JoinCodeModal/JoinCodeModal';
 import { LeagueHome } from '~/features/leagues/screens/LeagueHome/LeagueHome';
@@ -136,6 +137,16 @@ export const RootNavigator = () => {
         <Stack.Screen
           name="JoinCodeModal"
           component={JoinCodeModal}
+          options={{
+            presentation: 'containedTransparentModal',
+            animation: 'fade',
+            headerShown: false,
+            contentStyle: { backgroundColor: 'transparent' },
+          }}
+        />
+        <Stack.Screen
+          name="HoleDetailModal"
+          component={HoleDetailModal}
           options={{
             presentation: 'containedTransparentModal',
             animation: 'fade',

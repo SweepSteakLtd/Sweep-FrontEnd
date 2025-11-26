@@ -8,7 +8,6 @@ import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
 import type { RootStackParamList } from '~/navigation/types';
-import { useJoinLeague } from '~/services/apis/League/useJoinLeague';
 import {
   ButtonContainer,
   Container,
@@ -31,8 +30,6 @@ export const JoinCodeModal = () => {
   const [joinCode, setJoinCode] = useState('');
   const [error, setError] = useState('');
 
-  const joinLeagueMutation = useJoinLeague();
-
   useEffect(() => {
     Keyboard.dismiss();
   }, []);
@@ -41,7 +38,7 @@ export const JoinCodeModal = () => {
     navigation.goBack();
   };
 
-  const handleJoin = async () => {
+  const handleJoin = () => {
     if (!joinCode.trim()) {
       setError('Please enter a join code');
       return;
@@ -49,18 +46,10 @@ export const JoinCodeModal = () => {
 
     setError('');
 
-    try {
-      await joinLeagueMutation.mutateAsync({
-        league_id: leagueId,
-        join_code: joinCode.trim(),
-      });
-
-      navigation.goBack();
-      // Navigate to the league home after successful join
-      navigation.navigate('LeagueHome', { leagueId });
-    } catch (err) {
-      setError('Invalid join code. Please try again.');
-    }
+    // Navigate to the league home with the join code
+    // The API will validate the code when fetching league details
+    navigation.goBack();
+    navigation.navigate('LeagueHome', { leagueId, joinCode: joinCode.trim() });
   };
 
   return (
@@ -99,7 +88,6 @@ export const JoinCodeModal = () => {
             variant="primary"
             title="Join"
             onPress={handleJoin}
-            loading={joinLeagueMutation.isPending}
             disabled={!joinCode.trim()}
             style={{ flex: 1 }}
           />

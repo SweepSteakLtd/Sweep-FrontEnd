@@ -22,10 +22,19 @@ export const LeagueHome = () => {
   const theme = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<LeagueHomeRouteProp>();
-  const { leagueId } = route.params;
+  const { leagueId, joinCode: routeJoinCode } = route.params;
 
-  const { league, tournament, carouselData, totalPot, currentEntries, maxEntries, isLoading } =
-    useLeague(leagueId);
+  const {
+    league,
+    tournament,
+    carouselData,
+    totalPot,
+    currentEntries,
+    maxEntries,
+    isLoading,
+    isOwner,
+    joinCode,
+  } = useLeague(leagueId, routeJoinCode);
 
   if (isLoading) {
     return <LeagueHomeSkeleton />;
@@ -40,6 +49,8 @@ export const LeagueHome = () => {
             currentEntries={currentEntries}
             maxEntries={maxEntries}
             totalPot={totalPot}
+            joinCode={joinCode}
+            isOwner={isOwner}
           />
 
           <TournamentBanner tournament={tournament} />
@@ -49,7 +60,7 @@ export const LeagueHome = () => {
               title="Submit your fantasy list of golfers"
               variant="secondary"
               onPress={() => {
-                navigation.navigate('CreateTeam', { leagueId });
+                navigation.navigate('CreateTeam', { leagueId, joinCode: routeJoinCode });
               }}
               fullWidth
             />

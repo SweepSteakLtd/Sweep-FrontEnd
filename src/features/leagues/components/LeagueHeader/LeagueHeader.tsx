@@ -2,13 +2,26 @@ import React from 'react';
 import { useTheme } from 'styled-components/native';
 import { Typography } from '~/components/Typography/Typography';
 import { formatCurrency } from '~/utils/currency';
-import { Container, InfoIcon, InfoItem, InfoLabel, InfoRow, InfoValue, LeagueName } from './styles';
+import {
+  Container,
+  InfoIcon,
+  InfoItem,
+  InfoLabel,
+  InfoRow,
+  InfoValue,
+  JoinCodeContainer,
+  JoinCodeLabel,
+  JoinCodeValue,
+  LeagueName,
+} from './styles';
 
 type LeagueHeaderProps = {
   leagueName?: string;
   currentEntries: number;
   maxEntries: number;
   totalPot: number;
+  joinCode?: string;
+  isOwner?: boolean;
 };
 
 export const LeagueHeader = ({
@@ -16,6 +29,8 @@ export const LeagueHeader = ({
   currentEntries,
   maxEntries,
   totalPot,
+  joinCode,
+  isOwner,
 }: LeagueHeaderProps) => {
   const theme = useTheme();
 
@@ -26,6 +41,12 @@ export const LeagueHeader = ({
   return (
     <Container>
       <LeagueName>{leagueName}</LeagueName>
+      {isOwner && joinCode && (
+        <JoinCodeContainer>
+          <JoinCodeLabel>Share this code to invite others:</JoinCodeLabel>
+          <JoinCodeValue>{joinCode}</JoinCodeValue>
+        </JoinCodeContainer>
+      )}
       <InfoRow>
         <InfoItem>
           <InfoIcon>

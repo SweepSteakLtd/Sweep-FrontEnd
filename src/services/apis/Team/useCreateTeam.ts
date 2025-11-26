@@ -6,6 +6,7 @@ export interface CreateTeamRequest {
   name?: string;
   league_id?: string;
   players?: string[];
+  join_code?: string;
 }
 
 export const useCreateTeam = () => {
