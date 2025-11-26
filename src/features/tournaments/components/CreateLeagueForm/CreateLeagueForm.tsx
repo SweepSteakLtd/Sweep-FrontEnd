@@ -98,15 +98,10 @@ export const CreateLeagueForm = ({
 
       // Call onSuccess with league details before resetting form
       // Response could be { id, join_code } or { league: { id }, join_code }
-      const createdLeagueId = response.id || (response as any).league?.id;
-      const createdJoinCode = response.join_code || (response as any).league?.join_code;
+      const createdLeagueId = response.id || response.league?.id;
+      const createdJoinCode = response.join_code;
       const createdLeagueName = leagueName;
       const createdLeagueType = leagueType;
-
-      console.log('League created response:', JSON.stringify(response, null, 2));
-      console.log('createdLeagueId:', createdLeagueId);
-      console.log('createdJoinCode:', createdJoinCode);
-      console.log('createdLeagueType:', createdLeagueType);
 
       // Reset form on success
       setLeagueName('');
