@@ -76,16 +76,8 @@ export const TournamentLeagues = () => {
   const handleLeaguePress = (league: League) => {
     if (!league.id) return;
 
-    // For private leagues, show passcode modal
-    if (league.type === 'private') {
-      navigation.navigate('JoinCodeModal', {
-        leagueId: league.id,
-        leagueName: league.name || 'Private League',
-      });
-    } else {
-      // For public leagues, navigate directly
-      navigation.navigate('LeagueHome', { leagueId: league.id });
-    }
+    // Navigate directly to LeagueHome - it handles private league join code flow
+    navigation.navigate('LeagueHome', { leagueId: league.id });
   };
 
   // Show full skeleton only on true initial load (isLoading means no cached data)

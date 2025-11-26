@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { ApiError } from '~/services/apis/apiClient';
 import { useGetLeague } from '~/services/apis/League/useGetLeague';
 import type { Tournament } from '~/services/apis/schemas';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
@@ -44,6 +45,14 @@ export type LeagueData = {
   error: Error | null;
   isOwner: boolean;
   joinCode?: string;
+  // Private league join code handling
+  isPrivateLeagueError: boolean;
+  inputJoinCode: string;
+  setInputJoinCode: (code: string) => void;
+  joinError: string;
+  handleJoinWithCode: () => void;
+  hasAttemptedJoin: boolean;
+  submittedJoinCode?: string;
 };
 
 const mergeHolesAndAds = (tournament: Tournament | undefined): CarouselItem[] => {
@@ -77,16 +86,40 @@ const mergeHolesAndAds = (tournament: Tournament | undefined): CarouselItem[] =>
   return merged;
 };
 
-export const useLeague = (leagueId: string, joinCode?: string): LeagueData => {
+export const useLeague = (leagueId: string, initialJoinCode?: string): LeagueData => {
+  const [inputJoinCode, setInputJoinCode] = useState('');
+  const [submittedJoinCode, setSubmittedJoinCode] = useState(initialJoinCode);
+  const [joinError, setJoinError] = useState('');
+
   const {
     data: leagueData,
     isLoading: leagueLoading,
     error: leagueError,
-  } = useGetLeague(leagueId, joinCode);
+  } = useGetLeague(leagueId, submittedJoinCode);
   const { data: tournaments = [], isLoading: tournamentsLoading } = useGetTournaments();
   const { data: user } = useGetUser();
 
   const league = leagueData?.league || null;
+
+  // Check if error is a 403 (private league access denied)
+  const isPrivateLeagueError = leagueError instanceof ApiError && leagueError.status === 403;
+
+  // Track if user has attempted to join with a code (for showing invalid code message)
+  const hasAttemptedJoin = !!(submittedJoinCode && isPrivateLeagueError);
+
+  const handleJoinWithCode = () => {
+    if (!inputJoinCode.trim()) {
+      setJoinError('Please enter a join code');
+      return;
+    }
+    setJoinError('');
+    setSubmittedJoinCode(inputJoinCode.trim());
+  };
+
+  const handleJoinCodeChange = (code: string) => {
+    setInputJoinCode(code);
+    setJoinError('');
+  };
 
   const tournament = useMemo(
     () => tournaments.find((t) => t.id === league?.tournament_id),
@@ -115,5 +148,13 @@ export const useLeague = (leagueId: string, joinCode?: string): LeagueData => {
     error: leagueError,
     isOwner,
     joinCode: league?.join_code,
+    // Private league join code handling
+    isPrivateLeagueError,
+    inputJoinCode,
+    setInputJoinCode: handleJoinCodeChange,
+    joinError,
+    handleJoinWithCode,
+    hasAttemptedJoin,
+    submittedJoinCode,
   };
 };

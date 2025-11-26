@@ -11,6 +11,7 @@ import { HowToPlay } from '../../components/HowToPlay/HowToPlay';
 import { LeagueDates } from '../../components/LeagueDates/LeagueDates';
 import { LeagueDescription } from '../../components/LeagueDescription/LeagueDescription';
 import { LeagueHeader } from '../../components/LeagueHeader/LeagueHeader';
+import { PrivateLeagueGate } from '../../components/PrivateLeagueGate/PrivateLeagueGate';
 import { TournamentBanner } from '../../components/TournamentBanner/TournamentBanner';
 import { useLeague } from '../../hooks/useLeague';
 import { LeagueHomeSkeleton } from './LeagueHomeSkeleton';
@@ -34,10 +35,30 @@ export const LeagueHome = () => {
     isLoading,
     isOwner,
     joinCode,
+    isPrivateLeagueError,
+    inputJoinCode,
+    setInputJoinCode,
+    joinError,
+    handleJoinWithCode,
+    hasAttemptedJoin,
+    submittedJoinCode,
   } = useLeague(leagueId, routeJoinCode);
 
   if (isLoading) {
     return <LeagueHomeSkeleton />;
+  }
+
+  // Show join code input for private leagues
+  if (isPrivateLeagueError) {
+    return (
+      <PrivateLeagueGate
+        joinCode={inputJoinCode}
+        onJoinCodeChange={setInputJoinCode}
+        onSubmit={handleJoinWithCode}
+        error={joinError}
+        hasAttemptedJoin={hasAttemptedJoin}
+      />
+    );
   }
 
   return (
@@ -60,7 +81,7 @@ export const LeagueHome = () => {
               title="Submit your fantasy list of golfers"
               variant="secondary"
               onPress={() => {
-                navigation.navigate('CreateTeam', { leagueId, joinCode: routeJoinCode });
+                navigation.navigate('CreateTeam', { leagueId, joinCode: submittedJoinCode });
               }}
               fullWidth
             />
