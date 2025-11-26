@@ -32,12 +32,32 @@ export const RightSection = styled.View`
   gap: 6px;
 `;
 
+export const NameRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+`;
+
 export const GameName = styled.Text<{ isLive?: boolean }>`
   font-size: 17px;
   font-weight: 600;
   color: ${({ theme, isLive }: { theme: Theme; isLive?: boolean }) =>
     isLive ? theme.colors.primary : theme.colors.text.primary};
   line-height: 24px;
+  flex-shrink: 1;
+`;
+
+export const PrivatePill = styled.View`
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  padding: 2px 8px;
+  border-radius: 10px;
+`;
+
+export const PrivatePillText = styled.Text`
+  font-size: 11px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  text-transform: uppercase;
 `;
 
 export const TournamentInfo = styled.Text`

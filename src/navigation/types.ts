@@ -37,6 +37,11 @@ export type RootStackParamList = {
       style?: 'default' | 'cancel' | 'destructive';
     }>;
   };
+  JoinCodeModal: {
+    leagueId: string;
+    leagueName: string;
+    onSuccess?: () => void;
+  };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

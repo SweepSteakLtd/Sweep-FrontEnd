@@ -3,6 +3,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import { useAlert } from '~/components/Alert/Alert';
 import { Avatar } from '~/components/Avatar/Avatar';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
@@ -32,6 +33,7 @@ export const Profile = () => {
   const navigation = useNavigation<NavigationProp>();
   const theme = useTheme();
   const { signOut } = useAuth();
+  const { showAlert } = useAlert();
   const { data: user, refetch } = useGetUser();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -41,9 +43,25 @@ export const Profile = () => {
     setRefreshing(false);
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    navigation.navigate('Login');
+  const handleLogout = () => {
+    showAlert({
+      title: 'Sign Out',
+      message: 'Are you sure you want to sign out?',
+      buttons: [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            await signOut();
+            navigation.navigate('Login');
+          },
+        },
+      ],
+    });
   };
 
   const menuItems = [

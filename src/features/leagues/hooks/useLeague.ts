@@ -34,8 +34,8 @@ export type LeagueData = {
   tournament: Tournament | undefined;
   carouselData: CarouselItem[];
   totalPot: number;
-  currentParticipants: number;
-  maxParticipants: number;
+  currentEntries: number;
+  maxEntries: number;
   isLoading: boolean;
   error: Error | null;
 };
@@ -84,17 +84,19 @@ export const useLeague = (leagueId: string): LeagueData => {
 
   const carouselData = useMemo(() => mergeHolesAndAds(tournament), [tournament]);
 
-  const totalPot = (league?.entry_fee ?? 0) * (league?.max_participants ?? 0);
-  const currentParticipants = league?.user_id_list?.length || 0;
-  const maxParticipants = league?.max_participants || 100;
+  const currentEntries = league?.user_id_list?.length || 0;
+  const maxEntries = league?.max_participants || 100;
+  // Total pot is 90% of entry fees collected (platform keeps 10%)
+  const totalEntryFees = (league?.entry_fee ?? 0) * currentEntries;
+  const totalPot = Math.floor(totalEntryFees * 0.9);
 
   return {
     league,
     tournament,
     carouselData,
     totalPot,
-    currentParticipants,
-    maxParticipants,
+    currentEntries,
+    maxEntries,
     isLoading: leagueLoading || tournamentsLoading,
     error: leagueError,
   };

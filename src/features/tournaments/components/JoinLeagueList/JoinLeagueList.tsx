@@ -83,12 +83,13 @@ export const JoinLeagueList = ({
 
       {/* Search and Create row aligned with list items */}
       <SearchAndCreateRow>
-        <SearchWrapper style={{ opacity: activeLeagueTab === 'private' ? 0 : 1 }}>
+        <SearchWrapper>
           <SearchInput
             value={searchQuery}
             onChangeText={onSearchChange || (() => {})}
-            placeholder="Search leagues..."
-            editable={activeLeagueTab !== 'private'}
+            placeholder={
+              activeLeagueTab === 'private' ? 'Search by name or join code...' : 'Search leagues...'
+            }
           />
         </SearchWrapper>
         {onCreateLeague && (

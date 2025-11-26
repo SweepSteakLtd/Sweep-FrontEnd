@@ -15,7 +15,10 @@ import {
   InfoLabel,
   LeftSection,
   LiveDot,
+  NameRow,
   PlayersText,
+  PrivatePill,
+  PrivatePillText,
   RightSection,
   StatusContainer,
   StatusText,
@@ -55,19 +58,36 @@ export const LeagueCard = ({ league, tournamentName = '', onPress, onDelete }: L
     });
   };
 
-  const totalPot = (league.entry_fee ?? 0) * (league.max_participants ?? 0);
-  const year = league.start_time ? new Date(league.start_time).getFullYear() : new Date().getFullYear();
+  // Total pot is 90% of entry fees collected (platform keeps 10%)
+  const currentEntries = league.user_id_list?.length || 0;
+  const totalEntryFees = (league.entry_fee ?? 0) * currentEntries;
+  const totalPot = Math.floor(totalEntryFees * 0.9);
+  const year = league.start_time
+    ? new Date(league.start_time).getFullYear()
+    : new Date().getFullYear();
 
   const leagueStatus =
-    league.start_time && league.end_time ? getLeagueStatus(league.start_time, league.end_time) : null;
+    league.start_time && league.end_time
+      ? getLeagueStatus(league.start_time, league.end_time)
+      : null;
   const isLive = leagueStatus?.status === 'live';
   const isFinished = leagueStatus?.status === 'finished';
+  const isPrivate = league.type === 'private';
 
   const cardContent = (
     <Card onPress={onPress} activeOpacity={0.7} isFinished={isFinished}>
       <CardContainer>
         <LeftSection>
-          <GameName isLive={isLive}>{league.name}</GameName>
+          <NameRow>
+            <GameName isLive={isLive} numberOfLines={1}>
+              {league.name}
+            </GameName>
+            {isPrivate && (
+              <PrivatePill>
+                <PrivatePillText>Private</PrivatePillText>
+              </PrivatePill>
+            )}
+          </NameRow>
           <TournamentInfo>
             {tournamentName} {year}
           </TournamentInfo>
@@ -83,7 +103,7 @@ export const LeagueCard = ({ league, tournamentName = '', onPress, onDelete }: L
         <RightSection>
           <AmountText>{formatCurrency(totalPot)}</AmountText>
           <PlayersText>
-            <InfoLabel>{league.user_id_list?.length || 0} players</InfoLabel>
+            <InfoLabel>{currentEntries} entries</InfoLabel>
           </PlayersText>
         </RightSection>
       </CardContainer>

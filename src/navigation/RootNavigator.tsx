@@ -16,6 +16,7 @@ import { StakeLimits } from '~/features/betting-controls/screens/StakeLimits/Sta
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
+import { JoinCodeModal } from '~/features/leagues/screens/JoinCodeModal/JoinCodeModal';
 import { LeagueHome } from '~/features/leagues/screens/LeagueHome/LeagueHome';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
 import { MyLeagues } from '~/features/my-leagues/screens/MyLeagues/MyLeagues';
@@ -125,6 +126,16 @@ export const RootNavigator = () => {
         <Stack.Screen
           name="AlertModal"
           component={AlertModal}
+          options={{
+            presentation: 'containedTransparentModal',
+            animation: 'fade',
+            headerShown: false,
+            contentStyle: { backgroundColor: 'transparent' },
+          }}
+        />
+        <Stack.Screen
+          name="JoinCodeModal"
+          component={JoinCodeModal}
           options={{
             presentation: 'containedTransparentModal',
             animation: 'fade',

@@ -24,15 +24,8 @@ export const LeagueHome = () => {
   const route = useRoute<LeagueHomeRouteProp>();
   const { leagueId } = route.params;
 
-  const {
-    league,
-    tournament,
-    carouselData,
-    totalPot,
-    currentParticipants,
-    maxParticipants,
-    isLoading,
-  } = useLeague(leagueId);
+  const { league, tournament, carouselData, totalPot, currentEntries, maxEntries, isLoading } =
+    useLeague(leagueId);
 
   if (isLoading) {
     return <LeagueHomeSkeleton />;
@@ -44,8 +37,8 @@ export const LeagueHome = () => {
         <ScrollContent>
           <LeagueHeader
             leagueName={league?.name}
-            currentParticipants={currentParticipants}
-            maxParticipants={maxParticipants}
+            currentEntries={currentEntries}
+            maxEntries={maxEntries}
             totalPot={totalPot}
           />
 

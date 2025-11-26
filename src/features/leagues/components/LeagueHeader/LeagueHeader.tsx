@@ -6,15 +6,15 @@ import { Container, InfoIcon, InfoItem, InfoLabel, InfoRow, InfoValue, LeagueNam
 
 type LeagueHeaderProps = {
   leagueName?: string;
-  currentParticipants: number;
-  maxParticipants: number;
+  currentEntries: number;
+  maxEntries: number;
   totalPot: number;
 };
 
 export const LeagueHeader = ({
   leagueName,
-  currentParticipants,
-  maxParticipants,
+  currentEntries,
+  maxEntries,
   totalPot,
 }: LeagueHeaderProps) => {
   const theme = useTheme();
@@ -33,9 +33,9 @@ export const LeagueHeader = ({
               👥
             </Typography>
           </InfoIcon>
-          <InfoLabel>PARTICIPANTS</InfoLabel>
+          <InfoLabel>ENTRIES</InfoLabel>
           <InfoValue>
-            {currentParticipants}/{maxParticipants}
+            {currentEntries}/{maxEntries}
           </InfoValue>
         </InfoItem>
 
