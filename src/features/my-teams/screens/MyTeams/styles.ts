@@ -6,12 +6,6 @@ export const Container = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
 `;
 
-export const ScrollContent = styled.ScrollView.attrs({
-  showsVerticalScrollIndicator: false,
-  showsHorizontalScrollIndicator: false,
-  contentContainerStyle: { paddingBottom: 20, paddingHorizontal: 16 },
-})``;
-
 export const Header = styled.View`
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
   padding: 20px;
@@ -35,18 +29,6 @@ export const BalanceAmount = styled.Text`
   font-size: 32px;
   font-weight: 700;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
-`;
-
-export const BalanceBadge = styled.View`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  padding: 4px 12px;
-  border-radius: 16px;
-`;
-
-export const BalanceBadgeText = styled.Text`
-  font-size: 12px;
-  font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
 `;
 
 export const StatsRow = styled.View`
@@ -90,109 +72,6 @@ export const SectionTitle = styled.Text`
   font-weight: 600;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
   margin-bottom: 16px;
-`;
-
-export const TeamCard = styled.TouchableOpacity`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
-  border-radius: 16px;
-  margin-bottom: 12px;
-  overflow: hidden;
-`;
-
-export const TeamCardHeader = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom-width: 1px;
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-`;
-
-export const TeamHeader = styled.View`
-  flex: 1;
-`;
-
-export const TeamName = styled.Text`
-  font-size: 18px;
-  font-weight: 700;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
-  margin-bottom: 4px;
-`;
-
-export const LeagueName = styled.Text`
-  font-size: 13px;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
-`;
-
-export const PositionBadge = styled.View<{ isTop3?: boolean }>`
-  background-color: ${({ theme, isTop3 }: { theme: Theme; isTop3?: boolean }) =>
-    isTop3 ? theme.colors.primary : theme.colors.background};
-  padding: 8px 12px;
-  border-radius: 12px;
-  min-width: 48px;
-  align-items: center;
-`;
-
-export const PositionText = styled.Text<{ isTop3?: boolean }>`
-  font-size: 14px;
-  font-weight: 700;
-  color: ${({ theme, isTop3 }: { theme: Theme; isTop3?: boolean }) =>
-    isTop3 ? theme.colors.white : theme.colors.text.secondary};
-`;
-
-export const PlayersContainer = styled.View`
-  padding: 12px 16px;
-`;
-
-export const PlayersRow = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 8px;
-`;
-
-export const PlayerChip = styled.View`
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
-  padding: 6px 10px;
-  border-radius: 8px;
-`;
-
-export const PlayerAvatar = styled.View`
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  justify-content: center;
-  align-items: center;
-  margin-right: 6px;
-`;
-
-export const PlayerAvatarText = styled.Text`
-  font-size: 10px;
-  font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
-`;
-
-export const PlayerName = styled.Text`
-  font-size: 12px;
-  font-weight: 500;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
-`;
-
-export const TeamDetails = styled.View`
-  flex-direction: row;
-  gap: 8px;
-`;
-
-export const TeamDetailText = styled.Text`
-  font-size: 14px;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
-`;
-
-export const TeamDivider = styled.Text`
-  font-size: 14px;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.border};
 `;
 
 export const EmptyState = styled.View`

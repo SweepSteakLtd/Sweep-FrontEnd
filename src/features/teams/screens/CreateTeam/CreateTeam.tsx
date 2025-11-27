@@ -1,17 +1,18 @@
 import type { RouteProp } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SectionList } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { PlayerAvatarStack } from '~/features/my-teams/components/PlayerAvatarStack';
 import { PlayerListItem } from '~/features/players/components/PlayerListItem/PlayerListItem';
 import { PlayerListItemSkeleton } from '~/features/players/components/PlayerListItemSkeleton/PlayerListItemSkeleton';
 import type { RootStackParamList } from '~/navigation/types';
 import type { GroupPlayer } from '~/services/apis/schemas';
-import { SelectedPlayersList } from '../../components/SelectedPlayersList/SelectedPlayersList';
 import {
   Container,
+  EmptySelectionText,
   GroupHeader,
   GroupHeaderRight,
   GroupHeaderText,
@@ -20,16 +21,26 @@ import {
   SearchInput,
   SectionTitle,
   SelectedCount,
+  SelectedPlayersContainer,
   TeamNameInput,
+  ViewOnlyBanner,
+  ViewOnlyText,
 } from './styles';
-import { useCreateTeamScreen } from './useCreateTeamScreen';
+import { useTeamScreen } from './useCreateTeamScreen';
 
-type CreateTeamRouteProp = RouteProp<RootStackParamList, 'CreateTeam'>;
+type TeamScreenRouteProp = RouteProp<RootStackParamList, 'Team'>;
 
-export const CreateTeam = () => {
+export const TeamScreen = () => {
   const theme = useTheme();
-  const route = useRoute<CreateTeamRouteProp>();
-  const { leagueId, joinCode } = route.params;
+  const route = useRoute<TeamScreenRouteProp>();
+  const {
+    leagueId,
+    joinCode,
+    teamId,
+    teamName: initialTeamName,
+    playerIds,
+    tournamentStartTime,
+  } = route.params;
 
   const {
     teamName,
@@ -41,16 +52,28 @@ export const CreateTeam = () => {
     selectedPlayerIds,
     isLoading,
     isPending,
-    canCreateTeam,
+    canSubmit,
+    isEditMode,
+    isViewOnly,
     isGroupExpanded,
     toggleGroupExpanded,
     handlePlayerToggle,
-    handleCreateTeam,
+    handleSubmit,
     getSelectedPlayerForGroup,
     isPlayerSelected,
-  } = useCreateTeamScreen(leagueId, joinCode);
+  } = useTeamScreen(leagueId, joinCode, {
+    teamId,
+    teamName: initialTeamName,
+    playerIds,
+    tournamentStartTime,
+  });
+
+  const selectedPlayers = useMemo(() => {
+    return allPlayers.filter((player) => selectedPlayerIds.includes(player.id || ''));
+  }, [allPlayers, selectedPlayerIds]);
 
   const renderPlayer = ({ item }: { item: GroupPlayer }) => {
+    if (isViewOnly) return null;
     return (
       <PlayerListItem
         player={item}
@@ -65,6 +88,7 @@ export const CreateTeam = () => {
   }: {
     section: { title: string; groupName: string; hasSelection: boolean };
   }) => {
+    if (isViewOnly) return null;
     const expanded = isGroupExpanded(section.groupName);
     const selectedPlayer = getSelectedPlayerForGroup(section.groupName);
 
@@ -84,9 +108,11 @@ export const CreateTeam = () => {
     );
   };
 
+  const screenTitle = isViewOnly ? 'View Team' : isEditMode ? 'Edit Team' : 'Create Team';
+
   if (isLoading) {
     return (
-      <ScreenWrapper title="Create Team">
+      <ScreenWrapper title={screenTitle}>
         <Container style={{ paddingHorizontal: 16, paddingTop: 16 }}>
           <SectionTitle>Team Name</SectionTitle>
           <TeamNameInput
@@ -107,7 +133,7 @@ export const CreateTeam = () => {
   }
 
   return (
-    <ScreenWrapper title="Create Team">
+    <ScreenWrapper title={screenTitle}>
       <Container>
         <SectionList
           sections={sections}
@@ -116,12 +142,22 @@ export const CreateTeam = () => {
           keyExtractor={(item) => item.id || ''}
           ListHeaderComponent={
             <>
+              {isViewOnly && (
+                <ViewOnlyBanner>
+                  <ViewOnlyText>
+                    Tournament has started. You can no longer edit this team.
+                  </ViewOnlyText>
+                </ViewOnlyBanner>
+              )}
+
               <SectionTitle>Team Name</SectionTitle>
               <TeamNameInput
                 value={teamName}
                 onChangeText={setTeamName}
                 placeholder="Enter your team name"
                 placeholderTextColor={theme.colors.text.secondary}
+                editable={!isViewOnly}
+                style={isViewOnly ? { opacity: 0.6 } : undefined}
               />
 
               <SectionTitle>
@@ -131,28 +167,42 @@ export const CreateTeam = () => {
                 )}
               </SectionTitle>
 
-              <SelectedPlayersList players={allPlayers} selectedPlayerIds={selectedPlayerIds} />
+              <SelectedPlayersContainer>
+                {selectedPlayers.length > 0 ? (
+                  <PlayerAvatarStack players={selectedPlayers} />
+                ) : (
+                  <EmptySelectionText>No players selected</EmptySelectionText>
+                )}
+              </SelectedPlayersContainer>
 
-              <SectionTitle>Available Players</SectionTitle>
-              <HelpText>You can only select one player from each group</HelpText>
+              {!isViewOnly && (
+                <>
+                  <SectionTitle>Available Players</SectionTitle>
+                  <HelpText>You can only select one player from each group</HelpText>
 
-              <SearchInput
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                placeholder="Search by name or country"
-                placeholderTextColor={theme.colors.text.secondary}
-              />
+                  <SearchInput
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    placeholder="Search by name or country"
+                    placeholderTextColor={theme.colors.text.secondary}
+                  />
+                </>
+              )}
             </>
           }
           ListFooterComponent={
-            <Button
-              title="Create Team"
-              onPress={handleCreateTeam}
-              disabled={!canCreateTeam}
-              loading={isPending}
-              fullWidth
-              style={{ marginTop: 24, marginBottom: 40 }}
-            />
+            !isViewOnly ? (
+              <Button
+                title={isEditMode ? 'Save Changes' : 'Create Team'}
+                onPress={handleSubmit}
+                disabled={!canSubmit}
+                loading={isPending}
+                fullWidth
+                style={{ marginTop: 24, marginBottom: 40 }}
+              />
+            ) : (
+              <></>
+            )
           }
           contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16 }}
           showsVerticalScrollIndicator={false}

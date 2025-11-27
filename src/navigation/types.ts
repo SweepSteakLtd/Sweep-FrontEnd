@@ -18,7 +18,15 @@ export type RootStackParamList = {
   TournamentLeagues: { tournamentId: string };
   CreateLeague: { tournamentId: string; defaultLeagueType?: 'public' | 'private' };
   LeagueHome: { leagueId: string; joinCode?: string };
-  CreateTeam: { leagueId: string; joinCode?: string };
+  Team: {
+    leagueId: string;
+    joinCode?: string;
+    // Edit/View mode params (when coming from MyTeams)
+    teamId?: string;
+    teamName?: string;
+    playerIds?: string[];
+    tournamentStartTime?: string;
+  };
   BettingControls: undefined;
   DepositLimits: undefined;
   StakeLimits: undefined;

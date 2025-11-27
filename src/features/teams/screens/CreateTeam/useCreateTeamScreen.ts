@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import { useGetPlayerProfiles } from '~/services/apis/PlayerProfile/useGetPlayerProfiles';
 import type { GroupPlayer } from '~/services/apis/schemas';
 import { useCreateTeam } from '~/services/apis/Team/useCreateTeam';
+import { useUpdateTeam } from '~/services/apis/Team/useUpdateTeam';
 
 interface Section {
   title: string;
@@ -12,21 +13,53 @@ interface Section {
   data: GroupPlayer[];
 }
 
-export const useCreateTeamScreen = (leagueId: string, joinCode?: string) => {
+interface TeamScreenParams {
+  teamId?: string;
+  teamName?: string;
+  playerIds?: string[];
+  tournamentStartTime?: string;
+}
+
+export const useTeamScreen = (leagueId: string, joinCode?: string, params?: TeamScreenParams) => {
   const navigation = useNavigation();
   const { showAlert } = useAlert();
 
-  const [teamName, setTeamName] = useState('');
+  const isEditMode = !!params?.teamId;
+  const isViewOnly =
+    isEditMode && params?.tournamentStartTime
+      ? new Date(params.tournamentStartTime) <= new Date()
+      : false;
+
+  const [teamName, setTeamName] = useState(params?.teamName || '');
   const [selectedPlayersByGroup, setSelectedPlayersByGroup] = useState<Record<string, string>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+  const [initialized, setInitialized] = useState(false);
 
   const { data: playerGroups = [], isLoading } = useGetPlayerProfiles();
   const createTeamMutation = useCreateTeam();
+  const updateTeamMutation = useUpdateTeam(params?.teamId || '');
 
   const allPlayers = useMemo(() => {
     return playerGroups.flatMap((group) => group.players);
   }, [playerGroups]);
+
+  // Initialize edit/view mode with existing player selections
+  useEffect(() => {
+    if (isEditMode && params?.playerIds && playerGroups.length > 0 && !initialized) {
+      const newSelectedByGroup: Record<string, string> = {};
+
+      params.playerIds.forEach((playerId) => {
+        const player = allPlayers.find((p) => p.id === playerId);
+        if (player?.group) {
+          newSelectedByGroup[player.group] = playerId;
+        }
+      });
+
+      setSelectedPlayersByGroup(newSelectedByGroup);
+      setInitialized(true);
+    }
+  }, [isEditMode, params?.playerIds, playerGroups, allPlayers, initialized]);
 
   const selectedPlayerIds = useMemo(() => {
     return Object.values(selectedPlayersByGroup);
@@ -102,7 +135,7 @@ export const useCreateTeamScreen = (leagueId: string, joinCode?: string) => {
     });
   }, []);
 
-  const handleCreateTeam = useCallback(async () => {
+  const handleSubmit = useCallback(async () => {
     if (!teamName.trim()) {
       showAlert({
         title: 'Error',
@@ -120,30 +153,60 @@ export const useCreateTeamScreen = (leagueId: string, joinCode?: string) => {
     }
 
     try {
-      await createTeamMutation.mutateAsync({
-        name: teamName,
-        league_id: leagueId,
-        players: selectedPlayerIds,
-        join_code: joinCode,
-      });
+      if (isEditMode) {
+        await updateTeamMutation.mutateAsync({
+          name: teamName,
+          players: selectedPlayerIds,
+        });
 
-      showAlert({
-        title: 'Success',
-        message: 'Team created successfully!',
-        buttons: [
-          {
-            text: 'OK',
-            onPress: () => navigation.goBack(),
-          },
-        ],
-      });
+        showAlert({
+          title: 'Success',
+          message: 'Team updated successfully!',
+          buttons: [
+            {
+              text: 'OK',
+              onPress: () => navigation.goBack(),
+            },
+          ],
+        });
+      } else {
+        await createTeamMutation.mutateAsync({
+          name: teamName,
+          league_id: leagueId,
+          players: selectedPlayerIds,
+          join_code: joinCode,
+        });
+
+        showAlert({
+          title: 'Success',
+          message: 'Team created successfully!',
+          buttons: [
+            {
+              text: 'OK',
+              onPress: () => navigation.goBack(),
+            },
+          ],
+        });
+      }
     } catch {
       showAlert({
         title: 'Error',
-        message: 'Failed to create team. Please try again.',
+        message: isEditMode
+          ? 'Failed to update team. Please try again.'
+          : 'Failed to create team. Please try again.',
       });
     }
-  }, [teamName, selectedPlayerIds, leagueId, createTeamMutation, showAlert, navigation]);
+  }, [
+    teamName,
+    selectedPlayerIds,
+    leagueId,
+    isEditMode,
+    createTeamMutation,
+    updateTeamMutation,
+    showAlert,
+    navigation,
+    joinCode,
+  ]);
 
   const getSelectedPlayerForGroup = useCallback(
     (groupName: string) => {
@@ -158,8 +221,8 @@ export const useCreateTeamScreen = (leagueId: string, joinCode?: string) => {
     [selectedPlayerIds],
   );
 
-  const canCreateTeam =
-    teamName.trim() && selectedPlayerIds.length > 0 && !createTeamMutation.isPending;
+  const isPending = isEditMode ? updateTeamMutation.isPending : createTeamMutation.isPending;
+  const canSubmit = teamName.trim() && selectedPlayerIds.length > 0 && !isPending;
 
   const handleSelectPlayerById = useCallback((groupName: string, playerId: string) => {
     setSelectedPlayersByGroup((prev): Record<string, string> => {
@@ -187,13 +250,15 @@ export const useCreateTeamScreen = (leagueId: string, joinCode?: string) => {
     selectedPlayerIds,
     selectedPlayersByGroup,
     isLoading,
-    isPending: createTeamMutation.isPending,
-    canCreateTeam,
+    isPending,
+    canSubmit,
+    isEditMode,
+    isViewOnly,
     isGroupExpanded,
     toggleGroupExpanded,
     handlePlayerToggle,
     handleSelectPlayerById,
-    handleCreateTeam,
+    handleSubmit,
     getSelectedPlayerForGroup,
     isPlayerSelected,
   };

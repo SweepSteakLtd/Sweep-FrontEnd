@@ -81,7 +81,7 @@ export const LeagueHome = () => {
               title="Submit your fantasy list of golfers"
               variant="secondary"
               onPress={() => {
-                navigation.navigate('CreateTeam', { leagueId, joinCode: submittedJoinCode });
+                navigation.navigate('Team', { leagueId, joinCode: submittedJoinCode });
               }}
               fullWidth
             />

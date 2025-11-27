@@ -27,7 +27,7 @@ import { Deposit } from '~/features/payment/screens/Deposit/Deposit';
 import { Withdraw } from '~/features/payment/screens/Withdraw/Withdraw';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
-import { CreateTeam } from '~/features/teams/screens/CreateTeam/CreateTeam';
+import { TeamScreen } from '~/features/teams/screens/CreateTeam/CreateTeam';
 import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
 import { VerificationPending } from '~/features/verification/screens/VerificationPending/VerificationPending';
 import { navigationRef } from './navigationRef';
@@ -118,7 +118,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="TournamentLeagues" component={TournamentLeagues} />
         <Stack.Screen name="LeagueHome" component={LeagueHome} />
         <Stack.Screen name="CreateLeague" component={CreateLeague} />
-        <Stack.Screen name="CreateTeam" component={CreateTeam} />
+        <Stack.Screen name="Team" component={TeamScreen} />
         <Stack.Screen name="MyTeams" component={MyTeams} />
         <Stack.Screen name="MyLeagues" component={MyLeagues} />
         <Stack.Screen name="Deposit" component={Deposit} />

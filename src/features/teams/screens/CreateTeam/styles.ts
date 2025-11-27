@@ -81,3 +81,34 @@ export const HelpText = styled.Text<{ theme: Theme }>`
   font-style: italic;
   margin-bottom: 8px;
 `;
+
+export const SelectedPlayersContainer = styled.View<{ theme: Theme }>`
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
+  border-radius: 12px;
+  margin-bottom: 8px;
+  min-height: 64px;
+  padding: 16px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const EmptySelectionText = styled.Text<{ theme: Theme }>`
+  font-size: 14px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  font-style: italic;
+`;
+
+export const ViewOnlyBanner = styled.View<{ theme: Theme }>`
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.warning || '#FFA500'}20;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-width: 1px;
+  border-color: ${({ theme }: { theme: Theme }) => theme.colors.warning || '#FFA500'};
+`;
+
+export const ViewOnlyText = styled.Text<{ theme: Theme }>`
+  font-size: 14px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.warning || '#FFA500'};
+  text-align: center;
+`;
