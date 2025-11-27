@@ -52,12 +52,21 @@ export const CreateLeagueForm = ({
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [createError, setCreateError] = useState('');
 
+  const selectedTournament = tournaments.find((t) => t.id === selectedTournamentId);
+
   const tournamentOptions = tournaments
     .filter((t) => t.id && t.name)
     .map((t) => ({
       label: t.name!,
       value: t.id!,
     }));
+
+  // Update end time when tournament changes
+  useEffect(() => {
+    if (selectedTournament?.finishes_at) {
+      setEndTime(new Date(selectedTournament.finishes_at));
+    }
+  }, [selectedTournament?.finishes_at]);
 
   const handleCreateLeague = async () => {
     // Validate all fields
@@ -259,6 +268,7 @@ export const CreateLeagueForm = ({
           }}
           minimumDate={startTime}
           error={fieldErrors.endTime}
+          disabled
         />
 
         {createError ? <ErrorText style={{ marginTop: 16 }}>{createError}</ErrorText> : null}

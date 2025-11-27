@@ -8,6 +8,7 @@ interface TimeSelectFieldProps {
   onValueChange: (date: Date) => void;
   minimumDate?: Date;
   error?: string;
+  disabled?: boolean;
 }
 
 export const TimeSelectField = ({
@@ -16,6 +17,7 @@ export const TimeSelectField = ({
   onValueChange,
   minimumDate,
   error,
+  disabled,
 }: TimeSelectFieldProps) => {
   const [showPicker, setShowPicker] = useState(false);
 
@@ -33,8 +35,12 @@ export const TimeSelectField = ({
     <>
       <FieldContainer>
         <FieldLabel>{label}</FieldLabel>
-        <FieldTouchable onPress={() => setShowPicker(true)} activeOpacity={0.7}>
-          <FieldValue>{formatDate(value)}</FieldValue>
+        <FieldTouchable
+          onPress={() => !disabled && setShowPicker(true)}
+          activeOpacity={disabled ? 1 : 0.7}
+          disabled={disabled}
+        >
+          <FieldValue disabled={disabled}>{formatDate(value)}</FieldValue>
         </FieldTouchable>
       </FieldContainer>
       {error && <ErrorText>{error}</ErrorText>}

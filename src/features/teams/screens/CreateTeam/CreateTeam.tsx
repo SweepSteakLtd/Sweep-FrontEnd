@@ -13,6 +13,10 @@ import type { GroupPlayer } from '~/services/apis/schemas';
 import {
   Container,
   EmptySelectionText,
+  ErrorContainer,
+  ErrorIcon,
+  ErrorMessage,
+  ErrorTitle,
   GroupHeader,
   GroupHeaderRight,
   GroupHeaderText,
@@ -51,6 +55,8 @@ export const TeamScreen = () => {
     allPlayers,
     selectedPlayerIds,
     isLoading,
+    isError,
+    hasNoPlayers,
     isPending,
     canSubmit,
     isEditMode,
@@ -128,6 +134,36 @@ export const TeamScreen = () => {
               <PlayerListItemSkeleton key={`skeleton-${index}`} />
             ))}
         </Container>
+      </ScreenWrapper>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ScreenWrapper title={screenTitle}>
+        <ErrorContainer>
+          <ErrorIcon>⚠️</ErrorIcon>
+          <ErrorTitle>Something went wrong</ErrorTitle>
+          <ErrorMessage>
+            We couldn't load the available players. Please check your connection and try again
+            later.
+          </ErrorMessage>
+        </ErrorContainer>
+      </ScreenWrapper>
+    );
+  }
+
+  if (hasNoPlayers && !isEditMode) {
+    return (
+      <ScreenWrapper title={screenTitle}>
+        <ErrorContainer>
+          <ErrorIcon>🏌️</ErrorIcon>
+          <ErrorTitle>No Players Available</ErrorTitle>
+          <ErrorMessage>
+            There are no players available for team selection at the moment. Please come back later
+            when players have been added to the tournament.
+          </ErrorMessage>
+        </ErrorContainer>
       </ScreenWrapper>
     );
   }

@@ -36,7 +36,10 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [initialized, setInitialized] = useState(false);
 
-  const { data: playerGroups = [], isLoading } = useGetPlayerProfiles();
+  const { data: playerGroups = [], isLoading, isError } = useGetPlayerProfiles();
+
+  // Check if no players are available after loading
+  const hasNoPlayers = !isLoading && !isError && playerGroups.length === 0;
   const createTeamMutation = useCreateTeam();
   const updateTeamMutation = useUpdateTeam(params?.teamId || '');
 
@@ -250,6 +253,8 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
     selectedPlayerIds,
     selectedPlayersByGroup,
     isLoading,
+    isError,
+    hasNoPlayers,
     isPending,
     canSubmit,
     isEditMode,

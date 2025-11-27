@@ -21,10 +21,13 @@ export const FieldTouchable = styled.TouchableOpacity`
   align-items: center;
 `;
 
-export const FieldValue = styled.Text`
+export const FieldValue = styled.Text<{ disabled?: boolean }>`
   font-size: 14px;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  text-decoration-line: underline;
+  color: ${({ theme, disabled }: { theme: Theme; disabled?: boolean }) =>
+    disabled ? theme.colors.text.secondary : theme.colors.primary};
+  text-decoration-line: ${({ disabled }: { disabled?: boolean }) =>
+    disabled ? 'none' : 'underline'};
+  opacity: ${({ disabled }: { disabled?: boolean }) => (disabled ? 0.7 : 1)};
 `;
 
 export const ErrorText = styled.Text`

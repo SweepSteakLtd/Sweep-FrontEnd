@@ -112,3 +112,30 @@ export const ViewOnlyText = styled.Text<{ theme: Theme }>`
   color: ${({ theme }: { theme: Theme }) => theme.colors.warning || '#FFA500'};
   text-align: center;
 `;
+
+export const ErrorContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 24px;
+`;
+
+export const ErrorIcon = styled.Text`
+  font-size: 64px;
+  margin-bottom: 24px;
+`;
+
+export const ErrorTitle = styled.Text<{ theme: Theme }>`
+  font-size: 20px;
+  font-weight: 700;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+  margin-bottom: 12px;
+  text-align: center;
+`;
+
+export const ErrorMessage = styled.Text<{ theme: Theme }>`
+  font-size: 16px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  text-align: center;
+  line-height: 24px;
+`;
