@@ -148,7 +148,7 @@ const generateDynamicLeaderboardData = (): LeaderboardResponse => {
     prize: prizes[index] || 0,
   }));
 
-  return { data: rankedEntries };
+  return { data: { entries: rankedEntries, total_pot: 360000 } };
 };
 
 const mockLeaderboardResponse = generateDynamicLeaderboardData();
@@ -172,7 +172,7 @@ export const getLeaderboardHandler: MockHandler = {
     },
     'Empty Leaderboard': {
       status: 200,
-      data: { data: [] },
+      data: { data: { entries: [], total_pot: 0 } },
       delay: 300,
     },
     'Not Found': {

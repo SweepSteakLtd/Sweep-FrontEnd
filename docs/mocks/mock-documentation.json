@@ -1,7 +1,7 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-11-28T13:43:40.628Z",
+  "generatedAt": "2025-11-28T14:25:14.448Z",
   "endpoints": [
     {
       "id": "create-bet",
@@ -44,40 +44,6 @@
       ]
     },
     {
-      "id": "get-leagues",
-      "name": "Get Leagues List",
-      "method": "GET",
-      "path": "/api/leagues",
-      "description": "Get Leagues List endpoint",
-      "defaultScenario": "Success",
-      "scenarios": [
-        {
-          "name": "Success",
-          "status": 200,
-          "delay": "500ms",
-          "response": null
-        },
-        {
-          "name": "Empty List",
-          "status": 200,
-          "delay": "500ms",
-          "response": null
-        },
-        {
-          "name": "data",
-          "status": 200,
-          "delay": "500ms",
-          "response": null
-        },
-        {
-          "name": "Server Error",
-          "status": 500,
-          "delay": "1000ms",
-          "response": null
-        }
-      ]
-    },
-    {
       "id": "get-leaderboard",
       "name": "KMaster",
       "method": "GET",
@@ -107,6 +73,40 @@
           "name": "Not Found",
           "status": 404,
           "delay": "300ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "get-leagues",
+      "name": "Get Leagues List",
+      "method": "GET",
+      "path": "/api/leagues",
+      "description": "Get Leagues List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
           "response": null
         },
         {

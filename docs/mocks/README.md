@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-11-28T13:43:40.628Z
+Generated: 2025-11-28T14:25:14.448Z
 
 ## Files
 
@@ -32,20 +32,6 @@ Create Bet endpoint
 - Server Error (500) - 1000ms
 
 
-### GET /api/leagues
-**Get Leagues List**
-
-Get Leagues List endpoint
-
-**Default Scenario:** Success
-
-**Scenarios:** 4
-- Success (200) - 500ms
-- Empty List (200) - 500ms
-- data (200) - 500ms
-- Server Error (500) - 1000ms
-
-
 ### GET /api/leaderboards/
 **KMaster**
 
@@ -58,6 +44,20 @@ KMaster endpoint
 - Empty Leaderboard (200) - 300ms
 - data (200) - 300ms
 - Not Found (404) - 300ms
+- Server Error (500) - 1000ms
+
+
+### GET /api/leagues
+**Get Leagues List**
+
+Get Leagues List endpoint
+
+**Default Scenario:** Success
+
+**Scenarios:** 4
+- Success (200) - 500ms
+- Empty List (200) - 500ms
+- data (200) - 500ms
 - Server Error (500) - 1000ms
 
 

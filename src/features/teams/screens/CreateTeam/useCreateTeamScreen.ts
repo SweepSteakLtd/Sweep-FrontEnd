@@ -1,6 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
+import type { RootStackParamList } from '~/navigation/types';
 import { useGetPlayerProfiles } from '~/services/apis/PlayerProfile/useGetPlayerProfiles';
 import type { GroupPlayer } from '~/services/apis/schemas';
 import { useCreateTeam } from '~/services/apis/Team/useCreateTeam';
@@ -21,7 +23,7 @@ interface TeamScreenParams {
 }
 
 export const useTeamScreen = (leagueId: string, joinCode?: string, params?: TeamScreenParams) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { showAlert } = useAlert();
 
   const isEditMode = !!params?.teamId;
@@ -44,7 +46,7 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
   const updateTeamMutation = useUpdateTeam(params?.teamId || '');
 
   const allPlayers = useMemo(() => {
-    return playerGroups.flatMap((group) => group.players);
+    return playerGroups.flatMap((group) => group.players ?? []).filter((p) => p != null);
   }, [playerGroups]);
 
   // Initialize edit/view mode with existing player selections
@@ -106,14 +108,24 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
           };
         }
 
+        const filteredPlayers = (group.players ?? [])
+          .filter((player: GroupPlayer) => {
+            if (!player) return false;
+            const fullName = `${player.first_name} ${player.last_name}`.toLowerCase();
+            return fullName.includes(query) || player.country?.toLowerCase().includes(query);
+          })
+          .sort((a, b) => {
+            // Sort alphabetically by last name, then first name
+            const lastNameCompare = (a.last_name ?? '').localeCompare(b.last_name ?? '');
+            if (lastNameCompare !== 0) return lastNameCompare;
+            return (a.first_name ?? '').localeCompare(b.first_name ?? '');
+          });
+
         return {
           title: `Group ${groupName}`,
           groupName,
           hasSelection,
-          data: group.players.filter((player: GroupPlayer) => {
-            const fullName = `${player.first_name} ${player.last_name}`.toLowerCase();
-            return fullName.includes(query) || player.country?.toLowerCase().includes(query);
-          }),
+          data: filteredPlayers,
         };
       })
       .filter((section) => section.data.length > 0 || section.hasSelection);
@@ -185,8 +197,8 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
           message: 'Team created successfully!',
           buttons: [
             {
-              text: 'OK',
-              onPress: () => navigation.goBack(),
+              text: 'View Leaderboard',
+              onPress: () => navigation.navigate('Leaderboard', { leagueId }),
             },
           ],
         });

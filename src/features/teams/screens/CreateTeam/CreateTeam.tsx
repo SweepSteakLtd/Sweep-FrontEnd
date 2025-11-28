@@ -75,7 +75,7 @@ export const TeamScreen = () => {
   });
 
   const selectedPlayers = useMemo(() => {
-    return allPlayers.filter((player) => selectedPlayerIds.includes(player.id || ''));
+    return allPlayers.filter((player) => player && selectedPlayerIds.includes(player.id || ''));
   }, [allPlayers, selectedPlayerIds]);
 
   const renderPlayer = ({ item }: { item: GroupPlayer }) => {
@@ -85,6 +85,7 @@ export const TeamScreen = () => {
         player={item}
         isSelected={isPlayerSelected(item.id || '')}
         onPress={() => handlePlayerToggle(item)}
+        showOdds={false}
       />
     );
   };

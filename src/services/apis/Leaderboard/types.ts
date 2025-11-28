@@ -20,6 +20,11 @@ export interface LeaderboardEntry {
   prize: number;
 }
 
+export interface LeaderboardData {
+  entries: LeaderboardEntry[];
+  total_pot?: number;
+}
+
 export interface LeaderboardResponse {
-  data: LeaderboardEntry[];
+  data: LeaderboardData;
 }

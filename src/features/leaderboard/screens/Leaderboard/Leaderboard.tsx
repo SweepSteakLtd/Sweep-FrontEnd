@@ -42,6 +42,15 @@ export const Leaderboard = () => {
   const league = leagueData?.league;
   const tournament = tournaments?.find((t) => t.id === league?.tournament_id);
 
+  // Check if tournament has started (entries closed)
+  // Use tournament's starts_at to determine if players should be visible
+  // Default to true (show players) if no start time is available
+  const tournamentStarted = useMemo(() => {
+    const startTime = tournament?.starts_at;
+    if (!startTime) return true; // Default to started if no time available
+    return new Date(startTime) <= new Date();
+  }, [tournament?.starts_at]);
+
   // Build current user's full name to match against leaderboard entries
   const currentUserFullName = useMemo(() => {
     if (!currentUser?.first_name || !currentUser?.last_name) return null;
@@ -57,18 +66,27 @@ export const Leaderboard = () => {
     [currentUserFullName],
   );
 
-  const entries = leaderboardData?.data ?? [];
+  const entries = Array.isArray(leaderboardData?.data?.entries) ? leaderboardData.data.entries : [];
+  const leaderboardTotalPot = leaderboardData?.data?.total_pot;
   const isLoading = isLeaderboardLoading || isLeagueLoading;
 
-  // Sort entries: current user's teams first, then by rank
+  // Sort entries:
+  // - Before tournament starts: alphabetically by team name
+  // - After tournament starts: current user's teams first, then by rank
   const sortedEntries = useMemo(() => {
+    if (!tournamentStarted) {
+      // Before tournament starts, sort alphabetically by team name
+      return [...entries].sort((a, b) => (a.name.main ?? '').localeCompare(b.name.main ?? ''));
+    }
+
+    // After tournament starts, show current user's teams first, then by rank
     if (!currentUserFullName) return entries;
 
     const userTeams = entries.filter(isCurrentUserEntry);
     const otherTeams = entries.filter((entry) => !isCurrentUserEntry(entry));
 
     return [...userTeams, ...otherTeams];
-  }, [entries, currentUserFullName, isCurrentUserEntry]);
+  }, [entries, tournamentStarted, currentUserFullName, isCurrentUserEntry]);
 
   const filteredEntries = searchQuery
     ? sortedEntries.filter(
@@ -93,15 +111,16 @@ export const Leaderboard = () => {
       <CardWrapper>
         <LeaderboardTeamCard
           entry={item}
-          isTopThree={item.rank <= 3}
+          isTopThree={tournamentStarted && item.rank <= 3}
           isFirst={index === 0}
           isLast={index === filteredEntries.length - 1}
           isCurrentUser={isCurrentUserEntry(item)}
           currentUserNickname={currentUserNickname}
+          canExpand={tournamentStarted}
         />
       </CardWrapper>
     ),
-    [filteredEntries.length, isCurrentUserEntry, currentUserNickname],
+    [filteredEntries.length, isCurrentUserEntry, currentUserNickname, tournamentStarted],
   );
 
   const keyExtractor = useCallback(
@@ -115,8 +134,9 @@ export const Leaderboard = () => {
         tournamentName={tournament?.name}
         leagueName={league?.name}
         totalPot={
-          (leagueData?.total_pot ?? Math.floor((league?.entry_fee ?? 0) * entries.length * 0.9)) /
-          100
+          (leaderboardTotalPot ??
+            leagueData?.total_pot ??
+            Math.floor((league?.entry_fee ?? 0) * entries.length * 0.9)) / 100
         }
         totalTeams={entries.length || leagueData?.total_team_count || 0}
         coverPhoto={tournament?.cover_picture}

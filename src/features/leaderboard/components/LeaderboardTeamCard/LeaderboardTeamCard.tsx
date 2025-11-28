@@ -34,6 +34,8 @@ interface LeaderboardTeamCardProps {
   isLast?: boolean;
   isCurrentUser?: boolean;
   currentUserNickname?: string;
+  /** Whether the card can be expanded to show players (disabled before tournament starts) */
+  canExpand?: boolean;
 }
 
 /**
@@ -70,11 +72,16 @@ export const LeaderboardTeamCard = ({
   isLast = false,
   isCurrentUser = false,
   currentUserNickname,
+  canExpand = true,
 }: LeaderboardTeamCardProps) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const toggleExpanded = () => setIsExpanded(!isExpanded);
+  const toggleExpanded = () => {
+    if (canExpand) {
+      setIsExpanded(!isExpanded);
+    }
+  };
 
   const teamName = entry.name?.main ?? '';
   const ownerName = getOwnerDisplayName(entry, isCurrentUser, currentUserNickname);
@@ -114,12 +121,14 @@ export const LeaderboardTeamCard = ({
           </BestScores>
         </ScoreContainer>
 
-        <ExpandButton>
-          <ExpandIcon>{isExpanded ? '▲' : '▼'}</ExpandIcon>
-        </ExpandButton>
+        {canExpand && (
+          <ExpandButton>
+            <ExpandIcon>{isExpanded ? '▲' : '▼'}</ExpandIcon>
+          </ExpandButton>
+        )}
       </CardHeader>
 
-      {isExpanded && (
+      {canExpand && isExpanded && (
         <>
           <Divider />
           <PlayersGrid>
