@@ -45,6 +45,8 @@ export type LeagueData = {
   error: Error | null;
   isOwner: boolean;
   joinCode?: string;
+  /** Whether the league has ended (end_time has passed) */
+  hasEnded: boolean;
   // Private league join code handling
   isPrivateLeagueError: boolean;
   inputJoinCode: string;
@@ -140,6 +142,12 @@ export const useLeague = (leagueId: string, initialJoinCode?: string): LeagueDat
   // Check if current user is the owner of this league
   const isOwner = !!(user?.id && league?.owner_id && user.id === league.owner_id);
 
+  // Check if the league has ended
+  const hasEnded = useMemo(() => {
+    if (!league?.end_time) return false;
+    return new Date(league.end_time) <= new Date();
+  }, [league?.end_time]);
+
   return {
     league,
     tournament,
@@ -151,6 +159,7 @@ export const useLeague = (leagueId: string, initialJoinCode?: string): LeagueDat
     error: leagueError,
     isOwner,
     joinCode: league?.join_code,
+    hasEnded,
     // Private league join code handling
     isPrivateLeagueError,
     inputJoinCode,

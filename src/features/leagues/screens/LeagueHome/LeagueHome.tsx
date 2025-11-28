@@ -35,6 +35,7 @@ export const LeagueHome = () => {
     isLoading,
     isOwner,
     joinCode,
+    hasEnded,
     isPrivateLeagueError,
     inputJoinCode,
     setInputJoinCode,
@@ -77,14 +78,16 @@ export const LeagueHome = () => {
           <TournamentBanner tournament={tournament} />
 
           <ButtonsContainer>
-            <Button
-              title="Submit your fantasy list of golfers"
-              variant="secondary"
-              onPress={() => {
-                navigation.navigate('Team', { leagueId, joinCode: submittedJoinCode });
-              }}
-              fullWidth
-            />
+            {!hasEnded && (
+              <Button
+                title="Submit your fantasy list of golfers"
+                variant="secondary"
+                onPress={() => {
+                  navigation.navigate('Team', { leagueId, joinCode: submittedJoinCode });
+                }}
+                fullWidth
+              />
+            )}
             <Button
               title="View Leaderboard"
               onPress={() => {
