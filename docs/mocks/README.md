@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-11-20T17:22:20.031Z
+Generated: 2025-11-28T13:43:40.628Z
 
 ## Files
 
@@ -43,6 +43,21 @@ Get Leagues List endpoint
 - Success (200) - 500ms
 - Empty List (200) - 500ms
 - data (200) - 500ms
+- Server Error (500) - 1000ms
+
+
+### GET /api/leaderboards/
+**KMaster**
+
+KMaster endpoint
+
+**Default Scenario:** Success
+
+**Scenarios:** 5
+- Success (200) - 300ms
+- Empty Leaderboard (200) - 300ms
+- data (200) - 300ms
+- Not Found (404) - 300ms
 - Server Error (500) - 1000ms
 
 

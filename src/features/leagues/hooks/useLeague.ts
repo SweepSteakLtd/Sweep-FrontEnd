@@ -128,11 +128,14 @@ export const useLeague = (leagueId: string, initialJoinCode?: string): LeagueDat
 
   const carouselData = useMemo(() => mergeHolesAndAds(tournament), [tournament]);
 
-  const currentEntries = league?.user_id_list?.length || 0;
+  // Current user's entries = number of teams they have in this league
+  const currentEntries = leagueData?.user_team_count ?? leagueData?.user_bets?.length ?? 0;
   const maxEntries = league?.max_participants || 100;
-  // Total pot is 90% of entry fees collected (platform keeps 10%)
-  const totalEntryFees = (league?.entry_fee ?? 0) * currentEntries;
-  const totalPot = Math.floor(totalEntryFees * 0.9);
+  // Use total_pot from API (in pence), convert to pounds for display
+  const totalPotPence =
+    leagueData?.total_pot ??
+    Math.floor((league?.entry_fee ?? 0) * (leagueData?.total_team_count ?? 0) * 0.9);
+  const totalPot = totalPotPence / 100;
 
   // Check if current user is the owner of this league
   const isOwner = !!(user?.id && league?.owner_id && user.id === league.owner_id);

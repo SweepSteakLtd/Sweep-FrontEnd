@@ -138,6 +138,71 @@
         }
       }
     },
+    "/api/leaderboards/": {
+      "get": {
+        "summary": "KMaster",
+        "description": "KMaster endpoint",
+        "operationId": "get-leaderboard",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty Leaderboard": {
+                    "summary": "Empty Leaderboard",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Not Found": {
+                    "summary": "Not Found",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/player-profiles/": {
       "get": {
         "summary": "Get Player Profiles List",

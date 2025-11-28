@@ -88,8 +88,7 @@ export const LeagueHome = () => {
             <Button
               title="View Leaderboard"
               onPress={() => {
-                // TODO: Navigate to leaderboard
-                console.log('View leaderboard');
+                navigation.navigate('Leaderboard', { leagueId });
               }}
               backgroundColor={theme.colors.secondary}
               fullWidth

@@ -58,6 +58,9 @@ export type RootStackParamList = {
     distance: number;
     imageUri?: string;
   };
+  Leaderboard: {
+    leagueId: string;
+  };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

@@ -121,6 +121,9 @@ export const leagueDetailMock = {
       join_code: '34634',
       max_participants: 100,
       current_participants: 43,
+      total_pot: 33755, // Prize pool
+      total_team_count: 43, // Total teams in league
+      user_team_count: 2, // Current user's teams
       contact_phone: '+44 7700 900000',
       contact_email: 'memnon@sweepsteak.com',
       contact_visibility: 'public',

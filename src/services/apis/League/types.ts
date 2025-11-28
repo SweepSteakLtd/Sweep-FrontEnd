@@ -18,10 +18,15 @@ export const leagueDetailSchema = leagueSchema.extend({
   join_code: z.string().optional(), // Only returned for private leagues when user is owner or has access
 });
 
-// League detail response from GET /api/leagues/:id includes user_bets
+// League detail response from GET /api/leagues/:id
+// Note: user_team_count, total_team_count, total_pot are at root level, not inside league
 export const leagueDetailResponseSchema = z.object({
   league: leagueDetailSchema,
+  tournament: z.object({}).passthrough().optional(), // Tournament data
   user_bets: z.array(betSchema).optional().default([]),
+  user_team_count: z.number().optional(), // Number of teams the current user has in this league
+  total_team_count: z.number().optional(), // Total number of teams in the league
+  total_pot: z.number().optional(), // Total prize pool (in pence)
 });
 
 export type LeagueDetailResponse = z.infer<typeof leagueDetailResponseSchema>;

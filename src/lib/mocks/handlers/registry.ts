@@ -1,6 +1,7 @@
 import type { MockHandler } from '../types';
 import { adminHandlers } from './adminHandler';
 import { createBetHandler, deleteBetHandler, getBetsHandler, updateBetHandler } from './betHandler';
+import { getLeaderboardHandler } from './leaderboardHandler';
 import {
   createLeagueHandler,
   deleteLeagueHandler,
@@ -58,6 +59,9 @@ export const mockHandlers: MockHandler[] = [
   createTeamHandler,
   updateTeamHandler,
   deleteTeamHandler,
+
+  // Leaderboard endpoints
+  getLeaderboardHandler,
 
   // Admin endpoints
   ...adminHandlers,

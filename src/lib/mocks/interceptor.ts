@@ -35,7 +35,6 @@ const findMatchingHandler = (
   method: string,
   config: MockConfig,
 ): MockHandler | null => {
-  // Only log for API calls
   const isApiCall = url.includes('/api/');
 
   if (!config.globalEnabled) {
@@ -48,7 +47,6 @@ const findMatchingHandler = (
   for (const handler of mockHandlers) {
     const handlerConfig = config.handlers[handler.id];
 
-    // Check if handler is enabled in config
     if (!handlerConfig?.enabled) {
       continue;
     }
@@ -143,7 +141,13 @@ const mockedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promis
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
 
-      const response = createMockResponse(mockResponse.status, mockResponse.data);
+      // Apply post processor if defined (for dynamic data generation)
+      let responseData = mockResponse.data;
+      if (handler.postProcessor) {
+        responseData = handler.postProcessor(url, mockResponse.data);
+      }
+
+      const response = createMockResponse(mockResponse.status, responseData);
       await logApiResponse(url, method, response, true);
       return response;
     }

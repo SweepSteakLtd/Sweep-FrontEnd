@@ -16,6 +16,7 @@ import { StakeLimits } from '~/features/betting-controls/screens/StakeLimits/Sta
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { HoleDetailModal } from '~/features/holes/screens/HoleDetailModal/HoleDetailModal';
+import { Leaderboard } from '~/features/leaderboard/screens/Leaderboard/Leaderboard';
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
 import { JoinCodeModal } from '~/features/leagues/screens/JoinCodeModal/JoinCodeModal';
 import { LeagueHome } from '~/features/leagues/screens/LeagueHome/LeagueHome';
@@ -121,6 +122,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="Team" component={TeamScreen} />
         <Stack.Screen name="MyTeams" component={MyTeams} />
         <Stack.Screen name="MyLeagues" component={MyLeagues} />
+        <Stack.Screen name="Leaderboard" component={Leaderboard} />
         <Stack.Screen name="Deposit" component={Deposit} />
         <Stack.Screen name="Withdraw" component={Withdraw} />
         <Stack.Screen name="Settings" component={Settings} />
