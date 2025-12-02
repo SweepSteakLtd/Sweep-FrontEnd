@@ -9,7 +9,7 @@ import { PlayerAvatarStack } from '~/features/my-teams/components/PlayerAvatarSt
 import { PlayerListItem } from '~/features/players/components/PlayerListItem/PlayerListItem';
 import { PlayerListItemSkeleton } from '~/features/players/components/PlayerListItemSkeleton/PlayerListItemSkeleton';
 import type { RootStackParamList } from '~/navigation/types';
-import type { GroupPlayer } from '~/services/apis/schemas';
+import type { TeamPlayer } from '~/services/apis/Team/types';
 import {
   Container,
   EmptySelectionText,
@@ -78,7 +78,7 @@ export const TeamScreen = () => {
     return allPlayers.filter((player) => player && selectedPlayerIds.includes(player.id || ''));
   }, [allPlayers, selectedPlayerIds]);
 
-  const renderPlayer = ({ item }: { item: GroupPlayer }) => {
+  const renderPlayer = ({ item }: { item: TeamPlayer }) => {
     if (isViewOnly) return null;
     return (
       <PlayerListItem

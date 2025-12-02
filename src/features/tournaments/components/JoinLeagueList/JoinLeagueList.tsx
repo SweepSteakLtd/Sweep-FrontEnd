@@ -12,6 +12,9 @@ import { sortLeaguesByStatus } from '~/utils/leagueStatus';
 import {
   EmptyState,
   EmptyStateText,
+  JoinCodeContainer,
+  JoinCodeDescription,
+  JoinCodeTitle,
   SearchAndCreateRow,
   SearchAndTabsWrapper,
   SearchWrapper,
@@ -19,6 +22,7 @@ import {
 
 interface JoinLeagueListProps {
   leagues: League[];
+  userPrivateLeagues?: League[];
   onLeaguePress?: (league: League) => void;
   onLeagueDelete?: (leagueId: string) => void;
   onCreateLeague?: () => void;
@@ -37,6 +41,7 @@ const leagueTabs = [
 
 export const JoinLeagueList = ({
   leagues,
+  userPrivateLeagues = [],
   onLeaguePress,
   onLeagueDelete,
   onCreateLeague,
@@ -47,16 +52,23 @@ export const JoinLeagueList = ({
   onLeagueTabChange,
 }: JoinLeagueListProps) => {
   const theme = useTheme();
-  // Client-side filtering only by league tab, search is handled by API
-  const filteredLeagues = leagues.filter((league) => {
-    // Filter by league tab (Featured/Public/Private)
-    // Note: is_featured was removed from API, featured tab now shows all leagues
-    // if (activeLeagueTab === 'featured' && !league.is_featured) return false;
-    if (activeLeagueTab === 'public' && league.type === 'private') return false;
-    if (activeLeagueTab === 'private' && league.type !== 'private') return false;
 
-    return true;
-  });
+  const isPrivateTab = activeLeagueTab === 'private';
+  const isSearching = searchQuery.trim().length > 0;
+
+  // Filter leagues based on tab
+  const filteredLeagues = (() => {
+    if (isPrivateTab) {
+      if (isSearching) {
+        // When searching, show private leagues from search results
+        return leagues.filter((league) => league.type === 'private');
+      }
+      // When not searching, show user's private leagues
+      return userPrivateLeagues;
+    }
+    // Featured/Public tabs: never show private leagues
+    return leagues.filter((league) => league.type !== 'private');
+  })();
 
   // Sort leagues by status: live first, then upcoming, then finished
   const sortedLeagues = sortLeaguesByStatus(filteredLeagues);
@@ -68,6 +80,9 @@ export const JoinLeagueList = ({
   const handleLeagueDelete = (leagueId: string) => {
     onLeagueDelete?.(leagueId);
   };
+
+  // For private tab: show prompt when no search and no user leagues
+  const showPrivateEmptyState = isPrivateTab && !isSearching && userPrivateLeagues.length === 0;
 
   return (
     <>
@@ -87,9 +102,7 @@ export const JoinLeagueList = ({
           <SearchInput
             value={searchQuery}
             onChangeText={onSearchChange || (() => {})}
-            placeholder={
-              activeLeagueTab === 'private' ? 'Search by name or join code...' : 'Search leagues...'
-            }
+            placeholder={isPrivateTab ? 'Search private leagues by name...' : 'Search leagues...'}
           />
         </SearchWrapper>
         {onCreateLeague && (
@@ -102,11 +115,22 @@ export const JoinLeagueList = ({
         )}
       </SearchAndCreateRow>
 
-      {loading && sortedLeagues.length === 0 ? (
+      {/* Private tab: show prompt when not searching and no user leagues */}
+      {showPrivateEmptyState ? (
+        <JoinCodeContainer>
+          <JoinCodeTitle>Find a Private League</JoinCodeTitle>
+          <JoinCodeDescription>
+            Search for private leagues by name. Once you find a league, you'll need the join code
+            from the organiser to enter.
+          </JoinCodeDescription>
+        </JoinCodeContainer>
+      ) : loading && sortedLeagues.length === 0 ? (
         <LeagueCardSkeleton />
       ) : sortedLeagues.length === 0 ? (
         <EmptyState>
-          <EmptyStateText>No leagues found</EmptyStateText>
+          <EmptyStateText>
+            {isPrivateTab ? 'No private leagues found' : 'No leagues found'}
+          </EmptyStateText>
         </EmptyState>
       ) : (
         <View>

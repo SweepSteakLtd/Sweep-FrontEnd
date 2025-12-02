@@ -1,5 +1,8 @@
 import type { League } from '../League/types';
-import type { GroupPlayer } from '../schemas';
+import type { Team as GeneratedTeam } from '../schemas';
+
+// Derive TeamPlayer from the generated Team schema
+export type TeamPlayer = NonNullable<GeneratedTeam['players']>[number];
 
 export interface TeamData {
   id?: string;
@@ -15,5 +18,5 @@ export interface TeamData {
 export interface Team {
   league?: League;
   team?: TeamData;
-  players?: GroupPlayer[];
+  players?: TeamPlayer[];
 }

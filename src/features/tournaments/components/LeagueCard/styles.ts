@@ -16,20 +16,22 @@ export const Card = styled.TouchableOpacity<{ isFinished?: boolean }>`
 `;
 
 export const CardContainer = styled.View`
+  gap: 6px;
+`;
+
+export const CardRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 export const LeftSection = styled.View`
   flex: 1;
-  gap: 6px;
   padding-right: 16px;
 `;
 
 export const RightSection = styled.View`
   align-items: flex-end;
-  gap: 6px;
 `;
 
 export const NameRow = styled.View`
@@ -61,10 +63,11 @@ export const PrivatePillText = styled.Text`
 `;
 
 export const TournamentInfo = styled.Text`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
-  line-height: 20px;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  line-height: 16px;
+  flex: 1;
 `;
 
 export const StatusContainer = styled.View`
@@ -109,6 +112,26 @@ export const AmountText = styled.Text`
   font-weight: 700;
   color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
   line-height: 24px;
+`;
+
+export const EntryFeeContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+`;
+
+export const EntryFeeLabel = styled.Text`
+  font-size: 11px;
+  font-weight: 400;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  line-height: 14px;
+`;
+
+export const EntryFeeText = styled.Text`
+  font-size: 13px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.secondary};
+  line-height: 18px;
 `;
 
 export const DeleteButton = styled.View`

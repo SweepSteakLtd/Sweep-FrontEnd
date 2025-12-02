@@ -5,7 +5,7 @@ import { useAlert } from '~/components/Alert/Alert';
 import type { RootStackParamList } from '~/navigation/types';
 import { ApiError } from '~/services/apis/apiClient';
 import { useGetPlayerProfiles } from '~/services/apis/PlayerProfile/useGetPlayerProfiles';
-import type { GroupPlayer } from '~/services/apis/schemas';
+import type { TeamPlayer } from '~/services/apis/Team/types';
 import { useCreateTeam } from '~/services/apis/Team/useCreateTeam';
 import { useUpdateTeam } from '~/services/apis/Team/useUpdateTeam';
 
@@ -13,7 +13,7 @@ interface Section {
   title: string;
   groupName: string;
   hasSelection: boolean;
-  data: GroupPlayer[];
+  data: TeamPlayer[];
 }
 
 interface TeamScreenParams {
@@ -105,12 +105,12 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
             title: `Group ${groupName}`,
             groupName,
             hasSelection,
-            data: [] as GroupPlayer[],
+            data: [] as TeamPlayer[],
           };
         }
 
         const filteredPlayers = (group.players ?? [])
-          .filter((player: GroupPlayer) => {
+          .filter((player: TeamPlayer) => {
             if (!player) return false;
             const fullName = `${player.first_name} ${player.last_name}`.toLowerCase();
             return fullName.includes(query) || player.country?.toLowerCase().includes(query);
@@ -132,7 +132,7 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
       .filter((section) => section.data.length > 0 || section.hasSelection);
   }, [playerGroups, searchQuery, selectedPlayersByGroup, isGroupExpanded]);
 
-  const handlePlayerToggle = useCallback((player: GroupPlayer) => {
+  const handlePlayerToggle = useCallback((player: TeamPlayer) => {
     const groupName = player.group;
     if (!groupName || !player.id) return;
     const playerId = player.id;

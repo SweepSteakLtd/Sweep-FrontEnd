@@ -1,9 +1,11 @@
 import { z } from 'zod';
 import { betSchema, leagueSchema, type League as LeagueSchema } from '../schemas';
 
-// Re-export League from the auto-generated schemas
-export type League = LeagueSchema;
-export type LeaguesResponse = LeagueSchema[];
+// Extend League with fields that exist in API but not yet in OpenAPI spec
+export type League = LeagueSchema & {
+  joined_players?: string[]; // List of user IDs who joined the league
+};
+export type LeaguesResponse = League[];
 export type { LeaguesResponse as LeaguesResponseType, League as LeagueType } from '../schemas';
 
 // Extend the auto-generated League schema to include join_code for private leagues

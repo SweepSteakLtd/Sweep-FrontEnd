@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-12-02T14:40:41.727Z
+ * Generated: 2025-12-02T17:04:19.262Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -376,31 +376,6 @@ export const playerProfileSchema = z.object({
 });
 
 export type PlayerProfile = z.infer<typeof playerProfileSchema>;
-
-// GroupPlayer - individual player within a group
-export const groupPlayerSchema = z.object({
-  id: z.string().optional(),
-  external_id: z.string().optional(),
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
-  country: z.string().optional(),
-  age: z.number().optional(),
-  ranking: z.number().optional(),
-  profile_picture: z.string().optional(),
-  group: z.string().optional(),
-  created_at: z.string().optional(),
-  updated_at: z.string().optional(),
-});
-
-export type GroupPlayer = z.infer<typeof groupPlayerSchema>;
-
-// PlayerGroup - group containing players
-export const playerGroupSchema = z.object({
-  name: z.string().optional(),
-  players: z.array(groupPlayerSchema).optional().default([]),
-});
-
-export type PlayerGroup = z.infer<typeof playerGroupSchema>;
 
 // Transaction
 export const transactionSchema = z.object({

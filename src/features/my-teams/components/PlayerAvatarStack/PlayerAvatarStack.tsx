@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar } from '~/components/Avatar/Avatar';
-import type { GroupPlayer } from '~/services/apis/schemas';
+import type { TeamPlayer } from '~/services/apis/Team/types';
 import { AvatarWrapper, Container } from './styles';
 
 interface PlayerAvatarStackProps {
-  players: GroupPlayer[];
+  players: TeamPlayer[];
   maxDisplay?: number;
 }
 

@@ -10,16 +10,17 @@ import {
   AmountText,
   Card,
   CardContainer,
+  CardRow,
   DeleteButton,
+  EntryFeeContainer,
+  EntryFeeLabel,
+  EntryFeeText,
   GameName,
   InfoLabel,
-  LeftSection,
   LiveDot,
   NameRow,
-  PlayersText,
   PrivatePill,
   PrivatePillText,
-  RightSection,
   StatusContainer,
   StatusText,
   TimeText,
@@ -28,13 +29,12 @@ import {
 
 interface LeagueCardProps {
   league: League;
-  tournamentName?: string;
   index: number;
   onPress: () => void;
   onDelete?: (leagueId: string) => void;
 }
 
-export const LeagueCard = ({ league, tournamentName = '', onPress, onDelete }: LeagueCardProps) => {
+export const LeagueCard = ({ league, onPress, onDelete }: LeagueCardProps) => {
   const theme = useTheme();
   const { showAlert } = useAlert();
 
@@ -59,12 +59,9 @@ export const LeagueCard = ({ league, tournamentName = '', onPress, onDelete }: L
   };
 
   // Total pot is 90% of entry fees collected (platform keeps 10%)
-  const currentEntries = league.user_id_list?.length || 0;
+  const currentEntries = league.joined_players?.length || 0;
   const totalEntryFees = (league.entry_fee ?? 0) * currentEntries;
   const totalPot = Math.floor(totalEntryFees * 0.9);
-  const year = league.start_time
-    ? new Date(league.start_time).getFullYear()
-    : new Date().getFullYear();
 
   const leagueStatus =
     league.start_time && league.end_time
@@ -77,7 +74,8 @@ export const LeagueCard = ({ league, tournamentName = '', onPress, onDelete }: L
   const cardContent = (
     <Card onPress={onPress} activeOpacity={0.7} isFinished={isFinished}>
       <CardContainer>
-        <LeftSection>
+        {/* Row 1: Name + Private pill | Amount */}
+        <CardRow>
           <NameRow>
             <GameName isLive={isLive} numberOfLines={1}>
               {league.name}
@@ -88,24 +86,33 @@ export const LeagueCard = ({ league, tournamentName = '', onPress, onDelete }: L
               </PrivatePill>
             )}
           </NameRow>
-          <TournamentInfo>
-            {tournamentName} {year}
-          </TournamentInfo>
-          {leagueStatus && (
+          <AmountText>{formatCurrency(totalPot)}</AmountText>
+        </CardRow>
+
+        {/* Row 2: Description | Entries */}
+        <CardRow>
+          <TournamentInfo numberOfLines={1}>{league.description || ' '}</TournamentInfo>
+          <InfoLabel>
+            {currentEntries} {currentEntries === 1 ? 'entry' : 'entries'}
+          </InfoLabel>
+        </CardRow>
+
+        {/* Row 3: Status | Entry fee */}
+        <CardRow>
+          {leagueStatus ? (
             <StatusContainer>
               {isLive && <LiveDot />}
               {isLive && <StatusText isLive>{leagueStatus.status.toUpperCase()}</StatusText>}
               <TimeText>{leagueStatus.timeText}</TimeText>
             </StatusContainer>
+          ) : (
+            <StatusContainer />
           )}
-        </LeftSection>
-
-        <RightSection>
-          <AmountText>{formatCurrency(totalPot)}</AmountText>
-          <PlayersText>
-            <InfoLabel>{currentEntries} entries</InfoLabel>
-          </PlayersText>
-        </RightSection>
+          <EntryFeeContainer>
+            <EntryFeeLabel>Entry fee:</EntryFeeLabel>
+            <EntryFeeText>{formatCurrency(league.entry_fee ?? 0)}</EntryFeeText>
+          </EntryFeeContainer>
+        </CardRow>
       </CardContainer>
     </Card>
   );

@@ -12,8 +12,18 @@ import type { RootStackParamList } from '~/navigation/types';
 import type { League } from '~/services/apis/League/types';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
+import { useGetUser } from '~/services/apis/User/useGetUser';
 import { penceToPounds } from '~/utils/currency';
-import { Container, EmptyState, PotInfo, PotLabel } from './styles';
+import {
+  Container,
+  EmptyState,
+  GlobalStatsContainer,
+  PotInfo,
+  PotLabel,
+  StatItem,
+  StatLabel,
+  StatValue,
+} from './styles';
 import { TournamentLeaguesSkeleton } from './TournamentLeaguesSkeleton';
 
 type TournamentLeaguesRouteProp = RouteProp<RootStackParamList, 'TournamentLeagues'>;
@@ -36,6 +46,7 @@ export const TournamentLeagues = () => {
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
 
   const { data: tournaments = [] } = useGetTournaments();
+  const { data: currentUser } = useGetUser();
 
   const currentTournament = tournaments.find((t) => t.id === tournamentId);
 
@@ -53,9 +64,24 @@ export const TournamentLeagues = () => {
     true,
   );
 
+  // Filter leagues where current user is owner or member (for private tab)
+  const userPrivateLeagues = leagues.filter((league) => {
+    if (league.type !== 'private' || !currentUser?.id) return false;
+    const isOwner = league.owner_id === currentUser.id;
+    const isMember = league.joined_players?.includes(currentUser.id) ?? false;
+    return isOwner || isMember;
+  });
+
   // Calculate total pot from current leagues
   const totalPotForTournament = leagues.reduce(
     (sum, league) => sum + (league.entry_fee ?? 0) * (league.max_participants ?? 0),
+    0,
+  );
+
+  // Calculate global stats (all leagues including private)
+  const totalLeagues = leagues.length;
+  const totalEntrants = leagues.reduce(
+    (sum, league) => sum + (league.joined_players?.length ?? 0),
     0,
   );
 
@@ -123,14 +149,25 @@ export const TournamentLeagues = () => {
             <AnimatedAmount
               value={penceToPounds(totalPotForTournament)}
               variant="title"
-              color={theme.colors.text.secondary}
+              color={theme.colors.primary}
               align="center"
               weight="bold"
               decimals={2}
             />
           </PotInfo>
+          <GlobalStatsContainer>
+            <StatItem>
+              <StatValue>{totalLeagues}</StatValue>
+              <StatLabel>Leagues</StatLabel>
+            </StatItem>
+            <StatItem>
+              <StatValue>{totalEntrants}</StatValue>
+              <StatLabel>Entrants</StatLabel>
+            </StatItem>
+          </GlobalStatsContainer>
           <JoinLeagueList
             leagues={leagues}
+            userPrivateLeagues={userPrivateLeagues}
             onLeaguePress={handleLeaguePress}
             onCreateLeague={handleCreateLeague}
             loading={leaguesFetching}
