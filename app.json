@@ -19,6 +19,10 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to capture documents and photos for upload.",
+        "NSPhotoLibraryUsageDescription": "This app accesses your photo library to select documents and images for upload."
       }
     },
     "android": {
@@ -50,7 +54,14 @@
       "expo-secure-store",
       "expo-font",
       "@react-native-firebase/app",
-      "./plugins/withModularHeaders.js"
+      "./plugins/withModularHeaders.js",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "This app uses the camera to capture documents and photos for upload."
+        }
+      ],
+      "expo-document-picker"
     ]
   }
 }

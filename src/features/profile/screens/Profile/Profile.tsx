@@ -79,6 +79,7 @@ export const Profile = () => {
     { icon: '📄', label: 'Legal', onPress: () => {} },
     { icon: '⏻', label: 'Sign out', onPress: handleLogout },
     { icon: '⚙️', label: 'API Mocks', onPress: () => navigation.navigate('Settings') },
+    { icon: '📤', label: 'Test Upload', onPress: () => navigation.navigate('TestUpload') },
   ];
 
   return (

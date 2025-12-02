@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-11-25T21:43:03.214Z
+ * Generated: 2025-12-02T14:40:41.727Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -180,13 +180,13 @@ export const teamSchema = z.object({
       z.object({
         id: z.string().optional(),
         external_id: z.string().optional(),
-        level: z.number().optional(),
-        current_score: z.number().optional(),
-        position: z.number().optional(),
-        attempts: z.record(z.string(), z.number()).optional(),
-        missed_cut: z.boolean().optional(),
-        odds: z.number().optional(),
-        profile_id: z.string().optional(),
+        first_name: z.string().optional(),
+        last_name: z.string().optional(),
+        country: z.string().optional(),
+        age: z.number().optional(),
+        ranking: z.number().optional(),
+        profile_picture: z.string().optional(),
+        group: z.string().optional(),
         created_at: z.string().optional(),
         updated_at: z.string().optional(),
       }),
@@ -295,21 +295,9 @@ export const leagueSchema = z.object({
       updated_at: z.string().optional(),
     })
     .optional(),
-  user_bets: z
-    .array(
-      z.object({
-        id: z.string().optional(),
-        owner_id: z.string().optional(),
-        league_id: z.string().optional(),
-        team_id: z.string().optional(),
-        amount: z.number().optional(),
-        status: z.string().optional(),
-        created_at: z.string().optional(),
-        updated_at: z.string().optional(),
-      }),
-    )
-    .optional()
-    .default([]),
+  user_team_count: z.number().optional(),
+  total_team_count: z.number().optional(),
+  total_pot: z.number().optional(),
 });
 
 export type League = z.infer<typeof leagueSchema>;
@@ -389,11 +377,30 @@ export const playerProfileSchema = z.object({
 
 export type PlayerProfile = z.infer<typeof playerProfileSchema>;
 
-// Alias for clarity - PlayerProfile represents a group with players
-export type PlayerGroup = PlayerProfile;
+// GroupPlayer - individual player within a group
+export const groupPlayerSchema = z.object({
+  id: z.string().optional(),
+  external_id: z.string().optional(),
+  first_name: z.string().optional(),
+  last_name: z.string().optional(),
+  country: z.string().optional(),
+  age: z.number().optional(),
+  ranking: z.number().optional(),
+  profile_picture: z.string().optional(),
+  group: z.string().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
 
-// Type for individual player within a group
-export type GroupPlayer = NonNullable<PlayerProfile['players']>[number];
+export type GroupPlayer = z.infer<typeof groupPlayerSchema>;
+
+// PlayerGroup - group containing players
+export const playerGroupSchema = z.object({
+  name: z.string().optional(),
+  players: z.array(groupPlayerSchema).optional().default([]),
+});
+
+export type PlayerGroup = z.infer<typeof playerGroupSchema>;
 
 // Transaction
 export const transactionSchema = z.object({
@@ -453,22 +460,32 @@ export type Activitie = z.infer<typeof activitieSchema>;
 
 // Leaderboard
 export const leaderboardSchema = z.object({
-  rank: z.number().optional(),
-  name: z.object({ main: z.string().optional(), substring: z.string().optional() }).optional(),
-  total: z.number().optional(),
-  players: z
+  entries: z
     .array(
       z.object({
-        group: z.string().optional(),
-        player_name: z.string().optional(),
-        score: z.number().optional(),
-        status: z.string().optional(),
+        rank: z.number().optional(),
+        name: z
+          .object({ main: z.string().optional(), substring: z.string().optional() })
+          .optional(),
+        total: z.number().optional(),
+        players: z
+          .array(
+            z.object({
+              group: z.string().optional(),
+              player_name: z.string().optional(),
+              score: z.number().optional(),
+              status: z.string().optional(),
+            }),
+          )
+          .optional()
+          .default([]),
+        bestScore: z.array(z.number()).optional().default([]),
+        prize: z.number().optional(),
       }),
     )
     .optional()
     .default([]),
-  best_score: z.array(z.number()).optional().default([]),
-  prize: z.string().optional(),
+  total_pot: z.number().optional(),
 });
 
 export type Leaderboard = z.infer<typeof leaderboardSchema>;

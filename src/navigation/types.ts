@@ -61,6 +61,7 @@ export type RootStackParamList = {
   Leaderboard: {
     leagueId: string;
   };
+  TestUpload: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

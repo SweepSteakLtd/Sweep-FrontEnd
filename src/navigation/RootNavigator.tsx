@@ -29,6 +29,7 @@ import { Withdraw } from '~/features/payment/screens/Withdraw/Withdraw';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
 import { TeamScreen } from '~/features/teams/screens/CreateTeam/CreateTeam';
+import { TestUpload } from '~/features/test-upload/screens/TestUpload/TestUpload';
 import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
 import { VerificationPending } from '~/features/verification/screens/VerificationPending/VerificationPending';
 import { navigationRef } from './navigationRef';
@@ -126,6 +127,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="Deposit" component={Deposit} />
         <Stack.Screen name="Withdraw" component={Withdraw} />
         <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="TestUpload" component={TestUpload} />
         <Stack.Screen
           name="AlertModal"
           component={AlertModal}
