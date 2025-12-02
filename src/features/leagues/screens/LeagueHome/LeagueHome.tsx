@@ -30,8 +30,8 @@ export const LeagueHome = () => {
     tournament,
     carouselData,
     totalPot,
+    totalTeams,
     currentEntries,
-    maxEntries,
     isLoading,
     isOwner,
     joinCode,
@@ -68,8 +68,8 @@ export const LeagueHome = () => {
         <ScrollContent>
           <LeagueHeader
             leagueName={league?.name}
-            currentEntries={currentEntries}
-            maxEntries={maxEntries}
+            yourEntries={currentEntries}
+            totalTeams={totalTeams}
             totalPot={totalPot}
             joinCode={joinCode}
             isOwner={isOwner}

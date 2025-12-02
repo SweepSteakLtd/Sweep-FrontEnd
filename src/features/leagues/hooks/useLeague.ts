@@ -39,6 +39,8 @@ export type LeagueData = {
   tournament: Tournament | undefined;
   carouselData: CarouselItem[];
   totalPot: number;
+  totalTeams: number;
+  entryFee: number;
   currentEntries: number;
   maxEntries: number;
   isLoading: boolean;
@@ -133,10 +135,14 @@ export const useLeague = (leagueId: string, initialJoinCode?: string): LeagueDat
   // Current user's entries = number of teams they have in this league
   const currentEntries = leagueData?.user_team_count ?? leagueData?.user_bets?.length ?? 0;
   const maxEntries = league?.max_participants || 100;
+  // Total teams entered in the league
+  const totalTeams = leagueData?.total_team_count ?? 0;
+  // Entry fee in pounds (convert from pence)
+  const entryFee = (league?.entry_fee ?? 0) / 100;
   // Use total_pot from API (in pence), convert to pounds for display
+  // Fallback: calculate as (entry_fee x teams) x 0.9
   const totalPotPence =
-    leagueData?.total_pot ??
-    Math.floor((league?.entry_fee ?? 0) * (leagueData?.total_team_count ?? 0) * 0.9);
+    leagueData?.total_pot ?? Math.floor((league?.entry_fee ?? 0) * totalTeams * 0.9);
   const totalPot = totalPotPence / 100;
 
   // Check if current user is the owner of this league
@@ -153,6 +159,8 @@ export const useLeague = (leagueId: string, initialJoinCode?: string): LeagueDat
     tournament,
     carouselData,
     totalPot,
+    totalTeams,
+    entryFee,
     currentEntries,
     maxEntries,
     isLoading: leagueLoading || tournamentsLoading,

@@ -3,6 +3,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import type { RootStackParamList } from '~/navigation/types';
+import { ApiError } from '~/services/apis/apiClient';
 import { useGetPlayerProfiles } from '~/services/apis/PlayerProfile/useGetPlayerProfiles';
 import type { GroupPlayer } from '~/services/apis/schemas';
 import { useCreateTeam } from '~/services/apis/Team/useCreateTeam';
@@ -192,23 +193,21 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
           join_code: joinCode,
         });
 
-        showAlert({
-          title: 'Success',
-          message: 'Team created successfully!',
-          buttons: [
-            {
-              text: 'View Leaderboard',
-              onPress: () => navigation.navigate('Leaderboard', { leagueId }),
-            },
-          ],
-        });
+        // Navigate directly to leaderboard after successful team creation
+        navigation.replace('Leaderboard', { leagueId });
       }
-    } catch {
+    } catch (error) {
+      // Use the API error message if available (e.g., "You have reached the maximum number of teams")
+      const errorMessage =
+        error instanceof ApiError
+          ? error.message
+          : isEditMode
+            ? 'Failed to update team. Please try again.'
+            : 'Failed to create team. Please try again.';
+
       showAlert({
         title: 'Error',
-        message: isEditMode
-          ? 'Failed to update team. Please try again.'
-          : 'Failed to create team. Please try again.',
+        message: errorMessage,
       });
     }
   }, [

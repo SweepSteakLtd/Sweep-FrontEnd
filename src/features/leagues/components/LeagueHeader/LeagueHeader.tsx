@@ -16,8 +16,8 @@ import {
 
 type LeagueHeaderProps = {
   leagueName?: string;
-  currentEntries: number;
-  maxEntries: number;
+  yourEntries: number;
+  totalTeams: number;
   totalPot: number;
   joinCode?: string;
   isOwner?: boolean;
@@ -25,8 +25,8 @@ type LeagueHeaderProps = {
 
 export const LeagueHeader = ({
   leagueName,
-  currentEntries,
-  maxEntries,
+  yourEntries,
+  totalTeams,
   totalPot,
   joinCode,
   isOwner,
@@ -53,13 +53,21 @@ export const LeagueHeader = ({
         <InfoItem>
           <InfoIcon>
             <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
+              📝
+            </Typography>
+          </InfoIcon>
+          <InfoLabel>YOUR ENTRIES</InfoLabel>
+          <InfoValue>{yourEntries}</InfoValue>
+        </InfoItem>
+
+        <InfoItem>
+          <InfoIcon>
+            <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
               👥
             </Typography>
           </InfoIcon>
-          <InfoLabel>ENTRIES</InfoLabel>
-          <InfoValue>
-            {currentEntries}/{maxEntries}
-          </InfoValue>
+          <InfoLabel>TEAMS</InfoLabel>
+          <InfoValue>{totalTeams}</InfoValue>
         </InfoItem>
 
         <InfoItem>

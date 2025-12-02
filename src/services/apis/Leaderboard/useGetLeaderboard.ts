@@ -17,5 +17,8 @@ export const useGetLeaderboard = (leagueId: string, options?: { refetchInterval?
     queryFn: () => fetchLeaderboard(leagueId),
     enabled: !!leagueId,
     refetchInterval: options?.refetchInterval,
+    // Always fetch fresh data when screen mounts to show newly created teams
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
 };

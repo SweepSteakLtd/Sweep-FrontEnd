@@ -13,5 +13,8 @@ export const useGetLeague = (leagueId: string, joinCode?: string) => {
       return response.data;
     },
     enabled: !!leagueId,
+    // Always fetch fresh data when screen mounts to show updated team counts
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
 };
