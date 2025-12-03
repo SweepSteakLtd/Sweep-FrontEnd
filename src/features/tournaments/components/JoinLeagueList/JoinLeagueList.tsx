@@ -102,7 +102,7 @@ export const JoinLeagueList = ({
           <SearchInput
             value={searchQuery}
             onChangeText={onSearchChange || (() => {})}
-            placeholder={isPrivateTab ? 'Search private leagues by name...' : 'Search leagues...'}
+            placeholder={isPrivateTab ? 'Search by league name...' : 'Search leagues...'}
           />
         </SearchWrapper>
         {onCreateLeague && (
@@ -118,10 +118,9 @@ export const JoinLeagueList = ({
       {/* Private tab: show prompt when not searching and no user leagues */}
       {showPrivateEmptyState ? (
         <JoinCodeContainer>
-          <JoinCodeTitle>Find a Private League</JoinCodeTitle>
+          <JoinCodeTitle>Join a Private League</JoinCodeTitle>
           <JoinCodeDescription>
-            Search for private leagues by name. Once you find a league, you'll need the join code
-            from the organiser to enter.
+            Search for a league by name. You'll need a join code from the league organiser to join.
           </JoinCodeDescription>
         </JoinCodeContainer>
       ) : loading && sortedLeagues.length === 0 ? (

@@ -42,11 +42,7 @@ export const LeagueHeader = ({
       <LeagueName>{leagueName}</LeagueName>
       {isOwner && joinCode && (
         <CodeCardWrapper>
-          <JoinCodeCard
-            joinCode={joinCode}
-            leagueName={leagueName}
-            label="Share this code to invite others:"
-          />
+          <JoinCodeCard joinCode={joinCode} leagueName={leagueName} />
         </CodeCardWrapper>
       )}
       <InfoRow>

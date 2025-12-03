@@ -80,7 +80,7 @@ export const LeagueHome = () => {
           <ButtonsContainer>
             {!hasEnded && (
               <Button
-                title="Submit your fantasy list of golfers"
+                title="Submit your team"
                 variant="secondary"
                 onPress={() => {
                   navigation.navigate('Team', { leagueId, joinCode: submittedJoinCode });

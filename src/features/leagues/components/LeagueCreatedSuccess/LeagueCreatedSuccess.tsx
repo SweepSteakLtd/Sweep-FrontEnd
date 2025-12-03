@@ -45,11 +45,7 @@ export const LeagueCreatedSuccess = ({
 
       {isPrivate && joinCode ? (
         <CodeCardWrapper>
-          <JoinCodeCard
-            joinCode={joinCode}
-            leagueName={leagueName}
-            label="Share this code to invite players:"
-          />
+          <JoinCodeCard joinCode={joinCode} leagueName={leagueName} />
         </CodeCardWrapper>
       ) : null}
 

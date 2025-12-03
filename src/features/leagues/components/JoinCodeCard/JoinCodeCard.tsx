@@ -1,21 +1,29 @@
 import * as Clipboard from 'expo-clipboard';
 import { useState } from 'react';
 import { Share } from 'react-native';
-import { ButtonsRow, CodeText, Container, Label, LinkButton, LinkText } from './styles';
+import {
+  CodeContainer,
+  CodeText,
+  Container,
+  HintText,
+  ShareButton,
+  ShareButtonText,
+  ShareHintText,
+  Title,
+} from './styles';
 
 type JoinCodeCardProps = {
   joinCode: string;
   leagueName: string;
-  label?: string;
 };
 
-export const JoinCodeCard = ({ joinCode, leagueName, label }: JoinCodeCardProps) => {
-  const [copiedCode, setCopiedCode] = useState(false);
+export const JoinCodeCard = ({ joinCode, leagueName }: JoinCodeCardProps) => {
+  const [copied, setCopied] = useState(false);
 
-  const handleCopyCode = async () => {
+  const handleLongPress = async () => {
     await Clipboard.setStringAsync(joinCode);
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleShare = async () => {
@@ -31,16 +39,15 @@ export const JoinCodeCard = ({ joinCode, leagueName, label }: JoinCodeCardProps)
 
   return (
     <Container>
-      <CodeText>{joinCode}</CodeText>
-      {label ? <Label>{label}</Label> : null}
-      <ButtonsRow>
-        <LinkButton onPress={handleCopyCode}>
-          <LinkText>{copiedCode ? 'Copied!' : 'Copy'}</LinkText>
-        </LinkButton>
-        <LinkButton onPress={handleShare}>
-          <LinkText>Share</LinkText>
-        </LinkButton>
-      </ButtonsRow>
+      <CodeContainer onLongPress={handleLongPress} delayLongPress={300} activeOpacity={0.7}>
+        <Title>Join code</Title>
+        <CodeText>{joinCode}</CodeText>
+        <HintText>{copied ? 'Copied!' : 'Hold to copy'}</HintText>
+      </CodeContainer>
+      <ShareButton onPress={handleShare}>
+        <ShareButtonText>Share</ShareButtonText>
+        <ShareHintText>Share this code</ShareHintText>
+      </ShareButton>
     </Container>
   );
 };
