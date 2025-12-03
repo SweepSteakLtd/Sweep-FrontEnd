@@ -62,6 +62,7 @@ export type RootStackParamList = {
     leagueId: string;
   };
   TestUpload: undefined;
+  DocumentUpload: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

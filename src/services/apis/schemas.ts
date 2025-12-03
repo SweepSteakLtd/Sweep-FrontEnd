@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-12-02T17:04:19.262Z
+ * Generated: 2025-12-03T12:10:57.430Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -55,6 +55,9 @@ export const userSchema = z.object({
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
   status: z.string().optional(),
+  instance_id: z.string().optional(),
+  task_id: z.string().optional(),
+  message: z.string().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;
