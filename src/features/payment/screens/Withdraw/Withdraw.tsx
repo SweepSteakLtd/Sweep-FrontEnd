@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Image, ImageSourcePropType, ScrollView } from 'react-native';
+import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useGetUser } from '~/services/apis/User/useGetUser';
@@ -91,6 +92,7 @@ export const Withdraw = () => {
 
             <InfoText>Card withdrawals can take up to 24 hours.</InfoText>
           </Content>
+          <ComplianceFooter />
         </ScrollView>
       </Container>
     </ScreenWrapper>

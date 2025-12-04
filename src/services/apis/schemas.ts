@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-12-03T12:10:57.430Z
+ * Generated: 2025-12-04T11:31:42.953Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -114,8 +114,17 @@ export const tournamentSchema = z.object({
         current_score: z.number().optional(),
         position: z.number().optional(),
         attempts: z
-          .object({ hole1: z.number().optional(), hole2: z.number().optional() })
-          .optional(),
+          .array(
+            z.object({
+              day: z.string().optional(),
+              hole_id: z.string().optional(),
+              hole_name: z.string().optional(),
+              par: z.number().optional(),
+              attempt: z.number().optional(),
+            }),
+          )
+          .optional()
+          .default([]),
         missed_cut: z.boolean().optional(),
         odds: z.number().optional(),
         profile_id: z.string().optional(),

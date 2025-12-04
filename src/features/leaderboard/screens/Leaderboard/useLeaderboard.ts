@@ -5,6 +5,11 @@ import { useGetLeaderboard } from '~/services/apis/Leaderboard/useGetLeaderboard
 import { useGetLeague } from '~/services/apis/League/useGetLeague';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { useGetUser } from '~/services/apis/User/useGetUser';
+import { usePinnedTeam } from '../../hooks/usePinnedTeam';
+
+/** Generate a unique identifier for a leaderboard entry (uses team name + owner, not rank which changes) */
+export const getEntryId = (entry: LeaderboardEntry): string =>
+  `${entry.name.main}-${entry.name.substring}`;
 
 const POLL_INTERVAL = 5000; // 5 seconds
 
@@ -21,6 +26,7 @@ export const useLeaderboard = (leagueId: string) => {
   const { data: leagueData, isLoading: isLeagueLoading } = useGetLeague(leagueId);
   const { data: tournaments } = useGetTournaments();
   const { data: currentUser } = useGetUser();
+  const { pinnedTeamId, togglePin, isPinned } = usePinnedTeam(leagueId);
 
   const league = leagueData?.league;
   const tournament = tournaments?.find((t) => t.id === league?.tournament_id);
@@ -54,22 +60,32 @@ export const useLeaderboard = (leagueId: string) => {
   const isLoading = isLeaderboardLoading || isLeagueLoading;
 
   // Sort entries:
-  // - Before tournament starts: alphabetically by team name
-  // - After tournament starts: current user's teams first, then by rank
+  // 1. Current user's teams first
+  // 2. Pinned team (if any, and not already in user's teams)
+  // 3. Other teams (alphabetically before tournament, by rank after)
   const sortedEntries = useMemo(() => {
+    const userTeams = entries.filter(isCurrentUserEntry);
+    const pinnedTeam = pinnedTeamId
+      ? entries.find((entry) => getEntryId(entry) === pinnedTeamId && !isCurrentUserEntry(entry))
+      : null;
+    const otherTeams = entries.filter(
+      (entry) => !isCurrentUserEntry(entry) && getEntryId(entry) !== pinnedTeamId,
+    );
+
+    // Before tournament starts, sort other teams alphabetically
     if (!tournamentStarted) {
-      // Before tournament starts, sort alphabetically by team name
-      return [...entries].sort((a, b) => (a.name.main ?? '').localeCompare(b.name.main ?? ''));
+      const sortedUserTeams = [...userTeams].sort((a, b) =>
+        (a.name.main ?? '').localeCompare(b.name.main ?? ''),
+      );
+      const sortedOtherTeams = [...otherTeams].sort((a, b) =>
+        (a.name.main ?? '').localeCompare(b.name.main ?? ''),
+      );
+      return [...sortedUserTeams, ...(pinnedTeam ? [pinnedTeam] : []), ...sortedOtherTeams];
     }
 
-    // After tournament starts, show current user's teams first, then by rank
-    if (!currentUserFullName) return entries;
-
-    const userTeams = entries.filter(isCurrentUserEntry);
-    const otherTeams = entries.filter((entry) => !isCurrentUserEntry(entry));
-
-    return [...userTeams, ...otherTeams];
-  }, [entries, tournamentStarted, currentUserFullName, isCurrentUserEntry]);
+    // After tournament starts, keep original rank order
+    return [...userTeams, ...(pinnedTeam ? [pinnedTeam] : []), ...otherTeams];
+  }, [entries, tournamentStarted, isCurrentUserEntry, pinnedTeamId]);
 
   const filteredEntries = useMemo(() => {
     if (!searchQuery) return sortedEntries;
@@ -122,5 +138,9 @@ export const useLeaderboard = (leagueId: string) => {
     // Helpers
     isCurrentUserEntry,
     onRefresh,
+
+    // Pinning
+    togglePin,
+    isPinned,
   };
 };

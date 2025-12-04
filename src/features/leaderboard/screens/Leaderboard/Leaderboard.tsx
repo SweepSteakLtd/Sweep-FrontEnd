@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Platform, RefreshControl, UIManager } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { useTheme } from 'styled-components/native';
@@ -10,7 +10,7 @@ import { LeaderboardHeader } from '../../components/LeaderboardHeader/Leaderboar
 import { LeaderboardTeamCard } from '../../components/LeaderboardTeamCard/LeaderboardTeamCard';
 import { LeaderboardSkeleton } from './LeaderboardSkeleton';
 import { CardWrapper, Container, SearchContainer, SearchInput } from './styles';
-import { useLeaderboard } from './useLeaderboard';
+import { getEntryId, useLeaderboard } from './useLeaderboard';
 
 // Enable LayoutAnimation for Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -21,6 +21,7 @@ export const Leaderboard = () => {
   const theme = useTheme();
   const route = useRoute<RootStackScreenProps<'Leaderboard'>['route']>();
   const { leagueId } = route.params;
+  const [openSwipeableId, setOpenSwipeableId] = useState<string | null>(null);
 
   const {
     league,
@@ -36,29 +37,48 @@ export const Leaderboard = () => {
     isRefetching,
     isCurrentUserEntry,
     onRefresh,
+    togglePin,
+    isPinned,
   } = useLeaderboard(leagueId);
 
   const renderTeamCard = useCallback(
-    ({ item, index }: { item: LeaderboardEntry; index: number }) => (
-      <CardWrapper>
-        <LeaderboardTeamCard
-          entry={item}
-          isTopThree={tournamentStarted && item.rank <= 3}
-          isFirst={index === 0}
-          isLast={index === filteredEntries.length - 1}
-          isCurrentUser={isCurrentUserEntry(item)}
-          currentUserNickname={currentUserNickname}
-          canExpand={tournamentStarted}
-        />
-      </CardWrapper>
-    ),
-    [filteredEntries.length, isCurrentUserEntry, currentUserNickname, tournamentStarted],
+    ({ item, index }: { item: LeaderboardEntry; index: number }) => {
+      const entryId = getEntryId(item);
+      const isEntryPinned = isPinned(entryId);
+      const isOwnTeam = isCurrentUserEntry(item);
+
+      return (
+        <CardWrapper>
+          <LeaderboardTeamCard
+            entry={item}
+            entryId={entryId}
+            isTopThree={tournamentStarted && item.rank <= 3}
+            isFirst={index === 0}
+            isLast={index === filteredEntries.length - 1}
+            isCurrentUser={isOwnTeam}
+            currentUserNickname={currentUserNickname}
+            canExpand={tournamentStarted}
+            isPinned={isEntryPinned}
+            canPin={!isOwnTeam}
+            onTogglePin={() => togglePin(entryId)}
+            openSwipeableId={openSwipeableId}
+            onSwipeableOpen={setOpenSwipeableId}
+          />
+        </CardWrapper>
+      );
+    },
+    [
+      filteredEntries.length,
+      isCurrentUserEntry,
+      currentUserNickname,
+      tournamentStarted,
+      isPinned,
+      togglePin,
+      openSwipeableId,
+    ],
   );
 
-  const keyExtractor = useCallback(
-    (item: LeaderboardEntry) => `${item.rank}-${item.name.main}`,
-    [],
-  );
+  const keyExtractor = useCallback((item: LeaderboardEntry) => getEntryId(item), []);
 
   const ListHeader = (
     <>

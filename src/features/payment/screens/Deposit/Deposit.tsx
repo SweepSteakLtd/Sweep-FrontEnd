@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Image, ScrollView } from 'react-native';
 import { Button } from '~/components/Button/Button';
+import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import {
@@ -86,6 +87,7 @@ export const Deposit = () => {
               style={{ marginTop: 40 }}
             />
           </Content>
+          <ComplianceFooter />
         </ScrollView>
       </Container>
     </ScreenWrapper>

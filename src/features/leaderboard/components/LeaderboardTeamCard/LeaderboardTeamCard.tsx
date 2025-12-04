@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
 import { formatScore, getScoreColor } from '../../utils/scoreUtils';
@@ -12,6 +14,7 @@ import {
   ExpandIcon,
   OwnerName,
   OwnerRow,
+  PinIcon,
   PlayerGroup,
   PlayerName,
   PlayerRow,
@@ -22,6 +25,8 @@ import {
   RankBadge,
   RankText,
   ScoreContainer,
+  SwipeActionButton,
+  SwipeActionText,
   TeamInfo,
   TeamName,
   TotalScore,
@@ -29,6 +34,7 @@ import {
 
 interface LeaderboardTeamCardProps {
   entry: LeaderboardEntry;
+  entryId: string;
   isTopThree?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
@@ -36,6 +42,16 @@ interface LeaderboardTeamCardProps {
   currentUserNickname?: string;
   /** Whether the card can be expanded to show players (disabled before tournament starts) */
   canExpand?: boolean;
+  /** Whether this team is pinned */
+  isPinned?: boolean;
+  /** Whether this team can be pinned (not own team, tournament started) */
+  canPin?: boolean;
+  /** Callback to toggle pin state */
+  onTogglePin?: () => void;
+  /** ID of the currently open swipeable (for single-open behavior) */
+  openSwipeableId?: string | null;
+  /** Callback when this swipeable opens */
+  onSwipeableOpen?: (id: string) => void;
 }
 
 /**
@@ -67,15 +83,29 @@ const getOwnerDisplayName = (
 
 export const LeaderboardTeamCard = ({
   entry,
+  entryId,
   isTopThree = false,
   isFirst = false,
   isLast = false,
   isCurrentUser = false,
   currentUserNickname,
   canExpand = true,
+  isPinned = false,
+  canPin = false,
+  onTogglePin,
+  openSwipeableId,
+  onSwipeableOpen,
 }: LeaderboardTeamCardProps) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
+  const swipeableRef = useRef<Swipeable>(null);
+
+  // Close this swipeable if another one opens
+  useEffect(() => {
+    if (openSwipeableId && openSwipeableId !== entryId) {
+      swipeableRef.current?.close();
+    }
+  }, [openSwipeableId, entryId]);
 
   const toggleExpanded = () => {
     if (canExpand) {
@@ -83,12 +113,34 @@ export const LeaderboardTeamCard = ({
     }
   };
 
+  const handlePinPress = () => {
+    swipeableRef.current?.close();
+    onTogglePin?.();
+  };
+
+  const handleSwipeableOpen = () => {
+    onSwipeableOpen?.(entryId);
+  };
+
   const teamName = entry.name?.main ?? '';
   const ownerName = getOwnerDisplayName(entry, isCurrentUser, currentUserNickname);
   const bestScores = entry.bestScore ?? [];
   const players = entry.players ?? [];
 
-  return (
+  const renderRightActions = () => {
+    if (!canPin) return null;
+
+    return (
+      <TouchableOpacity onPress={handlePinPress} activeOpacity={0.8}>
+        <SwipeActionButton isPinned={isPinned}>
+          <PinIcon isPinned={false}>{isPinned ? '📌' : '📍'}</PinIcon>
+          <SwipeActionText>{isPinned ? 'Unpin' : 'Pin'}</SwipeActionText>
+        </SwipeActionButton>
+      </TouchableOpacity>
+    );
+  };
+
+  const cardContent = (
     <Card
       isTopThree={isTopThree}
       isFirst={isFirst}
@@ -110,6 +162,7 @@ export const LeaderboardTeamCard = ({
               </PrizeContainer>
             ) : null}
             <OwnerName numberOfLines={1}>{ownerName}</OwnerName>
+            {isPinned && <PinIcon isPinned>📌</PinIcon>}
           </OwnerRow>
         </TeamInfo>
 
@@ -146,5 +199,23 @@ export const LeaderboardTeamCard = ({
         </>
       )}
     </Card>
+  );
+
+  // Only wrap in Swipeable if pinning is available
+  if (!canPin) {
+    return cardContent;
+  }
+
+  return (
+    <Swipeable
+      ref={swipeableRef}
+      renderRightActions={renderRightActions}
+      overshootRight={false}
+      friction={2}
+      rightThreshold={40}
+      onSwipeableWillOpen={handleSwipeableOpen}
+    >
+      {cardContent}
+    </Swipeable>
   );
 };

@@ -144,3 +144,27 @@ export const PlayerScore = styled.Text`
   min-width: 50px;
   text-align: right;
 `;
+
+export const PinIcon = styled.Text<{ isPinned?: boolean }>`
+  font-size: 12px;
+  color: ${({ theme, isPinned }: { theme: Theme; isPinned?: boolean }) =>
+    isPinned ? theme.colors.primary : theme.colors.text.tertiary};
+`;
+
+export const SwipeActionButton = styled.View<{ isPinned?: boolean }>`
+  width: 50px;
+  background-color: ${({ theme, isPinned }: { theme: Theme; isPinned?: boolean }) =>
+    isPinned ? theme.colors.text.tertiary : theme.colors.primary};
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  border-radius: 8px;
+  margin-left: 4px;
+`;
+
+export const SwipeActionText = styled.Text`
+  font-size: 10px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  margin-top: 1px;
+`;
