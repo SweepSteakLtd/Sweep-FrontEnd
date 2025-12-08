@@ -1,0 +1,67 @@
+{
+  "expo": {
+    "name": "Chipin",
+    "slug": "sweepsteak",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/ChipinSmoothApp.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/transparent-chipin-white.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sweepsteak.app",
+      "buildNumber": "1",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to capture documents and photos for upload.",
+        "NSPhotoLibraryUsageDescription": "This app accesses your photo library to select documents and images for upload."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/ChipinSmoothApp.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.sweepsteak.app",
+      "versionCode": 1,
+      "edgeToEdgeEnabled": false,
+      "predictiveBackGestureEnabled": false,
+      "statusBar": {
+        "barStyle": "light-content",
+        "backgroundColor": "#2d5016",
+        "translucent": false
+      },
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/ChipinSmoothApp.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "beb39d44-bd25-4231-81ae-578a80713cbf"
+      }
+    },
+    "owner": "sweepstake",
+    "plugins": [
+      "expo-secure-store",
+      "expo-font",
+      "@react-native-firebase/app",
+      "./plugins/withModularHeaders.js",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "This app uses the camera to capture documents and photos for upload."
+        }
+      ],
+      "expo-document-picker"
+    ]
+  }
+}
