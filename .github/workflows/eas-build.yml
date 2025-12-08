@@ -54,21 +54,15 @@ jobs:
 
       - name: Comment on commit
         uses: actions/github-script@v6
-        continue-on-error: true
         with:
           script: |
             const profile = '${{ github.event.inputs.profile }}';
             const platform = '${{ github.event.inputs.platform }}';
             const sha = context.sha;
 
-            try {
-              await github.rest.repos.createCommitComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                commit_sha: sha,
-                body: `🚀 EAS Build started for **${platform}** with **${profile}** profile\n\nCheck build status at: https://expo.dev/accounts/${{ secrets.EXPO_ACCOUNT_OWNER }}/projects/sweepsteak/builds`
-              });
-            } catch (error) {
-              console.log('Could not create commit comment:', error.message);
-              // Don't fail the workflow if comment fails
-            }
+            github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: sha,
+              body: `🚀 EAS Build started for **${platform}** with **${profile}** profile\n\nCheck build status at: https://expo.dev/accounts/${{ secrets.EXPO_ACCOUNT_OWNER }}/projects/sweepsteak/builds`
+            });
