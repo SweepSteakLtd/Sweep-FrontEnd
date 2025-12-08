@@ -10,6 +10,7 @@ on:
         type: choice
         options:
           - test
+          - preview
           - production
       platform:
         description: 'Platform to build for'
