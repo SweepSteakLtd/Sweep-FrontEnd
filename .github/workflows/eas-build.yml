@@ -50,12 +50,19 @@ jobs:
           PROFILE="${{ github.event.inputs.profile }}"
           PLATFORM="${{ github.event.inputs.platform }}"
 
-          # For preview and production profiles, auto-submit to App Store Connect
+          # For preview and production profiles, auto-submit iOS builds to App Store Connect
+          # Note: Only iOS supports auto-submit (Android requires Google Service Account)
           if [ "$PROFILE" == "preview" ] || [ "$PROFILE" == "production" ]; then
-            if [ "$PLATFORM" == "all" ]; then
-              eas build --platform all --profile $PROFILE --auto-submit --non-interactive --no-wait
+            if [ "$PLATFORM" == "ios" ]; then
+              eas build --platform ios --profile $PROFILE --auto-submit --non-interactive --no-wait
+            elif [ "$PLATFORM" == "android" ]; then
+              # Android builds without auto-submit (requires Google Service Account)
+              eas build --platform android --profile $PROFILE --non-interactive --no-wait
             else
-              eas build --platform $PLATFORM --profile $PROFILE --auto-submit --non-interactive --no-wait
+              # For "all" platform, submit iOS only
+              eas build --platform ios --profile $PROFILE --auto-submit --non-interactive --no-wait &
+              eas build --platform android --profile $PROFILE --non-interactive --no-wait &
+              wait
             fi
           else
             # For test profile, builds automatically go to TestFlight (no submit needed)
