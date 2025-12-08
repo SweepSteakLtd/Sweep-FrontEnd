@@ -1,0 +1,197 @@
+import { useState } from 'react';
+import { RefreshControl, ScrollView } from 'react-native';
+import { useTheme } from 'styled-components/native';
+import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { Skeleton } from '~/components/Skeleton/Skeleton';
+import { useGetActivity } from '~/services/apis/Activity/useGetActivity';
+import { formatCurrency } from '~/utils/currency';
+import {
+  Container,
+  EmptyState,
+  EmptyStateText,
+  EmptyStateTitle,
+  ErrorState,
+  InfoText,
+  StatCard,
+  StatLabel,
+  StatRow,
+  StatValue,
+  TabButton,
+  TabButtonText,
+  TabsContainer,
+  TitleRow,
+} from './styles';
+
+type TimePeriod = 'all' | '7d' | '30d' | '3m' | '6m' | '12m';
+
+const TIME_PERIODS: { label: string; value: TimePeriod; timestamp?: string }[] = [
+  { label: 'All', value: 'all' },
+  { label: '7D', value: '7d', timestamp: '7d' },
+  { label: '30D', value: '30d', timestamp: '30d' },
+  { label: '3M', value: '3m', timestamp: '3m' },
+  { label: '6M', value: '6m', timestamp: '6m' },
+  { label: '12M', value: '12m', timestamp: '12m' },
+];
+
+const ActivitySkeleton = () => (
+  <>
+    <TitleRow>
+      <TabsContainer>
+        <Skeleton width={45} height={32} borderRadius={20} />
+        <Skeleton width={45} height={32} borderRadius={20} />
+        <Skeleton width={50} height={32} borderRadius={20} />
+        <Skeleton width={40} height={32} borderRadius={20} />
+        <Skeleton width={40} height={32} borderRadius={20} />
+        <Skeleton width={50} height={32} borderRadius={20} />
+      </TabsContainer>
+    </TitleRow>
+    <StatRow>
+      <StatCard>
+        <Skeleton width={80} height={28} style={{ marginBottom: 4 }} />
+        <Skeleton width={60} height={14} />
+      </StatCard>
+      <StatCard>
+        <Skeleton width={80} height={28} style={{ marginBottom: 4 }} />
+        <Skeleton width={60} height={14} />
+      </StatCard>
+      <StatCard>
+        <Skeleton width={80} height={28} style={{ marginBottom: 4 }} />
+        <Skeleton width={60} height={14} />
+      </StatCard>
+    </StatRow>
+  </>
+);
+
+export const Activity = () => {
+  const theme = useTheme();
+  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('all');
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Get timestamp for the selected period
+  const selectedTimestamp = TIME_PERIODS.find((p) => p.value === selectedPeriod)?.timestamp;
+
+  const { data: activity, isLoading, isError, refetch } = useGetActivity(selectedTimestamp);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  if (isError) {
+    return (
+      <ScreenWrapper title="Activity">
+        <ErrorState>
+          <EmptyStateTitle>Error</EmptyStateTitle>
+          <EmptyStateText>Failed to load activity. Please try again.</EmptyStateText>
+        </ErrorState>
+      </ScreenWrapper>
+    );
+  }
+
+  const hasActivity = activity && (activity.deposited || activity.withdrawn || activity.net_profit);
+
+  return (
+    <ScreenWrapper title="Activity">
+      <Container>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ padding: 16 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.colors.primary}
+            />
+          }
+        >
+          {isLoading || refreshing ? (
+            <ActivitySkeleton />
+          ) : (
+            <>
+              <TitleRow>
+                <TabsContainer>
+                  {TIME_PERIODS.map((period) => (
+                    <TabButton
+                      key={period.value}
+                      active={selectedPeriod === period.value}
+                      onPress={() => setSelectedPeriod(period.value)}
+                    >
+                      <TabButtonText active={selectedPeriod === period.value}>
+                        {period.label}
+                      </TabButtonText>
+                    </TabButton>
+                  ))}
+                </TabsContainer>
+              </TitleRow>
+
+              <StatRow>
+                <StatCard>
+                  <StatValue numberOfLines={1} adjustsFontSizeToFit>
+                    {formatCurrency(activity?.deposited)}
+                  </StatValue>
+                  <StatLabel>Deposited</StatLabel>
+                </StatCard>
+                <StatCard>
+                  <StatValue numberOfLines={1} adjustsFontSizeToFit>
+                    {formatCurrency(activity?.withdrawn)}
+                  </StatValue>
+                  <StatLabel>Withdrawn</StatLabel>
+                </StatCard>
+                <StatCard>
+                  <StatValue numberOfLines={1} adjustsFontSizeToFit>
+                    {formatCurrency(activity?.net_profit)}
+                  </StatValue>
+                  <StatLabel>Net profit</StatLabel>
+                </StatCard>
+              </StatRow>
+
+              <InfoText>
+                Your total lifetime deposits minus your total lifetime{'\n'}withdrawals equals your
+                net deposits.
+              </InfoText>
+
+              {!hasActivity ? (
+                <EmptyState>
+                  <EmptyStateTitle>NO ACTIVITY YET</EmptyStateTitle>
+                  <EmptyStateText>
+                    Keep track of your transaction history and returns here.
+                  </EmptyStateText>
+                </EmptyState>
+              ) : (
+                activity?.transactions &&
+                activity.transactions.length > 0 &&
+                activity.transactions[0].id && (
+                  <>
+                    <EmptyStateTitle style={{ marginTop: 16 }}>Recent Transaction</EmptyStateTitle>
+                    <StatCard style={{ marginTop: 12 }}>
+                      <EmptyStateText>
+                        {activity.transactions[0].name || 'Transaction'}
+                      </EmptyStateText>
+                      <StatValue
+                        style={{
+                          color:
+                            activity.transactions[0].type === 'deposit'
+                              ? theme.colors.primary
+                              : theme.colors.error,
+                        }}
+                      >
+                        {activity.transactions[0].type === 'deposit' ? '+' : '-'}
+                        {formatCurrency(activity.transactions[0].value).replace('£', '')}
+                      </StatValue>
+                      <EmptyStateText>
+                        {activity.transactions[0].created_at
+                          ? new Date(activity.transactions[0].created_at).toLocaleDateString()
+                          : ''}
+                      </EmptyStateText>
+                    </StatCard>
+                  </>
+                )
+              )}
+            </>
+          )}
+        </ScrollView>
+      </Container>
+    </ScreenWrapper>
+  );
+};

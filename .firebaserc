@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "sweepsteak-64dd0"
+  },
+  "targets": {
+    "sweepsteak-64dd0": {
+      "hosting": {
+        "development": [
+          "sweepsteak-development"
+        ],
+        "production": [
+          "sweepsteak-production"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

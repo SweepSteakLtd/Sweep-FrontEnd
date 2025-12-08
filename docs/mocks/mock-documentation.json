@@ -1,0 +1,287 @@
+{
+  "title": "SweepSteak Mock API Documentation",
+  "version": "1.0.0",
+  "generatedAt": "2025-11-28T14:25:14.448Z",
+  "endpoints": [
+    {
+      "id": "create-bet",
+      "name": "Create Bet",
+      "method": "POST",
+      "path": "/api/bets/",
+      "description": "Create Bet endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 201,
+          "delay": "800ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "800ms",
+          "response": null
+        },
+        {
+          "name": "Insufficient Funds",
+          "status": 400,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Invalid Data",
+          "status": 400,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "get-leaderboard",
+      "name": "KMaster",
+      "method": "GET",
+      "path": "/api/leaderboards/",
+      "description": "KMaster endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "300ms",
+          "response": null
+        },
+        {
+          "name": "Empty Leaderboard",
+          "status": 200,
+          "delay": "300ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "300ms",
+          "response": null
+        },
+        {
+          "name": "Not Found",
+          "status": 404,
+          "delay": "300ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "get-leagues",
+      "name": "Get Leagues List",
+      "method": "GET",
+      "path": "/api/leagues",
+      "description": "Get Leagues List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "get-player-profiles",
+      "name": "Get Player Profiles List",
+      "method": "GET",
+      "path": "/api/player-profiles/",
+      "description": "Get Player Profiles List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "create-profile",
+      "name": "Create User Profile",
+      "method": "POST",
+      "path": "/api/users",
+      "description": "Create User Profile endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 201,
+          "delay": "1000ms",
+          "response": null
+        },
+        {
+          "name": "Username Taken",
+          "status": 400,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Invalid Data",
+          "status": 400,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error (500)",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "get-teams",
+      "name": "Get Teams List",
+      "method": "GET",
+      "path": "/api/teams",
+      "description": "Get Teams List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "get-tournaments",
+      "name": "Get Tournaments List",
+      "method": "GET",
+      "path": "/api/tournaments",
+      "description": "Get Tournaments List endpoint",
+      "defaultScenario": "Success",
+      "scenarios": [
+        {
+          "name": "Success",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Empty List",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "data",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error",
+          "status": 500,
+          "delay": "1000ms",
+          "response": {
+            "error": "Failed to fetch tournaments"
+          }
+        }
+      ]
+    },
+    {
+      "id": "get-user",
+      "name": "Get User Profile",
+      "method": "GET",
+      "path": "/api/users/me",
+      "description": "Get User Profile endpoint",
+      "defaultScenario": "Complete Profile",
+      "scenarios": [
+        {
+          "name": "Complete Profile",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "No Profile (404)",
+          "status": 404,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Server Error (500)",
+          "status": 500,
+          "delay": "1000ms",
+          "response": null
+        }
+      ]
+    }
+  ]
+}

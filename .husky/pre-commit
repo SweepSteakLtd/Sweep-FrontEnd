@@ -1,0 +1,90 @@
+#!/bin/sh
+
+# Get list of staged TypeScript/JavaScript files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$' || true)
+
+# Export mocks documentation
+echo "📝 Exporting mock API documentation..."
+yarn export-mocks
+
+# Check if mock docs changed
+if git diff --quiet docs/mocks/; then
+  echo "✅ Mock docs are up to date"
+else
+  echo "📄 Mock docs updated, staging changes..."
+  git add docs/mocks/
+fi
+
+# Verify API schemas are in sync with OpenAPI spec
+echo ""
+echo "🔍 Verifying API schemas..."
+yarn verify-schemas || SCHEMA_EXIT_CODE=$?
+SCHEMA_EXIT_CODE=${SCHEMA_EXIT_CODE:-0}
+
+if [ $SCHEMA_EXIT_CODE -eq 0 ]; then
+  echo "✅ API schemas are in sync"
+elif [ $SCHEMA_EXIT_CODE -eq 2 ]; then
+  # Exit code 2 = API fetch failed, allow commit to proceed
+  echo "⚠️  To fix schema mismatch when API is available, run: yarn generate-schemas"
+else
+  # Exit code 1 = Schema mismatch detected, block commit
+  echo ""
+  echo "❌ COMMIT BLOCKED: Schema mismatch detected!"
+  echo ""
+  echo "📋 How to fix:"
+  echo "   1. Run: yarn generate-schemas"
+  echo "   2. Review the changes in src/services/apis/schemas.ts"
+  echo "   3. Commit again: git commit -m \"your message\""
+  echo ""
+  exit 1
+fi
+
+# Run Prettier on staged files
+if [ -n "$STAGED_FILES" ]; then
+  echo ""
+  echo "✨ Running Prettier..."
+  echo "$STAGED_FILES" | xargs npx prettier --write
+
+  # Re-stage formatted files
+  echo "$STAGED_FILES" | xargs git add
+  echo "✅ Code formatted"
+fi
+
+# Run ESLint on staged files
+if [ -n "$STAGED_FILES" ]; then
+  echo ""
+  echo "🔍 Running ESLint..."
+  if echo "$STAGED_FILES" | xargs npx eslint --no-warn-ignored; then
+    echo "✅ Linting passed"
+  else
+    echo ""
+    echo "❌ COMMIT BLOCKED: ESLint found errors!"
+    echo ""
+    echo "📋 How to fix:"
+    echo "   1. Run: yarn lint              (to see all errors)"
+    echo "   2. Run: yarn lint --fix        (to auto-fix where possible)"
+    echo "   3. Manually fix remaining errors"
+    echo "   4. Commit again: git commit -m \"your message\""
+    echo ""
+    exit 1
+  fi
+fi
+
+# Run TypeScript type check
+echo ""
+echo "🔍 Running TypeScript type check..."
+if yarn type-check; then
+  echo "✅ Type check passed"
+else
+  echo ""
+  echo "❌ COMMIT BLOCKED: TypeScript type check failed!"
+  echo ""
+  echo "📋 How to fix:"
+  echo "   1. Run: yarn type-check        (to see all type errors)"
+  echo "   2. Fix the TypeScript errors shown above"
+  echo "   3. Commit again: git commit -m \"your message\""
+  echo ""
+  exit 1
+fi
+
+exit 0

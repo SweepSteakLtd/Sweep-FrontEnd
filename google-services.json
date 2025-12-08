@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "230553092247",
+    "project_id": "sweepsteak-64dd0",
+    "storage_bucket": "sweepsteak-64dd0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230553092247:android:8bae81e7c81c75a13ce9d2",
+        "android_client_info": {
+          "package_name": "com.sweepsteak.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "230553092247-s7ddu1135o1b8fibsfb62gp6965q3vmj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB33ECGlbkGEZ1g9wAWeDu_A2noNOzh8B0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "230553092247-s7ddu1135o1b8fibsfb62gp6965q3vmj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "230553092247-7hoe1811pqllvv2fv4pd3r7fb127djbt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sweepsteak.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

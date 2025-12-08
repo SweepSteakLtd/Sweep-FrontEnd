@@ -1,0 +1,14 @@
+import styled from 'styled-components/native';
+
+export const StepContainer = styled.View`
+  width: 100%;
+  padding-bottom: 40px;
+`;
+
+export const StepTitle = styled.View`
+  margin-bottom: 8px;
+`;
+
+export const StepDescription = styled.View`
+  margin-bottom: 24px;
+`;

@@ -1,0 +1,98 @@
+import type { RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { Keyboard } from 'react-native';
+import { useTheme } from 'styled-components/native';
+import { Button } from '~/components/Button/Button';
+import { Input } from '~/components/Input/Input';
+import { Typography } from '~/components/Typography/Typography';
+import type { RootStackParamList } from '~/navigation/types';
+import {
+  ButtonContainer,
+  Container,
+  ContentContainer,
+  ErrorText,
+  InputContainer,
+  Subtitle,
+  Title,
+} from './styles';
+
+type JoinCodeModalRouteProp = RouteProp<RootStackParamList, 'JoinCodeModal'>;
+type JoinCodeModalNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+export const JoinCodeModal = () => {
+  const theme = useTheme();
+  const navigation = useNavigation<JoinCodeModalNavigationProp>();
+  const route = useRoute<JoinCodeModalRouteProp>();
+
+  const { leagueId, leagueName } = route.params;
+  const [joinCode, setJoinCode] = useState('');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    Keyboard.dismiss();
+  }, []);
+
+  const handleCancel = () => {
+    navigation.goBack();
+  };
+
+  const handleJoin = () => {
+    if (!joinCode.trim()) {
+      setError('Please enter a join code');
+      return;
+    }
+
+    setError('');
+
+    // Navigate to the league home with the join code
+    // The API will validate the code when fetching league details
+    navigation.goBack();
+    navigation.navigate('LeagueHome', { leagueId, joinCode: joinCode.trim() });
+  };
+
+  return (
+    <Container>
+      <ContentContainer>
+        <Title>
+          <Typography variant="subheading" color={theme.colors.text.secondary} weight="bold">
+            Join Private League
+          </Typography>
+        </Title>
+
+        <Subtitle>
+          <Typography variant="body" color={theme.colors.text.tertiary}>
+            Enter the passcode to join "{leagueName}"
+          </Typography>
+        </Subtitle>
+
+        <InputContainer>
+          <Input
+            label="Join Code"
+            value={joinCode}
+            onChangeText={(text) => {
+              setJoinCode(text);
+              setError('');
+            }}
+            placeholder="Enter passcode"
+            autoCapitalize="characters"
+            autoFocus
+          />
+          {error ? <ErrorText>{error}</ErrorText> : null}
+        </InputContainer>
+
+        <ButtonContainer>
+          <Button variant="secondary" title="Cancel" onPress={handleCancel} style={{ flex: 1 }} />
+          <Button
+            variant="primary"
+            title="Join"
+            onPress={handleJoin}
+            disabled={!joinCode.trim()}
+            style={{ flex: 1 }}
+          />
+        </ButtonContainer>
+      </ContentContainer>
+    </Container>
+  );
+};

@@ -1,0 +1,479 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SweepSteak Mock API",
+    "version": "1.0.0",
+    "description": "Mock API specification for SweepSteak mobile app development"
+  },
+  "servers": [
+    {
+      "url": "https://api.sweepsteak.com",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/api/bets/": {
+      "post": {
+        "summary": "Create Bet",
+        "description": "Create Bet endpoint",
+        "operationId": "create-bet",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Insufficient Funds": {
+                    "summary": "Insufficient Funds",
+                    "value": null
+                  },
+                  "Invalid Data": {
+                    "summary": "Invalid Data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/leaderboards/": {
+      "get": {
+        "summary": "KMaster",
+        "description": "KMaster endpoint",
+        "operationId": "get-leaderboard",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty Leaderboard": {
+                    "summary": "Empty Leaderboard",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Not Found": {
+                    "summary": "Not Found",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/leagues": {
+      "get": {
+        "summary": "Get Leagues List",
+        "description": "Get Leagues List endpoint",
+        "operationId": "get-leagues",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty List": {
+                    "summary": "Empty List",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/player-profiles/": {
+      "get": {
+        "summary": "Get Player Profiles List",
+        "description": "Get Player Profiles List endpoint",
+        "operationId": "get-player-profiles",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty List": {
+                    "summary": "Empty List",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "post": {
+        "summary": "Create User Profile",
+        "description": "Create User Profile endpoint",
+        "operationId": "create-profile",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Username Taken": {
+                    "summary": "Username Taken",
+                    "value": null
+                  },
+                  "Invalid Data": {
+                    "summary": "Invalid Data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error (500)": {
+                    "summary": "Server Error (500)",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teams": {
+      "get": {
+        "summary": "Get Teams List",
+        "description": "Get Teams List endpoint",
+        "operationId": "get-teams",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty List": {
+                    "summary": "Empty List",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments": {
+      "get": {
+        "summary": "Get Tournaments List",
+        "description": "Get Tournaments List endpoint",
+        "operationId": "get-tournaments",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Success",
+                    "value": null
+                  },
+                  "Empty List": {
+                    "summary": "Empty List",
+                    "value": null
+                  },
+                  "data": {
+                    "summary": "data",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Server Error": {
+                    "summary": "Server Error",
+                    "value": {
+                      "error": "Failed to fetch tournaments"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "summary": "Get User Profile",
+        "description": "Get User Profile endpoint",
+        "operationId": "get-user",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Complete Profile": {
+                    "summary": "Complete Profile",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "No Profile (404)": {
+                    "summary": "No Profile (404)",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error (500)": {
+                    "summary": "Server Error (500)",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

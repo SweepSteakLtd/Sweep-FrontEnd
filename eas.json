@@ -1,0 +1,90 @@
+{
+  "cli": {
+    "version": ">= 13.2.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "test": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": false,
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "staging"
+      }
+    },
+    "test-simulator": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true,
+        "resourceClass": "m-medium"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "staging"
+      }
+    },
+    "preview": {
+      "autoIncrement": true,
+      "ios": {
+        "distribution": "store",
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "distribution": "internal",
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "staging"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "autoIncrement": true,
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    }
+  },
+  "submit": {
+    "preview": {
+      "ios": {
+        "appleId": "karamvir.mangat@uvconsulting.net",
+        "ascAppId": "6738724528",
+        "appleTeamId": "743ZL7U46T"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json"
+      }
+    },
+    "production": {
+      "ios": {
+        "appleId": "karamvir.mangat@uvconsulting.net",
+        "ascAppId": "6738724528",
+        "appleTeamId": "743ZL7U46T"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+import React from 'react';
+import { TouchableOpacityProps } from 'react-native';
+import { useTheme } from 'styled-components/native';
+import { Icon } from '../Icon/Icon';
+import { Typography } from '../Typography/Typography';
+import { CheckboxBox, Container, LabelContainer } from './styles';
+
+interface CheckboxProps extends TouchableOpacityProps {
+  checked: boolean;
+  label?: string;
+  children?: React.ReactNode;
+}
+
+export const Checkbox: React.FC<CheckboxProps> = ({ checked, label, children, ...props }) => {
+  const theme = useTheme();
+  return (
+    <Container {...props}>
+      <CheckboxBox checked={checked}>
+        {checked && <Icon name="✓" size={16} style={{ color: theme.colors.white }} />}
+      </CheckboxBox>
+      <LabelContainer>
+        {label && (
+          <Typography variant="caption" color={theme.colors.white}>
+            {label}
+          </Typography>
+        )}
+        {children}
+      </LabelContainer>
+    </Container>
+  );
+};
