@@ -10,9 +10,24 @@ import { Typography } from '~/components/Typography/Typography';
 import { useLogin } from '~/features/authentication/hooks/useLogin';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
+<<<<<<< HEAD
 import { Container, ContentWrapper, FormContainer, Header } from './styles';
 import { loginSchema } from './validation';
 
+=======
+import {
+  Container,
+  ContentWrapper,
+  FormContainer,
+  Header,
+  HeaderLogo,
+  LogoContainer,
+} from './styles';
+import { loginSchema } from './validation';
+
+const chipinLogo = require('../../../../../assets/ChipinSmooth.png');
+
+>>>>>>> update-chipin-branding
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface FieldErrors extends Record<string, string | undefined> {
@@ -77,9 +92,15 @@ export const Login = () => {
       >
         <ContentWrapper>
           <Header>
+<<<<<<< HEAD
             <Typography variant="heading" color={theme.colors.text.primary}>
               Welcome to SweepSteak
             </Typography>
+=======
+            <LogoContainer>
+              <HeaderLogo source={chipinLogo} resizeMode="contain" />
+            </LogoContainer>
+>>>>>>> update-chipin-branding
           </Header>
 
           <FormContainer>

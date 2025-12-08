@@ -2,16 +2,32 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
+<<<<<<< HEAD
+=======
+import { useTheme } from 'styled-components/native';
+>>>>>>> update-chipin-branding
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
 import { PasswordRequirements } from '~/components/PasswordRequirements/PasswordRequirements';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+<<<<<<< HEAD
 import { useCreateFirebaseAccount } from '~/features/authentication/hooks/useCreateFirebaseAccount';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer } from './styles';
 import { createAccountSchema } from './validation';
 
+=======
+import { Typography } from '~/components/Typography/Typography';
+import { useCreateFirebaseAccount } from '~/features/authentication/hooks/useCreateFirebaseAccount';
+import { validateWithZod } from '~/lib/validation/zodHelpers';
+import type { RootStackParamList } from '~/navigation/types';
+import { Container, FormContainer, Header, HeaderLogo, HeaderText, LogoContainer } from './styles';
+import { createAccountSchema } from './validation';
+
+const chipinLogo = require('../../../../../assets/Chipin1.png');
+
+>>>>>>> update-chipin-branding
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface FieldErrors extends Record<string, string | undefined> {
@@ -21,6 +37,10 @@ interface FieldErrors extends Record<string, string | undefined> {
 }
 
 export const CreateAccount = () => {
+<<<<<<< HEAD
+=======
+  const theme = useTheme();
+>>>>>>> update-chipin-branding
   const navigation = useNavigation<NavigationProp>();
   const { createAccount, loading } = useCreateFirebaseAccount();
 
@@ -59,6 +79,20 @@ export const CreateAccount = () => {
           style={{ flex: 1 }}
           bottomOffset={140}
         >
+<<<<<<< HEAD
+=======
+          <Header>
+            <HeaderText>
+              <Typography variant="heading" color={theme.colors.text.primary}>
+                Welcome to Chipin
+              </Typography>
+            </HeaderText>
+            <LogoContainer>
+              <HeaderLogo source={chipinLogo} resizeMode="contain" />
+            </LogoContainer>
+          </Header>
+
+>>>>>>> update-chipin-branding
           <FormContainer>
             <Input
               label="Email"

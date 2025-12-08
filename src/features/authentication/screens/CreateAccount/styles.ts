@@ -7,6 +7,7 @@ export const Container = styled.View<{ theme: Theme }>`
   padding: 20px 30px 30px 30px;
 `;
 
+<<<<<<< HEAD
 export const LogoContainer = styled.View<{ theme: Theme }>`
   flex-direction: row;
   align-items: center;
@@ -25,6 +26,25 @@ export const LogoCircle = styled.View<{ theme: Theme }>`
 
 export const Header = styled.View<{ theme: Theme }>`
   margin-bottom: 20px;
+=======
+export const Header = styled.View<{ theme: Theme }>`
+  margin-bottom: 30px;
+  align-items: center;
+`;
+
+export const HeaderText = styled.View<{ theme: Theme }>`
+  margin-bottom: 20px;
+`;
+
+export const LogoContainer = styled.View<{ theme: Theme }>`
+  align-items: center;
+  justify-content: center;
+`;
+
+export const HeaderLogo = styled.Image<{ theme: Theme }>`
+  width: 150px;
+  height: 150px;
+>>>>>>> update-chipin-branding
 `;
 
 export const FormContainer = styled.View<{ theme: Theme }>`
