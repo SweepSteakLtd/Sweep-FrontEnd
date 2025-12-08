@@ -10,29 +10,10 @@ export const Container = styled.View`
 
 export const LogoContainer = styled.View`
   align-items: center;
-<<<<<<< HEAD
-`;
-
-export const GoldCircle = styled.View`
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.secondary};
-  justify-content: center;
-  align-items: center;
-`;
-
-export const AppName = styled.Text`
-  font-size: 32px;
-  font-weight: bold;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
-  margin-top: 20px;
-=======
   justify-content: center;
 `;
 
 export const LogoImage = styled.Image`
   width: 200px;
   height: 200px;
->>>>>>> update-chipin-branding
 `;

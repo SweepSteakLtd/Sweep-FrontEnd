@@ -10,21 +10,13 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-<<<<<<< HEAD
-import { Icon } from '~/components/Icon/Icon';
-=======
->>>>>>> update-chipin-branding
 import { firebaseAuth } from '~/lib/firebase';
 import type { RootStackParamList } from '~/navigation/types';
 import { ApiError } from '~/services/apis/apiClient';
 import { fetchUser, userQueryKeys } from '~/services/apis/User/useGetUser';
-<<<<<<< HEAD
-import { AppName, Container, GoldCircle, LogoContainer } from './styles';
-=======
 import { Container, LogoContainer, LogoImage } from './styles';
 
 const chipinLogo = require('../../../../../assets/Chipin1.png');
->>>>>>> update-chipin-branding
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -32,27 +24,6 @@ export const Splash = () => {
   const navigation = useNavigation<NavigationProp>();
   const queryClient = useQueryClient();
 
-<<<<<<< HEAD
-  // Reanimated shared values
-  const scale = useSharedValue(1);
-  const rotation = useSharedValue(0);
-
-  useEffect(() => {
-    // Pulsing scale animation
-    scale.value = withRepeat(
-      withSequence(
-        withTiming(1.1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
-      ),
-      -1, // Infinite
-      false,
-    );
-
-    // Subtle rotation animation
-    rotation.value = withRepeat(
-      withTiming(360, { duration: 3000, easing: Easing.linear }),
-      -1, // Infinite
-=======
   // Reanimated shared values for zoom animation
   const scale = useSharedValue(1);
 
@@ -64,7 +35,6 @@ export const Splash = () => {
         withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }), // Zoom out over 3 seconds
       ),
       -1, // Infinite loop
->>>>>>> update-chipin-branding
       false,
     );
   }, []);
@@ -123,20 +93,6 @@ export const Splash = () => {
   }, [navigation, queryClient]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-<<<<<<< HEAD
-    transform: [{ scale: scale.value }, { rotate: `${rotation.value}deg` }],
-  }));
-
-  return (
-    <Container>
-      <LogoContainer>
-        <Animated.View style={animatedStyle}>
-          <GoldCircle>
-            <Icon name="⛳" size={40} />
-          </GoldCircle>
-        </Animated.View>
-        <AppName>Sweepsteak</AppName>
-=======
     transform: [{ scale: scale.value }],
   }));
 
@@ -146,7 +102,6 @@ export const Splash = () => {
     <Container>
       <LogoContainer>
         <AnimatedImage source={chipinLogo} resizeMode="contain" style={animatedStyle} />
->>>>>>> update-chipin-branding
       </LogoContainer>
     </Container>
   );
