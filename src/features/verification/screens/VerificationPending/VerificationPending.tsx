@@ -1,31 +1,31 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Typography } from '~/components/Typography/Typography';
-import type { RootStackParamList } from '~/navigation/types';
-import { useDeleteUser } from '~/services/apis/User/useDeleteUser';
+import { LoadingState } from '~/features/create-profile/components/LoadingState/LoadingState';
 import { ButtonGroup, Container } from './styles';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+import { useVerificationPending } from './useVerificationPending';
 
 /**
- * VerificationPending screen shows when user's identity verification has failed
- * Simple error state - no polling, just shows error message
+ * VerificationPending screen shows when user's identity verification is in progress or has failed
+ * - If GBG status is IN_PROGRESS, shows loading state with animated hourglass
+ * - If GBG status is PASS, navigates to Dashboard
+ * - If GBG status is MANUAL or FAIL, shows error state
  */
 export const VerificationPending = () => {
   const theme = useTheme();
-  const navigation = useNavigation<NavigationProp>();
-  const { isPending: isDeleting, handleDeleteAccount } = useDeleteUser();
+  const { isVerifying, isServerError, isDeleting, errorMessage, handleDeleteAccount, handleRetry } =
+    useVerificationPending();
 
-  const handleRetry = () => {
-    // Redirect to login screen
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
-  };
+  if (isVerifying) {
+    return (
+      <LoadingState
+        title="Verifying your identity"
+        description="This may take a few moments..."
+        showProgressBar={false}
+      />
+    );
+  }
 
   return (
     <Container>
@@ -56,23 +56,29 @@ export const VerificationPending = () => {
           color={theme.colors.text.secondary}
           style={{ marginTop: 12, textAlign: 'center', fontSize: 16, paddingHorizontal: 24 }}
         >
-          Identity verification failed. Please contact support.
+          {errorMessage}
         </Typography>
       </KeyboardAwareScrollView>
       <KeyboardStickyView>
         <ButtonGroup>
+          {!isServerError && (
+            <Button
+              variant="secondary"
+              title={isDeleting ? 'Deleting...' : 'Delete Account'}
+              onPress={handleDeleteAccount}
+              disabled={isDeleting}
+              loading={isDeleting}
+              backgroundColor={theme.colors.error}
+              style={{
+                borderColor: theme.colors.error,
+              }}
+            />
+          )}
           <Button
-            variant="secondary"
-            title={isDeleting ? 'Deleting...' : 'Delete Account'}
-            onPress={handleDeleteAccount}
-            disabled={isDeleting}
-            loading={isDeleting}
-            backgroundColor={theme.colors.error}
-            style={{
-              borderColor: theme.colors.error,
-            }}
+            variant="primary"
+            title={isServerError ? 'Try Again' : 'Back to Login'}
+            onPress={handleRetry}
           />
-          <Button variant="primary" title="Back to Login" onPress={handleRetry} />
         </ButtonGroup>
       </KeyboardStickyView>
     </Container>

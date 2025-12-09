@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json
- * Generated: 2025-12-04T11:31:42.953Z
+ * Generated: 2025-12-09T17:44:51.218Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -71,6 +71,13 @@ export const tournamentSchema = z.object({
   description: z.string().optional(),
   url: z.string().optional(),
   cover_picture: z.string().optional(),
+  colours: z
+    .object({
+      primary: z.string().optional(),
+      secondary: z.string().optional(),
+      highlight: z.string().optional(),
+    })
+    .optional(),
   gallery: z.array(z.string()).optional().default([]),
   holes: z
     .array(
@@ -136,13 +143,6 @@ export const tournamentSchema = z.object({
     .default([]),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
-  colours: z
-    .object({
-      primary: z.string().optional(),
-      secondary: z.string().optional(),
-      highlight: z.string().optional(),
-    })
-    .optional(),
   sport: z.string().optional(),
   rules: z.array(z.string()).optional().default([]),
   instructions: z.array(z.string()).optional().default([]),
@@ -166,12 +166,15 @@ export const teamSchema = z.object({
       contact_phone: z.string().optional(),
       contact_email: z.string().optional(),
       contact_visibility: z.boolean().optional(),
+      join_code: z.string().optional(),
       max_participants: z.number().optional(),
       rewards: z.array(z.object({})).optional().default([]),
       start_time: z.string().optional(),
       end_time: z.string().optional(),
       type: z.string().optional(),
       user_id_list: z.array(z.string()).optional().default([]),
+      is_featured: z.boolean().optional(),
+      joined_players: z.array(z.string()).optional().default([]),
       tournament_id: z.string().optional(),
       owner_id: z.string().optional(),
       created_at: z.string().optional(),
@@ -218,12 +221,15 @@ export const leagueSchema = z.object({
   contact_phone: z.string().optional(),
   contact_email: z.string().optional(),
   contact_visibility: z.boolean().optional(),
+  join_code: z.string().optional(),
   max_participants: z.number().optional(),
   rewards: z.array(z.object({})).optional().default([]),
   start_time: z.string().optional(),
   end_time: z.string().optional(),
   type: z.string().optional(),
   user_id_list: z.array(z.string()).optional().default([]),
+  is_featured: z.boolean().optional(),
+  joined_players: z.array(z.string()).optional().default([]),
   tournament_id: z.string().optional(),
   owner_id: z.string().optional(),
   created_at: z.string().optional(),
@@ -237,12 +243,15 @@ export const leagueSchema = z.object({
       contact_phone: z.string().optional(),
       contact_email: z.string().optional(),
       contact_visibility: z.boolean().optional(),
+      join_code: z.string().optional(),
       max_participants: z.number().optional(),
       rewards: z.array(z.object({})).optional().default([]),
       start_time: z.string().optional(),
       end_time: z.string().optional(),
       type: z.string().optional(),
       user_id_list: z.array(z.string()).optional().default([]),
+      is_featured: z.boolean().optional(),
+      joined_players: z.array(z.string()).optional().default([]),
       tournament_id: z.string().optional(),
       owner_id: z.string().optional(),
       created_at: z.string().optional(),
@@ -488,6 +497,7 @@ export const playerSchema = z.object({
   missed_cut: z.boolean().optional(),
   odds: z.number().optional(),
   profile_id: z.string().optional(),
+  tournament_id: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });

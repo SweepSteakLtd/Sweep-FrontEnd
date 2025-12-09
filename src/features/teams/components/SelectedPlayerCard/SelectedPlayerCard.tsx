@@ -49,7 +49,7 @@ export const SelectedPlayerCard: React.FC<SelectedPlayerCardProps> = ({
 };
 
 interface PlaceholderCardProps {
-  groupName: string;
+  groupName?: string;
 }
 
 export const PlaceholderPlayerCard: React.FC<PlaceholderCardProps> = ({ groupName }) => {
@@ -58,10 +58,12 @@ export const PlaceholderPlayerCard: React.FC<PlaceholderCardProps> = ({ groupNam
       <PlaceholderAvatar>
         <PlaceholderIcon>?</PlaceholderIcon>
       </PlaceholderAvatar>
-      <PlaceholderText numberOfLines={1}>Select player</PlaceholderText>
-      <GroupBadge>
-        <GroupText>Group {groupName}</GroupText>
-      </GroupBadge>
+      <PlaceholderText numberOfLines={1}>Select</PlaceholderText>
+      {groupName && (
+        <GroupBadge>
+          <GroupText>Group {groupName}</GroupText>
+        </GroupBadge>
+      )}
     </CardContainer>
   );
 };

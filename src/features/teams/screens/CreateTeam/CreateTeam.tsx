@@ -174,20 +174,18 @@ export const TeamScreen = () => {
 
           <SelectedPlayersContainer>
             <SelectedPlayersScroll horizontal showsHorizontalScrollIndicator={false}>
-              {groupNames.map((groupName) => {
-                const selectedPlayer = selectedPlayers.find((p) => p.group === groupName);
-                if (selectedPlayer) {
-                  return (
-                    <SelectedPlayerCard
-                      key={selectedPlayer.id}
-                      player={selectedPlayer}
-                      onRemove={!isViewOnly ? () => handlePlayerToggle(selectedPlayer) : undefined}
-                      disabled={isViewOnly}
-                    />
-                  );
-                }
-                return <PlaceholderPlayerCard key={groupName} groupName={groupName} />;
-              })}
+              {selectedPlayers.length > 0 ? (
+                selectedPlayers.map((player) => (
+                  <SelectedPlayerCard
+                    key={player.id}
+                    player={player}
+                    onRemove={!isViewOnly ? () => handlePlayerToggle(player) : undefined}
+                    disabled={isViewOnly}
+                  />
+                ))
+              ) : (
+                <PlaceholderPlayerCard groupName={groupNames[currentStep]} />
+              )}
             </SelectedPlayersScroll>
           </SelectedPlayersContainer>
 

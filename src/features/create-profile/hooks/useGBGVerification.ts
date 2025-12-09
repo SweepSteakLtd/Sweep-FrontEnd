@@ -6,8 +6,13 @@ export interface GBGVerificationResult {
   error?: string;
 }
 
+export interface StartPollingOptions {
+  immediate?: boolean; // Poll immediately without initial delay
+  retryOnError?: boolean; // Retry on server errors (default: true)
+}
+
 export interface UseGBGVerificationReturn {
-  startPolling: (instanceId: string) => void;
+  startPolling: (instanceId: string, options?: StartPollingOptions) => void;
   stopPolling: () => void;
   result: GBGVerificationResult;
   isPolling: boolean;
@@ -23,7 +28,8 @@ export interface UseGBGVerificationReturn {
  * Stops polling when:
  * - Status is PASS (success)
  * - Status is MANUAL or FAIL (error)
- * - Maximum attempts reached (10 attempts)
+ * - Maximum attempts reached (15 attempts)
+ * - Server errors after 3 retries
  */
 export const useGBGVerification = (): UseGBGVerificationReturn => {
   const [isPolling, setIsPolling] = useState(false);
@@ -31,9 +37,12 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const attemptCountRef = useRef(0);
+  const errorRetryCountRef = useRef(0);
   const instanceIdRef = useRef<string | null>(null);
+  const retryOnErrorRef = useRef(true);
 
   const MAX_ATTEMPTS = 15;
+  const MAX_ERROR_RETRIES = 3;
 
   const getNextDelay = (attempt: number): number => {
     if (attempt === 0) return 5000; // First check after 5 seconds
@@ -93,7 +102,29 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
         }, nextDelay);
       }
     } catch (error) {
-      // Don't stop polling on errors, just continue trying
+      // If retryOnError is false, show error immediately
+      if (!retryOnErrorRef.current) {
+        setIsPolling(false);
+        setResult({
+          status: 'FAIL',
+          error: 'Failed to fetch your verification status. Please try again later.',
+        });
+        return;
+      }
+
+      // Track error retries separately - stop after MAX_ERROR_RETRIES
+      errorRetryCountRef.current += 1;
+
+      if (errorRetryCountRef.current >= MAX_ERROR_RETRIES) {
+        setIsPolling(false);
+        setResult({
+          status: 'FAIL',
+          error: 'Failed to fetch your verification status. Please try again later.',
+        });
+        return;
+      }
+
+      // Continue trying
       attemptCountRef.current += 1;
       const nextDelay = getNextDelay(attemptCountRef.current);
 
@@ -104,10 +135,14 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
   }, []);
 
   const startPolling = useCallback(
-    (instanceId: string) => {
+    (instanceId: string, options?: StartPollingOptions) => {
+      const { immediate = false, retryOnError = true } = options || {};
+
       // Reset state
       instanceIdRef.current = instanceId;
       attemptCountRef.current = 0;
+      errorRetryCountRef.current = 0;
+      retryOnErrorRef.current = retryOnError;
       setIsPolling(true);
       setResult({ status: null });
 
@@ -116,11 +151,16 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
         clearTimeout(timeoutRef.current);
       }
 
-      // Start first poll after initial delay
-      const initialDelay = getNextDelay(0);
-      timeoutRef.current = setTimeout(() => {
+      if (immediate) {
+        // Poll immediately
         poll();
-      }, initialDelay);
+      } else {
+        // Start first poll after initial delay
+        const initialDelay = getNextDelay(0);
+        timeoutRef.current = setTimeout(() => {
+          poll();
+        }, initialDelay);
+      }
     },
     [poll],
   );

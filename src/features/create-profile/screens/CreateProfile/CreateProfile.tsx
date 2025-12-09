@@ -5,7 +5,6 @@ import { ProgressIndicator } from '~/components/ProgressIndicator/ProgressIndica
 import { Typography } from '~/components/Typography/Typography';
 import { AnimatedStepContainer } from '~/features/create-profile/components/AnimatedStepContainer/AnimatedStepContainer';
 import { BasicInfoStep } from '~/features/create-profile/components/BasicInfoStep/BasicInfoStep';
-import { BioStep } from '~/features/create-profile/components/BioStep/BioStep';
 import { DepositLimitStep } from '~/features/create-profile/components/DepositLimitStep/DepositLimitStep';
 import { ErrorState } from '~/features/create-profile/components/ErrorState/ErrorState';
 import { LoadingState } from '~/features/create-profile/components/LoadingState/LoadingState';
@@ -114,15 +113,6 @@ export const CreateProfile = () => {
 
       case 5:
         return (
-          <BioStep
-            bio={formData.bio}
-            onBioChange={(text) => updateField('bio', text)}
-            bioError={fieldErrors.bio}
-          />
-        );
-
-      case 6:
-        return (
           <DepositLimitStep
             dailyLimit={formData.depositLimitDaily}
             weeklyLimit={formData.depositLimitWeekly}
@@ -136,7 +126,7 @@ export const CreateProfile = () => {
           />
         );
 
-      case 7:
+      case 6:
         return (
           <StakeLimitStep
             bettingLimit={formData.bettingLimit}

@@ -64,7 +64,7 @@ interface FormData {
   bettingLimit: string;
 }
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 6;
 
 const initialFormData: FormData = {
   firstName: '',
