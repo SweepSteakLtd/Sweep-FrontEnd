@@ -14,7 +14,7 @@ import { firebaseAuth } from '~/lib/firebase';
 import type { RootStackParamList } from '~/navigation/types';
 import { ApiError } from '~/services/apis/apiClient';
 import { fetchUser, userQueryKeys } from '~/services/apis/User/useGetUser';
-import { Container, LogoContainer, LogoImage } from './styles';
+import { Container, LogoContainer } from './styles';
 
 const chipinLogo = require('../../../../../assets/Chipin1.png');
 
@@ -96,12 +96,14 @@ export const Splash = () => {
     transform: [{ scale: scale.value }],
   }));
 
-  const AnimatedImage = Animated.createAnimatedComponent(LogoImage);
-
   return (
     <Container>
       <LogoContainer>
-        <AnimatedImage source={chipinLogo} resizeMode="contain" style={animatedStyle} />
+        <Animated.Image
+          source={chipinLogo}
+          resizeMode="contain"
+          style={[{ width: 200, height: 200 }, animatedStyle]}
+        />
       </LogoContainer>
     </Container>
   );

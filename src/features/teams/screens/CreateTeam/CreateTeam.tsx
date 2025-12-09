@@ -1,31 +1,33 @@
 import type { RouteProp } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import React, { useMemo } from 'react';
-import { SectionList } from 'react-native';
+import { ScrollView } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
+import { ProgressIndicator } from '~/components/ProgressIndicator/ProgressIndicator';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import { PlayerAvatarStack } from '~/features/my-teams/components/PlayerAvatarStack';
 import { PlayerListItem } from '~/features/players/components/PlayerListItem/PlayerListItem';
 import { PlayerListItemSkeleton } from '~/features/players/components/PlayerListItemSkeleton/PlayerListItemSkeleton';
 import type { RootStackParamList } from '~/navigation/types';
-import type { TeamPlayer } from '~/services/apis/Team/types';
+import {
+  PlaceholderPlayerCard,
+  SelectedPlayerCard,
+} from '../../components/SelectedPlayerCard/SelectedPlayerCard';
 import {
   Container,
-  EmptySelectionText,
+  CurrentGroupTitle,
   ErrorContainer,
   ErrorIcon,
   ErrorMessage,
   ErrorTitle,
-  GroupHeader,
-  GroupHeaderRight,
-  GroupHeaderText,
-  GroupSelectedText,
-  HelpText,
-  SearchInput,
+  FloatingButtonContainer,
+  PlayersListContainer,
   SectionTitle,
   SelectedCount,
   SelectedPlayersContainer,
+  SelectedPlayersScroll,
+  SelectionHint,
   TeamNameInput,
   ViewOnlyBanner,
   ViewOnlyText,
@@ -49,11 +51,17 @@ export const TeamScreen = () => {
   const {
     teamName,
     setTeamName,
-    searchQuery,
-    setSearchQuery,
-    sections,
     allPlayers,
     selectedPlayerIds,
+    groupNames,
+    currentStep,
+    completedSteps,
+    currentGroup,
+    currentGroupPlayers,
+    goToNextStep,
+    goToPreviousStep,
+    isFirstStep,
+    isLastStep,
     isLoading,
     isError,
     hasNoPlayers,
@@ -61,11 +69,8 @@ export const TeamScreen = () => {
     canSubmit,
     isEditMode,
     isViewOnly,
-    isGroupExpanded,
-    toggleGroupExpanded,
     handlePlayerToggle,
     handleSubmit,
-    getSelectedPlayerForGroup,
     isPlayerSelected,
   } = useTeamScreen(leagueId, joinCode, {
     teamId,
@@ -78,42 +83,8 @@ export const TeamScreen = () => {
     return allPlayers.filter((player) => player && selectedPlayerIds.includes(player.id || ''));
   }, [allPlayers, selectedPlayerIds]);
 
-  const renderPlayer = ({ item }: { item: TeamPlayer }) => {
-    if (isViewOnly) return null;
-    return (
-      <PlayerListItem
-        player={item}
-        isSelected={isPlayerSelected(item.id || '')}
-        onPress={() => handlePlayerToggle(item)}
-        showOdds={false}
-      />
-    );
-  };
-
-  const renderSectionHeader = ({
-    section,
-  }: {
-    section: { title: string; groupName: string; hasSelection: boolean };
-  }) => {
-    if (isViewOnly) return null;
-    const expanded = isGroupExpanded(section.groupName);
-    const selectedPlayer = getSelectedPlayerForGroup(section.groupName);
-
-    return (
-      <GroupHeader onPress={() => toggleGroupExpanded(section.groupName)}>
-        <GroupHeaderText>
-          {section.title} {expanded ? '▼' : '▶'}
-        </GroupHeaderText>
-        <GroupHeaderRight>
-          {selectedPlayer && (
-            <GroupSelectedText>
-              ✓ {selectedPlayer.first_name} {selectedPlayer.last_name}
-            </GroupSelectedText>
-          )}
-        </GroupHeaderRight>
-      </GroupHeader>
-    );
-  };
+  const allGroupsSelected = selectedPlayerIds.length === groupNames.length && groupNames.length > 0;
+  const isTeamNameStep = allGroupsSelected && currentStep === groupNames.length;
 
   const screenTitle = isViewOnly ? 'View Team' : isEditMode ? 'Edit Team' : 'Create Team';
 
@@ -121,15 +92,8 @@ export const TeamScreen = () => {
     return (
       <ScreenWrapper title={screenTitle}>
         <Container style={{ paddingHorizontal: 16, paddingTop: 16 }}>
-          <SectionTitle>Team Name</SectionTitle>
-          <TeamNameInput
-            value={teamName}
-            onChangeText={setTeamName}
-            placeholder="Enter your team name"
-            placeholderTextColor={theme.colors.text.secondary}
-          />
-          <SectionTitle>Available Players</SectionTitle>
-          {Array(8)
+          <SectionTitle>Loading players...</SectionTitle>
+          {Array(4)
             .fill(null)
             .map((_, index) => (
               <PlayerListItemSkeleton key={`skeleton-${index}`} />
@@ -169,83 +133,145 @@ export const TeamScreen = () => {
     );
   }
 
+  const stepLabels = groupNames.map((name) => `Group ${name}`);
+
   return (
     <ScreenWrapper title={screenTitle}>
-      <Container>
-        <SectionList
-          sections={sections}
-          renderItem={renderPlayer}
-          renderSectionHeader={renderSectionHeader}
-          keyExtractor={(item) => item.id || ''}
-          ListHeaderComponent={
-            <>
-              {isViewOnly && (
-                <ViewOnlyBanner>
-                  <ViewOnlyText>
-                    Tournament has started. You can no longer edit this team.
-                  </ViewOnlyText>
-                </ViewOnlyBanner>
-              )}
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <Container>
+          {isViewOnly && (
+            <ViewOnlyBanner>
+              <ViewOnlyText>Tournament has started. You can no longer edit this team.</ViewOnlyText>
+            </ViewOnlyBanner>
+          )}
 
+          {isViewOnly && (
+            <>
               <SectionTitle>Team Name</SectionTitle>
               <TeamNameInput
                 value={teamName}
                 onChangeText={setTeamName}
                 placeholder="Enter your team name"
                 placeholderTextColor={theme.colors.text.secondary}
-                editable={!isViewOnly}
-                style={isViewOnly ? { opacity: 0.6 } : undefined}
+                editable={false}
+                style={{ opacity: 0.6 }}
               />
-
-              <SectionTitle>
-                Selected Players{' '}
-                {selectedPlayerIds.length > 0 && (
-                  <SelectedCount>({selectedPlayerIds.length} selected)</SelectedCount>
-                )}
-              </SectionTitle>
-
-              <SelectedPlayersContainer>
-                {selectedPlayers.length > 0 ? (
-                  <PlayerAvatarStack players={selectedPlayers} />
-                ) : (
-                  <EmptySelectionText>No players selected</EmptySelectionText>
-                )}
-              </SelectedPlayersContainer>
-
-              {!isViewOnly && (
-                <>
-                  <SectionTitle>Available Players</SectionTitle>
-                  <HelpText>You can only select one player from each group</HelpText>
-
-                  <SearchInput
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    placeholder="Search by name or country"
-                    placeholderTextColor={theme.colors.text.secondary}
-                  />
-                </>
-              )}
             </>
-          }
-          ListFooterComponent={
-            !isViewOnly ? (
-              <Button
-                title={isEditMode ? 'Save Changes' : 'Create Team'}
-                onPress={handleSubmit}
-                disabled={!canSubmit}
-                loading={isPending}
-                fullWidth
-                style={{ marginTop: 24, marginBottom: 40 }}
+          )}
+
+          <SectionTitle>
+            Your Team{' '}
+            {selectedPlayerIds.length > 0 && (
+              <SelectedCount>
+                ({selectedPlayerIds.length}/{groupNames.length})
+              </SelectedCount>
+            )}
+          </SectionTitle>
+
+          <SelectedPlayersContainer>
+            <SelectedPlayersScroll horizontal showsHorizontalScrollIndicator={false}>
+              {groupNames.map((groupName) => {
+                const selectedPlayer = selectedPlayers.find((p) => p.group === groupName);
+                if (selectedPlayer) {
+                  return (
+                    <SelectedPlayerCard
+                      key={selectedPlayer.id}
+                      player={selectedPlayer}
+                      onRemove={!isViewOnly ? () => handlePlayerToggle(selectedPlayer) : undefined}
+                      disabled={isViewOnly}
+                    />
+                  );
+                }
+                return <PlaceholderPlayerCard key={groupName} groupName={groupName} />;
+              })}
+            </SelectedPlayersScroll>
+          </SelectedPlayersContainer>
+
+          {!isViewOnly && (
+            <>
+              <ProgressIndicator
+                variant="dots"
+                steps={stepLabels}
+                currentStep={isTeamNameStep ? groupNames.length - 1 : currentStep}
+                completedSteps={completedSteps}
+                style={isTeamNameStep ? { opacity: 0.2 } : undefined}
               />
-            ) : (
-              <></>
-            )
-          }
-          contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16 }}
-          showsVerticalScrollIndicator={false}
-          stickySectionHeadersEnabled={false}
-        />
-      </Container>
+
+              <Animated.View
+                key={isTeamNameStep ? 'team-name' : `step-${currentStep}`}
+                entering={FadeIn.duration(200)}
+                exiting={FadeOut.duration(150)}
+              >
+                {isTeamNameStep ? (
+                  <>
+                    <CurrentGroupTitle>Name Your Team</CurrentGroupTitle>
+                    <SelectionHint>Give your team a unique name</SelectionHint>
+                    <TeamNameInput
+                      value={teamName}
+                      onChangeText={setTeamName}
+                      placeholder="Enter your team name"
+                      placeholderTextColor={theme.colors.text.secondary}
+                      autoFocus
+                    />
+                  </>
+                ) : (
+                  <>
+                    <CurrentGroupTitle>
+                      Select from Group {currentGroup?.name || groupNames[currentStep]}
+                    </CurrentGroupTitle>
+                    <SelectionHint>You can only select one player from each group</SelectionHint>
+
+                    <PlayersListContainer>
+                      {currentGroupPlayers.map((player) => (
+                        <PlayerListItem
+                          key={player.id}
+                          player={player}
+                          isSelected={isPlayerSelected(player.id || '')}
+                          onPress={() => handlePlayerToggle(player)}
+                          showOdds={false}
+                        />
+                      ))}
+                    </PlayersListContainer>
+                  </>
+                )}
+              </Animated.View>
+            </>
+          )}
+        </Container>
+      </ScrollView>
+
+      {!isViewOnly && (
+        <FloatingButtonContainer>
+          <Button
+            title="Previous"
+            onPress={goToPreviousStep}
+            disabled={isFirstStep && !isTeamNameStep}
+            style={{ flex: 1, marginRight: 8 }}
+          />
+          {isTeamNameStep ? (
+            <Button
+              title={isEditMode ? 'Save Changes' : 'Create Team'}
+              onPress={handleSubmit}
+              disabled={!canSubmit}
+              loading={isPending}
+              variant="secondary"
+              style={{ flex: 1, marginLeft: 8 }}
+            />
+          ) : (
+            <Button
+              title="Next"
+              onPress={goToNextStep}
+              disabled={isLastStep && !allGroupsSelected}
+              style={{ flex: 1, marginLeft: 8 }}
+              variant="secondary"
+            />
+          )}
+        </FloatingButtonContainer>
+      )}
     </ScreenWrapper>
   );
 };

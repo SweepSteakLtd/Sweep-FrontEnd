@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar } from '~/components/Avatar/Avatar';
 import type { TeamPlayer } from '~/services/apis/Team/types';
+import { getCountryFlag } from '~/utils/country';
 import { Container, CountryFlag, CountryText, Info, InfoRow, NameText, OddsText } from './styles';
 
 interface PlayerListItemProps {
@@ -10,17 +11,6 @@ interface PlayerListItemProps {
   showOdds?: boolean;
   odds?: string;
 }
-
-// Country code to flag emoji mapping
-const getCountryFlag = (countryCode?: string): string => {
-  if (!countryCode) return '🏳️';
-
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map((char) => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-};
 
 export const PlayerListItem: React.FC<PlayerListItemProps> = ({
   player,

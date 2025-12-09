@@ -35,8 +35,7 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
 
   const [teamName, setTeamName] = useState(params?.teamName || '');
   const [selectedPlayersByGroup, setSelectedPlayersByGroup] = useState<Record<string, string>>({});
-  const [searchQuery, setSearchQuery] = useState('');
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+  const [currentStep, setCurrentStep] = useState(0);
   const [initialized, setInitialized] = useState(false);
 
   const { data: playerGroups = [], isLoading, isError } = useGetPlayerProfiles();
@@ -71,52 +70,81 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
     return Object.values(selectedPlayersByGroup);
   }, [selectedPlayersByGroup]);
 
-  const isGroupExpanded = useCallback(
-    (groupName: string) => {
-      if (expandedGroups[groupName] !== undefined) {
-        return expandedGroups[groupName];
+  // Get group names for step navigation
+  const groupNames = useMemo(() => {
+    return playerGroups
+      .filter((group) => group.name !== undefined)
+      .map((group) => group.name!)
+      .sort();
+  }, [playerGroups]);
+
+  // Get completed steps (groups with selected players)
+  const completedSteps = useMemo(() => {
+    return groupNames
+      .map((name, index) => (selectedPlayersByGroup[name] ? index : -1))
+      .filter((index) => index !== -1);
+  }, [groupNames, selectedPlayersByGroup]);
+
+  // Get current group based on step
+  const currentGroup = useMemo(() => {
+    if (groupNames.length === 0) return null;
+    return playerGroups.find((g) => g.name === groupNames[currentStep]) || null;
+  }, [playerGroups, groupNames, currentStep]);
+
+  // Get players for current group (sorted alphabetically)
+  const currentGroupPlayers = useMemo(() => {
+    if (!currentGroup?.players) return [];
+    return [...currentGroup.players]
+      .filter((p) => p != null)
+      .sort((a, b) => {
+        const lastNameCompare = (a.last_name ?? '').localeCompare(b.last_name ?? '');
+        if (lastNameCompare !== 0) return lastNameCompare;
+        return (a.first_name ?? '').localeCompare(b.first_name ?? '');
+      });
+  }, [currentGroup]);
+
+  // Step navigation
+  const goToStep = useCallback(
+    (step: number) => {
+      if (step >= 0 && step < groupNames.length) {
+        setCurrentStep(step);
       }
-      return !selectedPlayersByGroup[groupName];
     },
-    [expandedGroups, selectedPlayersByGroup],
+    [groupNames.length],
   );
 
-  const toggleGroupExpanded = useCallback(
-    (groupName: string) => {
-      setExpandedGroups((prev) => ({
-        ...prev,
-        [groupName]: !isGroupExpanded(groupName),
-      }));
-    },
-    [isGroupExpanded],
-  );
+  const allGroupsSelected =
+    groupNames.length > 0 && groupNames.every((name) => !!selectedPlayersByGroup[name]);
 
+  const goToNextStep = useCallback(() => {
+    // If all groups are selected and we're on the last group, go to team name step
+    if (allGroupsSelected && currentStep === groupNames.length - 1) {
+      setCurrentStep(groupNames.length); // Team name step
+    } else if (currentStep < groupNames.length - 1) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  }, [currentStep, groupNames.length, allGroupsSelected]);
+
+  const goToPreviousStep = useCallback(() => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  }, [currentStep]);
+
+  const isFirstStep = currentStep === 0;
+  const isLastStep = currentStep === groupNames.length - 1;
+
+  // Legacy sections for backwards compatibility
   const sections = useMemo((): Section[] => {
-    const query = searchQuery.toLowerCase();
     return playerGroups
       .filter((group) => group.name !== undefined)
       .map((group) => {
         const groupName = group.name!;
         const hasSelection = !!selectedPlayersByGroup[groupName];
-        const expanded = isGroupExpanded(groupName);
 
-        if (!expanded && hasSelection) {
-          return {
-            title: `Group ${groupName}`,
-            groupName,
-            hasSelection,
-            data: [] as TeamPlayer[],
-          };
-        }
-
-        const filteredPlayers = (group.players ?? [])
-          .filter((player: TeamPlayer) => {
-            if (!player) return false;
-            const fullName = `${player.first_name} ${player.last_name}`.toLowerCase();
-            return fullName.includes(query) || player.country?.toLowerCase().includes(query);
-          })
+        const sortedPlayers = (group.players ?? [])
+          .filter((player: TeamPlayer) => player != null)
           .sort((a, b) => {
-            // Sort alphabetically by last name, then first name
             const lastNameCompare = (a.last_name ?? '').localeCompare(b.last_name ?? '');
             if (lastNameCompare !== 0) return lastNameCompare;
             return (a.first_name ?? '').localeCompare(b.first_name ?? '');
@@ -126,30 +154,65 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
           title: `Group ${groupName}`,
           groupName,
           hasSelection,
-          data: filteredPlayers,
+          data: sortedPlayers,
         };
-      })
-      .filter((section) => section.data.length > 0 || section.hasSelection);
-  }, [playerGroups, searchQuery, selectedPlayersByGroup, isGroupExpanded]);
+      });
+  }, [playerGroups, selectedPlayersByGroup]);
 
-  const handlePlayerToggle = useCallback((player: TeamPlayer) => {
-    const groupName = player.group;
-    if (!groupName || !player.id) return;
-    const playerId = player.id;
+  const handlePlayerToggle = useCallback(
+    (player: TeamPlayer, autoAdvance = true) => {
+      const groupName = player.group;
+      if (!groupName || !player.id) return;
+      const playerId = player.id;
 
-    setSelectedPlayersByGroup((prev): Record<string, string> => {
-      if (prev[groupName] === playerId) {
-        const newState: Record<string, string> = {};
-        Object.keys(prev).forEach((key) => {
-          if (key !== groupName) {
-            newState[key] = prev[key];
+      setSelectedPlayersByGroup((prev): Record<string, string> => {
+        const isDeselecting = prev[groupName] === playerId;
+
+        if (isDeselecting) {
+          const newState: Record<string, string> = {};
+          Object.keys(prev).forEach((key) => {
+            if (key !== groupName) {
+              newState[key] = prev[key];
+            }
+          });
+
+          // Stay on current group if deselecting from current group
+          const currentGroupName = groupNames[currentStep];
+          if (groupName !== currentGroupName) {
+            // Navigate to the deselected group
+            const deselectedGroupIndex = groupNames.indexOf(groupName);
+            if (deselectedGroupIndex !== -1) {
+              setTimeout(() => {
+                setCurrentStep(deselectedGroupIndex);
+              }, 300);
+            }
           }
-        });
+
+          return newState;
+        }
+
+        const newState = { ...prev, [groupName]: playerId };
+
+        // Auto advance to first unfilled group after selection, or to team name step if all filled
+        if (autoAdvance) {
+          const firstUnfilledIndex = groupNames.findIndex((name) => !newState[name]);
+          if (firstUnfilledIndex !== -1) {
+            setTimeout(() => {
+              setCurrentStep(firstUnfilledIndex);
+            }, 300);
+          } else {
+            // All groups filled, go to team name step
+            setTimeout(() => {
+              setCurrentStep(groupNames.length);
+            }, 300);
+          }
+        }
+
         return newState;
-      }
-      return { ...prev, [groupName]: playerId };
-    });
-  }, []);
+      });
+    },
+    [groupNames, currentStep],
+  );
 
   const handleSubmit = useCallback(async () => {
     if (!teamName.trim()) {
@@ -254,15 +317,28 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
   }, []);
 
   return {
+    // Team data
     teamName,
     setTeamName,
-    searchQuery,
-    setSearchQuery,
     sections,
     playerGroups,
     allPlayers,
     selectedPlayerIds,
     selectedPlayersByGroup,
+
+    // Step navigation
+    currentStep,
+    groupNames,
+    completedSteps,
+    currentGroup,
+    currentGroupPlayers,
+    goToStep,
+    goToNextStep,
+    goToPreviousStep,
+    isFirstStep,
+    isLastStep,
+
+    // Loading states
     isLoading,
     isError,
     hasNoPlayers,
@@ -270,8 +346,8 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
     canSubmit,
     isEditMode,
     isViewOnly,
-    isGroupExpanded,
-    toggleGroupExpanded,
+
+    // Actions
     handlePlayerToggle,
     handleSelectPlayerById,
     handleSubmit,
