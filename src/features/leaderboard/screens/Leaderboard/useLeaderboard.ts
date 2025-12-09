@@ -16,13 +16,7 @@ const POLL_INTERVAL = 5000; // 5 seconds
 export const useLeaderboard = (leagueId: string) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const {
-    data: leaderboardData,
-    isLoading: isLeaderboardLoading,
-    refetch,
-    isRefetching,
-  } = useGetLeaderboard(leagueId, { refetchInterval: POLL_INTERVAL });
-
+  // Fetch league and tournament data first to determine if polling should be enabled
   const { data: leagueData, isLoading: isLeagueLoading } = useGetLeague(leagueId);
   const { data: tournaments } = useGetTournaments();
   const { data: currentUser } = useGetUser();
@@ -33,12 +27,22 @@ export const useLeaderboard = (leagueId: string) => {
 
   // Check if tournament has started (entries closed)
   // Use tournament's starts_at to determine if players should be visible
-  // Default to true (show players) if no start time is available
+  // Default to false (not started) if no start time is available yet
   const tournamentStarted = useMemo(() => {
     const startTime = tournament?.starts_at;
-    if (!startTime) return true; // Default to started if no time available
+    if (!startTime) return false; // Default to not started if no time available yet
     return new Date(startTime) <= new Date();
   }, [tournament?.starts_at]);
+
+  // Only poll when tournament has started
+  const {
+    data: leaderboardData,
+    isLoading: isLeaderboardLoading,
+    refetch,
+    isRefetching,
+  } = useGetLeaderboard(leagueId, {
+    refetchInterval: tournamentStarted ? POLL_INTERVAL : undefined,
+  });
 
   // Build current user's full name to match against leaderboard entries
   const currentUserFullName = useMemo(() => {
