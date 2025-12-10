@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Modal, Pressable, TouchableOpacity, View } from 'react-native';
 import { ImageGalleryModal } from './ImageGalleryModal';
 import {
+  AddMoreButton,
+  AddMoreIcon,
+  AddMoreLabel,
   Container,
   DocumentIcon,
   DocumentPreview,
-  IconText,
   ImageCountText,
   ImagesGrid,
   ImageThumbnail,
   ImageThumbnailContainer,
   Label,
-  PickerButton,
-  PickerButtonsRow,
-  PickerContainer,
-  PickerHelpText,
-  PickerHelpTextBold,
+  OptionButton,
+  OptionIcon,
+  OptionsContainer,
+  OptionsTitle,
+  OptionText,
   PreviewContainer,
   PreviewFileInfo,
   PreviewFileName,
@@ -26,6 +28,8 @@ import {
   PreviewRemoveText,
   ThumbnailRemoveButton,
   ThumbnailRemoveText,
+  ThumbnailSizeLabel,
+  ThumbnailSizeText,
 } from './styles';
 import { formatFileSize, getFileIcon, PickedFile, useDocumentPicker } from './useDocumentPicker';
 
@@ -80,6 +84,7 @@ export const DocumentPicker: React.FC<DocumentPickerProps> = (props) => {
 
   const [galleryVisible, setGalleryVisible] = useState(false);
   const [galleryInitialIndex, setGalleryInitialIndex] = useState(0);
+  const [optionsVisible, setOptionsVisible] = useState(false);
 
   // Determine callbacks based on mode
   const onFilePicked = multiple ? undefined : (props as SingleModeProps).onFilePicked;
@@ -108,25 +113,76 @@ export const DocumentPicker: React.FC<DocumentPickerProps> = (props) => {
     includeBase64,
   });
 
-  const handleTakePhoto = () => {
+  const openOptionsSheet = () => {
     if (disabled || isLoading) return;
-    takePhoto();
+    setOptionsVisible(true);
+  };
+
+  const closeOptionsSheet = () => {
+    setOptionsVisible(false);
+  };
+
+  const handleTakePhoto = () => {
+    closeOptionsSheet();
+    setTimeout(() => takePhoto(), 100);
   };
 
   const handlePickFromGallery = () => {
-    if (disabled || isLoading) return;
-    pickFromGallery();
+    closeOptionsSheet();
+    setTimeout(() => pickFromGallery(), 100);
   };
 
   const handlePickDocument = () => {
-    if (disabled || isLoading) return;
-    pickDocument();
+    closeOptionsSheet();
+    setTimeout(() => pickDocument(), 100);
   };
 
   const handleRemoveFile = (index?: number) => {
     if (disabled) return;
     removeFile(index);
   };
+
+  const renderOptionsSheet = () => (
+    <Modal
+      visible={optionsVisible}
+      transparent
+      animationType="slide"
+      onRequestClose={closeOptionsSheet}
+    >
+      <Pressable
+        style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}
+        onPress={closeOptionsSheet}
+      >
+        <Pressable onPress={(e) => e.stopPropagation()}>
+          <OptionsContainer>
+            <View
+              style={{
+                width: 40,
+                height: 4,
+                backgroundColor: '#ccc',
+                borderRadius: 2,
+                alignSelf: 'center',
+                marginBottom: 16,
+              }}
+            />
+            <OptionsTitle>Add Document</OptionsTitle>
+            <OptionButton onPress={handleTakePhoto} activeOpacity={0.7}>
+              <OptionIcon>📷</OptionIcon>
+              <OptionText>Take Photo</OptionText>
+            </OptionButton>
+            <OptionButton onPress={handlePickFromGallery} activeOpacity={0.7}>
+              <OptionIcon>🖼️</OptionIcon>
+              <OptionText>Choose from Gallery</OptionText>
+            </OptionButton>
+            <OptionButton onPress={handlePickDocument} activeOpacity={0.7}>
+              <OptionIcon>📁</OptionIcon>
+              <OptionText>Choose File</OptionText>
+            </OptionButton>
+          </OptionsContainer>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
 
   // Multiple mode - grid view
   if (multiple) {
@@ -137,119 +193,63 @@ export const DocumentPicker: React.FC<DocumentPickerProps> = (props) => {
       <Container>
         {label && <Label variant="body">{label}</Label>}
 
-        {!hasImages ? (
-          <PickerContainer>
-            <PickerButtonsRow>
-              <PickerButton
-                onPress={handleTakePhoto}
-                $disabled={disabled || isLoading}
-                disabled={disabled || isLoading}
-              >
-                <IconText>📷</IconText>
-              </PickerButton>
-
-              <PickerButton
-                onPress={handlePickFromGallery}
-                $disabled={disabled || isLoading}
-                disabled={disabled || isLoading}
-              >
-                <IconText>🖼️</IconText>
-              </PickerButton>
-
-              <PickerButton
-                onPress={handlePickDocument}
-                $disabled={disabled || isLoading}
-                disabled={disabled || isLoading}
-              >
-                <IconText>📁</IconText>
-              </PickerButton>
-            </PickerButtonsRow>
-            <PickerHelpText>
-              Take a photo or upload from gallery or files{'\n'}
-              <PickerHelpTextBold>JPEG, PNG</PickerHelpTextBold> supported{'\n'}
-              Max <PickerHelpTextBold>10MB</PickerHelpTextBold> per file
-            </PickerHelpText>
-          </PickerContainer>
-        ) : (
-          <>
-            <ImagesGrid>
-              {selectedFiles.map((file, index) => (
-                <TouchableOpacity
-                  key={`${file.uri}-${index}`}
-                  onPress={() => {
-                    setGalleryInitialIndex(index);
-                    setGalleryVisible(true);
-                  }}
-                  activeOpacity={0.8}
-                >
-                  <ImageThumbnailContainer>
-                    <ImageThumbnail source={{ uri: file.uri }} resizeMode="cover" />
-                    {!disabled && (
-                      <ThumbnailRemoveButton
-                        onPress={() => handleRemoveFile(index)}
-                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                      >
-                        <ThumbnailRemoveText>✕</ThumbnailRemoveText>
-                      </ThumbnailRemoveButton>
-                    )}
-                  </ImageThumbnailContainer>
-                </TouchableOpacity>
-              ))}
-            </ImagesGrid>
-
-            <ImageCountText>
-              {selectedFiles.length} of {maxFiles} images
-            </ImageCountText>
-
-            {canAddMore && !disabled && (
-              <PickerContainer style={{ marginTop: 12 }}>
-                <PickerButtonsRow>
-                  <PickerButton
-                    onPress={handleTakePhoto}
-                    $disabled={disabled || isLoading}
-                    disabled={disabled || isLoading}
+        <ImagesGrid>
+          {selectedFiles.map((file, index) => (
+            <TouchableOpacity
+              key={`${file.uri}-${index}`}
+              onPress={() => {
+                setGalleryInitialIndex(index);
+                setGalleryVisible(true);
+              }}
+              activeOpacity={0.8}
+            >
+              <ImageThumbnailContainer>
+                <ImageThumbnail source={{ uri: file.uri }} resizeMode="cover" />
+                {file.size && (
+                  <ThumbnailSizeLabel>
+                    <ThumbnailSizeText>{formatFileSize(file.size)}</ThumbnailSizeText>
+                  </ThumbnailSizeLabel>
+                )}
+                {!disabled && (
+                  <ThumbnailRemoveButton
+                    onPress={() => handleRemoveFile(index)}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                   >
-                    <IconText>📷</IconText>
-                  </PickerButton>
+                    <ThumbnailRemoveText>✕</ThumbnailRemoveText>
+                  </ThumbnailRemoveButton>
+                )}
+              </ImageThumbnailContainer>
+            </TouchableOpacity>
+          ))}
 
-                  <PickerButton
-                    onPress={handlePickFromGallery}
-                    $disabled={disabled || isLoading}
-                    disabled={disabled || isLoading}
-                  >
-                    <IconText>🖼️</IconText>
-                  </PickerButton>
+          {canAddMore && !disabled && (
+            <AddMoreButton onPress={openOptionsSheet} $disabled={isLoading} activeOpacity={0.7}>
+              <AddMoreIcon>+</AddMoreIcon>
+              <AddMoreLabel>Add</AddMoreLabel>
+            </AddMoreButton>
+          )}
+        </ImagesGrid>
 
-                  <PickerButton
-                    onPress={handlePickDocument}
-                    $disabled={disabled || isLoading}
-                    disabled={disabled || isLoading}
-                  >
-                    <IconText>📁</IconText>
-                  </PickerButton>
-                </PickerButtonsRow>
-                <PickerHelpText>
-                  Take a photo or upload from gallery or files{'\n'}
-                  <PickerHelpTextBold>JPEG, PNG</PickerHelpTextBold> supported{'\n'}
-                  Max <PickerHelpTextBold>10MB</PickerHelpTextBold> per file
-                </PickerHelpText>
-              </PickerContainer>
-            )}
-
-            <ImageGalleryModal
-              visible={galleryVisible}
-              images={selectedFiles}
-              initialIndex={galleryInitialIndex}
-              onClose={() => setGalleryVisible(false)}
-              onDelete={disabled ? undefined : handleRemoveFile}
-            />
-          </>
+        {hasImages && (
+          <ImageCountText>
+            {selectedFiles.length} of {maxFiles} images
+          </ImageCountText>
         )}
+
+        <ImageGalleryModal
+          visible={galleryVisible}
+          images={selectedFiles}
+          initialIndex={galleryInitialIndex}
+          onClose={() => setGalleryVisible(false)}
+          onDelete={disabled ? undefined : handleRemoveFile}
+        />
+
+        {renderOptionsSheet()}
       </Container>
     );
   }
 
-  // Single mode - original behavior
+  // Single mode
   const isImage = selectedFile?.type?.startsWith('image/');
 
   return (
@@ -257,38 +257,14 @@ export const DocumentPicker: React.FC<DocumentPickerProps> = (props) => {
       {label && <Label variant="body">{label}</Label>}
 
       {!selectedFile ? (
-        <PickerContainer>
-          <PickerButtonsRow>
-            <PickerButton
-              onPress={handleTakePhoto}
-              $disabled={disabled || isLoading}
-              disabled={disabled || isLoading}
-            >
-              <IconText>📷</IconText>
-            </PickerButton>
-
-            <PickerButton
-              onPress={handlePickFromGallery}
-              $disabled={disabled || isLoading}
-              disabled={disabled || isLoading}
-            >
-              <IconText>🖼️</IconText>
-            </PickerButton>
-
-            <PickerButton
-              onPress={handlePickDocument}
-              $disabled={disabled || isLoading}
-              disabled={disabled || isLoading}
-            >
-              <IconText>📁</IconText>
-            </PickerButton>
-          </PickerButtonsRow>
-          <PickerHelpText>
-            Take a photo or upload from gallery or files{'\n'}
-            <PickerHelpTextBold>JPEG, PNG</PickerHelpTextBold> supported{'\n'}
-            Max <PickerHelpTextBold>10MB</PickerHelpTextBold> per file
-          </PickerHelpText>
-        </PickerContainer>
+        <AddMoreButton
+          onPress={openOptionsSheet}
+          $disabled={disabled || isLoading}
+          activeOpacity={0.7}
+        >
+          <AddMoreIcon>+</AddMoreIcon>
+          <AddMoreLabel>Add</AddMoreLabel>
+        </AddMoreButton>
       ) : (
         <PreviewContainer>
           {isImage ? (
@@ -317,6 +293,8 @@ export const DocumentPicker: React.FC<DocumentPickerProps> = (props) => {
           </PreviewOverlay>
         </PreviewContainer>
       )}
+
+      {renderOptionsSheet()}
     </Container>
   );
 };

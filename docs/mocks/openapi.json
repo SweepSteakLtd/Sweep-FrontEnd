@@ -89,6 +89,59 @@
         }
       }
     },
+    "/api/users/verify/gbg": {
+      "get": {
+        "summary": "GBG Verification Status",
+        "description": "GBG Verification Status endpoint",
+        "operationId": "verify-gbg",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Pass": {
+                    "summary": "Pass",
+                    "value": null
+                  },
+                  "In Progress": {
+                    "summary": "In Progress",
+                    "value": null
+                  },
+                  "Manual Review Required": {
+                    "summary": "Manual Review Required",
+                    "value": null
+                  },
+                  "Fail": {
+                    "summary": "Fail",
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Server Error (500)": {
+                    "summary": "Server Error (500)",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/leaderboards/": {
       "get": {
         "summary": "KMaster",
@@ -434,6 +487,10 @@
                 "examples": {
                   "Complete Profile": {
                     "summary": "Complete Profile",
+                    "value": null
+                  },
+                  "Unverified Profile": {
+                    "summary": "Unverified Profile",
                     "value": null
                   }
                 }

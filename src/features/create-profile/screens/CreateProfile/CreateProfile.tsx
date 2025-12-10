@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
@@ -14,10 +16,14 @@ import { StakeLimitStep } from '~/features/create-profile/components/StakeLimitS
 import { SuccessState } from '~/features/create-profile/components/SuccessState/SuccessState';
 import { VerificationCodeStep } from '~/features/create-profile/components/VerificationCodeStep/VerificationCodeStep';
 import { useCreateProfileForm } from '~/features/create-profile/hooks/useCreateProfileForm';
+import type { RootStackParamList } from '~/navigation/types';
 import { ButtonGroup, Container, StepsContainer, Title } from './styles';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const CreateProfile = () => {
   const theme = useTheme();
+  const navigation = useNavigation<NavigationProp>();
 
   const {
     currentStep,
@@ -197,12 +203,10 @@ export const CreateProfile = () => {
           <Button
             variant="primary"
             title="Back"
-            onPress={handleBack}
+            onPress={currentStep === 1 ? () => navigation.navigate('Login') : handleBack}
             style={{
               flex: 1,
               marginRight: 8,
-              opacity: currentStep === 1 ? 0 : 1,
-              pointerEvents: currentStep === 1 ? 'none' : 'auto',
             }}
           />
           {currentStep < totalSteps ? (

@@ -1,10 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '~/components/Button/Button';
 import { DocumentPicker } from '~/components/DocumentPicker/DocumentPicker';
 import type { PickedFile } from '~/components/DocumentPicker/useDocumentPicker';
+import type { RootStackParamList } from '~/navigation/types';
 import { toJpegDataUri, useUploadGBGDocuments } from '~/services/apis/User/useUploadGBGDocuments';
 import {
   ButtonSection,
@@ -21,10 +23,12 @@ import {
   Title,
 } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const MAX_DOCUMENTS = 10;
 
 export const DocumentUpload: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   const [documents, setDocuments] = useState<PickedFile[]>([]);
   const uploadMutation = useUploadGBGDocuments();
 
@@ -56,7 +60,7 @@ export const DocumentUpload: React.FC = () => {
       Alert.alert('Success', 'Your documents have been uploaded for verification.', [
         {
           text: 'OK',
-          onPress: () => navigation.goBack(),
+          onPress: () => navigation.navigate('VerificationPending'),
         },
       ]);
     } catch (error) {
@@ -69,7 +73,7 @@ export const DocumentUpload: React.FC = () => {
 
   return (
     <Container>
-      <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
           <Content>
             <HeaderSection>

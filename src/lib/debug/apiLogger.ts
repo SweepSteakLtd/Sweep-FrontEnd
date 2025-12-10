@@ -6,12 +6,51 @@
 // Debug logging flag - enabled in development only
 const DEBUG_API = __DEV__;
 
+const MAX_LINES = 5;
+const MAX_STRING_LENGTH = 200;
+
 /**
- * Formats JSON data with proper indentation and structure
+ * Truncates long strings (like base64 data) in objects
+ */
+const truncateLongStrings = (data: unknown): unknown => {
+  if (typeof data === 'string') {
+    if (data.length > MAX_STRING_LENGTH) {
+      return `${data.substring(0, MAX_STRING_LENGTH)}... [truncated ${data.length - MAX_STRING_LENGTH} chars]`;
+    }
+    return data;
+  }
+
+  if (Array.isArray(data)) {
+    return data.map(truncateLongStrings);
+  }
+
+  if (data && typeof data === 'object') {
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(data)) {
+      result[key] = truncateLongStrings(value);
+    }
+    return result;
+  }
+
+  return data;
+};
+
+/**
+ * Formats JSON data with proper indentation and structure, truncated to max lines
  */
 const formatJSON = (data: unknown): string => {
   try {
-    return JSON.stringify(data, null, 2);
+    const truncatedData = truncateLongStrings(data);
+    const formatted = JSON.stringify(truncatedData, null, 2);
+    const lines = formatted.split('\n');
+
+    if (lines.length > MAX_LINES) {
+      return (
+        lines.slice(0, MAX_LINES).join('\n') + `\n... [${lines.length - MAX_LINES} more lines]`
+      );
+    }
+
+    return formatted;
   } catch {
     return String(data);
   }

@@ -2,6 +2,7 @@ import {
   userProfileCompleteMock,
   userProfileNoProfileMock,
   userProfileServerErrorMock,
+  userProfileUnverifiedMock,
 } from '~/features/authentication/mocks';
 import type { MockHandler } from '../types';
 
@@ -16,6 +17,11 @@ export const getUserHandler: MockHandler = {
     'Complete Profile': {
       status: 200,
       data: userProfileCompleteMock,
+      delay: 500,
+    },
+    'Unverified Profile': {
+      status: 200,
+      data: userProfileUnverifiedMock,
       delay: 500,
     },
     'No Profile (404)': {

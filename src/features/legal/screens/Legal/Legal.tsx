@@ -1,11 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Linking, ScrollView } from 'react-native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import type { RootStackParamList } from '~/navigation/types';
 import { Container, MenuItem, MenuItemArrow, MenuItemText, MenuSection } from './styles';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 type MenuItemConfig = {
   label: string;
@@ -13,8 +8,6 @@ type MenuItemConfig = {
 };
 
 export const Legal = () => {
-  const navigation = useNavigation<NavigationProp>();
-
   const menuItems: MenuItemConfig[] = [
     {
       label: 'Terms and Conditions',

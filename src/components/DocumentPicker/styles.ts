@@ -192,6 +192,21 @@ export const ThumbnailRemoveText = styled.Text`
   font-weight: bold;
 `;
 
+export const ThumbnailSizeLabel = styled.View`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 4px;
+`;
+
+export const ThumbnailSizeText = styled.Text`
+  color: #ffffff;
+  font-size: 10px;
+  text-align: center;
+`;
+
 export const AddMoreButton = styled(TouchableOpacity)<{ $disabled?: boolean }>`
   width: 100px;
   height: 100px;
@@ -270,4 +285,40 @@ export const GalleryImage = styled.Image<{ $width: number; $height: number }>`
   height: ${({ $height }: { $height: number }) => $height}px;
   border-radius: 8px;
   background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.card};
+`;
+
+// Bottom sheet options styles
+export const OptionsContainer = styled.View`
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
+  padding: 20px;
+  padding-bottom: 40px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+`;
+
+export const OptionsTitle = styled.Text`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text.primary};
+  margin-bottom: 16px;
+`;
+
+export const OptionButton = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.card};
+  border-radius: 12px;
+  margin-bottom: 12px;
+`;
+
+export const OptionIcon = styled.Text`
+  font-size: 24px;
+  margin-right: 16px;
+`;
+
+export const OptionText = styled.Text`
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text.primary};
 `;

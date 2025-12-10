@@ -29,6 +29,7 @@ const getCachedMockConfig = async (): Promise<MockConfig> => {
 
 /**
  * Check if a request matches a mock handler
+ * Finds the most specific handler (longest URL pattern match)
  */
 const findMatchingHandler = (
   url: string,
@@ -44,29 +45,31 @@ const findMatchingHandler = (
     return null;
   }
 
-  for (const handler of mockHandlers) {
-    const handlerConfig = config.handlers[handler.id];
+  // Find all matching handlers and select the most specific one (longest URL pattern)
+  const matchingHandlers = mockHandlers.filter(
+    (handler) => handler.method === method.toUpperCase() && url.includes(handler.urlPattern),
+  );
 
-    if (!handlerConfig?.enabled) {
-      continue;
+  if (matchingHandlers.length === 0) {
+    if (isApiCall) {
+      console.log(`[MockInterceptor]: No mock handler definition found for ${method} ${url}`);
     }
+    return null;
+  }
 
-    // Check if method matches
-    if (handler.method !== method.toUpperCase()) {
-      continue;
-    }
+  // Sort by URL pattern length (descending) to get most specific match first
+  matchingHandlers.sort((a, b) => b.urlPattern.length - a.urlPattern.length);
 
-    // Check if URL matches (contains the handler URL pattern)
-    if (!url.includes(handler.urlPattern)) {
-      continue;
-    }
+  const handler = matchingHandlers[0];
+  const handlerConfig = config.handlers[handler.id];
 
+  if (handlerConfig?.enabled) {
     return handler;
   }
 
   if (isApiCall) {
     console.log(
-      `[MockInterceptor]: No mock handler matched for ${method} ${url} (mocks are enabled but no handler configured)`,
+      `[MockInterceptor]: Handler ${handler.id} exists but not enabled for ${method} ${url}`,
     );
   }
 

@@ -6,6 +6,7 @@ import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Avatar } from '~/components/Avatar/Avatar';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
+import { DevMockButton } from '~/components/DevMockButton/DevMockButton';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useAuth } from '~/contexts/AuthContext';
 import type { RootStackParamList } from '~/navigation/types';
@@ -78,8 +79,6 @@ export const Profile = () => {
     { icon: '❓', label: 'Support', onPress: () => navigation.navigate('Support') },
     { icon: '📄', label: 'Legal', onPress: () => navigation.navigate('Legal') },
     { icon: '⏻', label: 'Sign out', onPress: handleLogout },
-    { icon: '⚙️', label: 'API Mocks', onPress: () => navigation.navigate('Settings') },
-    { icon: '📤', label: 'Test Upload', onPress: () => navigation.navigate('TestUpload') },
   ];
 
   return (
@@ -134,6 +133,7 @@ export const Profile = () => {
               </MenuItem>
             ))}
           </MenuSection>
+          <DevMockButton position="inline" style={{ marginTop: 24 }} />
 
           <ComplianceFooter />
         </ScrollView>

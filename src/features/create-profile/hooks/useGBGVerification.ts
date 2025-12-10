@@ -14,6 +14,7 @@ export interface StartPollingOptions {
 export interface UseGBGVerificationReturn {
   startPolling: (instanceId: string, options?: StartPollingOptions) => void;
   stopPolling: () => void;
+  resetResult: () => void;
   result: GBGVerificationResult;
   isPolling: boolean;
 }
@@ -173,6 +174,12 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
     }
   }, []);
 
+  const resetResult = useCallback(() => {
+    setResult({ status: null });
+    attemptCountRef.current = 0;
+    errorRetryCountRef.current = 0;
+  }, []);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -185,6 +192,7 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
   return {
     startPolling,
     stopPolling,
+    resetResult,
     result,
     isPolling,
   };

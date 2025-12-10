@@ -1,6 +1,7 @@
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
+import { DevMockButton } from '~/components/DevMockButton/DevMockButton';
 import { Typography } from '~/components/Typography/Typography';
 import { LoadingState } from '~/features/create-profile/components/LoadingState/LoadingState';
 import { ButtonGroup, Container } from './styles';
@@ -19,11 +20,14 @@ export const VerificationPending = () => {
 
   if (isVerifying) {
     return (
-      <LoadingState
-        title="Verifying your identity"
-        description="This may take a few moments..."
-        showProgressBar={false}
-      />
+      <Container>
+        <LoadingState
+          title="Verifying your identity"
+          description="This may take a few moments..."
+          showProgressBar={false}
+        />
+        <DevMockButton />
+      </Container>
     );
   }
 

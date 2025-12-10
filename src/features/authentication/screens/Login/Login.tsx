@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
+import { DevMockButton } from '~/components/DevMockButton/DevMockButton';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
 import { useLogin } from '~/features/authentication/hooks/useLogin';
@@ -151,12 +152,7 @@ export const Login = () => {
               title="Don't have an account? Create one"
             />
 
-            <Button
-              variant="link"
-              onPress={() => navigation.navigate('Settings')}
-              fullWidth={false}
-              title="Mock API Settings"
-            />
+            <DevMockButton position="inline" />
           </FormContainer>
         </ContentWrapper>
 

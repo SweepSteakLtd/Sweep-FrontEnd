@@ -33,6 +33,7 @@ import { Support } from '~/features/support/screens/Support/Support';
 import { TeamScreen } from '~/features/teams/screens/CreateTeam/CreateTeam';
 import { TestUpload } from '~/features/test-upload/screens/TestUpload/TestUpload';
 import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
+import { DocumentUpload } from '~/features/verification/screens/DocumentUpload/DocumentUpload';
 import { VerificationPending } from '~/features/verification/screens/VerificationPending/VerificationPending';
 import { navigationRef } from './navigationRef';
 import type { RootStackParamList } from './types';
@@ -109,6 +110,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="CreateProfile" component={CreateProfile} />
         <Stack.Screen name="VerificationPending" component={VerificationPending} />
+        <Stack.Screen name="DocumentUpload" component={DocumentUpload} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="AccountDetails" component={AccountDetails} />

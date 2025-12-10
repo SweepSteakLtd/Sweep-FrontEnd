@@ -1,6 +1,6 @@
 # SweepSteak Mock API Documentation
 
-Generated: 2025-11-28T14:25:14.448Z
+Generated: 2025-12-10T17:47:17.949Z
 
 ## Files
 
@@ -30,6 +30,21 @@ Create Bet endpoint
 - Insufficient Funds (400) - 500ms
 - Invalid Data (400) - 500ms
 - Server Error (500) - 1000ms
+
+
+### GET /api/users/verify/gbg
+**GBG Verification Status**
+
+GBG Verification Status endpoint
+
+**Default Scenario:** Pass
+
+**Scenarios:** 5
+- Pass (200) - 1000ms
+- In Progress (200) - 500ms
+- Manual Review Required (200) - 1000ms
+- Fail (200) - 1000ms
+- Server Error (500) (500) - 500ms
 
 
 ### GET /api/leaderboards/
@@ -124,8 +139,9 @@ Get User Profile endpoint
 
 **Default Scenario:** Complete Profile
 
-**Scenarios:** 3
+**Scenarios:** 4
 - Complete Profile (200) - 500ms
+- Unverified Profile (200) - 500ms
 - No Profile (404) (404) - 500ms
 - Server Error (500) (500) - 1000ms
 

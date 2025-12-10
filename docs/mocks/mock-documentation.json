@@ -1,7 +1,7 @@
 {
   "title": "SweepSteak Mock API Documentation",
   "version": "1.0.0",
-  "generatedAt": "2025-11-28T14:25:14.448Z",
+  "generatedAt": "2025-12-10T17:47:17.949Z",
   "endpoints": [
     {
       "id": "create-bet",
@@ -39,6 +39,46 @@
           "name": "Server Error",
           "status": 500,
           "delay": "1000ms",
+          "response": null
+        }
+      ]
+    },
+    {
+      "id": "verify-gbg",
+      "name": "GBG Verification Status",
+      "method": "GET",
+      "path": "/api/users/verify/gbg",
+      "description": "GBG Verification Status endpoint",
+      "defaultScenario": "Pass",
+      "scenarios": [
+        {
+          "name": "Pass",
+          "status": 200,
+          "delay": "1000ms",
+          "response": null
+        },
+        {
+          "name": "In Progress",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Manual Review Required",
+          "status": 200,
+          "delay": "1000ms",
+          "response": null
+        },
+        {
+          "name": "Fail",
+          "status": 200,
+          "delay": "1000ms",
+          "response": null
+        },
+        {
+          "name": "Server Error (500)",
+          "status": 500,
+          "delay": "500ms",
           "response": null
         }
       ]
@@ -265,6 +305,12 @@
       "scenarios": [
         {
           "name": "Complete Profile",
+          "status": 200,
+          "delay": "500ms",
+          "response": null
+        },
+        {
+          "name": "Unverified Profile",
           "status": 200,
           "delay": "500ms",
           "response": null
