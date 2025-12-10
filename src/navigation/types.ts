@@ -63,6 +63,8 @@ export type RootStackParamList = {
   };
   TestUpload: undefined;
   DocumentUpload: undefined;
+  Legal: undefined;
+  Support: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

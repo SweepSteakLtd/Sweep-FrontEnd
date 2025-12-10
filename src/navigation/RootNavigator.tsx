@@ -20,6 +20,7 @@ import { Leaderboard } from '~/features/leaderboard/screens/Leaderboard/Leaderbo
 import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
 import { JoinCodeModal } from '~/features/leagues/screens/JoinCodeModal/JoinCodeModal';
 import { LeagueHome } from '~/features/leagues/screens/LeagueHome/LeagueHome';
+import { Legal } from '~/features/legal/screens/Legal/Legal';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
 import { MyLeagues } from '~/features/my-leagues/screens/MyLeagues/MyLeagues';
 import { MyTeams } from '~/features/my-teams/screens/MyTeams/MyTeams';
@@ -28,6 +29,7 @@ import { Deposit } from '~/features/payment/screens/Deposit/Deposit';
 import { Withdraw } from '~/features/payment/screens/Withdraw/Withdraw';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
+import { Support } from '~/features/support/screens/Support/Support';
 import { TeamScreen } from '~/features/teams/screens/CreateTeam/CreateTeam';
 import { TestUpload } from '~/features/test-upload/screens/TestUpload/TestUpload';
 import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
@@ -127,6 +129,8 @@ export const RootNavigator = () => {
         <Stack.Screen name="Deposit" component={Deposit} />
         <Stack.Screen name="Withdraw" component={Withdraw} />
         <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="Legal" component={Legal} />
+        <Stack.Screen name="Support" component={Support} />
         <Stack.Screen name="TestUpload" component={TestUpload} />
         <Stack.Screen
           name="AlertModal"
