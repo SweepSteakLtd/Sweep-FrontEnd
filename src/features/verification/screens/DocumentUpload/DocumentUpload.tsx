@@ -61,12 +61,8 @@ export const DocumentUpload: React.FC = () => {
         documents: formattedDocuments,
       });
 
-      Alert.alert('Success', 'Your documents have been uploaded for verification.', [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('VerificationPending'),
-        },
-      ]);
+      // Navigate directly to verification pending screen with flag to show document review copy
+      navigation.navigate('VerificationPending', { fromDocumentUpload: true });
     } catch (error) {
       // Show error after request fails
       setShowError(true);

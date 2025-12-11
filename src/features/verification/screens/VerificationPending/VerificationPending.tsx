@@ -1,11 +1,15 @@
+import { useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { DevMockButton } from '~/components/DevMockButton/DevMockButton';
 import { Typography } from '~/components/Typography/Typography';
 import { LoadingState } from '~/features/create-profile/components/LoadingState/LoadingState';
+import type { RootStackScreenProps } from '~/navigation/types';
 import { ButtonGroup, Container } from './styles';
 import { useVerificationPending } from './useVerificationPending';
+
+type RouteProps = RootStackScreenProps<'VerificationPending'>['route'];
 
 /**
  * VerificationPending screen shows when user's identity verification is in progress or has failed
@@ -15,15 +19,20 @@ import { useVerificationPending } from './useVerificationPending';
  */
 export const VerificationPending = () => {
   const theme = useTheme();
+  const route = useRoute<RouteProps>();
+  const fromDocumentUpload = route.params?.fromDocumentUpload ?? false;
   const { isVerifying, isServerError, isDeleting, errorMessage, handleDeleteAccount, handleRetry } =
     useVerificationPending();
 
   if (isVerifying) {
+    // Show different title based on whether user came from document upload
+    const title = fromDocumentUpload ? 'Reviewing your documents' : 'Verifying your identity';
+
     return (
       <Container>
         <LoadingState
-          title="Verifying your identity"
-          description="This may take a few moments..."
+          title={title}
+          description="Hold tight, this may take a few moments..."
           showProgressBar={false}
         />
         <DevMockButton />
