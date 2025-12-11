@@ -79,9 +79,20 @@ export const TeamScreen = () => {
     tournamentStartTime,
   });
 
-  const selectedPlayers = useMemo(() => {
-    return allPlayers.filter((player) => player && selectedPlayerIds.includes(player.id || ''));
-  }, [allPlayers, selectedPlayerIds]);
+  const selectedPlayersByGroupMap = useMemo(() => {
+    const map = new Map<string, (typeof allPlayers)[0] | null>();
+    // Initialize all groups with null (placeholder)
+    groupNames.forEach((groupName) => {
+      map.set(groupName, null);
+    });
+    // Fill in selected players
+    allPlayers.forEach((player) => {
+      if (player && selectedPlayerIds.includes(player.id || '') && player.group) {
+        map.set(player.group, player);
+      }
+    });
+    return map;
+  }, [allPlayers, selectedPlayerIds, groupNames]);
 
   const allGroupsSelected = selectedPlayerIds.length === groupNames.length && groupNames.length > 0;
   const isTeamNameStep = allGroupsSelected && currentStep === groupNames.length;
@@ -174,18 +185,19 @@ export const TeamScreen = () => {
 
           <SelectedPlayersContainer>
             <SelectedPlayersScroll horizontal showsHorizontalScrollIndicator={false}>
-              {selectedPlayers.length > 0 ? (
-                selectedPlayers.map((player) => (
+              {groupNames.map((groupName) => {
+                const player = selectedPlayersByGroupMap.get(groupName);
+                return player ? (
                   <SelectedPlayerCard
                     key={player.id}
                     player={player}
                     onRemove={!isViewOnly ? () => handlePlayerToggle(player) : undefined}
                     disabled={isViewOnly}
                   />
-                ))
-              ) : (
-                <PlaceholderPlayerCard groupName={groupNames[currentStep]} />
-              )}
+                ) : (
+                  <PlaceholderPlayerCard key={`placeholder-${groupName}`} groupName={groupName} />
+                );
+              })}
             </SelectedPlayersScroll>
           </SelectedPlayersContainer>
 

@@ -13,7 +13,6 @@ export const TournamentCard = ({ tournament, onPress }: TournamentCardProps) => 
     <CoverCard
       imageUri={tournament.cover_picture}
       title={`${tournament.name} ${year}`}
-      subtitle={tournament.description}
       onPress={onPress}
       height={180}
       titleSize={18}

@@ -60,13 +60,15 @@ export const JoinLeagueList = ({
   const filteredLeagues = (() => {
     if (isPrivateTab) {
       if (isSearching) {
-        // When searching, show private leagues from search results
+        // When searching private tab, leagues already contains only search results
+        // Filter to only show private leagues from the search
         return leagues.filter((league) => league.type === 'private');
       }
       // When not searching, show user's private leagues
       return userPrivateLeagues;
     }
-    // Featured/Public tabs: never show private leagues
+    // Featured/Public tabs: show leagues from search (already filtered by API)
+    // Filter out private leagues for safety
     return leagues.filter((league) => league.type !== 'private');
   })();
 

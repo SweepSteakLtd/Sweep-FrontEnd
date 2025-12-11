@@ -35,58 +35,95 @@ export const TournamentLeagues = () => {
   const theme = useTheme();
 
   const tournamentId = route.params?.tournamentId || '';
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeGameTab, setActiveGameTab] = useState('featured');
+
+  // Independent search state per tab
+  const [publicSearchQuery, setPublicSearchQuery] = useState('');
+  const [privateSearchQuery, setPrivateSearchQuery] = useState('');
+
+  // Get current search query based on active tab
+  const currentSearchQuery = activeGameTab === 'private' ? privateSearchQuery : publicSearchQuery;
+  const setCurrentSearchQuery =
+    activeGameTab === 'private' ? setPrivateSearchQuery : setPublicSearchQuery;
 
   const handleGameTabChange = (tab: string) => {
     setActiveGameTab(tab);
   };
 
-  // Debounce search query for API calls
-  const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
+  // Debounce search queries for API calls
+  const debouncedPublicSearchQuery = useDebouncedValue(publicSearchQuery, 500);
+  const debouncedPrivateSearchQuery = useDebouncedValue(privateSearchQuery, 500);
 
   const { data: tournaments = [] } = useGetTournaments();
   const { data: currentUser } = useGetUser();
 
   const currentTournament = tournaments.find((t) => t.id === tournamentId);
 
+  // Fetch public/featured leagues (uses search_term which respects privacy)
   const {
-    data: leagues = [],
-    isLoading: leaguesLoading,
-    isFetching: leaguesFetching,
-    error: leaguesError,
-    refetch: refetchLeagues,
+    data: publicLeagues = [],
+    isLoading: publicLeaguesLoading,
+    isFetching: publicLeaguesFetching,
+    error: publicLeaguesError,
+    refetch: refetchPublicLeagues,
   } = useGetLeagues(
     {
       tournament_id: tournamentId || undefined,
-      search_term: debouncedSearchQuery || undefined,
+      search_term: debouncedPublicSearchQuery || undefined,
     },
-    true,
+    activeGameTab !== 'private', // Only fetch when not on private tab
   );
 
-  // Filter leagues where current user is owner or member (for private tab)
-  const userPrivateLeagues = leagues.filter((league) => {
+  // Fetch private leagues (uses name parameter which bypasses privacy filters)
+  const {
+    data: privateSearchLeagues = [],
+    isLoading: privateLeaguesLoading,
+    isFetching: privateLeaguesFetching,
+    error: privateLeaguesError,
+    refetch: refetchPrivateLeagues,
+  } = useGetLeagues(
+    {
+      tournament_id: tournamentId || undefined,
+      name: debouncedPrivateSearchQuery || undefined,
+    },
+    activeGameTab === 'private' && !!debouncedPrivateSearchQuery, // Only fetch when on private tab and searching
+  );
+
+  // Combined loading/error states based on active tab
+  const leaguesLoading = activeGameTab === 'private' ? privateLeaguesLoading : publicLeaguesLoading;
+  const leaguesFetching =
+    activeGameTab === 'private' ? privateLeaguesFetching : publicLeaguesFetching;
+  const leaguesError = activeGameTab === 'private' ? privateLeaguesError : publicLeaguesError;
+  const leagues = activeGameTab === 'private' ? privateSearchLeagues : publicLeagues;
+
+  // Filter leagues where current user is owner or member (for private tab when not searching)
+  // Uses publicLeagues since those are fetched with search_term which includes user's private leagues
+  const userPrivateLeagues = publicLeagues.filter((league) => {
     if (league.type !== 'private' || !currentUser?.id) return false;
     const isOwner = league.owner_id === currentUser.id;
     const isMember = league.joined_players?.includes(currentUser.id) ?? false;
     return isOwner || isMember;
   });
 
-  // Calculate total pot from current leagues
-  const totalPotForTournament = leagues.reduce(
+  // Calculate total pot from public leagues (consistent stats regardless of tab)
+  const totalPotForTournament = publicLeagues.reduce(
     (sum, league) => sum + (league.entry_fee ?? 0) * (league.max_participants ?? 0),
     0,
   );
 
-  // Calculate global stats (all leagues including private)
-  const totalLeagues = leagues.length;
-  const totalEntrants = leagues.reduce(
+  // Calculate global stats from public leagues (consistent regardless of tab)
+  const totalLeagues = publicLeagues.length;
+  const totalEntrants = publicLeagues.reduce(
     (sum, league) => sum + (league.joined_players?.length ?? 0),
     0,
   );
 
   const handleRefresh = async () => {
-    await refetchLeagues();
+    if (activeGameTab === 'private') {
+      await refetchPrivateLeagues();
+    } else {
+      await refetchPublicLeagues();
+    }
   };
 
   const handleCreateLeague = useCallback(() => {
@@ -171,8 +208,8 @@ export const TournamentLeagues = () => {
             onLeaguePress={handleLeaguePress}
             onCreateLeague={handleCreateLeague}
             loading={leaguesFetching}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
+            searchQuery={currentSearchQuery}
+            onSearchChange={setCurrentSearchQuery}
             activeLeagueTab={activeGameTab}
             onLeagueTabChange={handleGameTabChange}
           />

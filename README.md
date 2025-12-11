@@ -346,6 +346,66 @@ echo $ANDROID_HOME
 ### Issue: Pre-commit hook blocks commit
 See the [Code Quality & Pre-commit Checks](#code-quality--pre-commit-checks) section above for troubleshooting steps.
 
+## 🧪 Mock API System
+
+The app includes a comprehensive mock API system for development and testing without a backend connection.
+
+### Enabling Mocks
+
+1. **In Development**: Use the `DevMockButton` component (appears on Login screen)
+2. **Configure Mocks**: Toggle individual endpoints and select response scenarios
+3. **Global Toggle**: Enable/disable all mocks at once
+
+### Mock Features
+
+- **Scenario Selection**: Choose different responses (success, error, empty data)
+- **Configurable Delays**: Simulate network latency
+- **Post Processors**: Dynamic response modifications
+- **Persistent Config**: Mock settings saved to AsyncStorage
+
+### Documentation
+
+- See [docs/mocks/README.md](docs/mocks/README.md) for detailed mock system documentation
+- See [docs/features/login.md](docs/features/login.md) for login flow documentation
+- See [docs/features/create-profile.md](docs/features/create-profile.md) for profile creation documentation
+
+## 📱 Feature Documentation
+
+### Authentication Flow
+
+The app uses Firebase Authentication with a multi-step verification process:
+
+1. **Login** → Firebase authentication
+2. **Profile Check** → API call to `/api/users/me`
+3. **Routing Logic**:
+   - Profile exists + verified → Dashboard
+   - Profile exists + unverified → Verification Pending
+   - No profile → Create Profile
+
+See [docs/features/login.md](docs/features/login.md) for details.
+
+### Profile Creation Flow
+
+A 6-step wizard for creating user profiles:
+
+1. Basic Info (name)
+2. Phone Number Entry
+3. Phone Verification (SMS code)
+4. Personal Details (DOB, address)
+5. Deposit Limits
+6. Stake Limits
+
+After submission, GBG identity verification is triggered. See [docs/features/create-profile.md](docs/features/create-profile.md) for details.
+
+### Team Creation Flow
+
+Create fantasy golf teams by selecting players from groups:
+
+1. Select one player per group (A-J)
+2. Progress indicator shows completion
+3. Name your team
+4. Submit to join a league
+
 ## 📖 Additional Resources
 
 - [Expo Documentation](https://docs.expo.dev/)

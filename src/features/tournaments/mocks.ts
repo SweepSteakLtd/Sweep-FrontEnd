@@ -109,14 +109,24 @@ const samplePlayers = [
   },
 ];
 
+// Helper to generate dates relative to now
+const now = new Date();
+const getRelativeDate = (daysOffset: number, hoursOffset: number = 0) => {
+  const date = new Date(now);
+  date.setDate(date.getDate() + daysOffset);
+  date.setHours(date.getHours() + hoursOffset);
+  return date.toISOString();
+};
+
 // Tournament list mock data
 export const tournamentsListMock = {
   data: [
     {
       id: 'tournament-1',
       name: 'The Masters',
-      starts_at: '2026-04-09T08:00:00.000Z',
-      finishes_at: '2026-04-12T18:00:00.000Z',
+      // Started 2 days ago, ends in 2 days (LIVE tournament)
+      starts_at: getRelativeDate(-2),
+      finishes_at: getRelativeDate(2),
       description: "The Masters Tournament, one of golf's four major championships.",
       url: 'https://example.com/masters',
       cover_picture: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400',
@@ -145,8 +155,9 @@ export const tournamentsListMock = {
     {
       id: 'tournament-2',
       name: 'The Open Championship',
-      starts_at: '2025-07-17T08:00:00.000Z',
-      finishes_at: '2025-07-20T18:00:00.000Z',
+      // Starts in 7 days, ends in 10 days (UPCOMING tournament)
+      starts_at: getRelativeDate(7),
+      finishes_at: getRelativeDate(10),
       description: "The Open Championship, the oldest of golf's major championships.",
       url: 'https://example.com/open',
       cover_picture: 'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400',
@@ -175,8 +186,9 @@ export const tournamentsListMock = {
     {
       id: 'tournament-3',
       name: 'The Players Championship',
-      starts_at: '2025-03-13T08:00:00.000Z',
-      finishes_at: '2025-03-16T18:00:00.000Z',
+      // Ended 5 days ago (FINISHED tournament)
+      starts_at: getRelativeDate(-9),
+      finishes_at: getRelativeDate(-5),
       description: 'The Players Championship at TPC Sawgrass.',
       url: 'https://example.com/players',
       cover_picture: 'https://images.unsplash.com/photo-1592919505780-303950717480?w=400',
@@ -205,8 +217,9 @@ export const tournamentsListMock = {
     {
       id: 'tournament-4',
       name: 'PGA Championship',
-      starts_at: '2025-05-15T08:00:00.000Z',
-      finishes_at: '2025-05-18T18:00:00.000Z',
+      // Starts in 30 days, ends in 33 days (UPCOMING tournament)
+      starts_at: getRelativeDate(30),
+      finishes_at: getRelativeDate(33),
       description: "The PGA Championship, one of golf's four major championships.",
       url: 'https://example.com/pga',
       cover_picture: 'https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=400',
@@ -235,13 +248,13 @@ export const tournamentsListMock = {
   ],
 };
 
-// Single tournament detail mock
+// Single tournament detail mock - LIVE tournament (started 2 days ago, ends in 2 days)
 export const tournamentDetailMock = {
   data: {
     id: 'tournament-1',
     name: 'The Masters',
-    starts_at: '2026-04-09T08:00:00.000Z',
-    finishes_at: '2026-04-12T18:00:00.000Z',
+    starts_at: getRelativeDate(-2),
+    finishes_at: getRelativeDate(2),
     description: "The Masters Tournament, one of golf's four major championships.",
     url: 'https://example.com/masters',
     cover_picture: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400',

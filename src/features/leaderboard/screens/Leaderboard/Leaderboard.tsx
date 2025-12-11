@@ -102,14 +102,14 @@ export const Leaderboard = () => {
 
   if (isLoading) {
     return (
-      <ScreenWrapper title="Leader Board">
+      <ScreenWrapper title="Leaderboard">
         <LeaderboardSkeleton />
       </ScreenWrapper>
     );
   }
 
   return (
-    <ScreenWrapper title="Leader Board">
+    <ScreenWrapper title="Leaderboard">
       <Container>
         <Animated.FlatList
           data={filteredEntries}

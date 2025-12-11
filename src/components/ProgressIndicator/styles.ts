@@ -32,46 +32,60 @@ export const ProgressFill = styled.View`
 
 // Dots variant styles
 export const DotsContainer = styled.View`
-  padding: 12px 16px;
+  padding: 12px 4px;
+  align-items: center;
+`;
+
+export const DotsRowWrapper = styled.View`
+  position: relative;
+  width: 100%;
+`;
+
+export const DotsRowLine = styled.View`
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
+  border-radius: 2px;
+  z-index: 0;
+`;
+
+export const DotsRowLineFill = styled(Animated.View)`
+  height: 100%;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
+  border-radius: 2px;
 `;
 
 export const DotsRow = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 1;
 `;
 
 export const LabelsRow = styled.View`
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
+  width: 100%;
   margin-top: 6px;
 `;
 
 export const StepDot = styled.View`
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   justify-content: center;
   align-items: center;
 `;
 
 export const CheckMark = styled.Text`
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   color: ${({ theme }: { theme: Theme }) => theme.colors.white};
-`;
-
-export const Connector = styled.View`
-  flex: 1;
-  height: 3px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.border};
-  margin: 0 6px;
-  border-radius: 2px;
-  overflow: hidden;
-`;
-
-export const ConnectorFill = styled(Animated.View)`
-  height: 100%;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  border-radius: 2px;
 `;
 
 interface StepLabelProps {
@@ -80,10 +94,10 @@ interface StepLabelProps {
 }
 
 export const StepLabel = styled.Text<StepLabelProps>`
-  font-size: ${({ $isActive }: StepLabelProps) => ($isActive ? '13px' : '11px')};
+  font-size: ${({ $isActive }: StepLabelProps) => ($isActive ? '12px' : '10px')};
   font-weight: ${({ $isActive }: StepLabelProps) => ($isActive ? '700' : '500')};
   color: ${({ theme, $isActive, $isCompleted }: { theme: Theme } & StepLabelProps) =>
-    $isActive && $isCompleted ? theme.colors.primary : theme.colors.text.tertiary};
+    $isActive || $isCompleted ? theme.colors.primary : theme.colors.text.tertiary};
   text-align: center;
-  width: 28px;
+  width: 22px;
 `;

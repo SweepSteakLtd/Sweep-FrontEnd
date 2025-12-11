@@ -4,7 +4,8 @@ import { api } from '../apiClient';
 import { League } from './types';
 
 interface FetchLeaguesParams {
-  search_term?: string;
+  name?: string; // Pattern matching search (bypasses privacy filters) - use for private league search
+  search_term?: string; // Case-insensitive search (respects privacy) - use for public league search
   tournament_id?: string;
   entry_fee?: string;
   owner_id?: string;
@@ -21,7 +22,12 @@ export const fetchLeagues = async (params?: FetchLeaguesParams): Promise<League[
   try {
     // Build query params
     const queryParams = new URLSearchParams();
+    if (params?.name) {
+      // 'name' parameter bypasses privacy filters - use for private league search
+      queryParams.append('name', params.name);
+    }
     if (params?.search_term) {
+      // 'search_term' respects privacy filters - use for public league search
       queryParams.append('search_term', params.search_term);
     }
     if (params?.tournament_id) {
@@ -48,7 +54,8 @@ export const fetchLeagues = async (params?: FetchLeaguesParams): Promise<League[
  * - Without params: Returns all leagues
  * - With owner_id: Returns leagues for that owner
  * - With tournament_id: Returns leagues for that tournament
- * - With search_term: Filters leagues by search term
+ * - With search_term: Filters public leagues by search term (respects privacy)
+ * - With name: Searches all leagues by name pattern (bypasses privacy) - use for private league search
  */
 export const useGetLeagues = (params?: FetchLeaguesParams, enabled: boolean = true) => {
   return useQuery({

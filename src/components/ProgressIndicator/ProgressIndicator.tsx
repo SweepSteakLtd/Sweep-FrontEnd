@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
-import Reanimated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import Reanimated from 'react-native-reanimated';
 import { useTheme } from 'styled-components/native';
 import {
   CheckMark,
-  Connector,
-  ConnectorFill,
   Container,
   DotsContainer,
   DotsRow,
+  DotsRowLine,
+  DotsRowLineFill,
+  DotsRowWrapper,
   LabelsRow,
   ProgressBar,
   ProgressFill,
@@ -40,9 +41,9 @@ type ProgressIndicatorProps = BarProgressIndicatorProps | DotsProgressIndicatorP
 const AnimatedDot = ({ isActive, isCompleted }: { isActive: boolean; isCompleted: boolean }) => {
   const theme = useTheme();
 
-  const bgColor = isCompleted ? theme.colors.primary : 'transparent';
+  const bgColor = isCompleted ? theme.colors.primary : theme.colors.background;
   const borderCol = isActive || isCompleted ? theme.colors.primary : theme.colors.border;
-  const size = isActive ? 28 : 22;
+  const size = isActive ? 22 : 18;
 
   return (
     <StepDot>
@@ -61,23 +62,6 @@ const AnimatedDot = ({ isActive, isCompleted }: { isActive: boolean; isCompleted
         {isCompleted && <CheckMark>✓</CheckMark>}
       </Reanimated.View>
     </StepDot>
-  );
-};
-
-const AnimatedConnector = ({ isCompleted }: { isCompleted: boolean }) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      width: withSpring(isCompleted ? '100%' : '0%', {
-        damping: 20,
-        stiffness: 100,
-      }),
-    };
-  }, [isCompleted]);
-
-  return (
-    <Connector>
-      <ConnectorFill style={animatedStyle} />
-    </Connector>
   );
 };
 
@@ -125,23 +109,27 @@ const DotsVariant = ({
   completedSteps,
   style,
 }: Omit<DotsProgressIndicatorProps, 'variant'>) => {
+  // Calculate progress percentage for the line fill
+  const lastCompletedIndex = Math.max(...completedSteps, -1);
+  const progressPercent =
+    steps.length > 1 ? ((lastCompletedIndex + 1) / (steps.length - 1)) * 100 : 0;
+  const clampedProgress = Math.min(Math.max(progressPercent, 0), 100);
+
   return (
     <DotsContainer style={style}>
-      <DotsRow>
-        {steps.map((step, index) => {
-          const isActive = index === currentStep;
-          const isCompleted = completedSteps.includes(index);
-          const isLastStep = index === steps.length - 1;
-          const isConnectorCompleted = completedSteps.includes(index);
+      <DotsRowWrapper>
+        <DotsRowLine>
+          <DotsRowLineFill style={{ width: `${clampedProgress}%` }} />
+        </DotsRowLine>
+        <DotsRow>
+          {steps.map((step, index) => {
+            const isActive = index === currentStep;
+            const isCompleted = completedSteps.includes(index);
 
-          return (
-            <React.Fragment key={step}>
-              <AnimatedDot isActive={isActive} isCompleted={isCompleted} />
-              {!isLastStep && <AnimatedConnector isCompleted={isConnectorCompleted} />}
-            </React.Fragment>
-          );
-        })}
-      </DotsRow>
+            return <AnimatedDot key={step} isActive={isActive} isCompleted={isCompleted} />;
+          })}
+        </DotsRow>
+      </DotsRowWrapper>
       <LabelsRow>
         {steps.map((step, index) => {
           const isActive = index === currentStep;

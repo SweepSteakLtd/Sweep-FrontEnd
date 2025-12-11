@@ -7,7 +7,7 @@
 const DEBUG_API = __DEV__;
 
 // Set to false to see full logs
-const TRUNCATE_LOGS = true;
+const TRUNCATE_LOGS = false;
 const MAX_LINES = 5;
 const MAX_STRING_LENGTH = 200;
 
