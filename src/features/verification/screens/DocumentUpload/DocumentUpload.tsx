@@ -30,6 +30,7 @@ const MAX_DOCUMENTS = 10;
 export const DocumentUpload: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const [documents, setDocuments] = useState<PickedFile[]>([]);
+  const [showError, setShowError] = useState(false);
   const uploadMutation = useUploadGBGDocuments();
 
   const handleFilesChanged = (files: PickedFile[]) => {
@@ -49,6 +50,9 @@ export const DocumentUpload: React.FC = () => {
       return;
     }
 
+    // Clear error before new upload
+    setShowError(false);
+
     try {
       // Convert base64 strings to data URI format
       const formattedDocuments = documents.map((doc) => toJpegDataUri(doc.base64!));
@@ -64,7 +68,8 @@ export const DocumentUpload: React.FC = () => {
         },
       ]);
     } catch (error) {
-      // Error is handled by the mutation state
+      // Show error after request fails
+      setShowError(true);
     }
   };
 
@@ -119,14 +124,28 @@ export const DocumentUpload: React.FC = () => {
         </ScrollView>
 
         <ButtonSection>
-          {uploadMutation.isError && (
-            <ErrorText>Failed to upload documents. Please try again.</ErrorText>
+          {showError && (
+            <ErrorText>
+              There seems to be an issue with your verification. Please contact support.
+            </ErrorText>
           )}
           <Button
             title={isSubmitting ? 'Uploading...' : 'Submit Documents'}
             onPress={handleSubmit}
             disabled={!hasDocuments || isSubmitting}
             loading={isSubmitting}
+          />
+          <Button
+            variant="link"
+            title="Back to Login"
+            onPress={() =>
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              })
+            }
+            disabled={isSubmitting}
+            style={{ marginTop: 8 }}
           />
         </ButtonSection>
       </SafeAreaView>

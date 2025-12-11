@@ -6,6 +6,8 @@
 // Debug logging flag - enabled in development only
 const DEBUG_API = __DEV__;
 
+// Set to false to see full logs
+const TRUNCATE_LOGS = true;
 const MAX_LINES = 5;
 const MAX_STRING_LENGTH = 200;
 
@@ -36,10 +38,14 @@ const truncateLongStrings = (data: unknown): unknown => {
 };
 
 /**
- * Formats JSON data with proper indentation and structure, truncated to max lines
+ * Formats JSON data with proper indentation and structure
  */
 const formatJSON = (data: unknown): string => {
   try {
+    if (!TRUNCATE_LOGS) {
+      return JSON.stringify(data, null, 2);
+    }
+
     const truncatedData = truncateLongStrings(data);
     const formatted = JSON.stringify(truncatedData, null, 2);
     const lines = formatted.split('\n');

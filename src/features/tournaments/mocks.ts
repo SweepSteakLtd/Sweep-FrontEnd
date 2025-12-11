@@ -57,7 +57,7 @@ const sampleAds = [
   },
 ];
 
-// Sample players data
+// Sample players data - attempts is an array of objects per schema
 const samplePlayers = [
   {
     id: 'player-1',
@@ -65,7 +65,10 @@ const samplePlayers = [
     level: 1,
     current_score: -5,
     position: 1,
-    attempts: { hole1: 4, hole2: 5 },
+    attempts: [
+      { day: 'Day 1', hole_id: 'hole-1', hole_name: 'Hole 1', par: 4, attempt: 4 },
+      { day: 'Day 1', hole_id: 'hole-2', hole_name: 'Hole 2', par: 5, attempt: 5 },
+    ],
     missed_cut: false,
     odds: 12.5,
     profile_id: 'profile-001',
@@ -78,7 +81,10 @@ const samplePlayers = [
     level: 2,
     current_score: -3,
     position: 2,
-    attempts: { hole1: 3, hole2: 4 },
+    attempts: [
+      { day: 'Day 1', hole_id: 'hole-1', hole_name: 'Hole 1', par: 4, attempt: 3 },
+      { day: 'Day 1', hole_id: 'hole-2', hole_name: 'Hole 2', par: 5, attempt: 4 },
+    ],
     missed_cut: false,
     odds: 15.0,
     profile_id: 'profile-002',
@@ -91,7 +97,10 @@ const samplePlayers = [
     level: 1,
     current_score: -2,
     position: 3,
-    attempts: { hole1: 4, hole2: 6 },
+    attempts: [
+      { day: 'Day 1', hole_id: 'hole-1', hole_name: 'Hole 1', par: 4, attempt: 4 },
+      { day: 'Day 1', hole_id: 'hole-2', hole_name: 'Hole 2', par: 5, attempt: 6 },
+    ],
     missed_cut: false,
     odds: 18.0,
     profile_id: 'profile-003',
