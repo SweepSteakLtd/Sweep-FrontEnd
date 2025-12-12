@@ -53,3 +53,11 @@ export const StatLabel = styled.Text`
   color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
   opacity: 0.8;
 `;
+
+export const TournamentName = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+  text-align: center;
+  padding: 16px 32px;
+`;

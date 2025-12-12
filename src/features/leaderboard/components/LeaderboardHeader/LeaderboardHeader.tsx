@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image, View } from 'react-native';
+import { formatCurrency } from '~/utils/currency';
 import {
   Container,
   HeaderRow,
@@ -46,7 +47,7 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
         </TeamsCard>
 
         <PrizeCard>
-          <PrizeAmount>£{(totalPot ?? 0).toLocaleString()}</PrizeAmount>
+          <PrizeAmount>{formatCurrency(totalPot)}</PrizeAmount>
           <PrizeLabel>Prize pool</PrizeLabel>
         </PrizeCard>
       </HeaderRow>

@@ -23,6 +23,7 @@ import {
   StatItem,
   StatLabel,
   StatValue,
+  TournamentName,
 } from './styles';
 import { TournamentLeaguesSkeleton } from './TournamentLeaguesSkeleton';
 
@@ -147,7 +148,7 @@ export const TournamentLeagues = () => {
   // isFetching can be true even with cached data (background refetch)
   if (leaguesLoading) {
     return (
-      <ScreenWrapper title={currentTournament?.name || 'Tournament'}>
+      <ScreenWrapper title="Tournament">
         <TournamentLeaguesSkeleton />
       </ScreenWrapper>
     );
@@ -155,7 +156,7 @@ export const TournamentLeagues = () => {
 
   if (leaguesError) {
     return (
-      <ScreenWrapper title={currentTournament?.name || 'Tournament'}>
+      <ScreenWrapper title="Tournament">
         <Container>
           <EmptyState>
             <PotLabel>Failed to load data</PotLabel>
@@ -169,7 +170,7 @@ export const TournamentLeagues = () => {
   }
 
   return (
-    <ScreenWrapper title={currentTournament?.name || 'Tournament'}>
+    <ScreenWrapper title="Tournament">
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -181,6 +182,7 @@ export const TournamentLeagues = () => {
             />
           }
         >
+          {currentTournament?.name && <TournamentName>{currentTournament.name}</TournamentName>}
           <PotInfo>
             <PotLabel>Total Staked</PotLabel>
             <AnimatedAmount

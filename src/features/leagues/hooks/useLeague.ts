@@ -139,11 +139,9 @@ export const useLeague = (leagueId: string, initialJoinCode?: string): LeagueDat
   const totalTeams = leagueData?.total_team_count ?? 0;
   // Entry fee in pounds (convert from pence)
   const entryFee = (league?.entry_fee ?? 0) / 100;
-  // Use total_pot from API (in pence), convert to pounds for display
+  // Total pot in pence - formatCurrency handles conversion to pounds
   // Fallback: calculate as (entry_fee x teams) x 0.9
-  const totalPotPence =
-    leagueData?.total_pot ?? Math.floor((league?.entry_fee ?? 0) * totalTeams * 0.9);
-  const totalPot = totalPotPence / 100;
+  const totalPot = leagueData?.total_pot ?? Math.floor((league?.entry_fee ?? 0) * totalTeams * 0.9);
 
   // Check if current user is the owner of this league
   const isOwner = !!(user?.id && league?.owner_id && user.id === league.owner_id);

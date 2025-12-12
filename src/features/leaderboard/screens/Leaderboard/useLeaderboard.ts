@@ -109,12 +109,12 @@ export const useLeaderboard = (leagueId: string) => {
 
   const currentUserNickname = currentUser?.nickname;
 
-  // Calculate total pot (convert from pence to pounds)
+  // Total pot in pence - formatCurrency handles conversion to pounds
   const totalPot = useMemo(() => {
     return (
-      (leaderboardTotalPot ??
-        leagueData?.total_pot ??
-        Math.floor((league?.entry_fee ?? 0) * entries.length * 0.9)) / 100
+      leaderboardTotalPot ??
+      leagueData?.total_pot ??
+      Math.floor((league?.entry_fee ?? 0) * entries.length * 0.9)
     );
   }, [leaderboardTotalPot, leagueData?.total_pot, league?.entry_fee, entries.length]);
 
