@@ -18,6 +18,7 @@ export const TournamentCard = ({ tournament, onPress }: TournamentCardProps) => 
       titleSize={18}
       titleWeight="700"
       overlayPadding={16}
+      accentColor={tournament.colours?.primary}
     />
   );
 };

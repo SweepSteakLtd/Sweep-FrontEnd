@@ -50,12 +50,16 @@ export const MyTeams = () => {
       const tournamentId = team.league?.tournament_id;
       const tournament = tournaments?.find((t) => t.id === tournamentId);
 
-      navigation.navigate('Team', {
-        leagueId: team.league.id,
-        teamId: team.team.id,
-        teamName: team.team.name || '',
-        playerIds,
-        tournamentStartTime: tournament?.starts_at,
+      navigation.navigate('Tournament', {
+        tournamentId: tournamentId || '',
+        screen: 'Team',
+        params: {
+          leagueId: team.league.id,
+          teamId: team.team.id,
+          teamName: team.team.name || '',
+          playerIds,
+          tournamentStartTime: tournament?.starts_at,
+        },
       });
     },
     [navigation, tournaments],

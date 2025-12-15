@@ -107,7 +107,11 @@ export const MyLeagues = () => {
                 index={index}
                 onPress={() => {
                   if (league.id) {
-                    navigation.navigate('LeagueHome', { leagueId: league.id });
+                    navigation.navigate('Tournament', {
+                      tournamentId: league.tournament_id || '',
+                      screen: 'LeagueHome',
+                      params: { leagueId: league.id },
+                    });
                   }
                 }}
                 onDelete={handleLeagueDelete}

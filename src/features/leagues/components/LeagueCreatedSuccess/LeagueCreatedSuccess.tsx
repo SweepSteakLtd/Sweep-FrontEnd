@@ -16,6 +16,7 @@ type LeagueCreatedSuccessProps = {
   joinCode?: string;
   isPrivate: boolean;
   onViewLeague: () => void;
+  primaryColor?: string;
 };
 
 export const LeagueCreatedSuccess = ({
@@ -24,6 +25,7 @@ export const LeagueCreatedSuccess = ({
   joinCode,
   isPrivate,
   onViewLeague,
+  primaryColor,
 }: LeagueCreatedSuccessProps) => {
   return (
     <Container>
@@ -50,7 +52,13 @@ export const LeagueCreatedSuccess = ({
       ) : null}
 
       <ButtonsContainer>
-        <Button variant="primary" onPress={onViewLeague} title="View League" fullWidth />
+        <Button
+          variant="secondary"
+          onPress={onViewLeague}
+          title="View League"
+          fullWidth
+          primaryColor={primaryColor}
+        />
       </ButtonsContainer>
     </Container>
   );

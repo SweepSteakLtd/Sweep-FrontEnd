@@ -49,7 +49,11 @@ export const JoinCodeModal = () => {
     // Navigate to the league home with the join code
     // The API will validate the code when fetching league details
     navigation.goBack();
-    navigation.navigate('LeagueHome', { leagueId, joinCode: joinCode.trim() });
+    navigation.navigate('Tournament', {
+      tournamentId: '', // Empty string as we're navigating by leagueId
+      screen: 'LeagueHome',
+      params: { leagueId, joinCode: joinCode.trim() },
+    });
   };
 
   return (

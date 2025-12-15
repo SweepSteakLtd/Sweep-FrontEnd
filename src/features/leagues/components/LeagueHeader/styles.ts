@@ -3,7 +3,6 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   padding: 20px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
 `;
 
 export const LeagueName = styled.Text`
@@ -17,11 +16,16 @@ export const CodeCardWrapper = styled.View`
   margin-bottom: 16px;
 `;
 
+export const InfoWrapper = styled.View`
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
+  border-radius: 16px;
+  padding: 16px;
+`;
+
 export const InfoRow = styled.View`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-bottom: 8px;
 `;
 
 export const InfoItem = styled.View`
@@ -33,7 +37,7 @@ export const InfoIcon = styled.View`
   width: 48px;
   height: 48px;
   border-radius: 24px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
   justify-content: center;
   align-items: center;
   margin-bottom: 8px;

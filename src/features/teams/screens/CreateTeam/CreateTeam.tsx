@@ -7,9 +7,10 @@ import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ProgressIndicator } from '~/components/ProgressIndicator/ProgressIndicator';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import { PlayerListItem } from '~/features/players/components/PlayerListItem/PlayerListItem';
 import { PlayerListItemSkeleton } from '~/features/players/components/PlayerListItemSkeleton/PlayerListItemSkeleton';
-import type { RootStackParamList } from '~/navigation/types';
+import type { TournamentStackParamList } from '~/navigation/types';
 import {
   PlaceholderPlayerCard,
   SelectedPlayerCard,
@@ -34,10 +35,11 @@ import {
 } from './styles';
 import { useTeamScreen } from './useCreateTeamScreen';
 
-type TeamScreenRouteProp = RouteProp<RootStackParamList, 'Team'>;
+type TeamScreenRouteProp = RouteProp<TournamentStackParamList, 'Team'>;
 
 export const TeamScreen = () => {
   const theme = useTheme();
+  const { tournamentTheme } = useTournamentTheme();
   const route = useRoute<TeamScreenRouteProp>();
   const {
     leagueId,
@@ -46,7 +48,7 @@ export const TeamScreen = () => {
     teamName: initialTeamName,
     playerIds,
     tournamentStartTime,
-  } = route.params;
+  } = route.params ?? {};
 
   const {
     teamName,
@@ -101,7 +103,7 @@ export const TeamScreen = () => {
 
   if (isLoading) {
     return (
-      <ScreenWrapper title={screenTitle}>
+      <ScreenWrapper title={screenTitle} headerBackgroundColor={tournamentTheme.primary}>
         <Container style={{ paddingHorizontal: 16, paddingTop: 16 }}>
           <SectionTitle>Loading players...</SectionTitle>
           {Array(4)
@@ -116,7 +118,7 @@ export const TeamScreen = () => {
 
   if (isError) {
     return (
-      <ScreenWrapper title={screenTitle}>
+      <ScreenWrapper title={screenTitle} headerBackgroundColor={tournamentTheme.primary}>
         <ErrorContainer>
           <ErrorIcon>⚠️</ErrorIcon>
           <ErrorTitle>Something went wrong</ErrorTitle>
@@ -131,7 +133,7 @@ export const TeamScreen = () => {
 
   if (hasNoPlayers && !isEditMode) {
     return (
-      <ScreenWrapper title={screenTitle}>
+      <ScreenWrapper title={screenTitle} headerBackgroundColor={tournamentTheme.primary}>
         <ErrorContainer>
           <ErrorIcon>🏌️</ErrorIcon>
           <ErrorTitle>No Players Available</ErrorTitle>
@@ -147,7 +149,7 @@ export const TeamScreen = () => {
   const stepLabels = groupNames.map((name) => `Group ${name}`);
 
   return (
-    <ScreenWrapper title={screenTitle}>
+    <ScreenWrapper title={screenTitle} headerBackgroundColor={tournamentTheme.primary}>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1 }}
@@ -270,6 +272,7 @@ export const TeamScreen = () => {
               loading={isPending}
               variant="secondary"
               style={{ flex: 1, marginLeft: 8 }}
+              primaryColor={tournamentTheme.primary}
             />
           ) : (
             <Button
@@ -278,6 +281,7 @@ export const TeamScreen = () => {
               disabled={isLastStep && !allGroupsSelected}
               style={{ flex: 1, marginLeft: 8 }}
               variant="secondary"
+              primaryColor={tournamentTheme.primary}
             />
           )}
         </FloatingButtonContainer>

@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
-import type { RootStackParamList } from '~/navigation/types';
+import type { TournamentStackParamList } from '~/navigation/types';
 import { ApiError } from '~/services/apis/apiClient';
 import { useGetPlayerProfiles } from '~/services/apis/PlayerProfile/useGetPlayerProfiles';
 import type { TeamPlayer } from '~/services/apis/Team/types';
@@ -24,7 +24,7 @@ interface TeamScreenParams {
 }
 
 export const useTeamScreen = (leagueId: string, joinCode?: string, params?: TeamScreenParams) => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<TournamentStackParamList>>();
   const { showAlert } = useAlert();
 
   const isEditMode = !!params?.teamId;

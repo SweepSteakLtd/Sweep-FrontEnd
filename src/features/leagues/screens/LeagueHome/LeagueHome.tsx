@@ -5,7 +5,8 @@ import React from 'react';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import type { RootStackParamList } from '~/navigation/types';
+import { useTournamentTheme } from '~/context/TournamentThemeContext';
+import type { TournamentStackParamList } from '~/navigation/types';
 import { HolesInfoCarousel } from '../../components/HolesInfoCarousel/HolesInfoCarousel';
 import { HowToPlay } from '../../components/HowToPlay/HowToPlay';
 import { LeagueDates } from '../../components/LeagueDates/LeagueDates';
@@ -15,15 +16,16 @@ import { PrivateLeagueGate } from '../../components/PrivateLeagueGate/PrivateLea
 import { TournamentBanner } from '../../components/TournamentBanner/TournamentBanner';
 import { useLeague } from '../../hooks/useLeague';
 import { LeagueHomeSkeleton } from './LeagueHomeSkeleton';
-import { ButtonsContainer, Container, ScrollContent } from './styles';
+import { ButtonsContainer, Container, HeaderSection, ScrollContent } from './styles';
 
-type LeagueHomeRouteProp = RouteProp<RootStackParamList, 'LeagueHome'>;
+type LeagueHomeRouteProp = RouteProp<TournamentStackParamList, 'LeagueHome'>;
 
 export const LeagueHome = () => {
   const theme = useTheme();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { tournamentTheme } = useTournamentTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<TournamentStackParamList>>();
   const route = useRoute<LeagueHomeRouteProp>();
-  const { leagueId, joinCode: routeJoinCode } = route.params;
+  const { leagueId, joinCode: routeJoinCode } = route.params ?? {};
 
   const {
     league,
@@ -63,17 +65,19 @@ export const LeagueHome = () => {
   }
 
   return (
-    <ScreenWrapper title="League Home">
+    <ScreenWrapper title="League Home" headerBackgroundColor={tournamentTheme.primary}>
       <Container>
         <ScrollContent>
-          <LeagueHeader
-            leagueName={league?.name}
-            yourEntries={currentEntries}
-            totalTeams={totalTeams}
-            totalPot={totalPot}
-            joinCode={joinCode}
-            isOwner={isOwner}
-          />
+          <HeaderSection backgroundColor={tournamentTheme.secondary}>
+            <LeagueHeader
+              leagueName={league?.name}
+              yourEntries={currentEntries}
+              totalTeams={totalTeams}
+              totalPot={totalPot}
+              joinCode={joinCode}
+              isOwner={isOwner}
+            />
+          </HeaderSection>
 
           <TournamentBanner tournament={tournament} />
 
@@ -86,6 +90,7 @@ export const LeagueHome = () => {
                   navigation.navigate('Team', { leagueId, joinCode: submittedJoinCode });
                 }}
                 fullWidth
+                primaryColor={tournamentTheme.primary}
               />
             )}
             <Button

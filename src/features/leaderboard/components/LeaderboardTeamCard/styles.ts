@@ -71,7 +71,7 @@ export const ScoreContainer = styled.View`
 export const TotalScore = styled.Text`
   font-size: 16px;
   font-weight: 700;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
 `;
 
 export const BestScoresLabel = styled.Text`
@@ -87,7 +87,7 @@ export const BestScores = styled.Text`
 `;
 
 export const PrizeContainer = styled.View`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary}20;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
   padding: 2px 6px;
   border-radius: 4px;
 `;
@@ -95,7 +95,7 @@ export const PrizeContainer = styled.View`
 export const PrizeAmount = styled.Text`
   font-size: 10px;
   font-weight: 700;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
 `;
 
 export const ExpandButton = styled.View`

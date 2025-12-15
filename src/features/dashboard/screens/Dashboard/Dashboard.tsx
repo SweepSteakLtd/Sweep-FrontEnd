@@ -40,9 +40,12 @@ export const Dashboard = () => {
   };
 
   const handleTournamentPress = (tournament: Tournament) => {
-    // Navigate to the games listing screen for this tournament
+    // Navigate to the tournament navigator with colors for theming
     if (tournament.id) {
-      navigation.navigate('TournamentLeagues', { tournamentId: tournament.id });
+      navigation.navigate('Tournament', {
+        tournamentId: tournament.id,
+        tournamentColors: tournament.colours,
+      });
     }
   };
 

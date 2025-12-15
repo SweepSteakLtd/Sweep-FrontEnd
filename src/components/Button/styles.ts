@@ -4,7 +4,12 @@ import type { Theme } from '~/theme/theme';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'link' | 'circular';
 
-export const getBackgroundColor = (variant: ButtonVariant, disabled: boolean, theme: Theme) => {
+export const getBackgroundColor = (
+  variant: ButtonVariant,
+  disabled: boolean,
+  theme: Theme,
+  primaryColor?: string,
+) => {
   if (variant === 'link') return 'transparent';
   if (variant === 'circular') return theme.colors.white;
   if (disabled) return '#8b8b8b';
@@ -13,7 +18,7 @@ export const getBackgroundColor = (variant: ButtonVariant, disabled: boolean, th
     case 'primary':
       return theme.colors.button.primary;
     case 'secondary':
-      return theme.colors.primary;
+      return primaryColor || theme.colors.primary;
     case 'outline':
       return 'transparent';
     default:
@@ -47,6 +52,7 @@ interface StyledButtonProps {
   disabled: boolean;
   fullWidth: boolean;
   backgroundColor?: string;
+  primaryColor?: string;
 }
 
 export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
@@ -55,8 +61,9 @@ export const StyledButton = styled(TouchableOpacity)<StyledButtonProps>`
     variant,
     disabled,
     backgroundColor,
+    primaryColor,
   }: StyledButtonProps & { theme: Theme }) =>
-    backgroundColor || getBackgroundColor(variant, disabled, theme)};
+    backgroundColor || getBackgroundColor(variant, disabled, theme, primaryColor)};
   padding: ${({ variant }: StyledButtonProps) => {
     if (variant === 'link') return '8px';
     if (variant === 'circular') return '8px';

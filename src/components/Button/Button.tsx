@@ -12,6 +12,7 @@ interface ButtonProps extends TouchableOpacityProps {
   loading?: boolean;
   fullWidth?: boolean;
   backgroundColor?: string;
+  primaryColor?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -22,6 +23,7 @@ export const Button: React.FC<ButtonProps> = ({
   loading = false,
   fullWidth = true,
   backgroundColor,
+  primaryColor,
   ...props
 }) => {
   const theme = useTheme();
@@ -64,6 +66,7 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       fullWidth={fullWidth}
       backgroundColor={backgroundColor}
+      primaryColor={primaryColor}
       {...props}
     >
       {renderContent()}

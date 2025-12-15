@@ -31,6 +31,7 @@ interface JoinLeagueListProps {
   onSearchChange?: (query: string) => void;
   activeLeagueTab?: string;
   onLeagueTabChange?: (tab: string) => void;
+  activeTabColor?: string;
 }
 
 const leagueTabs = [
@@ -50,6 +51,7 @@ export const JoinLeagueList = ({
   onSearchChange,
   activeLeagueTab = 'featured',
   onLeagueTabChange,
+  activeTabColor,
 }: JoinLeagueListProps) => {
   const theme = useTheme();
 
@@ -95,6 +97,7 @@ export const JoinLeagueList = ({
           activeTab={activeLeagueTab}
           onTabPress={onLeagueTabChange || (() => {})}
           loading={false}
+          activeColor={activeTabColor}
         />
       </SearchAndTabsWrapper>
 
@@ -112,7 +115,7 @@ export const JoinLeagueList = ({
             icon={<PlusIcon size={24} color="white" />}
             onPress={onCreateLeague}
             fullWidth={false}
-            backgroundColor={theme.colors.primary}
+            backgroundColor={activeTabColor || theme.colors.primary}
           />
         )}
       </SearchAndCreateRow>

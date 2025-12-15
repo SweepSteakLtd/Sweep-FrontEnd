@@ -1,9 +1,21 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
+import { hexWithOpacity } from '~/utils/color';
+
+interface HeaderSectionProps {
+  backgroundColor?: string;
+}
 
 export const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
+`;
+
+export const HeaderSection = styled.View<HeaderSectionProps>`
+  background-color: ${({ backgroundColor }: HeaderSectionProps) =>
+    backgroundColor ? hexWithOpacity(backgroundColor, 0.2) : 'transparent'};
+  padding-bottom: 16px;
+  margin-bottom: 16px;
 `;
 
 export const ScrollContent = styled.ScrollView.attrs({

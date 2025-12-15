@@ -4,8 +4,10 @@ import { Platform, RefreshControl, UIManager } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
-import type { RootStackScreenProps } from '~/navigation/types';
+import { useTournamentTheme } from '~/context/TournamentThemeContext';
+import type { TournamentStackScreenProps } from '~/navigation/types';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
+import { hexWithOpacity } from '~/utils/color';
 import { LeaderboardHeader } from '../../components/LeaderboardHeader/LeaderboardHeader';
 import { LeaderboardTeamCard } from '../../components/LeaderboardTeamCard/LeaderboardTeamCard';
 import { LeaderboardSkeleton } from './LeaderboardSkeleton';
@@ -19,7 +21,8 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 export const Leaderboard = () => {
   const theme = useTheme();
-  const route = useRoute<RootStackScreenProps<'Leaderboard'>['route']>();
+  const { tournamentTheme } = useTournamentTheme();
+  const route = useRoute<TournamentStackScreenProps<'Leaderboard'>['route']>();
   const { leagueId } = route.params;
   const [openSwipeableId, setOpenSwipeableId] = useState<string | null>(null);
 
@@ -109,7 +112,11 @@ export const Leaderboard = () => {
   }
 
   return (
-    <ScreenWrapper title="Leaderboard">
+    <ScreenWrapper
+      title="Leaderboard"
+      headerBackgroundColor={tournamentTheme.primary}
+      contentBackgroundColor={hexWithOpacity(tournamentTheme.secondary, 0.1)}
+    >
       <Container>
         <Animated.FlatList
           data={filteredEntries}
@@ -125,7 +132,7 @@ export const Leaderboard = () => {
             <RefreshControl
               refreshing={isRefetching}
               onRefresh={onRefresh}
-              tintColor={theme.colors.primary}
+              tintColor={tournamentTheme.primary}
             />
           }
         />

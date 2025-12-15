@@ -5,6 +5,7 @@ interface TabProps {
   active: boolean;
   isLast: boolean;
   theme: Theme;
+  activeColor?: string;
 }
 
 interface TabTextProps {
@@ -24,8 +25,8 @@ export const Tab = styled.TouchableOpacity<TabProps>`
   padding: 10px 16px;
   margin-right: ${({ isLast }: TabProps) => (isLast ? '0px' : '4px')};
   border-radius: 8px;
-  background-color: ${({ active, theme }: TabProps) =>
-    active ? theme.colors.primary : 'transparent'};
+  background-color: ${({ active, activeColor, theme }: TabProps) =>
+    active ? activeColor || theme.colors.primary : 'transparent'};
   border-width: 0px;
   border-color: transparent;
   min-width: auto;

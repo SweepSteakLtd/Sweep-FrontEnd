@@ -170,7 +170,7 @@ export const ScenarioOption = styled.TouchableOpacity<{ selected: boolean }>`
   padding: 16px;
   border-radius: 12px;
   background-color: ${({ selected, theme }: { selected: boolean; theme: Theme }) =>
-    selected ? theme.colors.primary + '15' : theme.colors.card};
+    selected ? theme.colors.backgroundLight : theme.colors.card};
   border-width: 2px;
   border-color: ${({ selected, theme }: { selected: boolean; theme: Theme }) =>
     selected ? theme.colors.primary : theme.colors.border};

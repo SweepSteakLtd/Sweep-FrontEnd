@@ -11,6 +11,7 @@ export interface CoverCardProps {
   titleSize?: number;
   titleWeight?: '400' | '500' | '600' | '700';
   overlayPadding?: number;
+  accentColor?: string;
 }
 
 export const CoverCard = ({
@@ -23,6 +24,7 @@ export const CoverCard = ({
   titleSize = 18,
   titleWeight = '700',
   overlayPadding = 16,
+  accentColor,
 }: CoverCardProps) => {
   const defaultImage =
     imageUri || 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=800&h=400&fit=crop';
@@ -31,7 +33,7 @@ export const CoverCard = ({
     <CardWrapper>
       <Card onPress={onPress} activeOpacity={onPress ? 0.8 : 1} disabled={!onPress} height={height}>
         <CoverImage source={{ uri: defaultImage }} resizeMode="cover" />
-        <Overlay padding={overlayPadding}>
+        <Overlay padding={overlayPadding} accentColor={accentColor}>
           {children ? (
             children
           ) : (

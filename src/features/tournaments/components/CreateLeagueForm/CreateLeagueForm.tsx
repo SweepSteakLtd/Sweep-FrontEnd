@@ -19,6 +19,7 @@ interface CreateLeagueFormProps {
   defaultLeagueType?: 'public' | 'private';
   onSuccess?: (leagueId: string, leagueName: string, isPrivate: boolean, joinCode?: string) => void;
   onSubmit?: (handleCreateLeague: () => Promise<void>) => void;
+  activeColor?: string;
 }
 
 interface FieldErrors extends Record<string, string | undefined> {
@@ -37,6 +38,7 @@ export const CreateLeagueForm = ({
   defaultLeagueType = 'public',
   onSuccess,
   onSubmit,
+  activeColor,
 }: CreateLeagueFormProps) => {
   const theme = useTheme();
   const createLeagueMutation = useCreateLeague();
@@ -165,6 +167,7 @@ export const CreateLeagueForm = ({
             <Switch
               value={leagueType === 'private'}
               onValueChange={(value) => setLeagueType(value ? 'private' : 'public')}
+              activeColor={activeColor}
             />
             <SwitchLabel isActive={leagueType === 'private'}>Private</SwitchLabel>
           </View>

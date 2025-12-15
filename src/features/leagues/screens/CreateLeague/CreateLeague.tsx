@@ -5,14 +5,15 @@ import { useState } from 'react';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import { CreateLeagueForm } from '~/features/tournaments/components/CreateLeagueForm/CreateLeagueForm';
-import type { RootStackParamList } from '~/navigation/types';
+import type { TournamentStackParamList } from '~/navigation/types';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { LeagueCreatedSuccess } from '../../components/LeagueCreatedSuccess/LeagueCreatedSuccess';
 import { ButtonContainer, Container } from './styles';
 
-type CreateLeagueRouteProp = RouteProp<RootStackParamList, 'CreateLeague'>;
-type CreateLeagueNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type CreateLeagueRouteProp = RouteProp<TournamentStackParamList, 'CreateLeague'>;
+type CreateLeagueNavigationProp = NativeStackNavigationProp<TournamentStackParamList>;
 
 type CreatedLeagueState = {
   leagueId: string;
@@ -24,6 +25,7 @@ type CreatedLeagueState = {
 export const CreateLeague = () => {
   const route = useRoute<CreateLeagueRouteProp>();
   const navigation = useNavigation<CreateLeagueNavigationProp>();
+  const { tournamentTheme } = useTournamentTheme();
   const { data: tournaments = [] } = useGetTournaments();
 
   const [createdLeague, setCreatedLeague] = useState<CreatedLeagueState>(null);
@@ -69,20 +71,21 @@ export const CreateLeague = () => {
   // Show success screen after league is created
   if (createdLeague) {
     return (
-      <ScreenWrapper title="League Created">
+      <ScreenWrapper title="League Created" headerBackgroundColor={tournamentTheme.primary}>
         <LeagueCreatedSuccess
           leagueName={createdLeague.leagueName}
           tournamentName={activeTournament?.name || ''}
           joinCode={createdLeague.joinCode}
           isPrivate={createdLeague.isPrivate}
           onViewLeague={handleViewLeague}
+          primaryColor={tournamentTheme.primary}
         />
       </ScreenWrapper>
     );
   }
 
   return (
-    <ScreenWrapper title="Create League">
+    <ScreenWrapper title="Create League" headerBackgroundColor={tournamentTheme.primary}>
       <Container>
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
@@ -96,6 +99,7 @@ export const CreateLeague = () => {
             defaultLeagueType={route.params.defaultLeagueType}
             onSuccess={handleSuccess}
             onSubmit={handleSubmit}
+            activeColor={tournamentTheme.primary}
           />
         </KeyboardAwareScrollView>
         <KeyboardStickyView>
@@ -105,6 +109,7 @@ export const CreateLeague = () => {
               onPress={handleCreateLeague}
               loading={isLoading}
               title="Create League"
+              primaryColor={tournamentTheme.primary}
             />
           </ButtonContainer>
         </KeyboardStickyView>

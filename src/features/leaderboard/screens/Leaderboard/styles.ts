@@ -3,12 +3,11 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
 `;
 
 export const SearchContainer = styled.View`
-  margin-bottom: 12px;
   padding-horizontal: 16px;
+  margin-bottom: 12px;
 `;
 
 export const CardWrapper = styled.View`

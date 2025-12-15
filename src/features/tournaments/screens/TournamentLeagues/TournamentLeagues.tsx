@@ -3,12 +3,12 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
-import { useTheme } from 'styled-components/native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import { JoinLeagueList } from '~/features/tournaments/components/JoinLeagueList/JoinLeagueList';
 import { useDebouncedValue } from '~/hooks/useDebouncedValue';
-import type { RootStackParamList } from '~/navigation/types';
+import type { TournamentStackParamList } from '~/navigation/types';
 import type { League } from '~/services/apis/League/types';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
@@ -18,6 +18,7 @@ import {
   Container,
   EmptyState,
   GlobalStatsContainer,
+  HeaderSection,
   PotInfo,
   PotLabel,
   StatItem,
@@ -27,13 +28,13 @@ import {
 } from './styles';
 import { TournamentLeaguesSkeleton } from './TournamentLeaguesSkeleton';
 
-type TournamentLeaguesRouteProp = RouteProp<RootStackParamList, 'TournamentLeagues'>;
-type TournamentLeaguesNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type TournamentLeaguesRouteProp = RouteProp<TournamentStackParamList, 'TournamentLeagues'>;
+type TournamentLeaguesNavigationProp = NativeStackNavigationProp<TournamentStackParamList>;
 
 export const TournamentLeagues = () => {
   const route = useRoute<TournamentLeaguesRouteProp>();
   const navigation = useNavigation<TournamentLeaguesNavigationProp>();
-  const theme = useTheme();
+  const { tournamentTheme } = useTournamentTheme();
 
   const tournamentId = route.params?.tournamentId || '';
   const [activeGameTab, setActiveGameTab] = useState('featured');
@@ -170,7 +171,7 @@ export const TournamentLeagues = () => {
   }
 
   return (
-    <ScreenWrapper title="Tournament">
+    <ScreenWrapper title="Tournament" headerBackgroundColor={tournamentTheme.primary}>
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -178,32 +179,33 @@ export const TournamentLeagues = () => {
             <RefreshControl
               refreshing={leaguesFetching && leagues.length > 0}
               onRefresh={handleRefresh}
-              tintColor={theme.colors.primary}
+              tintColor={tournamentTheme.primary}
             />
           }
         >
-          {currentTournament?.name && <TournamentName>{currentTournament.name}</TournamentName>}
-          <PotInfo>
-            <PotLabel>Total Staked</PotLabel>
-            <AnimatedAmount
-              value={penceToPounds(totalPotForTournament)}
-              variant="title"
-              color={theme.colors.primary}
-              align="center"
-              weight="bold"
-              decimals={2}
-            />
-          </PotInfo>
-          <GlobalStatsContainer>
-            <StatItem>
-              <StatValue>{totalLeagues}</StatValue>
-              <StatLabel>Leagues</StatLabel>
-            </StatItem>
-            <StatItem>
-              <StatValue>{totalEntrants}</StatValue>
-              <StatLabel>Entrants</StatLabel>
-            </StatItem>
-          </GlobalStatsContainer>
+          <HeaderSection backgroundColor={tournamentTheme.secondary}>
+            {currentTournament?.name && <TournamentName>{currentTournament.name}</TournamentName>}
+            <PotInfo>
+              <PotLabel>Total Staked</PotLabel>
+              <AnimatedAmount
+                value={penceToPounds(totalPotForTournament)}
+                variant="title"
+                align="center"
+                weight="bold"
+                decimals={2}
+              />
+            </PotInfo>
+            <GlobalStatsContainer>
+              <StatItem>
+                <StatValue>{totalLeagues}</StatValue>
+                <StatLabel>Leagues</StatLabel>
+              </StatItem>
+              <StatItem>
+                <StatValue>{totalEntrants}</StatValue>
+                <StatLabel>Entrants</StatLabel>
+              </StatItem>
+            </GlobalStatsContainer>
+          </HeaderSection>
           <JoinLeagueList
             leagues={leagues}
             userPrivateLeagues={userPrivateLeagues}
@@ -214,6 +216,7 @@ export const TournamentLeagues = () => {
             onSearchChange={setCurrentSearchQuery}
             activeLeagueTab={activeGameTab}
             onLeagueTabChange={handleGameTabChange}
+            activeTabColor={tournamentTheme.primary}
           />
         </ScrollView>
       </Container>

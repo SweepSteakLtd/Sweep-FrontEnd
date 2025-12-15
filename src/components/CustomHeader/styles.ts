@@ -1,12 +1,18 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 
-export const SafeAreaContainer = styled.View`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
+interface BackgroundColorProps {
+  backgroundColor?: string;
+}
+
+export const SafeAreaContainer = styled.View<BackgroundColorProps>`
+  background-color: ${({ backgroundColor, theme }: BackgroundColorProps & { theme: Theme }) =>
+    backgroundColor || theme.colors.primary};
 `;
 
-export const Container = styled.View`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
+export const Container = styled.View<BackgroundColorProps>`
+  background-color: ${({ backgroundColor, theme }: BackgroundColorProps & { theme: Theme }) =>
+    backgroundColor || theme.colors.primary};
 `;
 
 export const HeaderContent = styled.View`

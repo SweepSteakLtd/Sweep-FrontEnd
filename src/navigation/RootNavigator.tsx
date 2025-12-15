@@ -16,10 +16,7 @@ import { StakeLimits } from '~/features/betting-controls/screens/StakeLimits/Sta
 import { CreateProfile } from '~/features/create-profile/screens/CreateProfile/CreateProfile';
 import { Dashboard } from '~/features/dashboard/screens/Dashboard/Dashboard';
 import { HoleDetailModal } from '~/features/holes/screens/HoleDetailModal/HoleDetailModal';
-import { Leaderboard } from '~/features/leaderboard/screens/Leaderboard/Leaderboard';
-import { CreateLeague } from '~/features/leagues/screens/CreateLeague/CreateLeague';
 import { JoinCodeModal } from '~/features/leagues/screens/JoinCodeModal/JoinCodeModal';
-import { LeagueHome } from '~/features/leagues/screens/LeagueHome/LeagueHome';
 import { Legal } from '~/features/legal/screens/Legal/Legal';
 import { TermsAndConditions } from '~/features/legal/screens/TermsAndConditions/TermsAndConditions';
 import { MyLeagues } from '~/features/my-leagues/screens/MyLeagues/MyLeagues';
@@ -30,12 +27,11 @@ import { Withdraw } from '~/features/payment/screens/Withdraw/Withdraw';
 import { Profile } from '~/features/profile/screens/Profile/Profile';
 import { Settings } from '~/features/settings/screens/Settings/Settings';
 import { Support } from '~/features/support/screens/Support/Support';
-import { TeamScreen } from '~/features/teams/screens/CreateTeam/CreateTeam';
 import { TestUpload } from '~/features/test-upload/screens/TestUpload/TestUpload';
-import { TournamentLeagues } from '~/features/tournaments/screens/TournamentLeagues/TournamentLeagues';
 import { DocumentUpload } from '~/features/verification/screens/DocumentUpload/DocumentUpload';
 import { VerificationPending } from '~/features/verification/screens/VerificationPending/VerificationPending';
 import { navigationRef } from './navigationRef';
+import { TournamentNavigator } from './TournamentNavigator';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -121,13 +117,9 @@ export const RootNavigator = () => {
         <Stack.Screen name="StakeLimits" component={StakeLimits} />
         <Stack.Screen name="SpendLimit" component={SpendLimit} />
         <Stack.Screen name="SelfExclusion" component={SelfExclusion} />
-        <Stack.Screen name="TournamentLeagues" component={TournamentLeagues} />
-        <Stack.Screen name="LeagueHome" component={LeagueHome} />
-        <Stack.Screen name="CreateLeague" component={CreateLeague} />
-        <Stack.Screen name="Team" component={TeamScreen} />
+        <Stack.Screen name="Tournament" component={TournamentNavigator} />
         <Stack.Screen name="MyTeams" component={MyTeams} />
         <Stack.Screen name="MyLeagues" component={MyLeagues} />
-        <Stack.Screen name="Leaderboard" component={Leaderboard} />
         <Stack.Screen name="Deposit" component={Deposit} />
         <Stack.Screen name="Withdraw" component={Withdraw} />
         <Stack.Screen name="Settings" component={Settings} />

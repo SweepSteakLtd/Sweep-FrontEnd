@@ -6,7 +6,13 @@ import { Avatar } from '../Avatar/Avatar';
 import { Button } from '../Button/Button';
 import { CustomHeader } from '../CustomHeader/CustomHeader';
 import { BackArrowIcon } from '../Icon/BackArrowIcon';
-import { Container, ProfileBalance, ProfileButton } from './styles';
+import {
+  Container,
+  OuterContainer,
+  ProfileBalance,
+  ProfileButton,
+  StatusBarBackground,
+} from './styles';
 
 interface ScreenWrapperProps {
   children: React.ReactNode;
@@ -15,6 +21,8 @@ interface ScreenWrapperProps {
   showBackButton?: boolean;
   showProfile?: boolean;
   rightComponent?: React.ReactNode;
+  headerBackgroundColor?: string;
+  contentBackgroundColor?: string;
 }
 
 export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
@@ -24,6 +32,8 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   showBackButton = true,
   showProfile = false,
   rightComponent,
+  headerBackgroundColor,
+  contentBackgroundColor,
 }) => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -61,15 +71,19 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   ) : null;
 
   return (
-    <Container>
-      {showHeader && (
-        <CustomHeader
-          title={headerTitle}
-          leftComponent={backButtonComponent}
-          rightComponent={rightComponent || profileComponent}
-        />
-      )}
-      {children}
-    </Container>
+    <OuterContainer contentBackgroundColor={contentBackgroundColor}>
+      {showHeader && <StatusBarBackground backgroundColor={headerBackgroundColor} />}
+      <Container>
+        {showHeader && (
+          <CustomHeader
+            title={headerTitle}
+            leftComponent={backButtonComponent}
+            rightComponent={rightComponent || profileComponent}
+            backgroundColor={headerBackgroundColor}
+          />
+        )}
+        {children}
+      </Container>
+    </OuterContainer>
   );
 };

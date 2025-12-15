@@ -13,9 +13,16 @@ interface TabBarProps {
   activeTab: string;
   onTabPress: (tabId: string) => void;
   loading?: boolean;
+  activeColor?: string;
 }
 
-export const TabBar = ({ tabs, activeTab, onTabPress, loading = false }: TabBarProps) => {
+export const TabBar = ({
+  tabs,
+  activeTab,
+  onTabPress,
+  loading = false,
+  activeColor,
+}: TabBarProps) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const tabRefs = useRef<{ [key: string]: View | null }>({});
 
@@ -79,6 +86,7 @@ export const TabBar = ({ tabs, activeTab, onTabPress, loading = false }: TabBarP
                 isLast={isLast}
                 onPress={() => onTabPress(tab.id)}
                 activeOpacity={0.7}
+                activeColor={activeColor}
               >
                 <TabText active={isActive}>{tab.label}</TabText>
               </Tab>

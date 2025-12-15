@@ -32,13 +32,19 @@ interface OverlayProps {
   padding: number;
 }
 
-export const Overlay = styled.View<OverlayProps>`
+interface OverlayPropsWithAccent extends OverlayProps {
+  accentColor?: string;
+}
+
+export const Overlay = styled.View<OverlayPropsWithAccent>`
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: ${({ padding }: OverlayProps) => padding}px;
+  padding: ${({ padding }: OverlayPropsWithAccent) => padding}px;
   background-color: rgba(0, 0, 0, 0.6);
+  border-bottom-width: ${({ accentColor }: OverlayPropsWithAccent) => (accentColor ? 4 : 0)}px;
+  border-bottom-color: ${({ accentColor }: OverlayPropsWithAccent) => accentColor || 'transparent'};
 `;
 
 interface TitleProps {

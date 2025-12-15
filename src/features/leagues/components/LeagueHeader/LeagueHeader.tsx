@@ -11,6 +11,7 @@ import {
   InfoLabel,
   InfoRow,
   InfoValue,
+  InfoWrapper,
   LeagueName,
 } from './styles';
 
@@ -45,37 +46,39 @@ export const LeagueHeader = ({
           <JoinCodeCard joinCode={joinCode} leagueName={leagueName} />
         </CodeCardWrapper>
       )}
-      <InfoRow>
-        <InfoItem>
-          <InfoIcon>
-            <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
-              📝
-            </Typography>
-          </InfoIcon>
-          <InfoLabel>YOUR ENTRIES</InfoLabel>
-          <InfoValue>{yourEntries}</InfoValue>
-        </InfoItem>
+      <InfoWrapper>
+        <InfoRow>
+          <InfoItem>
+            <InfoIcon>
+              <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
+                📝
+              </Typography>
+            </InfoIcon>
+            <InfoLabel>YOUR ENTRIES</InfoLabel>
+            <InfoValue>{yourEntries}</InfoValue>
+          </InfoItem>
 
-        <InfoItem>
-          <InfoIcon>
-            <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
-              👥
-            </Typography>
-          </InfoIcon>
-          <InfoLabel>TEAMS</InfoLabel>
-          <InfoValue>{totalTeams}</InfoValue>
-        </InfoItem>
+          <InfoItem>
+            <InfoIcon>
+              <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
+                👥
+              </Typography>
+            </InfoIcon>
+            <InfoLabel>TEAMS</InfoLabel>
+            <InfoValue>{totalTeams}</InfoValue>
+          </InfoItem>
 
-        <InfoItem>
-          <InfoIcon>
-            <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
-              🏆
-            </Typography>
-          </InfoIcon>
-          <InfoLabel>TOTAL POT</InfoLabel>
-          <InfoValue>{formatCurrency(totalPot)}</InfoValue>
-        </InfoItem>
-      </InfoRow>
+          <InfoItem>
+            <InfoIcon>
+              <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
+                🏆
+              </Typography>
+            </InfoIcon>
+            <InfoLabel>TOTAL POT</InfoLabel>
+            <InfoValue>{formatCurrency(totalPot)}</InfoValue>
+          </InfoItem>
+        </InfoRow>
+      </InfoWrapper>
     </Container>
   );
 };

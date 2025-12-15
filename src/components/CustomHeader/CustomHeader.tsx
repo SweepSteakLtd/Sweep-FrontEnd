@@ -14,12 +14,14 @@ interface CustomHeaderProps {
   title?: string;
   leftComponent?: React.ReactNode;
   rightComponent?: React.ReactNode;
+  backgroundColor?: string;
 }
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({
   title,
   leftComponent,
   rightComponent,
+  backgroundColor,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -27,8 +29,8 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
   const topPadding = Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight || 0;
 
   return (
-    <SafeAreaContainer style={{ paddingTop: topPadding }}>
-      <Container>
+    <SafeAreaContainer style={{ paddingTop: topPadding }} backgroundColor={backgroundColor}>
+      <Container backgroundColor={backgroundColor}>
         <HeaderContent>
           <LeftSection>{leftComponent}</LeftSection>
           {title && <Title numberOfLines={1}>{title}</Title>}

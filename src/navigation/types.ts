@@ -1,5 +1,28 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
+// Tournament colors type for navigation params
+export type TournamentColors = {
+  primary?: string;
+  secondary?: string;
+  highlight?: string;
+};
+
+// Tournament stack (nested navigator)
+export type TournamentStackParamList = {
+  TournamentLeagues: { tournamentId: string };
+  LeagueHome: { leagueId: string; joinCode?: string };
+  CreateLeague: { tournamentId: string; defaultLeagueType?: 'public' | 'private' };
+  Team: {
+    leagueId: string;
+    joinCode?: string;
+    teamId?: string;
+    teamName?: string;
+    playerIds?: string[];
+    tournamentStartTime?: string;
+  };
+  Leaderboard: { leagueId: string };
+};
+
 export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
@@ -15,17 +38,12 @@ export type RootStackParamList = {
   Security: undefined;
   Settings: undefined;
   Activity: undefined;
-  TournamentLeagues: { tournamentId: string };
-  CreateLeague: { tournamentId: string; defaultLeagueType?: 'public' | 'private' };
-  LeagueHome: { leagueId: string; joinCode?: string };
-  Team: {
-    leagueId: string;
-    joinCode?: string;
-    // Edit/View mode params (when coming from MyTeams)
-    teamId?: string;
-    teamName?: string;
-    playerIds?: string[];
-    tournamentStartTime?: string;
+  // Tournament nested navigator
+  Tournament: {
+    tournamentId: string;
+    tournamentColors?: TournamentColors;
+    screen?: keyof TournamentStackParamList;
+    params?: TournamentStackParamList[keyof TournamentStackParamList];
   };
   BettingControls: undefined;
   DepositLimits: undefined;
@@ -58,9 +76,6 @@ export type RootStackParamList = {
     distance: number;
     imageUri?: string;
   };
-  Leaderboard: {
-    leagueId: string;
-  };
   TestUpload: undefined;
   DocumentUpload: undefined;
   Legal: undefined;
@@ -71,6 +86,9 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeSta
   RootStackParamList,
   T
 >;
+
+export type TournamentStackScreenProps<T extends keyof TournamentStackParamList> =
+  NativeStackScreenProps<TournamentStackParamList, T>;
 
 declare global {
   namespace ReactNavigation {

@@ -137,6 +137,11 @@ export const tournamentsListMock = {
       maximum_cut_amount: 50,
       maximum_score_generator: 100,
       players: samplePlayers,
+      colours: {
+        primary: '#1a5f2a', // Masters green
+        secondary: '#d4af37', // Gold
+        highlight: '#2e7d32', // Lighter green
+      },
       rules: [
         'Each player must select their team before the tournament starts',
         'Points are awarded based on player performance in each round',
@@ -168,6 +173,11 @@ export const tournamentsListMock = {
       maximum_cut_amount: 40,
       maximum_score_generator: 90,
       players: samplePlayers,
+      colours: {
+        primary: '#003366', // The Open navy blue
+        secondary: '#c5a96d', // Gold/tan
+        highlight: '#1a4d80', // Lighter navy
+      },
       rules: [
         'Each player must select their team before the tournament starts',
         'Points are awarded based on player performance in each round',
@@ -199,6 +209,11 @@ export const tournamentsListMock = {
       maximum_cut_amount: 30,
       maximum_score_generator: 80,
       players: samplePlayers,
+      colours: {
+        primary: '#0066cc', // TPC blue
+        secondary: '#ffffff', // White
+        highlight: '#3385d6', // Lighter blue
+      },
       rules: [
         'Each player must select their team before the tournament starts',
         'Points are awarded based on player performance in each round',
@@ -230,6 +245,11 @@ export const tournamentsListMock = {
       maximum_cut_amount: 60,
       maximum_score_generator: 110,
       players: samplePlayers,
+      colours: {
+        primary: '#041e42', // PGA dark blue
+        secondary: '#ffc72c', // Gold/yellow
+        highlight: '#1a3a5c', // Lighter dark blue
+      },
       rules: [
         'Each player must select their team before the tournament starts',
         'Points are awarded based on player performance in each round',
@@ -265,6 +285,11 @@ export const tournamentDetailMock = {
     maximum_cut_amount: 50,
     maximum_score_generator: 100,
     players: samplePlayers,
+    colours: {
+      primary: '#1a5f2a', // Masters green
+      secondary: '#d4af37', // Gold
+      highlight: '#2e7d32', // Lighter green
+    },
     rules: [
       'Each player must select their team before the tournament starts',
       'Points are awarded based on player performance in each round',
