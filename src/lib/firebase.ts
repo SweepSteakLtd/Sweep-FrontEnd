@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 // @ts-ignore - getReactNativePersistence exists in the React Native bundle but is missing from TypeScript definitions
 import { getReactNativePersistence, initializeAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,3 +22,5 @@ const app = initializeApp(firebaseConfig);
 export const firebaseAuth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
+
+export const firebaseStorage = getStorage(app);

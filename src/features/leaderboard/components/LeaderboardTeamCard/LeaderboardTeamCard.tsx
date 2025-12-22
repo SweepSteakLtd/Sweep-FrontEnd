@@ -168,7 +168,7 @@ export const LeaderboardTeamCard = ({
 
         <ScoreContainer>
           <TotalScore>{formatScore(entry.total)}</TotalScore>
-          <BestScoresLabel>Best 3</BestScoresLabel>
+          <BestScoresLabel>Best {bestScores.length}</BestScoresLabel>
           <BestScores>
             {bestScores.length > 0 ? bestScores.map((score) => formatScore(score)).join(', ') : '-'}
           </BestScores>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { Image, Modal, RefreshControl, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
@@ -11,6 +11,7 @@ import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useDeleteUser } from '~/services/apis/User/useDeleteUser';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
+import { useUploadProfilePhoto } from '../../hooks/useUploadProfilePhoto';
 import {
   AvatarContainer,
   AvatarSection,
@@ -28,6 +29,14 @@ export const AccountDetails = () => {
   const { data: user, refetch } = useGetUser();
   const updateUserMutation = useUpdateUser();
   const { isPending: isDeleting, handleDeleteAccount } = useDeleteUser();
+  const {
+    pickFromGallery,
+    confirmUpload,
+    cancelUpload,
+    previewUri,
+    isLoading: isUploadingPhoto,
+    isUploading,
+  } = useUploadProfilePhoto();
 
   const [nickName, setNickName] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -46,8 +55,8 @@ export const AccountDetails = () => {
   };
 
   const handleChangePhoto = () => {
-    // TODO: Implement photo picker
-    console.log('Change photo');
+    if (isUploadingPhoto) return;
+    pickFromGallery();
   };
 
   const handleUpdate = async () => {
@@ -90,7 +99,11 @@ export const AccountDetails = () => {
             <AvatarContainer>
               <Avatar size={80} />
               <EditButton>
-                <Button icon={<Icon name="✏️" size={16} />} onPress={handleChangePhoto} />
+                <Button
+                  icon={<Icon name={isUploadingPhoto ? '⏳' : '✏️'} size={16} />}
+                  onPress={handleChangePhoto}
+                  disabled={isUploadingPhoto}
+                />
               </EditButton>
             </AvatarContainer>
           </AvatarSection>
@@ -196,6 +209,70 @@ export const AccountDetails = () => {
           </ButtonContainer>
         </KeyboardStickyView>
       </Container>
+
+      <Modal visible={!!previewUri} transparent animationType="fade" onRequestClose={cancelUpload}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {previewUri && (
+              <Image source={{ uri: previewUri }} style={styles.previewImage} resizeMode="cover" />
+            )}
+            <View style={styles.modalButtons}>
+              <Button
+                title="Cancel"
+                variant="secondary"
+                onPress={cancelUpload}
+                disabled={isUploading}
+                style={{ flex: 1 }}
+              />
+              <Button
+                title="Re-select"
+                variant="secondary"
+                onPress={() => {
+                  cancelUpload();
+                  setTimeout(pickFromGallery, 100);
+                }}
+                disabled={isUploading}
+                style={{ flex: 1 }}
+              />
+              <Button
+                title={isUploading ? 'Uploading...' : 'Confirm'}
+                variant="secondary"
+                onPress={confirmUpload}
+                disabled={isUploading}
+                loading={isUploading}
+                style={{ flex: 1 }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScreenWrapper>
   );
 };
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
+    width: '100%',
+    maxWidth: 400,
+  },
+  previewImage: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+});
