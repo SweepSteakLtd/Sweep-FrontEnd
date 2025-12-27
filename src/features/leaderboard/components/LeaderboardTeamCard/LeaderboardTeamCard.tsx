@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
@@ -144,7 +144,7 @@ export const LeaderboardTeamCard = ({
     return (
       <TouchableOpacity onPress={handlePinPress} activeOpacity={0.8}>
         <SwipeActionButton isPinned={isPinned}>
-          <PinIcon isPinned={false}>{isPinned ? '📌' : '📍'}</PinIcon>
+          <PinIcon isPinned={false} isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament}>{isPinned ? '📌' : '📍'}</PinIcon>
           <SwipeActionText>{isPinned ? 'Unpin' : 'Pin'}</SwipeActionText>
         </SwipeActionButton>
       </TouchableOpacity>
@@ -157,52 +157,86 @@ export const LeaderboardTeamCard = ({
       isFirst={isFirst}
       isLast={isLast}
       isOpenTournament={isOpenTournament}
+      isMastersTournament={isMastersTournament}
       isPGATournament={isPGATournament}
       onPress={toggleExpanded}
       activeOpacity={0.7}
     >
       <CardHeader>
-        <RankBadge isTopThree={isTopThree} primaryColor={tournamentTheme.primary}>
-          <RankText isTopThree={isTopThree}>{entry.rank}</RankText>
+        <RankBadge isTopThree={isTopThree} isMastersTournament={isMastersTournament} primaryColor={tournamentTheme.primary}>
+          <RankText isTopThree={isTopThree} isMastersTournament={isMastersTournament}>{entry.rank}</RankText>
         </RankBadge>
 
         <TeamInfo>
-          <TeamName numberOfLines={1}>{teamName}</TeamName>
+          <TeamName isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} numberOfLines={1}>{teamName}</TeamName>
           <OwnerRow>
             {entry.prize > 0 ? (
-              <PrizeContainer>
-                <PrizeAmount isPGATournament={isPGATournament}>£{(entry.prize / 100).toLocaleString()}</PrizeAmount>
+              <PrizeContainer isMastersTournament={isMastersTournament}>
+                <PrizeAmount isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>£{(entry.prize / 100).toLocaleString()}</PrizeAmount>
               </PrizeContainer>
             ) : null}
-            <OwnerName isPGATournament={isPGATournament} numberOfLines={1}>{ownerName}</OwnerName>
-            {isPinned && <PinIcon isPinned isPGATournament={isPGATournament}>📌</PinIcon>}
+            <OwnerName isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} isPGATournament={isPGATournament} numberOfLines={1}>{ownerName}</OwnerName>
+            {isPinned && <PinIcon isPinned isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>📌</PinIcon>}
           </OwnerRow>
         </TeamInfo>
 
         <ScoreContainer isMastersTournament={isMastersTournament}>
-          <TotalScore isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>{formatScore(entry.total)}</TotalScore>
-          <BestScoresLabel isMastersTournament={isMastersTournament}>Best {bestScores.length}</BestScoresLabel>
-          <BestScores isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>
-            {bestScores.length > 0 ? bestScores.map((score) => formatScore(score)).join(', ') : '-'}
+          <TotalScore 
+            isOpenTournament={isOpenTournament} 
+            isMastersTournament={isMastersTournament} 
+            isPGATournament={isPGATournament}
+            style={{ 
+              color: getScoreColor(entry.total),
+              fontWeight: entry.total !== null && entry.total < 0 ? '900' : '700'
+            }}
+          >
+            {formatScore(entry.total)}
+          </TotalScore>
+          <BestScoresLabel isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament}>Best {bestScores.length}</BestScoresLabel>
+          <BestScores isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>
+            {bestScores.length > 0 ? (
+              <>
+                {bestScores.map((score, index) => (
+                  <Text 
+                    key={index} 
+                    style={{ 
+                      color: getScoreColor(score), 
+                      fontWeight: score !== null && score < 0 ? '900' : 'normal',
+                      fontSize: 9,
+                    }}
+                  >
+                    {formatScore(score)}{index < bestScores.length - 1 ? ', ' : ''}
+                  </Text>
+                ))}
+              </>
+            ) : '-'}
           </BestScores>
         </ScoreContainer>
 
         {canExpand && (
           <ExpandButton>
-            <ExpandIcon>{isExpanded ? '▲' : '▼'}</ExpandIcon>
+            <ExpandIcon isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament}>{isExpanded ? '▲' : '▼'}</ExpandIcon>
           </ExpandButton>
         )}
       </CardHeader>
 
       {canExpand && isExpanded && (
         <>
-          <Divider />
+          <Divider isMastersTournament={isMastersTournament} />
           <PlayersGrid>
             {players.map((player, index) => (
               <PlayerRow key={`${player.group}-${index}`}>
-                <PlayerGroup isPGATournament={isPGATournament}>Group {player.group}</PlayerGroup>
-                <PlayerName numberOfLines={1}>{player.player_name}</PlayerName>
-                <PlayerScore isPGATournament={isPGATournament} style={{ color: getScoreColor(player.score, theme) }}>
+                <PlayerGroup isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>Group {player.group}</PlayerGroup>
+                <PlayerName isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} numberOfLines={1}>{player.player_name}</PlayerName>
+                <PlayerScore 
+                  isOpenTournament={isOpenTournament} 
+                  isMastersTournament={isMastersTournament}
+                  isPGATournament={isPGATournament} 
+                  style={{ 
+                    color: getScoreColor(player.score),
+                    fontWeight: player.score !== null && player.score < 0 ? '900' : '600'
+                  }}
+                >
                   {formatScore(player.score)}
                   {player.status === 'F' ? ' (F)' : ''}
                 </PlayerScore>

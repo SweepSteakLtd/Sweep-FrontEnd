@@ -6,13 +6,14 @@ export const Card = styled.TouchableOpacity<{
   isFirst?: boolean;
   isLast?: boolean;
   isOpenTournament?: boolean;
+  isMastersTournament?: boolean;
   isPGATournament?: boolean;
 }>`
-  background-color: ${({ isOpenTournament, isPGATournament }: { isOpenTournament?: boolean; isPGATournament?: boolean }) =>
-    isOpenTournament ? '#FFB200' : isPGATournament ? '#0D2363' : '#1e40af'};
+  background-color: ${({ isOpenTournament, isMastersTournament, isPGATournament }: { isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#FFFFFF' : isOpenTournament ? '#FFB200' : isPGATournament ? '#0D2363' : '#1e40af'};
   border-bottom-width: ${({ isLast }: { isLast?: boolean }) => (isLast ? '0px' : '1px')};
-  border-bottom-color: ${({ isOpenTournament }: { isOpenTournament?: boolean }) =>
-    isOpenTournament ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)'};
+  border-bottom-color: ${({ isOpenTournament, isMastersTournament }: { isOpenTournament?: boolean; isMastersTournament?: boolean }) =>
+    isMastersTournament ? 'rgba(0, 0, 0, 0.1)' : isOpenTournament ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)'};
   border-top-left-radius: ${({ isFirst }: { isFirst?: boolean }) => (isFirst ? '10px' : '0px')};
   border-top-right-radius: ${({ isFirst }: { isFirst?: boolean }) => (isFirst ? '10px' : '0px')};
   border-bottom-left-radius: ${({ isLast }: { isLast?: boolean }) => (isLast ? '10px' : '0px')};
@@ -26,20 +27,21 @@ export const CardHeader = styled.View`
   gap: 10px;
 `;
 
-export const RankBadge = styled.View<{ isTopThree?: boolean; primaryColor?: string }>`
+export const RankBadge = styled.View<{ isTopThree?: boolean; isMastersTournament?: boolean; primaryColor?: string }>`
   width: 24px;
   height: 24px;
   border-radius: 12px;
-  background-color: ${({ primaryColor }: { primaryColor?: string }) =>
-    primaryColor || '#1e40af'};
+  background-color: ${({ isMastersTournament, primaryColor }: { isMastersTournament?: boolean; primaryColor?: string }) =>
+    isMastersTournament ? '#000000' : primaryColor || '#1e40af'};
   justify-content: center;
   align-items: center;
 `;
 
-export const RankText = styled.Text<{ isTopThree?: boolean }>`
+export const RankText = styled.Text<{ isTopThree?: boolean; isMastersTournament?: boolean }>`
   font-size: 11px;
   font-weight: 700;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  color: ${({ theme, isMastersTournament }: { theme: Theme; isMastersTournament?: boolean }) =>
+    isMastersTournament ? '#FFFFFF' : theme.colors.white};
 `;
 
 export const TeamInfo = styled.View`
@@ -47,10 +49,11 @@ export const TeamInfo = styled.View`
   min-width: 0;
 `;
 
-export const TeamName = styled.Text`
+export const TeamName = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean }>`
   font-size: 13px;
   font-weight: 600;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  color: ${({ theme, isOpenTournament, isMastersTournament }: { theme: Theme; isOpenTournament?: boolean; isMastersTournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : theme.colors.white};
 `;
 
 export const OwnerRow = styled.View`
@@ -60,53 +63,52 @@ export const OwnerRow = styled.View`
   margin-top: 1px;
 `;
 
-export const OwnerName = styled.Text<{ isPGATournament?: boolean }>`
+export const OwnerName = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
   font-size: 10px;
-  color: ${({ isPGATournament }: { isPGATournament?: boolean }) =>
-    isPGATournament ? '#CCA600' : '#FFD700'};
+  color: ${({ isOpenTournament, isMastersTournament, isPGATournament }: { isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : isPGATournament ? '#CCA600' : '#FFD700'};
 `;
 
 export const ScoreContainer = styled.View<{ isMastersTournament?: boolean }>`
-  background-color: ${({ isMastersTournament }: { isMastersTournament?: boolean }) =>
-    isMastersTournament ? '#ff4444' : 'transparent'};
+  background-color: transparent;
   justify-content: center;
   min-width: 60px;
   padding: 4px 8px;
   border-radius: 4px;
 `;
 
-export const TotalScore = styled.Text<{ isMastersTournament?: boolean; isPGATournament?: boolean }>`
+export const TotalScore = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
   font-size: 16px;
   font-weight: 700;
-  color: ${({ theme, isMastersTournament, isPGATournament }: { theme: Theme; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
-    isMastersTournament ? theme.colors.white : isPGATournament ? '#CCA600' : '#FFD700'};
+  color: ${({ theme, isOpenTournament, isMastersTournament, isPGATournament }: { theme: Theme; isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : isPGATournament ? '#CCA600' : '#FFD700'};
 `;
 
-export const BestScoresLabel = styled.Text<{ isMastersTournament?: boolean }>`
+export const BestScoresLabel = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean }>`
   font-size: 8px;
-  color: ${({ theme, isMastersTournament }: { theme: Theme; isMastersTournament?: boolean }) =>
-    isMastersTournament ? theme.colors.white : theme.colors.white};
+  color: ${({ theme, isOpenTournament, isMastersTournament }: { theme: Theme; isOpenTournament?: boolean; isMastersTournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : theme.colors.white};
   text-transform: uppercase;
   margin-top: 1px;
 `;
 
-export const BestScores = styled.Text<{ isMastersTournament?: boolean; isPGATournament?: boolean }>`
-  font-size: 9px;
-  color: ${({ theme, isMastersTournament, isPGATournament }: { theme: Theme; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
-    isMastersTournament ? theme.colors.white : isPGATournament ? '#CCA600' : '#FFD700'};
+export const BestScores = styled.View<{ isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
+  flex-direction: row;
+  flex-wrap: wrap;
 `;
 
-export const PrizeContainer = styled.View`
-  background-color: rgba(255, 255, 255, 0.2);
+export const PrizeContainer = styled.View<{ isMastersTournament?: boolean }>`
+  background-color: ${({ isMastersTournament }: { isMastersTournament?: boolean }) =>
+    isMastersTournament ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)'};
   padding: 2px 6px;
   border-radius: 4px;
 `;
 
-export const PrizeAmount = styled.Text<{ isPGATournament?: boolean }>`
+export const PrizeAmount = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
   font-size: 10px;
   font-weight: 700;
-  color: ${({ isPGATournament }: { isPGATournament?: boolean }) =>
-    isPGATournament ? '#CCA600' : '#FFD700'};
+  color: ${({ isOpenTournament, isMastersTournament, isPGATournament }: { isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : isPGATournament ? '#CCA600' : '#FFD700'};
 `;
 
 export const ExpandButton = styled.View`
@@ -115,14 +117,16 @@ export const ExpandButton = styled.View`
   width: 16px;
 `;
 
-export const ExpandIcon = styled.Text`
+export const ExpandIcon = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean }>`
   font-size: 8px;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  color: ${({ theme, isOpenTournament, isMastersTournament }: { theme: Theme; isOpenTournament?: boolean; isMastersTournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : theme.colors.white};
 `;
 
-export const Divider = styled.View`
+export const Divider = styled.View<{ isMastersTournament?: boolean }>`
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: ${({ isMastersTournament }: { isMastersTournament?: boolean }) =>
+    isMastersTournament ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.05)'};
 `;
 
 export const PlayersGrid = styled.View`
@@ -136,33 +140,34 @@ export const PlayerRow = styled.View`
   gap: 8px;
 `;
 
-export const PlayerGroup = styled.Text<{ isPGATournament?: boolean }>`
+export const PlayerGroup = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
   font-size: 11px;
   font-weight: 600;
-  color: ${({ isPGATournament }: { isPGATournament?: boolean }) =>
-    isPGATournament ? '#CCA600' : '#FFD700'};
+  color: ${({ isOpenTournament, isMastersTournament, isPGATournament }: { isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : isPGATournament ? '#CCA600' : '#FFD700'};
   width: 55px;
 `;
 
-export const PlayerName = styled.Text`
+export const PlayerName = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean }>`
   flex: 1;
   font-size: 13px;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.white};
+  color: ${({ theme, isOpenTournament, isMastersTournament }: { theme: Theme; isOpenTournament?: boolean; isMastersTournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : theme.colors.white};
 `;
 
-export const PlayerScore = styled.Text<{ isPGATournament?: boolean }>`
+export const PlayerScore = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
   font-size: 13px;
   font-weight: 600;
   min-width: 50px;
   text-align: right;
-  color: ${({ isPGATournament }: { isPGATournament?: boolean }) =>
-    isPGATournament ? '#CCA600' : '#FFD700'};
+  color: ${({ isOpenTournament, isMastersTournament, isPGATournament }: { isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : isPGATournament ? '#CCA600' : '#FFD700'};
 `;
 
-export const PinIcon = styled.Text<{ isPinned?: boolean; isPGATournament?: boolean }>`
+export const PinIcon = styled.Text<{ isPinned?: boolean; isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
   font-size: 12px;
-  color: ${({ theme, isPinned, isPGATournament }: { theme: Theme; isPinned?: boolean; isPGATournament?: boolean }) =>
-    isPinned ? (isPGATournament ? '#CCA600' : '#FFD700') : theme.colors.white};
+  color: ${({ theme, isPinned, isOpenTournament, isMastersTournament, isPGATournament }: { theme: Theme; isPinned?: boolean; isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : isPinned ? (isPGATournament ? '#CCA600' : '#FFD700') : theme.colors.white};
 `;
 
 export const SwipeActionButton = styled.View<{ isPinned?: boolean }>`

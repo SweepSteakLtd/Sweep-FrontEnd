@@ -8,10 +8,10 @@ export const formatScore = (score: number | null): string => {
 // Helper to get score color
 export const getScoreColor = (
   score: number | null,
-  theme: { colors: { primary: string; error: string; text: { secondary: string } } },
+  theme?: { colors: { primary: string; error: string; text: { secondary: string } } },
 ): string => {
-  if (score === null) return theme.colors.text.secondary;
-  if (score < 0) return theme.colors.primary;
-  if (score > 0) return theme.colors.error;
-  return theme.colors.text.secondary;
+  if (score === null) return theme?.colors.text.secondary || '#666666';
+  if (score < 0) return '#FF0000'; // Red for negative
+  if (score === 0) return '#87CEEB'; // Light blue for zero
+  return '#00FF00'; // Green for positive
 };

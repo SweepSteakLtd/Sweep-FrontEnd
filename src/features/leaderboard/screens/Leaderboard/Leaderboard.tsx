@@ -114,7 +114,11 @@ export const Leaderboard = () => {
             return (
               <>
                 {isFirst && isOpenTournament && <LeaderboardWrapperOpen />}
-                <CardWrapper isOpenTournament={isOpenTournament} isPGATournament={isPGATournament}>
+                <CardWrapper
+                  isOpenTournament={isOpenTournament}
+                  isMastersTournament={isMastersTournament}
+                  isPGATournament={isPGATournament}
+                >
                   <LeaderboardTeamCard
                     entry={item}
                     entryId={entryId}

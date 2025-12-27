@@ -34,11 +34,11 @@ export const LeaderboardWrapperClose = styled.View`
   min-height: 0px;
 `;
 
-export const CardWrapper = styled.View<{ isOpenTournament?: boolean; isPGATournament?: boolean }>`
+export const CardWrapper = styled.View<{ isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }>`
   padding-horizontal: 0px;
   padding-vertical: 0px;
-  background-color: ${({ isOpenTournament, isPGATournament }: { isOpenTournament?: boolean; isPGATournament?: boolean }) =>
-    isOpenTournament ? '#FFB200' : isPGATournament ? '#0D2363' : '#1e40af'};
+  background-color: ${({ isOpenTournament, isMastersTournament, isPGATournament }: { isOpenTournament?: boolean; isMastersTournament?: boolean; isPGATournament?: boolean }) =>
+    isMastersTournament ? '#FFFFFF' : isOpenTournament ? '#FFB200' : isPGATournament ? '#0D2363' : '#1e40af'};
   border-left-width: ${({ isOpenTournament }: { isOpenTournament?: boolean }) =>
     isOpenTournament ? '2px' : '0px'};
   border-right-width: ${({ isOpenTournament }: { isOpenTournament?: boolean }) =>
