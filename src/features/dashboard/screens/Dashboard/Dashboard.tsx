@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
-import { BackHandler, FlatList, RefreshControl, View } from 'react-native';
+import { BackHandler, FlatList, Image, RefreshControl, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
@@ -11,6 +11,8 @@ import type { RootStackParamList } from '~/navigation/types';
 import type { Tournament } from '~/services/apis/schemas';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { EmptyState, EmptyStateText, TournamentGrid } from './styles';
+
+const chipinLogoWhite = require('../../../../../assets/ChipinLogoWhite.png');
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -49,9 +51,23 @@ export const Dashboard = () => {
     }
   };
 
+  const headerLeftComponent = (
+    <View style={{ flexDirection: 'row', alignItems: 'center', zIndex: 20 }}>
+      <Image
+        source={chipinLogoWhite}
+        resizeMode="contain"
+        style={{
+          width: 120,
+          height: 40,
+          zIndex: 20,
+        }}
+      />
+    </View>
+  );
+
   if (loading) {
     return (
-      <ScreenWrapper title="Tournaments" showBackButton={false} showProfile>
+      <ScreenWrapper title="" showBackButton={false} showProfile leftComponent={headerLeftComponent}>
         <TournamentGrid>
           <View style={{ padding: 20 }}>
             {/* Show 3 skeleton cards while loading */}
@@ -66,7 +82,7 @@ export const Dashboard = () => {
 
   if (error) {
     return (
-      <ScreenWrapper title="Tournaments" showBackButton={false} showProfile>
+      <ScreenWrapper title="" showBackButton={false} showProfile leftComponent={headerLeftComponent}>
         <EmptyState>
           <EmptyStateText>Failed to load tournaments</EmptyStateText>
           <EmptyStateText style={{ fontSize: 14, marginTop: 8, opacity: 0.7 }}>
@@ -78,7 +94,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <ScreenWrapper title="Tournaments" showBackButton={false} showProfile>
+    <ScreenWrapper title="" showBackButton={false} showProfile leftComponent={headerLeftComponent}>
       {tournaments.length === 0 ? (
         <EmptyState>
           <EmptyStateText>No tournaments available</EmptyStateText>

@@ -14,6 +14,8 @@ interface CustomHeaderProps {
   title?: string;
   leftComponent?: React.ReactNode;
   rightComponent?: React.ReactNode;
+  leftLogo?: React.ReactNode;
+  rightLogo?: React.ReactNode;
   backgroundColor?: string;
 }
 
@@ -21,6 +23,8 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
   title,
   leftComponent,
   rightComponent,
+  leftLogo,
+  rightLogo,
   backgroundColor,
 }) => {
   const insets = useSafeAreaInsets();
@@ -32,9 +36,15 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
     <SafeAreaContainer style={{ paddingTop: topPadding }} backgroundColor={backgroundColor}>
       <Container backgroundColor={backgroundColor}>
         <HeaderContent>
-          <LeftSection>{leftComponent}</LeftSection>
-          {title && <Title numberOfLines={1}>{title}</Title>}
-          <RightSection>{rightComponent}</RightSection>
+          <LeftSection>
+            {leftComponent}
+            {leftLogo}
+          </LeftSection>
+          {title && <Title>{title}</Title>}
+          <RightSection>
+            {rightLogo}
+            {rightComponent}
+          </RightSection>
         </HeaderContent>
       </Container>
     </SafeAreaContainer>

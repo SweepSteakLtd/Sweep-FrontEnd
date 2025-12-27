@@ -2,11 +2,13 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
+import { Image } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import type { TournamentStackParamList } from '~/navigation/types';
+
 import { HolesInfoCarousel } from '../../components/HolesInfoCarousel/HolesInfoCarousel';
 import { HowToPlay } from '../../components/HowToPlay/HowToPlay';
 import { LeagueDates } from '../../components/LeagueDates/LeagueDates';
@@ -16,7 +18,14 @@ import { PrivateLeagueGate } from '../../components/PrivateLeagueGate/PrivateLea
 import { TournamentBanner } from '../../components/TournamentBanner/TournamentBanner';
 import { useLeague } from '../../hooks/useLeague';
 import { LeagueHomeSkeleton } from './LeagueHomeSkeleton';
-import { ButtonsContainer, Container, HeaderSection, ScrollContent } from './styles';
+import {
+  ButtonsContainer,
+  Container,
+  HeaderBackgroundImage,
+  HeaderOverlay,
+  HeaderSection,
+  ScrollContent,
+} from './styles';
 
 type LeagueHomeRouteProp = RouteProp<TournamentStackParamList, 'LeagueHome'>;
 
@@ -65,18 +74,29 @@ export const LeagueHome = () => {
   }
 
   return (
-    <ScreenWrapper title="League Home" headerBackgroundColor={tournamentTheme.primary}>
+    <ScreenWrapper
+      title="League Home"
+      headerBackgroundColor={tournamentTheme.primary}
+    >
       <Container>
         <ScrollContent>
           <HeaderSection backgroundColor={tournamentTheme.secondary}>
-            <LeagueHeader
-              leagueName={league?.name}
-              yourEntries={currentEntries}
-              totalTeams={totalTeams}
-              totalPot={totalPot}
-              joinCode={joinCode}
-              isOwner={isOwner}
-            />
+            {tournament?.cover_picture && (
+              <HeaderBackgroundImage
+                source={{ uri: tournament.cover_picture }}
+                resizeMode="cover"
+              />
+            )}
+            <HeaderOverlay>
+              <LeagueHeader
+                leagueName={league?.name}
+                yourEntries={currentEntries}
+                totalTeams={totalTeams}
+                totalPot={totalPot}
+                joinCode={joinCode}
+                isOwner={isOwner}
+              />
+            </HeaderOverlay>
           </HeaderSection>
 
           <TournamentBanner tournament={tournament} />

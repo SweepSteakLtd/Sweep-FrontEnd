@@ -20,7 +20,10 @@ interface ScreenWrapperProps {
   showHeader?: boolean;
   showBackButton?: boolean;
   showProfile?: boolean;
+  leftComponent?: React.ReactNode;
   rightComponent?: React.ReactNode;
+  leftLogo?: React.ReactNode;
+  rightLogo?: React.ReactNode;
   headerBackgroundColor?: string;
   contentBackgroundColor?: string;
 }
@@ -31,7 +34,10 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   showHeader = true,
   showBackButton = true,
   showProfile = false,
+  leftComponent,
   rightComponent,
+  leftLogo,
+  rightLogo,
   headerBackgroundColor,
   contentBackgroundColor,
 }) => {
@@ -49,8 +55,8 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
     }
   };
 
-  // Default title from route name if not provided
-  const headerTitle = title || route.name;
+  // Default title from route name if not provided (but not if title is explicitly empty string)
+  const headerTitle = title === '' ? undefined : title || route.name;
 
   // Back button component
   const backButtonComponent = showBackButton ? (
@@ -77,8 +83,10 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
         {showHeader && (
           <CustomHeader
             title={headerTitle}
-            leftComponent={backButtonComponent}
+            leftComponent={leftComponent || backButtonComponent}
             rightComponent={rightComponent || profileComponent}
+            leftLogo={leftLogo}
+            rightLogo={rightLogo}
             backgroundColor={headerBackgroundColor}
           />
         )}

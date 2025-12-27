@@ -21,7 +21,7 @@ import {
 } from './styles';
 import { loginSchema } from './validation';
 
-const chipinLogo = require('../../../../../assets/ChipinSmooth.png');
+const chipinLogo = require('../../../../../assets/ChipInLogo.jpg');
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 

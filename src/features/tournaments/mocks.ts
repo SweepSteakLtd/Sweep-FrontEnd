@@ -129,7 +129,8 @@ export const tournamentsListMock = {
       finishes_at: getRelativeDate(2),
       description: "The Masters Tournament, one of golf's four major championships.",
       url: 'https://example.com/masters',
-      cover_picture: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400',
+      cover_picture:
+        'https://blog-admin.siriusxm.com/wp-content/uploads/2025/04/siriusxm-masters-radio-1x1-1.jpeg',
       gallery: [],
       holes: sampleHoles,
       ads: sampleAds,
@@ -165,7 +166,7 @@ export const tournamentsListMock = {
       finishes_at: getRelativeDate(10),
       description: "The Open Championship, the oldest of golf's major championships.",
       url: 'https://example.com/open',
-      cover_picture: 'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400',
+      cover_picture: 'https://ntvb.tmsimg.com/assets/p24750131_b_h8_ab.jpg?w=1280&h=720',
       gallery: [],
       holes: sampleHoles,
       ads: sampleAds,
@@ -201,7 +202,8 @@ export const tournamentsListMock = {
       finishes_at: getRelativeDate(-5),
       description: 'The Players Championship at TPC Sawgrass.',
       url: 'https://example.com/players',
-      cover_picture: 'https://images.unsplash.com/photo-1592919505780-303950717480?w=400',
+      cover_picture:
+        'https://prod.cosm-cdn.io/venue-events/Sports/Golf/march_pga_championship/03_13_round_one/Program/All_Venues/Event_Assets/Event_Images/PNG_PGA-ThePlayersChampionship.png',
       gallery: [],
       holes: sampleHoles,
       ads: sampleAds,
@@ -237,7 +239,8 @@ export const tournamentsListMock = {
       finishes_at: getRelativeDate(33),
       description: "The PGA Championship, one of golf's four major championships.",
       url: 'https://example.com/pga',
-      cover_picture: 'https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=400',
+      cover_picture:
+        'https://blog-admin.siriusxm.com/wp-content/uploads/2024/05/siriusxm-pga-championship-2025-16x9-1.jpeg',
       gallery: [],
       holes: sampleHoles,
       ads: sampleAds,

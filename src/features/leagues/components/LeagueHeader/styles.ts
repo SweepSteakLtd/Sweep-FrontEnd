@@ -8,7 +8,7 @@ export const Container = styled.View`
 export const LeagueName = styled.Text`
   font-size: 24px;
   font-weight: 700;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+  color: #ffffff;
   margin-bottom: 16px;
 `;
 

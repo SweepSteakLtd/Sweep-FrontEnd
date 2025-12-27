@@ -14,7 +14,7 @@ import type { RootStackParamList } from '~/navigation/types';
 import { Container, FormContainer, Header, HeaderLogo, HeaderText, LogoContainer } from './styles';
 import { createAccountSchema } from './validation';
 
-const chipinLogo = require('../../../../../assets/Chipin1.png');
+const chipinLogo = require('../../../../../assets/ChipInLogo.jpg');
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 

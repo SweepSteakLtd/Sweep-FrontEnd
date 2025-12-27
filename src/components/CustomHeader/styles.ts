@@ -45,6 +45,7 @@ export const Title = styled.Text`
   font-weight: 600;
   color: ${({ theme }: { theme: Theme }) => theme.colors.white};
   text-align: center;
-  padding-horizontal: 48px;
+  padding-horizontal: 80px;
   pointer-events: none;
+  flex-wrap: wrap;
 `;

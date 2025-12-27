@@ -2,8 +2,10 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useState } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
+import { Image, RefreshControl, ScrollView, View } from 'react-native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
+import { Button } from '~/components/Button/Button';
+import { BackArrowIcon } from '~/components/Icon/BackArrowIcon';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import { JoinLeagueList } from '~/features/tournaments/components/JoinLeagueList/JoinLeagueList';
@@ -14,10 +16,14 @@ import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { penceToPounds } from '~/utils/currency';
+
 import {
+  AmountWrapper,
   Container,
   EmptyState,
   GlobalStatsContainer,
+  HeaderBackgroundImage,
+  HeaderOverlay,
   HeaderSection,
   PotInfo,
   PotLabel,
@@ -145,11 +151,17 @@ export const TournamentLeagues = () => {
     navigation.navigate('LeagueHome', { leagueId: league.id });
   };
 
+  const handleBackPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
+  };
+
   // Show full skeleton only on true initial load (isLoading means no cached data)
   // isFetching can be true even with cached data (background refetch)
   if (leaguesLoading) {
     return (
-      <ScreenWrapper title="Tournament">
+      <ScreenWrapper title="Tournament" headerBackgroundColor={tournamentTheme.primary}>
         <TournamentLeaguesSkeleton />
       </ScreenWrapper>
     );
@@ -157,7 +169,7 @@ export const TournamentLeagues = () => {
 
   if (leaguesError) {
     return (
-      <ScreenWrapper title="Tournament">
+      <ScreenWrapper title="Tournament" headerBackgroundColor={tournamentTheme.primary}>
         <Container>
           <EmptyState>
             <PotLabel>Failed to load data</PotLabel>
@@ -171,7 +183,10 @@ export const TournamentLeagues = () => {
   }
 
   return (
-    <ScreenWrapper title="Tournament" headerBackgroundColor={tournamentTheme.primary}>
+    <ScreenWrapper
+      title="Tournament Leagues"
+      headerBackgroundColor={tournamentTheme.primary}
+    >
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -184,27 +199,61 @@ export const TournamentLeagues = () => {
           }
         >
           <HeaderSection backgroundColor={tournamentTheme.secondary}>
-            {currentTournament?.name && <TournamentName>{currentTournament.name}</TournamentName>}
-            <PotInfo>
-              <PotLabel>Total Staked</PotLabel>
-              <AnimatedAmount
-                value={penceToPounds(totalPotForTournament)}
-                variant="title"
-                align="center"
-                weight="bold"
-                decimals={2}
+            {currentTournament?.cover_picture && (
+              <HeaderBackgroundImage
+                source={{ uri: currentTournament.cover_picture }}
+                resizeMode="cover"
               />
-            </PotInfo>
-            <GlobalStatsContainer>
-              <StatItem>
-                <StatValue>{totalLeagues}</StatValue>
-                <StatLabel>Leagues</StatLabel>
-              </StatItem>
-              <StatItem>
-                <StatValue>{totalEntrants}</StatValue>
-                <StatLabel>Entrants</StatLabel>
-              </StatItem>
-            </GlobalStatsContainer>
+            )}
+            <HeaderOverlay>
+              {currentTournament?.name && <TournamentName>{currentTournament.name}</TournamentName>}
+              <PotInfo>
+                <PotLabel>Total Staked</PotLabel>
+                <AmountWrapper>
+                  <AnimatedAmount
+                    value={penceToPounds(totalPotForTournament)}
+                    variant="title"
+                    align="center"
+                    weight="bold"
+                    decimals={2}
+                    color={tournamentTheme.primary}
+                    style={{
+                      textShadowColor: 'rgba(0, 0, 0, 0.3)',
+                      textShadowOffset: { width: 1, height: 1 },
+                      textShadowRadius: 2,
+                    }}
+                  />
+                </AmountWrapper>
+              </PotInfo>
+              <GlobalStatsContainer>
+                <StatItem>
+                  <StatValue
+                    color={tournamentTheme.primary}
+                    style={{
+                      textShadowColor: 'rgba(0, 0, 0, 0.3)',
+                      textShadowOffset: { width: 1, height: 1 },
+                      textShadowRadius: 2,
+                    }}
+                  >
+                    {totalLeagues}
+                  </StatValue>
+                  <StatLabel>Leagues</StatLabel>
+                </StatItem>
+                <StatItem>
+                  <StatValue
+                    color={tournamentTheme.primary}
+                    style={{
+                      textShadowColor: 'rgba(0, 0, 0, 0.3)',
+                      textShadowOffset: { width: 1, height: 1 },
+                      textShadowRadius: 2,
+                    }}
+                  >
+                    {totalEntrants}
+                  </StatValue>
+                  <StatLabel>Entrants</StatLabel>
+                </StatItem>
+              </GlobalStatsContainer>
+            </HeaderOverlay>
           </HeaderSection>
           <JoinLeagueList
             leagues={leagues}

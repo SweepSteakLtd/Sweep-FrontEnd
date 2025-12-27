@@ -152,7 +152,8 @@ export const leagueDetailMock = {
         finishes_at: '2026-04-12T18:00:00.000Z',
         description: "The Masters Tournament, one of golf's four major championships.",
         url: 'https://example.com/masters',
-        cover_picture: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400',
+        cover_picture:
+          'https://blog-admin.siriusxm.com/wp-content/uploads/2025/04/siriusxm-masters-radio-1x1-1.jpeg',
         gallery: [],
         holes: [
           {

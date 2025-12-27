@@ -10,4 +10,3 @@ export const SemiCircleHeader: React.FC = () => {
     </Container>
   );
 };
-

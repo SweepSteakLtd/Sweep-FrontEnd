@@ -168,7 +168,7 @@ export const LeaderboardTeamCard = ({
         </RankBadge>
 
         <TeamInfo>
-          <TeamName isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} numberOfLines={1}>{teamName}</TeamName>
+          <TeamName isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament}>{teamName}</TeamName>
           <OwnerRow>
             {entry.prize > 0 ? (
               <PrizeContainer isMastersTournament={isMastersTournament}>

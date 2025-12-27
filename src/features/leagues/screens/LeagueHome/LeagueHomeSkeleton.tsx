@@ -1,13 +1,18 @@
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import { Skeleton } from '~/components/Skeleton/Skeleton';
 import { Container, ScrollContent } from './styles';
 
 export const LeagueHomeSkeleton = () => {
   const theme = useTheme();
+  const { tournamentTheme } = useTournamentTheme();
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper
+      title="League Home"
+      headerBackgroundColor={tournamentTheme.primary}
+    >
       <Container>
         <ScrollContent>
           {/* Header Skeleton */}

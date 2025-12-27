@@ -1,6 +1,9 @@
+import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
 import { hexWithOpacity } from '~/utils/color';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface HeaderSectionProps {
   backgroundColor?: string;
@@ -16,6 +19,20 @@ export const HeaderSection = styled.View<HeaderSectionProps>`
     backgroundColor ? hexWithOpacity(backgroundColor, 0.2) : 'transparent'};
   padding-bottom: 16px;
   margin-bottom: 16px;
+  overflow: hidden;
+`;
+
+export const HeaderBackgroundImage = styled.Image`
+  position: absolute;
+  width: ${SCREEN_WIDTH}px;
+  height: 100%;
+  top: 0;
+  left: 0;
+`;
+
+export const HeaderOverlay = styled.View`
+  background-color: rgba(0, 0, 0, 0.5);
+  padding-bottom: 16px;
 `;
 
 export const ScrollContent = styled.ScrollView.attrs({
