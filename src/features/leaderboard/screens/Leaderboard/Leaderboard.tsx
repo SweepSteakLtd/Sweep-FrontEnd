@@ -7,11 +7,21 @@ import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import type { TournamentStackScreenProps } from '~/navigation/types';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
-import { hexWithOpacity } from '~/utils/color';
 import { LeaderboardHeader } from '../../components/LeaderboardHeader/LeaderboardHeader';
 import { LeaderboardTeamCard } from '../../components/LeaderboardTeamCard/LeaderboardTeamCard';
+import { MastersColumnHeader } from '../../components/MastersColumnHeader/MastersColumnHeader';
+import { MastersHeader } from '../../components/MastersHeader/MastersHeader';
+import { PGAHeader } from '../../components/PGAHeader/PGAHeader';
+import { SemiCircleHeader } from '../../components/SemiCircleHeader/SemiCircleHeader';
 import { LeaderboardSkeleton } from './LeaderboardSkeleton';
-import { CardWrapper, Container, SearchContainer, SearchInput } from './styles';
+import {
+  CardWrapper,
+  Container,
+  LeaderboardWrapperClose,
+  LeaderboardWrapperOpen,
+  SearchContainer,
+  SearchInput,
+} from './styles';
 import { getEntryId, useLeaderboard } from './useLeaderboard';
 
 // Enable LayoutAnimation for Android
@@ -44,44 +54,14 @@ export const Leaderboard = () => {
     isPinned,
   } = useLeaderboard(leagueId);
 
-  const renderTeamCard = useCallback(
-    ({ item, index }: { item: LeaderboardEntry; index: number }) => {
-      const entryId = getEntryId(item);
-      const isEntryPinned = isPinned(entryId);
-      const isOwnTeam = isCurrentUserEntry(item);
-
-      return (
-        <CardWrapper>
-          <LeaderboardTeamCard
-            entry={item}
-            entryId={entryId}
-            isTopThree={tournamentStarted && item.rank <= 3}
-            isFirst={index === 0}
-            isLast={index === filteredEntries.length - 1}
-            isCurrentUser={isOwnTeam}
-            currentUserNickname={currentUserNickname}
-            canExpand={tournamentStarted}
-            isPinned={isEntryPinned}
-            canPin={!isOwnTeam}
-            onTogglePin={() => togglePin(entryId)}
-            openSwipeableId={openSwipeableId}
-            onSwipeableOpen={setOpenSwipeableId}
-          />
-        </CardWrapper>
-      );
-    },
-    [
-      filteredEntries.length,
-      isCurrentUserEntry,
-      currentUserNickname,
-      tournamentStarted,
-      isPinned,
-      togglePin,
-      openSwipeableId,
-    ],
-  );
-
   const keyExtractor = useCallback((item: LeaderboardEntry) => getEntryId(item), []);
+
+  // Check if this is The Open tournament
+  const isOpenTournament = tournament?.name?.toLowerCase().includes('open') ?? false;
+  // Check if this is The Masters tournament
+  const isMastersTournament = tournament?.name?.toLowerCase().includes('masters') ?? false;
+  // Check if this is a PGA tournament
+  const isPGATournament = tournament?.name?.toLowerCase().includes('pga') ?? false;
 
   const ListHeader = (
     <>
@@ -100,6 +80,10 @@ export const Leaderboard = () => {
           placeholderTextColor={theme.colors.text.secondary}
         />
       </SearchContainer>
+      {isOpenTournament && <SemiCircleHeader />}
+      {isMastersTournament && <MastersHeader />}
+      {isPGATournament && <PGAHeader />}
+      <MastersColumnHeader primaryColor={tournamentTheme.primary} />
     </>
   );
 
@@ -115,12 +99,45 @@ export const Leaderboard = () => {
     <ScreenWrapper
       title="Leaderboard"
       headerBackgroundColor={tournamentTheme.primary}
-      contentBackgroundColor={hexWithOpacity(tournamentTheme.secondary, 0.1)}
+      contentBackgroundColor={'white'}
     >
       <Container>
         <Animated.FlatList
           data={filteredEntries}
-          renderItem={renderTeamCard}
+          renderItem={({ item, index }) => {
+            const entryId = getEntryId(item);
+            const isEntryPinned = isPinned(entryId);
+            const isOwnTeam = isCurrentUserEntry(item);
+            const isFirst = index === 0;
+            const isLast = index === filteredEntries.length - 1;
+
+            return (
+              <>
+                {isFirst && isOpenTournament && <LeaderboardWrapperOpen />}
+                <CardWrapper isOpenTournament={isOpenTournament} isPGATournament={isPGATournament}>
+                  <LeaderboardTeamCard
+                    entry={item}
+                    entryId={entryId}
+                    isTopThree={tournamentStarted && item.rank <= 3}
+                    isFirst={isFirst}
+                    isLast={isLast}
+                    isCurrentUser={isOwnTeam}
+                    currentUserNickname={currentUserNickname}
+                    canExpand={tournamentStarted}
+                    isPinned={isEntryPinned}
+                    canPin={!isOwnTeam}
+                    onTogglePin={() => togglePin(entryId)}
+                    openSwipeableId={openSwipeableId}
+                    onSwipeableOpen={setOpenSwipeableId}
+                    isOpenTournament={isOpenTournament}
+                    isMastersTournament={isMastersTournament}
+                    isPGATournament={isPGATournament}
+                  />
+                </CardWrapper>
+                {isLast && isOpenTournament && <LeaderboardWrapperClose />}
+              </>
+            );
+          }}
           keyExtractor={keyExtractor}
           ListHeaderComponent={ListHeader}
           contentContainerStyle={{ paddingBottom: 20, flexGrow: 1 }}
@@ -129,11 +146,7 @@ export const Leaderboard = () => {
           contentInsetAdjustmentBehavior="never"
           automaticallyAdjustContentInsets={false}
           refreshControl={
-            <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={onRefresh}
-              tintColor={tournamentTheme.primary}
-            />
+            <RefreshControl refreshing={isRefetching} onRefresh={onRefresh} tintColor={'red'} />
           }
         />
       </Container>

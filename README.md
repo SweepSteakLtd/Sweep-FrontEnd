@@ -1,10 +1,10 @@
 # SweepSteak Frontend
 
-A React Native mobile application for SweepSteak - the social golf sweeps platform.
+A React Native mobile application for SweepSteak (now named Chipin) - the social golf sweeps platform.
 
 ## 🏌️ About
 
-SweepSteak is a social golf sweepstake platform that allows users to participate in golf-based competitions and track prize payouts.
+Chipin is a social golf sweepstake platform that allows users to participate in and create golf-based fantasy teams and leagues/competitions and compete against eachother to win and track prize payouts on real golfing events and tournaments. 
 
 ### Key Features
 

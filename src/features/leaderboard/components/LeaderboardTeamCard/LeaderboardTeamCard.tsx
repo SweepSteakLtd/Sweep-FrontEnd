@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
+import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
 import { formatScore, getScoreColor } from '../../utils/scoreUtils';
 import {
@@ -52,6 +53,12 @@ interface LeaderboardTeamCardProps {
   openSwipeableId?: string | null;
   /** Callback when this swipeable opens */
   onSwipeableOpen?: (id: string) => void;
+  /** Whether this is The Open tournament (for special styling) */
+  isOpenTournament?: boolean;
+  /** Whether this is The Masters tournament (for special styling) */
+  isMastersTournament?: boolean;
+  /** Whether this is a PGA tournament (for special styling) */
+  isPGATournament?: boolean;
 }
 
 /**
@@ -95,8 +102,12 @@ export const LeaderboardTeamCard = ({
   onTogglePin,
   openSwipeableId,
   onSwipeableOpen,
+  isOpenTournament = false,
+  isMastersTournament = false,
+  isPGATournament = false,
 }: LeaderboardTeamCardProps) => {
   const theme = useTheme();
+  const { tournamentTheme } = useTournamentTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const swipeableRef = useRef<Swipeable>(null);
 
@@ -145,11 +156,13 @@ export const LeaderboardTeamCard = ({
       isTopThree={isTopThree}
       isFirst={isFirst}
       isLast={isLast}
+      isOpenTournament={isOpenTournament}
+      isPGATournament={isPGATournament}
       onPress={toggleExpanded}
       activeOpacity={0.7}
     >
       <CardHeader>
-        <RankBadge isTopThree={isTopThree}>
+        <RankBadge isTopThree={isTopThree} primaryColor={tournamentTheme.primary}>
           <RankText isTopThree={isTopThree}>{entry.rank}</RankText>
         </RankBadge>
 
@@ -158,18 +171,18 @@ export const LeaderboardTeamCard = ({
           <OwnerRow>
             {entry.prize > 0 ? (
               <PrizeContainer>
-                <PrizeAmount>£{(entry.prize / 100).toLocaleString()}</PrizeAmount>
+                <PrizeAmount isPGATournament={isPGATournament}>£{(entry.prize / 100).toLocaleString()}</PrizeAmount>
               </PrizeContainer>
             ) : null}
-            <OwnerName numberOfLines={1}>{ownerName}</OwnerName>
-            {isPinned && <PinIcon isPinned>📌</PinIcon>}
+            <OwnerName isPGATournament={isPGATournament} numberOfLines={1}>{ownerName}</OwnerName>
+            {isPinned && <PinIcon isPinned isPGATournament={isPGATournament}>📌</PinIcon>}
           </OwnerRow>
         </TeamInfo>
 
-        <ScoreContainer>
-          <TotalScore>{formatScore(entry.total)}</TotalScore>
-          <BestScoresLabel>Best {bestScores.length}</BestScoresLabel>
-          <BestScores>
+        <ScoreContainer isMastersTournament={isMastersTournament}>
+          <TotalScore isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>{formatScore(entry.total)}</TotalScore>
+          <BestScoresLabel isMastersTournament={isMastersTournament}>Best {bestScores.length}</BestScoresLabel>
+          <BestScores isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>
             {bestScores.length > 0 ? bestScores.map((score) => formatScore(score)).join(', ') : '-'}
           </BestScores>
         </ScoreContainer>
@@ -187,9 +200,9 @@ export const LeaderboardTeamCard = ({
           <PlayersGrid>
             {players.map((player, index) => (
               <PlayerRow key={`${player.group}-${index}`}>
-                <PlayerGroup>Group {player.group}</PlayerGroup>
+                <PlayerGroup isPGATournament={isPGATournament}>Group {player.group}</PlayerGroup>
                 <PlayerName numberOfLines={1}>{player.player_name}</PlayerName>
-                <PlayerScore style={{ color: getScoreColor(player.score, theme) }}>
+                <PlayerScore isPGATournament={isPGATournament} style={{ color: getScoreColor(player.score, theme) }}>
                   {formatScore(player.score)}
                   {player.status === 'F' ? ' (F)' : ''}
                 </PlayerScore>

@@ -138,9 +138,9 @@ export const tournamentsListMock = {
       maximum_score_generator: 100,
       players: samplePlayers,
       colours: {
-        primary: '#1a5f2a', // Masters green
-        secondary: '#d4af37', // Gold
-        highlight: '#2e7d32', // Lighter green
+        primary: '#336600',
+        secondary: '#F79E1B',
+        highlight: '#EB001B',
       },
       rules: [
         'Each player must select their team before the tournament starts',
@@ -286,9 +286,9 @@ export const tournamentDetailMock = {
     maximum_score_generator: 100,
     players: samplePlayers,
     colours: {
-      primary: '#1a5f2a', // Masters green
-      secondary: '#d4af37', // Gold
-      highlight: '#2e7d32', // Lighter green
+      primary: '#336600',
+      secondary: '#F79E1B',
+      highlight: '#EB001B',
     },
     rules: [
       'Each player must select their team before the tournament starts',

@@ -10,7 +10,7 @@ import Animated, {
 import { Container, LogoContainer } from './styles';
 import { useSplash } from './useSplash';
 
-const chipinLogo = require('../../../../../assets/Chipin1.png');
+const chipinLogo = require('../../../../../assets/ChipInLogo.jpg');
 
 export const Splash = () => {
   // Handle auth check and navigation
