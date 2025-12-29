@@ -47,8 +47,8 @@ export const useGBGVerification = (): UseGBGVerificationReturn => {
 
   const getNextDelay = (attempt: number): number => {
     if (attempt === 0) return 5000; // First check after 5 seconds
-    if (attempt === 1) return 3000; // Second check after 3 seconds
-    return 2000; // All subsequent checks every 2 seconds
+    if (attempt === 1) return 5000; // Second check after 3 seconds
+    return 7000; // All subsequent checks every 2 seconds
   };
 
   const poll = useCallback(async () => {

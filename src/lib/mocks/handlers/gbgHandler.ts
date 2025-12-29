@@ -2,11 +2,43 @@
  * GBG Verification API Handlers
  *
  * Endpoints:
+ * - GET /api/users/tasks/gbg - Get pending GBG verification tasks
  * - GET /api/users/verify/gbg?instance_id={id} - Check GBG verification status
  * - POST /api/users/upload/gbg - Upload documents for manual verification
  */
 
 import type { MockHandler } from '../types';
+
+// GBG Tasks Response Mocks
+export const gbgTasksAvailableMock = {
+  data: {
+    instanceId: 'mock-kyc-instance-123',
+    status: 'InProgress',
+    tasks: [
+      {
+        taskId: 'mock-task-id-789',
+        variantId: 'mock-variant-id-456',
+      },
+    ],
+    tasksCount: 1,
+    message: 'Tasks available for completion',
+  },
+};
+
+export const gbgNoTasksMock = {
+  data: {
+    instanceId: 'mock-kyc-instance-123',
+    status: 'Completed',
+    tasks: [],
+    tasksCount: 0,
+    message: 'No pending tasks at this time',
+  },
+};
+
+export const gbgTasksErrorMock = {
+  error: 'Internal Server Error',
+  message: 'Failed to retrieve verification tasks',
+};
 
 // GBG Verification Response Mocks
 export const gbgVerificationPassMock = {
@@ -126,6 +158,45 @@ export const uploadGBGDocumentsHandler: MockHandler = {
     'Server Error (500)': {
       status: 500,
       data: gbgVerificationServerErrorMock,
+      delay: 500,
+    },
+  },
+};
+
+/**
+ * GET /api/users/tasks/gbg
+ * Get pending GBG verification tasks
+ *
+ * Returns the list of tasks that need to be completed for the user's verification journey
+ *
+ * Response:
+ * - data.instanceId: string - GBG journey instance ID
+ * - data.status: 'InProgress' | 'Completed' | 'Failed'
+ * - data.tasks: Array of task objects with taskId and variantId
+ * - data.tasksCount: number - Number of pending tasks
+ * - data.message: string
+ */
+export const getGBGTasksHandler: MockHandler = {
+  id: 'get-gbg-tasks',
+  name: 'Get GBG Tasks',
+  group: 'User',
+  method: 'GET',
+  urlPattern: '/api/users/tasks/gbg',
+  defaultScenario: 'Tasks Available',
+  scenarios: {
+    'Tasks Available': {
+      status: 200,
+      data: gbgTasksAvailableMock,
+      delay: 500,
+    },
+    'No Tasks': {
+      status: 200,
+      data: gbgNoTasksMock,
+      delay: 500,
+    },
+    'Server Error (500)': {
+      status: 500,
+      data: gbgTasksErrorMock,
       delay: 500,
     },
   },

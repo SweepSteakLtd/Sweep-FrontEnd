@@ -1,7 +1,7 @@
 import type { MockHandler } from '../types';
 import { adminHandlers } from './adminHandler';
 import { createBetHandler, deleteBetHandler, getBetsHandler, updateBetHandler } from './betHandler';
-import { uploadGBGDocumentsHandler, verifyGBGHandler } from './gbgHandler';
+import { getGBGTasksHandler, uploadGBGDocumentsHandler, verifyGBGHandler } from './gbgHandler';
 import { getLeaderboardHandler } from './leaderboardHandler';
 import {
   createLeagueHandler,
@@ -34,6 +34,7 @@ export const mockHandlers: MockHandler[] = [
   updateProfileHandler,
 
   // GBG Verification endpoints
+  getGBGTasksHandler,
   verifyGBGHandler,
   uploadGBGDocumentsHandler,
 

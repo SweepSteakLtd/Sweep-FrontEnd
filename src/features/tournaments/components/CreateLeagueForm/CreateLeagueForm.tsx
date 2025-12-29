@@ -28,7 +28,6 @@ interface FieldErrors extends Record<string, string | undefined> {
   tournamentId?: string;
   entryFee?: string;
   maxEntries?: string;
-  startTime?: string;
   endTime?: string;
 }
 
@@ -49,7 +48,6 @@ export const CreateLeagueForm = ({
   const [selectedTournamentId, setSelectedTournamentId] = useState(activeTournamentId);
   const [entryFee, setEntryFee] = useState('');
   const [maxEntries, setMaxEntries] = useState('');
-  const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [createError, setCreateError] = useState('');
@@ -63,13 +61,6 @@ export const CreateLeagueForm = ({
       value: t.id!,
     }));
 
-  // Update end time when tournament changes
-  useEffect(() => {
-    if (selectedTournament?.finishes_at) {
-      setEndTime(new Date(selectedTournament.finishes_at));
-    }
-  }, [selectedTournament?.finishes_at]);
-
   const handleCreateLeague = async () => {
     // Validate all fields
     const validation = validateWithZod<FieldErrors>(createLeagueSchema, {
@@ -78,7 +69,6 @@ export const CreateLeagueForm = ({
       tournamentId: selectedTournamentId,
       entryFee,
       maxEntries,
-      startTime,
       endTime,
     });
 
@@ -90,9 +80,10 @@ export const CreateLeagueForm = ({
     setFieldErrors({});
     setCreateError('');
 
-    // Ensure start time is not in the past
-    const now = new Date();
-    const adjustedStartTime = startTime < now ? now : startTime;
+    // Use tournament's start time
+    const tournamentStartTime = selectedTournament?.starts_at
+      ? new Date(selectedTournament.starts_at)
+      : new Date();
 
     try {
       const response = await createLeagueMutation.mutateAsync({
@@ -101,7 +92,7 @@ export const CreateLeagueForm = ({
         entry_fee: poundsToPence(entryFee),
         max_participants: parseInt(maxEntries),
         rewards: [],
-        start_time: adjustedStartTime.toISOString(),
+        start_time: tournamentStartTime.toISOString(),
         end_time: endTime.toISOString(),
         tournament_id: selectedTournamentId,
         type: leagueType,
@@ -120,7 +111,6 @@ export const CreateLeagueForm = ({
       setSelectedTournamentId(activeTournamentId);
       setEntryFee('');
       setMaxEntries('');
-      setStartTime(new Date());
       setEndTime(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
 
       if (createdLeagueId) {
@@ -140,16 +130,7 @@ export const CreateLeagueForm = ({
   // Expose the handler to parent component
   useEffect(() => {
     onSubmit?.(handleCreateLeague);
-  }, [
-    leagueName,
-    description,
-    selectedTournamentId,
-    entryFee,
-    maxEntries,
-    startTime,
-    endTime,
-    leagueType,
-  ]);
+  }, [leagueName, description, selectedTournamentId, entryFee, maxEntries, endTime, leagueType]);
 
   return (
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -248,19 +229,6 @@ export const CreateLeagueForm = ({
         />
 
         <TimeSelectField
-          label="Start Time"
-          value={startTime}
-          onValueChange={(date) => {
-            setStartTime(date);
-            if (fieldErrors.startTime) {
-              setFieldErrors((prev) => ({ ...prev, startTime: undefined }));
-            }
-          }}
-          minimumDate={new Date()}
-          error={fieldErrors.startTime}
-        />
-
-        <TimeSelectField
           label="End Time"
           value={endTime}
           onValueChange={(date) => {
@@ -269,7 +237,9 @@ export const CreateLeagueForm = ({
               setFieldErrors((prev) => ({ ...prev, endTime: undefined }));
             }
           }}
-          minimumDate={startTime}
+          minimumDate={
+            selectedTournament?.starts_at ? new Date(selectedTournament.starts_at) : new Date()
+          }
           error={fieldErrors.endTime}
           disabled
         />
