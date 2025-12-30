@@ -2,7 +2,6 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
-import { Image } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
@@ -74,10 +73,7 @@ export const LeagueHome = () => {
   }
 
   return (
-    <ScreenWrapper
-      title="League Home"
-      headerBackgroundColor={tournamentTheme.primary}
-    >
+    <ScreenWrapper title="League Home" headerBackgroundColor={tournamentTheme.primary}>
       <Container>
         <ScrollContent>
           <HeaderSection backgroundColor={tournamentTheme.secondary}>
@@ -110,6 +106,7 @@ export const LeagueHome = () => {
                   navigation.navigate('Team', { leagueId, joinCode: submittedJoinCode });
                 }}
                 fullWidth
+                disabled={tournament?.players.length === 0}
                 primaryColor={tournamentTheme.primary}
               />
             )}
