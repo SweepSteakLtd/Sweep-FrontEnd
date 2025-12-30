@@ -54,6 +54,13 @@ export const CreateLeagueForm = ({
 
   const selectedTournament = tournaments.find((t) => t.id === selectedTournamentId);
 
+  // Update end time when tournament changes to match tournament's end date
+  useEffect(() => {
+    if (selectedTournament?.finishes_at) {
+      setEndTime(new Date(selectedTournament.finishes_at));
+    }
+  }, [selectedTournament?.finishes_at]);
+
   const tournamentOptions = tournaments
     .filter((t) => t.id && t.name)
     .map((t) => ({
@@ -111,7 +118,7 @@ export const CreateLeagueForm = ({
       setSelectedTournamentId(activeTournamentId);
       setEntryFee('');
       setMaxEntries('');
-      setEndTime(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
+      // End time will be automatically set by useEffect when selectedTournamentId changes
 
       if (createdLeagueId) {
         onSuccess?.(
