@@ -5,10 +5,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
-import { DevMockButton } from '~/components/DevMockButton/DevMockButton';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
-import { useLogin } from '~/features/authentication/hooks/useLogin';
+import { useForgotPassword } from '~/features/authentication/hooks/useForgotPassword';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
 import {
@@ -19,7 +18,7 @@ import {
   HeaderLogo,
   LogoContainer,
 } from './styles';
-import { loginSchema } from './validation';
+import { forgotPasswordSchema } from './validation';
 
 const chipinLogo = require('../../../../../assets/ChipInLogo.jpg');
 
@@ -27,23 +26,20 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface FieldErrors extends Record<string, string | undefined> {
   email?: string;
-  password?: string;
 }
 
-export const Login = () => {
+export const ForgotPassword = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
-  const { login, loading } = useLogin();
+  const { resetPassword, loading } = useForgotPassword();
 
-  const [email, setEmail] = useState('marin.obranovic@gmail.com');
-  const [password, setPassword] = useState('Dude1234');
+  const [email, setEmail] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
-  const handleSignIn = async () => {
+  const handleResetPassword = async () => {
     // Validate using Zod
-    const validation = validateWithZod<FieldErrors>(loginSchema, {
+    const validation = validateWithZod<FieldErrors>(forgotPasswordSchema, {
       email,
-      password,
     });
 
     if (!validation.success) {
@@ -53,28 +49,10 @@ export const Login = () => {
 
     setFieldErrors({});
 
-    const loginResult = await login(email, password);
-
-    if (loginResult.success) {
-      if (loginResult.profileComplete) {
-        // User has profile - check if verified
-        if (!loginResult.isVerified) {
-          // User is not verified - show verification pending screen
-          navigation.navigate('VerificationPending');
-        } else {
-          // User is verified - show T&C first, then go to Dashboard
-          navigation.navigate('TermsAndConditions', {
-            nextScreen: 'Dashboard',
-          });
-        }
-      } else {
-        // User needs to complete profile - show T&C first
-        navigation.navigate('TermsAndConditions', {
-          nextScreen: 'CreateProfile',
-        });
-      }
+    const success = await resetPassword(email);
+    if (success) {
+      navigation.navigate('Login');
     }
-    // If failed, error is already shown by useLogin hook
   };
 
   return (
@@ -94,11 +72,19 @@ export const Login = () => {
 
           <FormContainer>
             <Typography
-              variant="body"
-              color={theme.colors.text.tertiary}
+              variant="heading"
+              color={theme.colors.text.primary}
               style={{ marginBottom: 10 }}
             >
-              Sign in to your account
+              Forgot Password?
+            </Typography>
+
+            <Typography
+              variant="body"
+              color={theme.colors.text.tertiary}
+              style={{ marginBottom: 20 }}
+            >
+              Enter your email address and we'll send you a link to reset your password.
             </Typography>
 
             <Input
@@ -117,50 +103,20 @@ export const Login = () => {
               error={fieldErrors.email}
             />
 
-            <Input
-              variant="light"
-              label="Password"
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                if (fieldErrors.password) {
-                  setFieldErrors((prev) => ({ ...prev, password: undefined }));
-                }
-              }}
-              placeholder="Password"
-              secureTextEntry
-              autoCapitalize="none"
-              error={fieldErrors.password}
-            />
-
-            <Button
-              variant="link"
-              onPress={() => navigation.navigate('ForgotPassword')}
-              fullWidth={false}
-              title="Forgot Password?"
-              style={{ alignSelf: 'flex-end', marginTop: -8 }}
-            />
-
             <Button
               disabled={loading}
               loading={loading}
-              onPress={handleSignIn}
+              onPress={handleResetPassword}
               style={{ marginTop: 16, marginBottom: 10 }}
-              title="Sign In"
+              title="Send Reset Link"
             />
 
             <Button
               variant="link"
-              onPress={() =>
-                navigation.navigate('TermsAndConditions', {
-                  nextScreen: 'CreateAccount',
-                })
-              }
+              onPress={() => navigation.navigate('Login')}
               fullWidth={false}
-              title="Don't have an account? Create one"
+              title="Back to Login"
             />
-
-            <DevMockButton position="inline" />
           </FormContainer>
         </ContentWrapper>
 

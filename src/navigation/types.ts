@@ -26,6 +26,7 @@ export type TournamentStackParamList = {
 export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
+  ForgotPassword: undefined;
   TermsAndConditions: {
     nextScreen: 'CreateAccount' | 'CreateProfile' | 'Dashboard';
   };

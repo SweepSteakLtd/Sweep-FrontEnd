@@ -7,6 +7,7 @@ import { Security } from '~/features/account/screens/Security/Security';
 import { Activity } from '~/features/activity/screens/Activity/Activity';
 import { AlertModal } from '~/features/alert/screens/AlertModal/AlertModal';
 import { CreateAccount } from '~/features/authentication/screens/CreateAccount/CreateAccount';
+import { ForgotPassword } from '~/features/authentication/screens/ForgotPassword/ForgotPassword';
 import { Login } from '~/features/authentication/screens/Login/Login';
 import { BettingControls } from '~/features/betting-controls/screens/BettingControls/BettingControls';
 import { DepositLimits } from '~/features/betting-controls/screens/DepositLimits/DepositLimits';
@@ -102,6 +103,7 @@ export const RootNavigator = () => {
       >
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="CreateProfile" component={CreateProfile} />
