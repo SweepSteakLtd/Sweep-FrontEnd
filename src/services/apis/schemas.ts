@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: http://localhost:8080/openapi.json
- * Generated: 2025-12-29T20:39:28.613Z
+ * Generated: 2026-01-08T20:22:14.557Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -528,6 +528,7 @@ export const leaderboardSchema = z.object({
     .optional()
     .default([]),
   total_pot: z.number().optional(),
+  round: z.string().optional(),
 });
 
 export type Leaderboard = z.infer<typeof leaderboardSchema>;

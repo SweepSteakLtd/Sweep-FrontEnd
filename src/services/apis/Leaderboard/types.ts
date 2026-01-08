@@ -23,6 +23,7 @@ export interface LeaderboardEntry {
 export interface LeaderboardData {
   entries: LeaderboardEntry[];
   total_pot?: number;
+  round?: string;
 }
 
 export interface LeaderboardResponse {

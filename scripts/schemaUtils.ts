@@ -5,8 +5,7 @@
  * to ensure they always use the same schema extraction logic.
  */
 
-export const OPENAPI_URL =
-  'https://sweepsteak-production--sweepsteak-64dd0.europe-west4.hosted.app/openapi.json';
+export const OPENAPI_URL = 'http://localhost:8080/openapi.json';
 
 export interface OpenAPISchema {
   type?: string;

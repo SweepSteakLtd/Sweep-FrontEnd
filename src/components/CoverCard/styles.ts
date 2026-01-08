@@ -64,3 +64,29 @@ export const Subtitle = styled.Text`
   font-weight: 400;
   color: #ffffff;
 `;
+
+export const LiveBadge = styled.View`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #ff0000;
+  padding: 6px 12px;
+  border-radius: 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+`;
+
+export const LiveDot = styled.View`
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #ffffff;
+`;
+
+export const LiveText = styled.Text`
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+`;

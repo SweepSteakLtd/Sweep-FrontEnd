@@ -61,6 +61,7 @@ export const useLeaderboard = (leagueId: string) => {
 
   const entries = Array.isArray(leaderboardData?.data?.entries) ? leaderboardData.data.entries : [];
   const leaderboardTotalPot = leaderboardData?.data?.total_pot;
+  const round = leaderboardData?.data?.round;
   const isLoading = isLeaderboardLoading || isLeagueLoading;
 
   // Sort entries:
@@ -129,6 +130,7 @@ export const useLeaderboard = (leagueId: string) => {
     totalPot,
     totalTeams,
     currentUserNickname,
+    round,
 
     // State
     searchQuery,

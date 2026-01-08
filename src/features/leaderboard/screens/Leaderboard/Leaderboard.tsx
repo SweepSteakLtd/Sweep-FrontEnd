@@ -43,6 +43,7 @@ export const Leaderboard = () => {
     totalPot,
     totalTeams,
     currentUserNickname,
+    round,
     searchQuery,
     setSearchQuery,
     tournamentStarted,
@@ -83,7 +84,7 @@ export const Leaderboard = () => {
       {isOpenTournament && <SemiCircleHeader />}
       {isMastersTournament && <MastersHeader />}
       {isPGATournament && <PGAHeader />}
-      <MastersColumnHeader primaryColor={tournamentTheme.primary} />
+      <MastersColumnHeader primaryColor={tournamentTheme.primary} round={round} />
     </>
   );
 
