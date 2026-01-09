@@ -52,3 +52,23 @@ export const Logo = styled.Image`
 export const Link = styled.TouchableOpacity`
   padding: 4px 0;
 `;
+
+export const CompactRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 360px;
+`;
+
+export const CompactLink = styled.TouchableOpacity`
+  padding: 0px;
+`;
+
+export const PairRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 360px;
+`;

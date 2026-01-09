@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation } from 'react-native';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
+import type { Tournament } from '~/services/apis/schemas';
 import { useGetLeaderboard } from '~/services/apis/Leaderboard/useGetLeaderboard';
 import { useGetLeague } from '~/services/apis/League/useGetLeague';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
@@ -23,7 +24,21 @@ export const useLeaderboard = (leagueId: string) => {
   const { pinnedTeamId, togglePin, isPinned } = usePinnedTeam(leagueId);
 
   const league = leagueData?.league;
-  const tournament = tournaments?.find((t) => t.id === league?.tournament_id);
+
+  // Prefer tournament info from league detail response (when present), since it's the most direct
+  // association between this league and its tournament. Fall back to matching against the global
+  // tournaments list by `id` or `external_id`.
+  const tournamentFromLeague = leagueData?.tournament as Tournament | undefined;
+  const hasTournamentFromLeague = !!(
+    tournamentFromLeague &&
+    (tournamentFromLeague.id || tournamentFromLeague.external_id || tournamentFromLeague.name)
+  );
+
+  const tournament = hasTournamentFromLeague
+    ? tournamentFromLeague
+    : tournaments?.find(
+        (t) => t.id === league?.tournament_id || t.external_id === league?.tournament_id,
+      );
 
   // Check if tournament has started (entries closed)
   // Use tournament's starts_at to determine if players should be visible

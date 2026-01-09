@@ -1,11 +1,9 @@
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useCallback, useState } from 'react';
-import { Image, RefreshControl, ScrollView, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { RefreshControl, ScrollView } from 'react-native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
-import { Button } from '~/components/Button/Button';
-import { BackArrowIcon } from '~/components/Icon/BackArrowIcon';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import { JoinLeagueList } from '~/features/tournaments/components/JoinLeagueList/JoinLeagueList';
@@ -65,7 +63,9 @@ export const TournamentLeagues = () => {
   const { data: tournaments = [] } = useGetTournaments();
   const { data: currentUser } = useGetUser();
 
-  const currentTournament = tournaments.find((t) => t.id === tournamentId);
+  const currentTournament = tournaments.find(
+    (t) => t.id === tournamentId || t.external_id === tournamentId,
+  );
 
   // Fetch public/featured leagues (uses search_term which respects privacy)
   const {
@@ -82,6 +82,12 @@ export const TournamentLeagues = () => {
     activeGameTab !== 'private', // Only fetch when not on private tab
   );
 
+  // Defensive client-side filter (helps when mocks/backends ignore tournament_id query param)
+  const tournamentPublicLeagues = useMemo(() => {
+    if (!tournamentId) return publicLeagues;
+    return publicLeagues.filter((league) => league.tournament_id === tournamentId);
+  }, [publicLeagues, tournamentId]);
+
   // Fetch private leagues (uses name parameter which bypasses privacy filters)
   const {
     data: privateSearchLeagues = [],
@@ -97,16 +103,21 @@ export const TournamentLeagues = () => {
     activeGameTab === 'private' && !!debouncedPrivateSearchQuery, // Only fetch when on private tab and searching
   );
 
+  const tournamentPrivateSearchLeagues = useMemo(() => {
+    if (!tournamentId) return privateSearchLeagues;
+    return privateSearchLeagues.filter((league) => league.tournament_id === tournamentId);
+  }, [privateSearchLeagues, tournamentId]);
+
   // Combined loading/error states based on active tab
   const leaguesLoading = activeGameTab === 'private' ? privateLeaguesLoading : publicLeaguesLoading;
   const leaguesFetching =
     activeGameTab === 'private' ? privateLeaguesFetching : publicLeaguesFetching;
   const leaguesError = activeGameTab === 'private' ? privateLeaguesError : publicLeaguesError;
-  const leagues = activeGameTab === 'private' ? privateSearchLeagues : publicLeagues;
+  const leagues = activeGameTab === 'private' ? tournamentPrivateSearchLeagues : tournamentPublicLeagues;
 
   // Filter leagues where current user is owner or member (for private tab when not searching)
   // Uses publicLeagues since those are fetched with search_term which includes user's private leagues
-  const userPrivateLeagues = publicLeagues.filter((league) => {
+  const userPrivateLeagues = tournamentPublicLeagues.filter((league) => {
     if (league.type !== 'private' || !currentUser?.id) return false;
     const isOwner = league.owner_id === currentUser.id;
     const isMember = league.joined_players?.includes(currentUser.id) ?? false;
@@ -114,14 +125,14 @@ export const TournamentLeagues = () => {
   });
 
   // Calculate total pot from public leagues (consistent stats regardless of tab)
-  const totalPotForTournament = publicLeagues.reduce(
+  const totalPotForTournament = tournamentPublicLeagues.reduce(
     (sum, league) => sum + (league.entry_fee ?? 0) * (league.max_participants ?? 0),
     0,
   );
 
   // Calculate global stats from public leagues (consistent regardless of tab)
-  const totalLeagues = publicLeagues.length;
-  const totalEntrants = publicLeagues.reduce(
+  const totalLeagues = tournamentPublicLeagues.length;
+  const totalEntrants = tournamentPublicLeagues.reduce(
     (sum, league) => sum + (league.joined_players?.length ?? 0),
     0,
   );
@@ -151,12 +162,6 @@ export const TournamentLeagues = () => {
     navigation.navigate('LeagueHome', { leagueId: league.id });
   };
 
-  const handleBackPress = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    }
-  };
-
   // Show full skeleton only on true initial load (isLoading means no cached data)
   // isFetching can be true even with cached data (background refetch)
   if (leaguesLoading) {
@@ -183,10 +188,7 @@ export const TournamentLeagues = () => {
   }
 
   return (
-    <ScreenWrapper
-      title="Tournament Leagues"
-      headerBackgroundColor={tournamentTheme.primary}
-    >
+    <ScreenWrapper title="Tournament Leagues" headerBackgroundColor={tournamentTheme.primary}>
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}

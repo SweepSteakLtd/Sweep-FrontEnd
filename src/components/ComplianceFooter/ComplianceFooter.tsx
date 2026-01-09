@@ -9,6 +9,7 @@ import {
   LicenceNumber,
   Link,
   Logo,
+  PairRow,
   Section,
 } from './styles';
 
@@ -17,14 +18,21 @@ const visaLogo = require('~/assets/images/compliance/visa.png');
 const mastercardLogo = require('~/assets/images/compliance/mastercard.png');
 const gamstopLogo = require('~/assets/images/compliance/gamstop.png');
 const gambleawareLogo = require('~/assets/images/compliance/gambleaware.png');
+const gamCareHelplineLogo = require('~/assets/images/compliance/GamCare-Helpline.png');
+const gcLogo = require('~/assets/images/compliance/GC_logo.png');
+const gamblingAddictionLogo = require('~/assets/images/compliance/Gambling_Addiction.png');
 
 export const ComplianceFooter = () => {
+  const openUrl = (url: string) => {
+    Linking.openURL(url);
+  };
+
   const handleGambleAwarePress = () => {
-    Linking.openURL('https://www.gambleaware.org/');
+    openUrl('https://www.gambleaware.org/');
   };
 
   const handleGamstopPress = () => {
-    Linking.openURL('https://www.gamstop.co.uk/');
+    openUrl('https://www.gamstop.co.uk/');
   };
 
   const version = DeviceInfo.getVersion();
@@ -44,12 +52,44 @@ export const ComplianceFooter = () => {
           <Link onPress={handleGamstopPress} activeOpacity={0.7}>
             <Logo source={gamstopLogo} resizeMode="contain" style={{ width: 120, height: 50 }} />
           </Link>
+          <Link onPress={() => openUrl('https://www.gamblingcommission.gov.uk/')} activeOpacity={0.7}>
+            <Logo source={gcLogo} resizeMode="contain" style={{ width: 90, height: 50 }} />
+          </Link>
         </View>
       </Section>
       <Section>
-        <Link onPress={handleGambleAwarePress} activeOpacity={0.7}>
-          <Logo source={gambleawareLogo} resizeMode="contain" style={{ width: 120, height: 40 }} />
-        </Link>
+        <PairRow style={{ paddingLeft: 14 }}>
+          <Link onPress={handleGambleAwarePress} activeOpacity={0.7} style={{ marginRight: 12 }}>
+            <Logo source={gambleawareLogo} resizeMode="contain" style={{ width: 120, height: 30 }} />
+          </Link>
+
+          <Link
+            onPress={() => openUrl('https://gordonmoody.org.uk/gambling-therapy/')}
+            activeOpacity={0.7}
+          >
+            <Logo
+              source={gamblingAddictionLogo}
+              resizeMode="contain"
+              style={{ width: 180, height: 30 }}
+            />
+          </Link>
+        </PairRow>
+      </Section>
+
+      <Section>
+        <PairRow>
+          <Link
+            onPress={() => openUrl('https://www.gamcare.org.uk/')}
+            activeOpacity={0.7}
+            style={{ flex: 1, minWidth: 0 }}
+          >
+            <Logo
+              source={gamCareHelplineLogo}
+              resizeMode="contain"
+              style={{ width: '100%', height: 53 }}
+            />
+          </Link>
+        </PairRow>
       </Section>
       <Divider />
 

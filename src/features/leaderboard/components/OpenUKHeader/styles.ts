@@ -29,3 +29,4 @@ export const LogoImage = styled.Image`
   max-height: 60px;
 `;
 
+

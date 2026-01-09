@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, LogoImage } from './styles';
 
-const mastersLogo = require('../../../../../assets/MastersLogo1.png');
+const mastersLogo = require('~/assets/images/tournaments/MastersLogo1.png');
 
 export const MastersHeader: React.FC = () => {
   return (
@@ -10,4 +10,3 @@ export const MastersHeader: React.FC = () => {
     </Container>
   );
 };
-

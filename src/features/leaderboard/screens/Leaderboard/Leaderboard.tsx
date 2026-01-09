@@ -12,7 +12,7 @@ import { LeaderboardTeamCard } from '../../components/LeaderboardTeamCard/Leader
 import { MastersColumnHeader } from '../../components/MastersColumnHeader/MastersColumnHeader';
 import { MastersHeader } from '../../components/MastersHeader/MastersHeader';
 import { PGAHeader } from '../../components/PGAHeader/PGAHeader';
-import { SemiCircleHeader } from '../../components/SemiCircleHeader/SemiCircleHeader';
+import { OpenUKHeader } from '../../components/OpenUKHeader/OpenUKHeader';
 import { LeaderboardSkeleton } from './LeaderboardSkeleton';
 import {
   CardWrapper,
@@ -81,7 +81,7 @@ export const Leaderboard = () => {
           placeholderTextColor={theme.colors.text.secondary}
         />
       </SearchContainer>
-      {isOpenTournament && <SemiCircleHeader />}
+      {isOpenTournament && <OpenUKHeader />}
       {isMastersTournament && <MastersHeader />}
       {isPGATournament && <PGAHeader />}
       <MastersColumnHeader primaryColor={tournamentTheme.primary} round={round} />

@@ -144,12 +144,10 @@ export const TotalScore = styled.Text<{
   font-size: 16px;
   font-weight: 700;
   color: ${({
-    theme,
     isOpenTournament,
     isMastersTournament,
     isPGATournament,
   }: {
-    theme: Theme;
     isOpenTournament?: boolean;
     isMastersTournament?: boolean;
     isPGATournament?: boolean;

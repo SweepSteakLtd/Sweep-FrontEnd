@@ -1,14 +1,10 @@
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import { firebaseAuth, firebaseStorage } from '~/lib/firebase';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
-
-// Lazy import to avoid loading the native module until it's actually needed
-const loadImageManipulator = async () => {
-  return await import('expo-image-manipulator');
-};
 
 // Configuration constants
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -49,9 +45,6 @@ export const useUploadProfilePhoto = () => {
 
   // Resize and compress image
   const processImage = async (uri: string): Promise<{ uri: string; size: number }> => {
-    // Lazy load the native module
-    const ImageManipulator = await loadImageManipulator();
-    
     // Resize to max dimension while maintaining aspect ratio
     const result = await ImageManipulator.manipulateAsync(
       uri,

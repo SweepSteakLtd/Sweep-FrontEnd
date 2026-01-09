@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { /* Text, */ TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { useTheme } from 'styled-components/native';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
 import { formatScore, getScoreColor } from '../../utils/scoreUtils';
 import {
-  // BestScores,
-  // BestScoresLabel,
+  BestScores,
+  BestScoresLabel,
   Card,
   CardHeader,
   Divider,
@@ -106,7 +105,6 @@ export const LeaderboardTeamCard = ({
   isMastersTournament = false,
   isPGATournament = false,
 }: LeaderboardTeamCardProps) => {
-  const theme = useTheme();
   const { tournamentTheme } = useTournamentTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const swipeableRef = useRef<Swipeable>(null);
@@ -135,7 +133,8 @@ export const LeaderboardTeamCard = ({
 
   const teamName = entry.name?.main ?? '';
   const ownerName = getOwnerDisplayName(entry, isCurrentUser, currentUserNickname);
-  // const bestScores = entry.bestScore ?? [];
+  // API returns `bestScore` (camelCase). Default to [] so mocks/older payloads won't crash.
+  const bestScores = entry.bestScore ?? [];
   const players = entry.players ?? [];
 
   const renderRightActions = () => {
@@ -228,9 +227,17 @@ export const LeaderboardTeamCard = ({
           >
             {formatScore(entry.total)}
           </TotalScore>
-          {/* Commented out - may be needed in the future
-          <BestScoresLabel isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament}>Best {bestScores.length}</BestScoresLabel>
-          <BestScores isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament} isPGATournament={isPGATournament}>
+          <BestScoresLabel
+            isOpenTournament={isOpenTournament}
+            isMastersTournament={isMastersTournament}
+          >
+            Best {bestScores.length}
+          </BestScoresLabel>
+          <BestScores
+            isOpenTournament={isOpenTournament}
+            isMastersTournament={isMastersTournament}
+            isPGATournament={isPGATournament}
+          >
             {bestScores.length > 0 ? (
               <>
                 {bestScores.map((score, index) => (
@@ -242,13 +249,15 @@ export const LeaderboardTeamCard = ({
                       fontSize: 9,
                     }}
                   >
-                    {formatScore(score)}{index < bestScores.length - 1 ? ', ' : ''}
+                    {formatScore(score)}
+                    {index < bestScores.length - 1 ? ', ' : ''}
                   </Text>
                 ))}
               </>
-            ) : '-'}
+            ) : (
+              '-'
+            )}
           </BestScores>
-          */}
         </ScoreContainer>
 
         {canExpand && (

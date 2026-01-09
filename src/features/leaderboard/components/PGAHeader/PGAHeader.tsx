@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, LogoImage } from './styles';
 
-const pgaLogo = require('../../../../../assets/PGALogo1.png');
+const pgaLogo = require('~/assets/images/tournaments/PGALogo1.png');
 
 export const PGAHeader: React.FC = () => {
   return (
@@ -10,4 +10,3 @@ export const PGAHeader: React.FC = () => {
     </Container>
   );
 };
-
