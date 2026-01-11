@@ -1,18 +1,19 @@
-import { useRoute } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
-import { Platform, RefreshControl, UIManager } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useCallback, useEffect, useState } from 'react';
+import { BackHandler, Platform, RefreshControl, UIManager } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
-import type { TournamentStackScreenProps } from '~/navigation/types';
+import type { TournamentStackParamList, TournamentStackScreenProps } from '~/navigation/types';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
 import { LeaderboardHeader } from '../../components/LeaderboardHeader/LeaderboardHeader';
 import { LeaderboardTeamCard } from '../../components/LeaderboardTeamCard/LeaderboardTeamCard';
 import { MastersColumnHeader } from '../../components/MastersColumnHeader/MastersColumnHeader';
 import { MastersHeader } from '../../components/MastersHeader/MastersHeader';
-import { PGAHeader } from '../../components/PGAHeader/PGAHeader';
 import { OpenUKHeader } from '../../components/OpenUKHeader/OpenUKHeader';
+import { PGAHeader } from '../../components/PGAHeader/PGAHeader';
 import { LeaderboardSkeleton } from './LeaderboardSkeleton';
 import {
   CardWrapper,
@@ -32,9 +33,23 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 export const Leaderboard = () => {
   const theme = useTheme();
   const { tournamentTheme } = useTournamentTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<TournamentStackParamList>>();
   const route = useRoute<TournamentStackScreenProps<'Leaderboard'>['route']>();
   const { leagueId } = route.params;
   const [openSwipeableId, setOpenSwipeableId] = useState<string | null>(null);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const {
     league,

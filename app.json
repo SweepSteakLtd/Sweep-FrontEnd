@@ -4,7 +4,7 @@
     "slug": "sweepsteak",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/ChipinLogo.jpg",
+    "icon": "./assets/ChipInLogo.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -25,7 +25,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/ChipinLogo.jpg",
+        "foregroundImage": "./assets/ChipInLogo.jpg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.sweepsteak.app",
@@ -40,7 +40,7 @@
       "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/ChipinLogo.jpg"
+      "favicon": "./assets/ChipInLogo.jpg"
     },
     "extra": {
       "eas": {

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
 import { formatScore, getScoreColor } from '../../utils/scoreUtils';
 import {
-  BestScores,
-  BestScoresLabel,
+  // BestScores,
+  // BestScoresLabel,
   Card,
   CardHeader,
   Divider,
@@ -29,6 +29,7 @@ import {
   SwipeActionText,
   TeamInfo,
   TeamName,
+  TeamNameRow,
   TotalScore,
 } from './styles';
 
@@ -134,7 +135,7 @@ export const LeaderboardTeamCard = ({
   const teamName = entry.name?.main ?? '';
   const ownerName = getOwnerDisplayName(entry, isCurrentUser, currentUserNickname);
   // API returns `bestScore` (camelCase). Default to [] so mocks/older payloads won't crash.
-  const bestScores = entry.bestScore ?? [];
+  // const bestScores = entry.bestScore ?? [];
   const players = entry.players ?? [];
 
   const renderRightActions = () => {
@@ -164,8 +165,9 @@ export const LeaderboardTeamCard = ({
       isOpenTournament={isOpenTournament}
       isMastersTournament={isMastersTournament}
       isPGATournament={isPGATournament}
-      onPress={toggleExpanded}
-      activeOpacity={0.7}
+      onPress={canExpand ? toggleExpanded : undefined}
+      activeOpacity={canExpand ? 0.7 : 1}
+      disabled={!canExpand}
     >
       <CardHeader>
         <RankBadge
@@ -179,21 +181,17 @@ export const LeaderboardTeamCard = ({
         </RankBadge>
 
         <TeamInfo>
-          <TeamName isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament}>
-            {teamName}
-          </TeamName>
-          <OwnerRow>
-            {entry.prize > 0 ? (
-              <PrizeContainer isMastersTournament={isMastersTournament}>
-                <PrizeAmount
-                  isOpenTournament={isOpenTournament}
-                  isMastersTournament={isMastersTournament}
-                  isPGATournament={isPGATournament}
-                >
-                  £{(entry.prize / 100).toLocaleString()}
-                </PrizeAmount>
+          <TeamNameRow>
+            <TeamName isOpenTournament={isOpenTournament} isMastersTournament={isMastersTournament}>
+              {teamName}
+            </TeamName>
+            {entry.prize > 0 && (
+              <PrizeContainer>
+                <PrizeAmount>£{(entry.prize / 100).toLocaleString()}</PrizeAmount>
               </PrizeContainer>
-            ) : null}
+            )}
+          </TeamNameRow>
+          <OwnerRow>
             <OwnerName
               isOpenTournament={isOpenTournament}
               isMastersTournament={isMastersTournament}
@@ -227,6 +225,7 @@ export const LeaderboardTeamCard = ({
           >
             {formatScore(entry.total)}
           </TotalScore>
+          {/* Commented out - may be needed in the future
           <BestScoresLabel
             isOpenTournament={isOpenTournament}
             isMastersTournament={isMastersTournament}
@@ -258,6 +257,7 @@ export const LeaderboardTeamCard = ({
               '-'
             )}
           </BestScores>
+          */}
         </ScoreContainer>
 
         {canExpand && (

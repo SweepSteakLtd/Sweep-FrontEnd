@@ -82,6 +82,12 @@ export const TeamInfo = styled.View`
   min-width: 0;
 `;
 
+export const TeamNameRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+`;
+
 export const TeamName = styled.Text<{ isOpenTournament?: boolean; isMastersTournament?: boolean }>`
   font-size: 13px;
   font-weight: 600;
@@ -94,6 +100,7 @@ export const TeamName = styled.Text<{ isOpenTournament?: boolean; isMastersTourn
     isOpenTournament?: boolean;
     isMastersTournament?: boolean;
   }) => (isMastersTournament ? '#000000' : isOpenTournament ? '#003366' : theme.colors.white)};
+  flex-shrink: 1;
 `;
 
 export const OwnerRow = styled.View`
@@ -141,7 +148,7 @@ export const TotalScore = styled.Text<{
   isMastersTournament?: boolean;
   isPGATournament?: boolean;
 }>`
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 700;
   color: ${({
     isOpenTournament,
@@ -188,36 +195,16 @@ export const BestScores = styled.View<{
   flex-wrap: wrap;
 `;
 
-export const PrizeContainer = styled.View<{ isMastersTournament?: boolean }>`
-  background-color: ${({ isMastersTournament }: { isMastersTournament?: boolean }) =>
-    isMastersTournament ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)'};
+export const PrizeContainer = styled.View`
+  background-color: #ffd700;
   padding: 2px 6px;
   border-radius: 4px;
 `;
 
-export const PrizeAmount = styled.Text<{
-  isOpenTournament?: boolean;
-  isMastersTournament?: boolean;
-  isPGATournament?: boolean;
-}>`
+export const PrizeAmount = styled.Text`
   font-size: 10px;
   font-weight: 700;
-  color: ${({
-    isOpenTournament,
-    isMastersTournament,
-    isPGATournament,
-  }: {
-    isOpenTournament?: boolean;
-    isMastersTournament?: boolean;
-    isPGATournament?: boolean;
-  }) =>
-    isMastersTournament
-      ? '#000000'
-      : isOpenTournament
-        ? '#003366'
-        : isPGATournament
-          ? '#CCA600'
-          : '#FFD700'};
+  color: #000000;
 `;
 
 export const ExpandButton = styled.View`

@@ -1,7 +1,8 @@
 import type { RouteProp } from '@react-navigation/native';
-import { useRoute } from '@react-navigation/native';
-import React, { useMemo } from 'react';
-import { ScrollView } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useEffect, useMemo } from 'react';
+import { BackHandler, ScrollView } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
@@ -40,6 +41,7 @@ type TeamScreenRouteProp = RouteProp<TournamentStackParamList, 'Team'>;
 export const TeamScreen = () => {
   const theme = useTheme();
   const { tournamentTheme } = useTournamentTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<TournamentStackParamList>>();
   const route = useRoute<TeamScreenRouteProp>();
   const {
     leagueId,
@@ -49,6 +51,19 @@ export const TeamScreen = () => {
     playerIds,
     tournamentStartTime,
   } = route.params ?? {};
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const {
     teamName,

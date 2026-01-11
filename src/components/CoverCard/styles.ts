@@ -90,3 +90,19 @@ export const LiveText = styled.Text`
   font-weight: 700;
   text-transform: uppercase;
 `;
+
+export const FinishedBadge = styled.View`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
+  padding: 6px 12px;
+  border-radius: 6px;
+`;
+
+export const FinishedText = styled.Text`
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+`;

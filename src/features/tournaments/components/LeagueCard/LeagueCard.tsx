@@ -77,9 +77,7 @@ export const LeagueCard = ({ league, onPress, onDelete }: LeagueCardProps) => {
         {/* Row 1: Name + Private pill | Amount */}
         <CardRow>
           <NameRow>
-            <GameName isLive={isLive}>
-              {league.name}
-            </GameName>
+            <GameName isLive={isLive}>{league.name}</GameName>
             {isPrivate && (
               <PrivatePill>
                 <PrivatePillText>Private</PrivatePillText>

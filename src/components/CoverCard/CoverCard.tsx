@@ -3,6 +3,8 @@ import {
   Card,
   CardWrapper,
   CoverImage,
+  FinishedBadge,
+  FinishedText,
   LiveBadge,
   LiveDot,
   LiveText,
@@ -23,6 +25,7 @@ export interface CoverCardProps {
   overlayPadding?: number;
   accentColor?: string;
   showLiveBadge?: boolean;
+  showFinishedBadge?: boolean;
 }
 
 export const CoverCard = ({
@@ -37,6 +40,7 @@ export const CoverCard = ({
   overlayPadding = 16,
   accentColor,
   showLiveBadge = false,
+  showFinishedBadge = false,
 }: CoverCardProps) => {
   const defaultImage =
     imageUri || 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=800&h=400&fit=crop';
@@ -50,6 +54,11 @@ export const CoverCard = ({
             <LiveDot />
             <LiveText>Live</LiveText>
           </LiveBadge>
+        )}
+        {showFinishedBadge && (
+          <FinishedBadge>
+            <FinishedText>Finished</FinishedText>
+          </FinishedBadge>
         )}
         <Overlay padding={overlayPadding} accentColor={accentColor}>
           {children ? (

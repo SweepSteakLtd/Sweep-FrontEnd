@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation } from 'react-native';
 import type { LeaderboardEntry } from '~/services/apis/Leaderboard/types';
-import type { Tournament } from '~/services/apis/schemas';
 import { useGetLeaderboard } from '~/services/apis/Leaderboard/useGetLeaderboard';
 import { useGetLeague } from '~/services/apis/League/useGetLeague';
+import type { Tournament } from '~/services/apis/schemas';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { usePinnedTeam } from '../../hooks/usePinnedTeam';
@@ -41,22 +41,27 @@ export const useLeaderboard = (leagueId: string) => {
       );
 
   // Check if tournament has started (entries closed)
-  // Use tournament's starts_at to determine if players should be visible
-  // Default to false (not started) if no start time is available yet
+  // Tournament has started if it's live or finished (backend provides these flags)
   const tournamentStarted = useMemo(() => {
-    const startTime = tournament?.starts_at;
-    if (!startTime) return false; // Default to not started if no time available yet
-    return new Date(startTime) <= new Date();
-  }, [tournament?.starts_at]);
+    if (!tournament) return false;
+    const isLive = tournament.is_live ?? false;
+    const isFinished = tournament.is_finished ?? false;
+    return isLive || isFinished;
+  }, [tournament]);
 
-  // Only poll when tournament has started
+  // Only poll when tournament is live (not when finished)
+  const tournamentIsLive = useMemo(() => {
+    if (!tournament) return false;
+    return tournament.is_live ?? false;
+  }, [tournament]);
+
   const {
     data: leaderboardData,
     isLoading: isLeaderboardLoading,
     refetch,
     isRefetching,
   } = useGetLeaderboard(leagueId, {
-    refetchInterval: tournamentStarted ? POLL_INTERVAL : undefined,
+    refetchInterval: tournamentIsLive ? POLL_INTERVAL : undefined,
   });
 
   // Build current user's full name to match against leaderboard entries

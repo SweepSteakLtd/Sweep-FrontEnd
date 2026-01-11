@@ -1,8 +1,8 @@
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useCallback, useMemo, useState } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { BackHandler, RefreshControl, ScrollView } from 'react-native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
@@ -113,7 +113,8 @@ export const TournamentLeagues = () => {
   const leaguesFetching =
     activeGameTab === 'private' ? privateLeaguesFetching : publicLeaguesFetching;
   const leaguesError = activeGameTab === 'private' ? privateLeaguesError : publicLeaguesError;
-  const leagues = activeGameTab === 'private' ? tournamentPrivateSearchLeagues : tournamentPublicLeagues;
+  const leagues =
+    activeGameTab === 'private' ? tournamentPrivateSearchLeagues : tournamentPublicLeagues;
 
   // Filter leagues where current user is owner or member (for private tab when not searching)
   // Uses publicLeagues since those are fetched with search_term which includes user's private leagues
@@ -161,6 +162,19 @@ export const TournamentLeagues = () => {
     // Navigate directly to LeagueHome - it handles private league join code flow
     navigation.navigate('LeagueHome', { leagueId: league.id });
   };
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true; // Prevent default behavior (exit app)
+      }
+      return false; // Let default behavior happen (exit app)
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   // Show full skeleton only on true initial load (isLoading means no cached data)
   // isFetching can be true even with cached data (background refetch)

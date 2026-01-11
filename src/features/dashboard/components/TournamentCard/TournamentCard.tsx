@@ -9,15 +9,6 @@ interface TournamentCardProps {
 export const TournamentCard = ({ tournament, onPress }: TournamentCardProps) => {
   const year = tournament.starts_at ? new Date(tournament.starts_at).getFullYear() : '';
 
-  // Determine if tournament is currently live
-  const isLive = () => {
-    if (!tournament.starts_at || !tournament.finishes_at) return false;
-    const now = new Date();
-    const startDate = new Date(tournament.starts_at);
-    const endDate = new Date(tournament.finishes_at);
-    return now >= startDate && now <= endDate;
-  };
-
   return (
     <CoverCard
       imageUri={tournament.cover_picture}
@@ -28,7 +19,8 @@ export const TournamentCard = ({ tournament, onPress }: TournamentCardProps) => 
       titleWeight="700"
       overlayPadding={16}
       accentColor={tournament.colours?.primary}
-      showLiveBadge={isLive()}
+      showLiveBadge={tournament.is_live ?? false}
+      showFinishedBadge={tournament.is_finished ?? false}
     />
   );
 };

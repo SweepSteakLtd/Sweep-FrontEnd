@@ -22,27 +22,38 @@ interface TeamCardProps {
   onPress: () => void;
 }
 
-const getTournamentStatus = (startsAt?: string, finishesAt?: string): string => {
+const getTournamentStatus = (
+  startsAt?: string,
+  finishesAt?: string,
+  isLive?: boolean,
+  isFinished?: boolean,
+): string => {
+  // Use backend flags if available
+  if (isFinished) {
+    return 'Tournament ended';
+  }
+
+  if (isLive) {
+    if (finishesAt) {
+      const now = new Date();
+      const endDate = new Date(finishesAt);
+      const diffTime = endDate.getTime() - now.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return `Tournament ends in ${diffDays} ${diffDays === 1 ? 'day' : 'days'}`;
+    }
+    return 'Tournament in progress';
+  }
+
+  // Fallback to date calculation if backend flags not available
   if (!startsAt) return 'Tournament dates unavailable';
 
   const now = new Date();
   const startDate = new Date(startsAt);
-  const endDate = finishesAt ? new Date(finishesAt) : null;
 
   if (now < startDate) {
     const diffTime = startDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return `Tournament starts in ${diffDays} ${diffDays === 1 ? 'day' : 'days'}`;
-  }
-
-  if (endDate && now > endDate) {
-    return 'Tournament ended';
-  }
-
-  if (endDate) {
-    const diffTime = endDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return `Tournament ends in ${diffDays} ${diffDays === 1 ? 'day' : 'days'}`;
   }
 
   return 'Tournament in progress';
@@ -63,8 +74,14 @@ export const TeamCard: React.FC<TeamCardProps> = ({ team, onPress }) => {
   }, [team.league?.tournament_id, tournaments]);
 
   const tournamentStatus = useMemo(
-    () => getTournamentStatus(tournament?.starts_at, tournament?.finishes_at),
-    [tournament?.starts_at, tournament?.finishes_at],
+    () =>
+      getTournamentStatus(
+        tournament?.starts_at,
+        tournament?.finishes_at,
+        tournament?.is_live,
+        tournament?.is_finished,
+      ),
+    [tournament?.starts_at, tournament?.finishes_at, tournament?.is_live, tournament?.is_finished],
   );
 
   return (
