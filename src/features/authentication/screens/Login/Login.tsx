@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { BackHandler } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
@@ -36,8 +37,21 @@ export const Login = () => {
   const { login, loading } = useLogin();
 
   const [email, setEmail] = useState('marin.obranovic@gmail.com');
-  const [password, setPassword] = useState('Dude1234');
+  const [password, setPassword] = useState('Dude1234#');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const handleSignIn = async () => {
     // Validate using Zod

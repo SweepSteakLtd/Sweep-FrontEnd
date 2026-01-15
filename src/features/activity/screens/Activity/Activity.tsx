@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { BackHandler, RefreshControl, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Skeleton } from '~/components/Skeleton/Skeleton';
+import type { RootStackParamList } from '~/navigation/types';
 import { useGetActivity } from '~/services/apis/Activity/useGetActivity';
 import { formatCurrency } from '~/utils/currency';
 import {
@@ -22,6 +25,7 @@ import {
   TitleRow,
 } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type TimePeriod = 'all' | '7d' | '30d' | '3m' | '6m' | '12m';
 
 const TIME_PERIODS: { label: string; value: TimePeriod; timestamp?: string }[] = [
@@ -64,8 +68,22 @@ const ActivitySkeleton = () => (
 
 export const Activity = () => {
   const theme = useTheme();
+  const navigation = useNavigation<NavigationProp>();
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('all');
   const [refreshing, setRefreshing] = useState(false);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   // Get timestamp for the selected period
   const selectedTimestamp = TIME_PERIODS.find((p) => p.value === selectedPeriod)?.timestamp;

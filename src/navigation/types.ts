@@ -55,6 +55,11 @@ export type RootStackParamList = {
   MyLeagues: undefined;
   Deposit: undefined;
   Withdraw: undefined;
+  PaymentCheckout: {
+    transactionId: string;
+    amount: number;
+    currency?: string;
+  };
   AlertModal: {
     title: string;
     message: string;

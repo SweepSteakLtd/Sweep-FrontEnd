@@ -1,7 +1,9 @@
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, RefreshControl } from 'react-native';
+import { ActivityIndicator, BackHandler, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { Switch } from '~/components/Switch/Switch';
@@ -17,6 +19,7 @@ import {
   toggleMockHandler,
 } from '~/lib/mocks/storage';
 import type { MockConfig, MockHandler } from '~/lib/mocks/types';
+import type { RootStackParamList } from '~/navigation/types';
 import {
   BottomSheetContainer,
   BottomSheetTitle,
@@ -55,8 +58,11 @@ interface HandlerWithConfig extends MockHandler {
   configSelectedScenario: string;
 }
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const Settings = () => {
   const theme = useTheme();
+  const navigation = useNavigation<NavigationProp>();
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<MockConfig | null>(null);
   const [handlers, setHandlers] = useState<HandlerWithConfig[]>([]);
@@ -139,6 +145,19 @@ export const Settings = () => {
       [group]: !prev[group],
     }));
   };
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   useEffect(() => {
     loadConfig();

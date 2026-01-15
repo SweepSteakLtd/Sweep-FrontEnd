@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { BackHandler } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
@@ -34,6 +35,19 @@ export const SelfExclusion = () => {
   const { data: user } = useGetUser();
   const { mutate: updateUser, isPending } = useUpdateUser();
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   // Format the exclusion end date if it exists
   const exclusionEndDate = user?.exclusion_ending

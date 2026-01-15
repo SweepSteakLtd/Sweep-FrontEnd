@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Image, ImageSourcePropType, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { BackHandler, Image, ImageSourcePropType, ScrollView } from 'react-native';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import {
   AvailableText,
@@ -42,11 +45,27 @@ const PAYMENT_METHODS: PaymentMethod[] = [
   },
 ];
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const Withdraw = () => {
+  const navigation = useNavigation<NavigationProp>();
   const { data: user } = useGetUser();
   const availableBalance = user?.current_balance || 0;
 
   const [amount, setAmount] = useState('0');
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   return (
     <ScreenWrapper

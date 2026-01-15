@@ -24,6 +24,7 @@ import type { MockHandler } from '../types';
  * Retrieves all player profiles
  * Supports query parameters:
  * - country: Filter player profiles by country (ISO code)
+ * - tournament_id: Filter player profiles by tournament ID
  */
 export const getPlayerProfilesHandler: MockHandler = {
   id: 'get-player-profiles',
@@ -36,6 +37,7 @@ export const getPlayerProfilesHandler: MockHandler = {
     // Parse URL to get query parameters
     const urlObj = new URL(url, 'http://localhost');
     const country = urlObj.searchParams.get('country');
+    const tournamentId = urlObj.searchParams.get('tournament_id');
 
     // Type guard for data structure
     if (!data || typeof data !== 'object' || !('data' in data) || !Array.isArray(data.data)) {
@@ -43,19 +45,22 @@ export const getPlayerProfilesHandler: MockHandler = {
     }
 
     // If no filters, return all data
-    if (!country) {
+    if (!country && !tournamentId) {
       return data;
     }
 
-    // Filter player profiles based on country
-    const filteredProfiles = data.data.filter(
-      (profile) =>
-        profile &&
-        typeof profile === 'object' &&
-        'country' in profile &&
-        typeof profile.country === 'string' &&
-        profile.country.toLowerCase() === country.toLowerCase(),
-    );
+    let filteredProfiles = data.data;
+
+    if (country) {
+      filteredProfiles = filteredProfiles.filter(
+        (profile) =>
+          profile &&
+          typeof profile === 'object' &&
+          'country' in profile &&
+          typeof profile.country === 'string' &&
+          profile.country.toLowerCase() === country.toLowerCase(),
+      );
+    }
 
     return { data: filteredProfiles };
   },

@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { BackHandler } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
@@ -29,10 +30,23 @@ export const CreateAccount = () => {
   const navigation = useNavigation<NavigationProp>();
   const { createAccount, loading } = useCreateFirebaseAccount();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('marin.obranovic@gmail.com');
+  const [password, setPassword] = useState('Dude1234');
+  const [confirmPassword, setConfirmPassword] = useState('Dude1234');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const handleContinue = async () => {
     // Validate using Zod

@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: http://localhost:8080/openapi.json
- * Generated: 2026-01-11T20:09:16.209Z
+ * Generated: 2026-01-15T20:19:26.625Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -20,6 +20,7 @@ export const userSchema = z.object({
   last_name: z.string().optional(),
   nickname: z.string().optional(),
   email: z.string().optional(),
+  date_of_birth: z.string().optional(),
   bio: z.string().optional(),
   profile_picture: z.string().optional(),
   phone_number: z.string().optional(),
@@ -480,6 +481,21 @@ export const transactionSchema = z.object({
 
 export type Transaction = z.infer<typeof transactionSchema>;
 
+// Payment
+export const paymentSchema = z.object({
+  transaction_id: z.string().optional(),
+  merchant_ref_num: z.string().optional(),
+  amount: z.number().optional(),
+  currency: z.string().optional(),
+  status: z.string().optional(),
+  charge_id: z.string().optional(),
+  received: z.boolean().optional(),
+  api_key: z.string().optional(),
+  environment: z.string().optional(),
+});
+
+export type Payment = z.infer<typeof paymentSchema>;
+
 // Activitie
 export const activitieSchema = z.object({
   deposited: z.number().optional(),
@@ -636,6 +652,12 @@ export const transactionsResponseSchema = z.object({
 });
 
 export type TransactionsResponse = z.infer<typeof transactionsResponseSchema>;
+
+export const paymentsResponseSchema = z.object({
+  data: z.array(paymentSchema),
+});
+
+export type PaymentsResponse = z.infer<typeof paymentsResponseSchema>;
 
 export const activitiesResponseSchema = z.object({
   data: z.array(activitieSchema),

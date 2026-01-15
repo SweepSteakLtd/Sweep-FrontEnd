@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
-import { Alert, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, BackHandler, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '~/components/Button/Button';
 import { DocumentPicker } from '~/components/DocumentPicker/DocumentPicker';
@@ -32,6 +32,19 @@ export const DocumentUpload: React.FC = () => {
   const [documents, setDocuments] = useState<PickedFile[]>([]);
   const [showError, setShowError] = useState(false);
   const uploadMutation = useUploadGBGDocuments();
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const handleFilesChanged = (files: PickedFile[]) => {
     setDocuments(files);

@@ -1,18 +1,38 @@
-import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { BackHandler } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
 import { PasswordRequirements } from '~/components/PasswordRequirements/PasswordRequirements';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import type { RootStackParamList } from '~/navigation/types';
 import { useChangePassword } from '../../hooks/useChangePassword';
 import { ButtonContainer, Container, InputRow, Section, SectionTitle } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const Security = () => {
+  const navigation = useNavigation<NavigationProp>();
   const { changePassword, loading, errors } = useChangePassword();
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const handleUpdate = async () => {
     const result = await changePassword({

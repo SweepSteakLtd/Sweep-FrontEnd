@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAlert } from '~/components/Alert/Alert';
 import type { TournamentStackParamList } from '~/navigation/types';
 import { ApiError } from '~/services/apis/apiClient';
+import { useGetLeague } from '~/services/apis/League/useGetLeague';
 import { useGetPlayerProfiles } from '~/services/apis/PlayerProfile/useGetPlayerProfiles';
 import type { TeamPlayer } from '~/services/apis/Team/types';
 import { useCreateTeam } from '~/services/apis/Team/useCreateTeam';
@@ -38,7 +39,15 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
   const [currentStep, setCurrentStep] = useState(0);
   const [initialized, setInitialized] = useState(false);
 
-  const { data: playerGroups = [], isLoading, isError } = useGetPlayerProfiles();
+  // Fetch league data to get tournament_id
+  const { data: leagueData } = useGetLeague(leagueId, joinCode);
+  const tournamentId = leagueData?.league?.tournament_id;
+
+  const {
+    data: playerGroups = [],
+    isLoading,
+    isError,
+  } = useGetPlayerProfiles(tournamentId ? { tournament_id: tournamentId } : undefined);
 
   // Check if no players are available after loading
   const hasNoPlayers = !isLoading && !isError && playerGroups.length === 0;

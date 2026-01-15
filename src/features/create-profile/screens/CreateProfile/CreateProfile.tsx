@@ -1,5 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
+import { BackHandler } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
@@ -24,6 +26,19 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const CreateProfile = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const {
     currentStep,

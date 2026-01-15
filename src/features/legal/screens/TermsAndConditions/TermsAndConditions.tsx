@@ -3,8 +3,8 @@ import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import { useState } from 'react';
-import { ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { BackHandler, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Checkbox } from '~/components/Checkbox/Checkbox';
@@ -23,6 +23,19 @@ export const TermsAndConditions = () => {
   const [accepted, setAccepted] = useState(false);
 
   const { nextScreen } = route.params;
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const handleAccept = () => {
     if (accepted) {

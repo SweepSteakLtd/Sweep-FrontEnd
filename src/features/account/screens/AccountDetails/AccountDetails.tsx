@@ -1,5 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { Image, Modal, RefreshControl, StyleSheet, View } from 'react-native';
+import { BackHandler, Image, Modal, RefreshControl, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
@@ -8,6 +10,7 @@ import { Button } from '~/components/Button/Button';
 import { Icon } from '~/components/Icon/Icon';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import type { RootStackParamList } from '~/navigation/types';
 import { useDeleteUser } from '~/services/apis/User/useDeleteUser';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
@@ -23,8 +26,11 @@ import {
   SectionTitle,
 } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const AccountDetails = () => {
   const theme = useTheme();
+  const navigation = useNavigation<NavigationProp>();
   const { showAlert } = useAlert();
   const { data: user, refetch } = useGetUser();
   const updateUserMutation = useUpdateUser();
@@ -47,6 +53,19 @@ export const AccountDetails = () => {
       setNickName(user.nickname || '');
     }
   }, [user]);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);

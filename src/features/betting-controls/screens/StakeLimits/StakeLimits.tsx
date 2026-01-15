@@ -1,21 +1,41 @@
-import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { BackHandler } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useAlert } from '~/components/Alert/Alert';
 import { Button } from '~/components/Button/Button';
 import { LimitInput } from '~/components/LimitInput/LimitInput';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import type { RootStackParamList } from '~/navigation/types';
 import { useGetUser } from '~/services/apis/User/useGetUser';
 import { useUpdateUser } from '~/services/apis/User/useUpdateUser';
 import { penceToPounds, poundsToPence } from '~/utils/currency';
 import { ButtonContainer, Container, Section } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const StakeLimits = () => {
+  const navigation = useNavigation<NavigationProp>();
   const { data: user } = useGetUser();
   const { mutate: updateUser, isPending } = useUpdateUser();
   const { showAlert } = useAlert();
 
   const [stakeLimit, setStakeLimit] = useState('');
   const [stakeNoLimit, setStakeNoLimit] = useState(false);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const handleUpdate = () => {
     // Check if user made any changes

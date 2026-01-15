@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useCallback, useState } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { BackHandler, FlatList, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import type { RootStackParamList } from '~/navigation/types';
@@ -39,6 +39,19 @@ export const MyTeams = () => {
   const { data: teams, isLoading, refetch: refetchTeams } = useGetTeams();
   const { data: tournaments, refetch: refetchTournaments } = useGetTournaments();
   const [refreshing, setRefreshing] = useState(false);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const handleTeamPress = useCallback(
     (team: Team) => {

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { useEffect, useState } from 'react';
+import { BackHandler, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { LeagueCard } from '~/features/tournaments/components/LeagueCard/LeagueCard';
@@ -41,6 +41,19 @@ export const MyLeagues = () => {
   } = useGetLeagues(user?.id ? { owner_id: user.id } : undefined, !!user?.id);
   const deleteLeagueMutation = useDeleteLeague();
   const [refreshing, setRefreshing] = useState(false);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);

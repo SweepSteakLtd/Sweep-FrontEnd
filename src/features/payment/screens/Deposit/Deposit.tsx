@@ -1,12 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { Image, ScrollView } from 'react-native';
+import type { NavigationProp } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Alert, BackHandler, ScrollView } from 'react-native';
 import { Button } from '~/components/Button/Button';
 import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { Input } from '~/components/Input/Input';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import type { RootStackParamList } from '~/navigation/types';
+import { useInitiatePayment } from '~/services/apis/Payment';
 import {
-  ChangeButton,
-  ChangeButtonText,
   Container,
   Content,
   HeaderRight,
@@ -20,8 +22,24 @@ import {
 import { depositSchema, MAX_AMOUNT, MIN_AMOUNT } from './validation';
 
 export const Deposit = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [amount, setAmount] = useState('20');
-  const [paymentMethod] = useState('Apple Pay');
+  const [paymentMethod] = useState('Paysafe Checkout');
+
+  const { mutate: initiatePayment, isPending: isInitiating } = useInitiatePayment();
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const validation = useMemo(() => {
     const result = depositSchema.safeParse({ amount });
@@ -34,8 +52,40 @@ export const Deposit = () => {
 
   const handleContinue = () => {
     if (!validation.isValid) return;
-    // TODO: Navigate to payment confirmation or process payment
-    console.log('Processing deposit:', amount, paymentMethod);
+
+    const amountInPounds = parseFloat(amount);
+    const amountInPence = Math.round(amountInPounds * 100); // Convert to pence
+
+    // Step 1: Initiate payment (create pending transaction)
+    initiatePayment(
+      {
+        amount: amountInPence,
+        currency: 'GBP',
+      },
+      {
+        onSuccess: (response) => {
+          console.log('Payment initiated:', response.data.transactionId);
+
+          // Step 2: Navigate to PaymentCheckout screen
+          navigation.navigate('PaymentCheckout', {
+            transactionId: response.data.transactionId,
+            amount: amountInPounds,
+            currency: 'GBP',
+          });
+        },
+        onError: (error: any) => {
+          console.error('Failed to initiate payment:', error);
+
+          // Show user-friendly error message
+          let errorMessage = 'Failed to initiate payment. Please try again.';
+          if (error?.message) {
+            errorMessage = error.message;
+          }
+
+          Alert.alert('Payment Error', errorMessage, [{ text: 'OK', style: 'default' }]);
+        },
+      },
+    );
   };
 
   return (
@@ -65,24 +115,17 @@ export const Deposit = () => {
             </LimitsText>
 
             <SectionTitle style={{ marginTop: 32 }}>Payment Method</SectionTitle>
-            <PaymentMethodCard onPress={() => {}}>
+            <PaymentMethodCard>
               <PaymentMethodLeft>
-                <Image
-                  source={require('../../../../../assets/images/payment/apple-logo-black.png')}
-                  style={{ width: 50, height: 32, marginRight: 12 }}
-                  resizeMode="contain"
-                />
                 <PaymentMethodText>{paymentMethod}</PaymentMethodText>
               </PaymentMethodLeft>
-              <ChangeButton onPress={() => {}}>
-                <ChangeButtonText>Change</ChangeButtonText>
-              </ChangeButton>
             </PaymentMethodCard>
 
             <Button
               title="Continue"
               onPress={handleContinue}
-              disabled={!validation.isValid}
+              disabled={!validation.isValid || isInitiating}
+              loading={isInitiating}
               fullWidth
               style={{ marginTop: 40 }}
             />

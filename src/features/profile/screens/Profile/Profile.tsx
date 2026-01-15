@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { BackHandler, RefreshControl, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useAlert } from '~/components/Alert/Alert';
 import { Avatar } from '~/components/Avatar/Avatar';
@@ -37,6 +37,19 @@ export const Profile = () => {
   const { showAlert } = useAlert();
   const { data: user, refetch } = useGetUser();
   const [refreshing, setRefreshing] = useState(false);
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);

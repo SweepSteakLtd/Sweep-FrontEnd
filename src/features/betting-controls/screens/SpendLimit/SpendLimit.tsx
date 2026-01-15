@@ -1,4 +1,9 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
+import { BackHandler } from 'react-native';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import type { RootStackParamList } from '~/navigation/types';
 import {
   Container,
   Description,
@@ -13,7 +18,24 @@ import {
   Title,
 } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const SpendLimit = () => {
+  const navigation = useNavigation<NavigationProp>();
+
+  // Handle Android hardware back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
   // Mock data
   const remainingSpend = 5000;
   const rollingLimit = 5000;
