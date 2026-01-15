@@ -44,7 +44,7 @@ const PaymentCheckoutScreen = () => {
   const route = useRoute<PaymentCheckoutRouteProp>();
   const [webViewKey, setWebViewKey] = useState(0); // Used to force reload
   const { data: userData } = useGetUser();
-  const { transactionId, amount, currency = 'GBP' } = route.params;
+  const { transactionId, amount, currency = 'GBP', type } = route.params;
 
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -115,6 +115,7 @@ const PaymentCheckoutScreen = () => {
       lastName: userData?.last_name,
       email: userData?.email,
       phone: userData?.phone_number,
+      type,
       billingAddress: {
         city: userData?.address?.town,
         country: userData?.address?.country,
@@ -133,7 +134,7 @@ const PaymentCheckoutScreen = () => {
       window.__PAYMENT_CONFIG__ = ${JSON.stringify(config)};
       true;
     `;
-  }, [amount, currency, publicKeyData]);
+  }, [amount, currency, publicKeyData, type, transactionId, userData]);
 
   /**
    * Handle messages from WebView
@@ -170,8 +171,10 @@ const PaymentCheckoutScreen = () => {
 
                     // Show success message
                     Alert.alert(
-                      'Payment Successful',
-                      `Your deposit of £${amount.toFixed(2)} has been processed successfully.`,
+                      type === 'deposit' ? 'Deposit Successful' : 'Withdrawal Successful',
+                      type === 'deposit'
+                        ? `Your deposit of £${amount.toFixed(2)} has been processed successfully.`
+                        : `Your withdrawal of £${amount.toFixed(2)} has been processed successfully.`,
                       [
                         {
                           text: 'OK',

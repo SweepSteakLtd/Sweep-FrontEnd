@@ -71,6 +71,7 @@ export const Deposit = () => {
             transactionId: response.data.transactionId,
             amount: amountInPounds,
             currency: 'GBP',
+            type: 'deposit',
           });
         },
         onError: (error: any) => {

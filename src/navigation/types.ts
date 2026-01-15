@@ -59,6 +59,7 @@ export type RootStackParamList = {
     transactionId: string;
     amount: number;
     currency?: string;
+    type: 'deposit' | 'withdrawal';
   };
   AlertModal: {
     title: string;

@@ -38,3 +38,17 @@ export interface GetPublicKeyResponse {
     environment: 'TEST' | 'LIVE';
   };
 }
+
+export interface InitiateWithdrawalRequest {
+  amount: number; // Amount in minor units (cents/pence)
+  currency?: string; // Default: 'GBP'
+}
+
+export interface InitiateWithdrawalResponse {
+  data: {
+    transactionId: string;
+    merchantRefNum: string;
+    amount: number;
+    currency: string;
+  };
+}

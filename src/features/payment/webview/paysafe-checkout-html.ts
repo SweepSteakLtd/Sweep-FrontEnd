@@ -196,9 +196,9 @@ export const paysafeCheckoutHtml = `
                 accountId: "1003051160",
               },
             },
-            payout: false,
+            payout: config.type === "withdrawal",
             // singleUseCustomerToken: "SPP2YHcOKjdqofR2",
-            canEditAmount: true,
+            canEditAmount: config.type !== "withdrawal",
           };
 
           // Result callback - called when payment is completed or fails
@@ -214,11 +214,12 @@ export const paysafeCheckoutHtml = `
                 code: error.code || "UNKNOWN",
                 correlationId: error.correlationId || "",
               });
-            } else if (result && result.token) {
+            } else if (result && result.paymentHandleToken
+) {
               // Payment successful
               sendMessage({
                 type: "payment_success",
-                paymentHandleToken: result.token,
+                paymentHandleToken: result.paymentHandleToken,
                 paymentMethod: result.paymentMethod || "CARD",
                 status: result.status || "PAYABLE",
                 gatewayResponse: result.gatewayResponse || {},
