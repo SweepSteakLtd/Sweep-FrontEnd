@@ -58,7 +58,7 @@ export const Withdraw = () => {
     if (amountNum > MAX_WITHDRAWAL) {
       return { isValid: false, error: `Maximum withdrawal is £${MAX_WITHDRAWAL}` };
     }
-    if (amountNum > availableBalance) {
+    if (amountNum > availableBalance / 100) {
       return { isValid: false, error: 'Insufficient balance' };
     }
     return { isValid: true, error: undefined };
@@ -125,7 +125,7 @@ export const Withdraw = () => {
               error={validation.error}
               style={{ fontSize: 32, textAlign: 'center' }}
             />
-            <AvailableText>£{availableBalance.toFixed(2)} available</AvailableText>
+            <AvailableText>£{(availableBalance / 100).toFixed(2)} available</AvailableText>
 
             <InfoText style={{ marginTop: 32 }}>
               Card withdrawals can take up to 24 hours. Min £{MIN_WITHDRAWAL} - Max: £

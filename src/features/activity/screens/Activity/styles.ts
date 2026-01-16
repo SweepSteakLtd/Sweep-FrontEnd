@@ -226,3 +226,22 @@ export const TransactionValue = styled.Text<TransactionValueProps>`
   color: ${({ color, theme }: { color?: string; theme: Theme }) =>
     color || theme.colors.text.primary};
 `;
+
+interface StatusBadgeProps {
+  status?: string;
+}
+
+export const StatusBadge = styled.View<StatusBadgeProps>`
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: ${({ status }: { status?: string }) => {
+    if (status === 'COMPLETED') return '#22c55e';
+    if (status === 'FAILED') return '#ef4444';
+    if (status === 'REFUND') return '#eab308';
+    return '#94a3b8';
+  }};
+  position: absolute;
+  top: 16px;
+  right: 16px;
+`;

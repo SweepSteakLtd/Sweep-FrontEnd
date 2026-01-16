@@ -19,6 +19,7 @@ import {
   StatLabel,
   StatRow,
   StatValue,
+  StatusBadge,
   TabButton,
   TabButtonText,
   TabsContainer,
@@ -178,31 +179,36 @@ export const Activity = () => {
                 </EmptyState>
               ) : (
                 activity?.transactions &&
-                activity.transactions.length > 0 &&
-                activity.transactions[0].id && (
+                activity.transactions.length > 0 && (
                   <>
-                    <EmptyStateTitle style={{ marginTop: 16 }}>Recent Transaction</EmptyStateTitle>
-                    <StatCard style={{ marginTop: 12 }}>
-                      <EmptyStateText>
-                        {activity.transactions[0].name || 'Transaction'}
-                      </EmptyStateText>
-                      <StatValue
-                        style={{
-                          color:
-                            activity.transactions[0].type === 'deposit'
-                              ? theme.colors.primary
-                              : theme.colors.error,
-                        }}
-                      >
-                        {activity.transactions[0].type === 'deposit' ? '+' : '-'}
-                        {formatCurrency(activity.transactions[0].value).replace('£', '')}
-                      </StatValue>
-                      <EmptyStateText>
-                        {activity.transactions[0].created_at
-                          ? new Date(activity.transactions[0].created_at).toLocaleDateString()
-                          : ''}
-                      </EmptyStateText>
-                    </StatCard>
+                    <EmptyStateTitle style={{ marginTop: 16 }}>Transactions</EmptyStateTitle>
+                    {activity.transactions.map((transaction) => (
+                      <StatCard key={transaction.id} style={{ marginTop: 12 }}>
+                        <StatusBadge status={transaction.payment_status} />
+                        <EmptyStateText>{transaction.name || 'Transaction'}</EmptyStateText>
+                        <StatValue
+                          style={{
+                            color:
+                              transaction.type === 'deposit'
+                                ? theme.colors.primary
+                                : theme.colors.error,
+                          }}
+                        >
+                          {transaction.type === 'deposit' ? '+' : '-'}
+                          {formatCurrency(transaction.value).replace('£', '')}
+                        </StatValue>
+                        {transaction.payment_method && (
+                          <StatLabel style={{ marginTop: 4 }}>
+                            {transaction.payment_method}
+                          </StatLabel>
+                        )}
+                        <EmptyStateText style={{ marginTop: 4 }}>
+                          {transaction.created_at
+                            ? new Date(transaction.created_at).toLocaleString()
+                            : ''}
+                        </EmptyStateText>
+                      </StatCard>
+                    ))}
                   </>
                 )
               )}

@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: http://localhost:8080/openapi.json
- * Generated: 2026-01-15T20:19:26.625Z
+ * Generated: 2026-01-16T20:11:24.665Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -461,8 +461,8 @@ export const transactionSchema = z.object({
         name: z.string().optional(),
         value: z.number().optional(),
         type: z.string().optional(),
-        charge_id: z.string().optional(),
-        user_id: z.string().optional(),
+        payment_status: z.string().optional(),
+        payment_method: z.string().optional(),
         created_at: z.string().optional(),
         updated_at: z.string().optional(),
       }),
@@ -473,8 +473,8 @@ export const transactionSchema = z.object({
   name: z.string().optional(),
   value: z.number().optional(),
   type: z.string().optional(),
-  charge_id: z.string().optional(),
-  user_id: z.string().optional(),
+  payment_status: z.string().optional(),
+  payment_method: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });
@@ -508,8 +508,8 @@ export const activitieSchema = z.object({
         name: z.string().optional(),
         value: z.number().optional(),
         type: z.string().optional(),
-        charge_id: z.string().optional(),
-        user_id: z.string().optional(),
+        payment_status: z.string().optional(),
+        payment_method: z.string().optional(),
         created_at: z.string().optional(),
         updated_at: z.string().optional(),
       }),

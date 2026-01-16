@@ -198,7 +198,7 @@ export const paysafeCheckoutHtml = `
             },
             payout: config.type === "withdrawal",
             // singleUseCustomerToken: "SPP2YHcOKjdqofR2",
-            canEditAmount: config.type !== "withdrawal",
+            canEditAmount: false,
           };
 
           // Result callback - called when payment is completed or fails
