@@ -240,6 +240,52 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
       return;
     }
 
+    const createTeam = async () => {
+      try {
+        await createTeamMutation.mutateAsync({
+          name: teamName,
+          league_id: leagueId,
+          players: selectedPlayerIds,
+          join_code: joinCode,
+        });
+
+        // Navigate directly to leaderboard after successful team creation
+        navigation.replace('Leaderboard', { leagueId });
+      } catch (error) {
+        // Handle insufficient funds error (422)
+        if (error instanceof ApiError && error.status === 422) {
+          showAlert({
+            title: 'Insufficient Funds',
+            message:
+              'You do not have enough funds deposited to create this team. Would you like to deposit more or cancel?',
+            buttons: [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Deposit',
+                onPress: () => {
+                  // Navigate to root navigator's Deposit screen
+                  navigation.getParent()?.navigate('Deposit' as never);
+                },
+              },
+            ],
+          });
+          return;
+        }
+
+        // Use the API error message if available (e.g., "You have reached the maximum number of teams")
+        const errorMessage =
+          error instanceof ApiError ? error.message : 'Failed to create team. Please try again.';
+
+        showAlert({
+          title: 'Error',
+          message: errorMessage,
+        });
+      }
+    };
+
     try {
       if (isEditMode) {
         await updateTeamMutation.mutateAsync({
@@ -258,24 +304,27 @@ export const useTeamScreen = (leagueId: string, joinCode?: string, params?: Team
           ],
         });
       } else {
-        await createTeamMutation.mutateAsync({
-          name: teamName,
-          league_id: leagueId,
-          players: selectedPlayerIds,
-          join_code: joinCode,
+        // Show confirmation before creating team (involves payment)
+        showAlert({
+          title: 'Confirm Team Creation',
+          message:
+            'By creating this team, the entry fee will be deducted from your account. Do you want to proceed?',
+          buttons: [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Confirm',
+              onPress: createTeam,
+            },
+          ],
         });
-
-        // Navigate directly to leaderboard after successful team creation
-        navigation.replace('Leaderboard', { leagueId });
       }
     } catch (error) {
-      // Use the API error message if available (e.g., "You have reached the maximum number of teams")
+      // Handle errors from update mutation
       const errorMessage =
-        error instanceof ApiError
-          ? error.message
-          : isEditMode
-            ? 'Failed to update team. Please try again.'
-            : 'Failed to create team. Please try again.';
+        error instanceof ApiError ? error.message : 'Failed to update team. Please try again.';
 
       showAlert({
         title: 'Error',

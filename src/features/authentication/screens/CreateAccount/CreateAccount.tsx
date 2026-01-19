@@ -30,9 +30,9 @@ export const CreateAccount = () => {
   const navigation = useNavigation<NavigationProp>();
   const { createAccount, loading } = useCreateFirebaseAccount();
 
-  const [email, setEmail] = useState('marin.obranovic@gmail.com');
-  const [password, setPassword] = useState('Dude1234');
-  const [confirmPassword, setConfirmPassword] = useState('Dude1234');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   // Handle Android hardware back button
