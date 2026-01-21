@@ -29,7 +29,7 @@ export interface CreateUserProfileParams {
 
 // API Function - Profile creation can take 10-15 seconds
 const createUserProfile = async (params: CreateUserProfileParams): Promise<UserResponse> => {
-  return api.post<UserResponse>('/api/users', params, undefined, 20000); // 20 second timeout
+  return api.post<UserResponse>('/api/users', params, undefined, 60000); // 1 minute timeout
 };
 
 /**

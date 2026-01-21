@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import { BackHandler } from 'react-native';
-import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { ProgressIndicator } from '~/components/ProgressIndicator/ProgressIndicator';
@@ -180,11 +180,7 @@ export const CreateProfile = () => {
   // Form state
   return (
     <Container>
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ flex: 1 }}
-        bottomOffset={140}
-      >
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <Title>
           <Typography variant="title" color={theme.colors.text.primary} align="center">
             The boring stuff!
@@ -211,9 +207,7 @@ export const CreateProfile = () => {
             );
           })}
         </StepsContainer>
-      </KeyboardAwareScrollView>
 
-      <KeyboardStickyView>
         <ButtonGroup>
           <Button
             variant="primary"
@@ -244,7 +238,7 @@ export const CreateProfile = () => {
             />
           )}
         </ButtonGroup>
-      </KeyboardStickyView>
+      </KeyboardAwareScrollView>
     </Container>
   );
 };

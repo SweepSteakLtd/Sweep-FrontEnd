@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { BackHandler } from 'react-native';
-import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
 import { Input } from '~/components/Input/Input';
@@ -73,11 +73,7 @@ export const CreateAccount = () => {
   return (
     <ScreenWrapper title="Create Account">
       <Container>
-        <KeyboardAwareScrollView
-          showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }}
-          bottomOffset={140}
-        >
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <Header>
             <HeaderText>
               <Typography variant="heading" color={theme.colors.text.primary}>
@@ -139,11 +135,8 @@ export const CreateAccount = () => {
               error={fieldErrors.confirmPassword}
             />
           </FormContainer>
-        </KeyboardAwareScrollView>
-
-        <KeyboardStickyView>
           <Button disabled={loading} loading={loading} onPress={handleContinue} title="Continue" />
-        </KeyboardStickyView>
+        </KeyboardAwareScrollView>
       </Container>
     </ScreenWrapper>
   );

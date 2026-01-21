@@ -1,11 +1,12 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGBGVerification } from '~/features/create-profile/hooks/useGBGVerification';
 import type { RootStackParamList, RootStackScreenProps } from '~/navigation/types';
 import { useDeleteUser } from '~/services/apis/User/useDeleteUser';
 import { useGetUser, userQueryKeys } from '~/services/apis/User/useGetUser';
+import { verifyGBG } from '~/services/apis/User/useVerifyGBG';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type RouteProps = RootStackScreenProps<'VerificationPending'>['route'];
@@ -32,6 +33,7 @@ export const useVerificationPending = () => {
   // Track if we've navigated away to prevent restarting polling
   const hasNavigatedAwayRef = useRef(false);
   const fromDocumentUpload = route.params?.fromDocumentUpload ?? false;
+  const [isRetrying, setIsRetrying] = useState(false);
 
   // Stop polling when screen loses focus, reset flag when focused
   useFocusEffect(
@@ -71,19 +73,109 @@ export const useVerificationPending = () => {
       !isPolling &&
       !result.status
     ) {
-      // If coming from document upload, add a delay to give backend time to process
+      // If coming from document upload, retry 3 times with 3-second intervals
       if (fromDocumentUpload) {
         console.log(
-          '[VerificationPending] Coming from document upload, waiting 3 seconds before polling',
+          '[VerificationPending] Coming from document upload, starting retry logic (3 attempts with 3s intervals)',
         );
-        const delayTimeout = setTimeout(() => {
-          if (!hasNavigatedAwayRef.current) {
-            console.log('[VerificationPending] Starting polling after delay');
-            startPolling(user.kyc_instance_id!, { immediate: true });
-          }
-        }, 3000); // 3 second delay to allow backend to process upload
+        setIsRetrying(true);
 
-        return () => clearTimeout(delayTimeout);
+        let attemptCount = 0;
+        const MAX_ATTEMPTS = 3;
+        const RETRY_DELAY = 3000; // 3 seconds
+
+        const checkStatus = async () => {
+          attemptCount++;
+          console.log(`[VerificationPending] Attempt ${attemptCount}/${MAX_ATTEMPTS}`);
+
+          try {
+            const response = await verifyGBG(user.kyc_instance_id!);
+            console.log(`[VerificationPending] Attempt ${attemptCount} - Status:`, response.status);
+
+            // If we get a definitive status (PASS, FAIL, or IN_PROGRESS), handle it
+            if (response.status === 'PASS') {
+              console.log('[VerificationPending] Got PASS status - navigating to Dashboard');
+              setIsRetrying(false);
+              hasNavigatedAwayRef.current = true;
+              queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Dashboard' }],
+              });
+              return;
+            }
+
+            if (response.status === 'FAIL') {
+              console.log('[VerificationPending] Got FAIL status - showing error');
+              setIsRetrying(false);
+              // Start normal polling to handle FAIL state
+              startPolling(user.kyc_instance_id!, { immediate: true });
+              return;
+            }
+
+            if (response.status === 'IN_PROGRESS') {
+              console.log('[VerificationPending] Got IN_PROGRESS - starting normal polling');
+              setIsRetrying(false);
+              // Start normal polling to continue checking
+              startPolling(user.kyc_instance_id!, { immediate: true });
+              return;
+            }
+
+            // If status is MANUAL and we haven't reached max attempts, retry
+            if (response.status === 'MANUAL' && attemptCount < MAX_ATTEMPTS) {
+              console.log(
+                `[VerificationPending] Still MANUAL, waiting ${RETRY_DELAY}ms before retry...`,
+              );
+              setTimeout(() => {
+                if (!hasNavigatedAwayRef.current) {
+                  checkStatus();
+                }
+              }, RETRY_DELAY);
+              return;
+            }
+
+            // If we've exhausted all retries and still MANUAL, navigate to DocumentUpload
+            if (response.status === 'MANUAL' && attemptCount >= MAX_ATTEMPTS) {
+              console.log(
+                '[VerificationPending] Still MANUAL after 3 attempts - navigating to DocumentUpload',
+              );
+              setIsRetrying(false);
+              hasNavigatedAwayRef.current = true;
+              navigation.navigate('DocumentUpload');
+              return;
+            }
+          } catch (error) {
+            console.error('[VerificationPending] Error checking status:', error);
+            // On error, try again if we have attempts left
+            if (attemptCount < MAX_ATTEMPTS) {
+              console.log('[VerificationPending] Error, retrying...');
+              setTimeout(() => {
+                if (!hasNavigatedAwayRef.current) {
+                  checkStatus();
+                }
+              }, RETRY_DELAY);
+            } else {
+              // After max attempts with errors, start normal polling to handle error state
+              console.log(
+                '[VerificationPending] Error after max attempts - starting normal polling',
+              );
+              setIsRetrying(false);
+              startPolling(user.kyc_instance_id!, { immediate: true });
+            }
+          }
+        };
+
+        // Start first check after initial delay
+        const initialTimeout = setTimeout(() => {
+          if (!hasNavigatedAwayRef.current) {
+            checkStatus();
+          }
+        }, RETRY_DELAY);
+
+        return () => {
+          clearTimeout(initialTimeout);
+          setIsRetrying(false);
+        };
       } else {
         // Poll immediately - no delay needed when checking status
         startPolling(user.kyc_instance_id, { immediate: true });
@@ -91,7 +183,16 @@ export const useVerificationPending = () => {
       }
     }
     return undefined;
-  }, [isUserLoading, user, isPolling, result.status, startPolling, fromDocumentUpload]);
+  }, [
+    isUserLoading,
+    user,
+    isPolling,
+    result.status,
+    startPolling,
+    fromDocumentUpload,
+    navigation,
+    queryClient,
+  ]);
 
   // Handle GBG verification result
   useEffect(() => {
@@ -127,12 +228,14 @@ export const useVerificationPending = () => {
   // - User has kyc_instance_id but no result yet (waiting to start polling)
   // - GBG status is IN_PROGRESS
   // - GBG status is MANUAL (navigating to document upload)
+  // - Retrying status checks (3 attempts)
   const hasPendingVerification =
     user?.is_identity_verified === false && user?.kyc_instance_id && !result.status;
 
   const isVerifying =
     isUserLoading ||
     isPolling ||
+    isRetrying ||
     hasPendingVerification ||
     result.status === 'IN_PROGRESS' ||
     result.status === 'MANUAL';
