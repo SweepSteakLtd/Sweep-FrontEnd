@@ -1,13 +1,14 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 import { useGBGVerification } from '~/features/create-profile/hooks/useGBGVerification';
-import type { RootStackParamList } from '~/navigation/types';
+import type { RootStackParamList, RootStackScreenProps } from '~/navigation/types';
 import { useDeleteUser } from '~/services/apis/User/useDeleteUser';
 import { useGetUser, userQueryKeys } from '~/services/apis/User/useGetUser';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type RouteProps = RootStackScreenProps<'VerificationPending'>['route'];
 
 /**
  * Hook for VerificationPending screen
@@ -22,6 +23,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
  */
 export const useVerificationPending = () => {
   const navigation = useNavigation<NavigationProp>();
+  const route = useRoute<RouteProps>();
   const queryClient = useQueryClient();
   const { isPending: isDeleting, handleDeleteAccount } = useDeleteUser();
   const { data: user, isLoading: isUserLoading } = useGetUser();
@@ -29,6 +31,7 @@ export const useVerificationPending = () => {
 
   // Track if we've navigated away to prevent restarting polling
   const hasNavigatedAwayRef = useRef(false);
+  const fromDocumentUpload = route.params?.fromDocumentUpload ?? false;
 
   // Stop polling when screen loses focus, reset flag when focused
   useFocusEffect(
@@ -68,10 +71,27 @@ export const useVerificationPending = () => {
       !isPolling &&
       !result.status
     ) {
-      // Poll immediately - no delay needed when checking status
-      startPolling(user.kyc_instance_id, { immediate: true });
+      // If coming from document upload, add a delay to give backend time to process
+      if (fromDocumentUpload) {
+        console.log(
+          '[VerificationPending] Coming from document upload, waiting 3 seconds before polling',
+        );
+        const delayTimeout = setTimeout(() => {
+          if (!hasNavigatedAwayRef.current) {
+            console.log('[VerificationPending] Starting polling after delay');
+            startPolling(user.kyc_instance_id!, { immediate: true });
+          }
+        }, 3000); // 3 second delay to allow backend to process upload
+
+        return () => clearTimeout(delayTimeout);
+      } else {
+        // Poll immediately - no delay needed when checking status
+        startPolling(user.kyc_instance_id, { immediate: true });
+        return undefined;
+      }
     }
-  }, [isUserLoading, user, isPolling, result.status, startPolling]);
+    return undefined;
+  }, [isUserLoading, user, isPolling, result.status, startPolling, fromDocumentUpload]);
 
   // Handle GBG verification result
   useEffect(() => {
@@ -79,8 +99,11 @@ export const useVerificationPending = () => {
 
     if (!status) return;
 
+    console.log('[VerificationPending] Received status:', status);
+
     if (status === 'PASS') {
       // Verification passed - stop polling, invalidate user query and navigate to dashboard
+      console.log('[VerificationPending] Status PASS - navigating to Dashboard');
       hasNavigatedAwayRef.current = true;
       stopPolling();
       queryClient.invalidateQueries({ queryKey: userQueryKeys.user });
@@ -90,6 +113,7 @@ export const useVerificationPending = () => {
       });
     } else if (status === 'MANUAL') {
       // Manual verification required - stop polling and navigate to document upload
+      console.log('[VerificationPending] Status MANUAL - navigating to DocumentUpload');
       hasNavigatedAwayRef.current = true;
       stopPolling();
       navigation.navigate('DocumentUpload');
