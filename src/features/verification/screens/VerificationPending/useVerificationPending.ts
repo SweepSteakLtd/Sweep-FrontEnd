@@ -51,7 +51,12 @@ export const useVerificationPending = () => {
 
   // If user is already verified, navigate to Dashboard
   useEffect(() => {
+    if (!isUserLoading && user) {
+      console.log('[VerificationPending] User data loaded:', JSON.stringify(user, null, 2));
+    }
+
     if (!isUserLoading && user?.is_identity_verified === true) {
+      console.log('[VerificationPending] User is verified, navigating to Dashboard');
       hasNavigatedAwayRef.current = true;
       stopPolling();
       navigation.reset({
@@ -59,7 +64,7 @@ export const useVerificationPending = () => {
         routes: [{ name: 'Dashboard' }],
       });
     }
-  }, [isUserLoading, user?.is_identity_verified, navigation, stopPolling]);
+  }, [isUserLoading, user, navigation, stopPolling]);
 
   // Start GBG polling if user is not verified but has a kyc_instance_id
   // This continues polling after Splash navigated here with IN_PROGRESS status
@@ -73,16 +78,16 @@ export const useVerificationPending = () => {
       !isPolling &&
       !result.status
     ) {
-      // If coming from document upload, retry 3 times with 3-second intervals
+      // If coming from document upload, retry 8 times with 8-second intervals
       if (fromDocumentUpload) {
         console.log(
-          '[VerificationPending] Coming from document upload, starting retry logic (3 attempts with 3s intervals)',
+          '[VerificationPending] Coming from document upload, starting retry logic (8 attempts with 8s intervals)',
         );
         setIsRetrying(true);
 
         let attemptCount = 0;
-        const MAX_ATTEMPTS = 3;
-        const RETRY_DELAY = 3000; // 3 seconds
+        const MAX_ATTEMPTS = 8;
+        const RETRY_DELAY = 8000; // 8 seconds
 
         const checkStatus = async () => {
           attemptCount++;
@@ -90,7 +95,10 @@ export const useVerificationPending = () => {
 
           try {
             const response = await verifyGBG(user.kyc_instance_id!);
-            console.log(`[VerificationPending] Attempt ${attemptCount} - Status:`, response.status);
+            console.log(
+              `[VerificationPending] Attempt ${attemptCount} - Full GBG response:`,
+              JSON.stringify(response, null, 2),
+            );
 
             // If we get a definitive status (PASS, FAIL, or IN_PROGRESS), handle it
             if (response.status === 'PASS') {
@@ -137,7 +145,7 @@ export const useVerificationPending = () => {
             // If we've exhausted all retries and still MANUAL, navigate to DocumentUpload
             if (response.status === 'MANUAL' && attemptCount >= MAX_ATTEMPTS) {
               console.log(
-                '[VerificationPending] Still MANUAL after 3 attempts - navigating to DocumentUpload',
+                '[VerificationPending] Still MANUAL after 8 attempts - navigating to DocumentUpload',
               );
               setIsRetrying(false);
               hasNavigatedAwayRef.current = true;
@@ -200,7 +208,10 @@ export const useVerificationPending = () => {
 
     if (!status) return;
 
-    console.log('[VerificationPending] Received status:', status);
+    console.log(
+      '[VerificationPending] Received GBG result from polling:',
+      JSON.stringify(result, null, 2),
+    );
 
     if (status === 'PASS') {
       // Verification passed - stop polling, invalidate user query and navigate to dashboard
