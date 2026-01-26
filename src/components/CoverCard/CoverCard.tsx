@@ -1,21 +1,10 @@
 import { ReactNode } from 'react';
-import {
-  Card,
-  CardWrapper,
-  CoverImage,
-  FinishedBadge,
-  FinishedText,
-  LiveBadge,
-  LiveDot,
-  LiveText,
-  Overlay,
-  Subtitle,
-  Title,
-} from './styles';
+import { TournamentBadges } from '~/components/TournamentBadges/TournamentBadges';
+import { Card, CardWrapper, CoverImage, Overlay, Subtitle, Title } from './styles';
 
 export interface CoverCardProps {
   imageUri?: string;
-  title: string;
+  title?: string;
   subtitle?: string;
   onPress?: () => void;
   height?: number;
@@ -26,6 +15,7 @@ export interface CoverCardProps {
   accentColor?: string;
   showLiveBadge?: boolean;
   showFinishedBadge?: boolean;
+  startsAt?: string;
 }
 
 export const CoverCard = ({
@@ -41,6 +31,7 @@ export const CoverCard = ({
   accentColor,
   showLiveBadge = false,
   showFinishedBadge = false,
+  startsAt,
 }: CoverCardProps) => {
   const defaultImage =
     imageUri || 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=800&h=400&fit=crop';
@@ -49,17 +40,11 @@ export const CoverCard = ({
     <CardWrapper>
       <Card onPress={onPress} activeOpacity={onPress ? 0.8 : 1} disabled={!onPress} height={height}>
         <CoverImage source={{ uri: defaultImage }} resizeMode="cover" />
-        {showLiveBadge && (
-          <LiveBadge>
-            <LiveDot />
-            <LiveText>Live</LiveText>
-          </LiveBadge>
-        )}
-        {showFinishedBadge && (
-          <FinishedBadge>
-            <FinishedText>Finished</FinishedText>
-          </FinishedBadge>
-        )}
+        <TournamentBadges
+          isLive={showLiveBadge}
+          isFinished={showFinishedBadge}
+          startsAt={startsAt}
+        />
         <Overlay padding={overlayPadding} accentColor={accentColor}>
           {children ? (
             children

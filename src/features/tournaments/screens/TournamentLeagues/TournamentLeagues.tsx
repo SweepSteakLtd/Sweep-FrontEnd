@@ -2,9 +2,10 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { BackHandler, RefreshControl, ScrollView } from 'react-native';
+import { Alert, BackHandler, RefreshControl, ScrollView } from 'react-native';
 import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
+import { TournamentBadges } from '~/components/TournamentBadges/TournamentBadges';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
 import { JoinLeagueList } from '~/features/tournaments/components/JoinLeagueList/JoinLeagueList';
 import { useDebouncedValue } from '~/hooks/useDebouncedValue';
@@ -41,7 +42,7 @@ export const TournamentLeagues = () => {
   const { tournamentTheme } = useTournamentTheme();
 
   const tournamentId = route.params?.tournamentId || '';
-  const [activeGameTab, setActiveGameTab] = useState('featured');
+  const [activeGameTab, setActiveGameTab] = useState('my_leagues');
 
   // Independent search state per tab
   const [publicSearchQuery, setPublicSearchQuery] = useState('');
@@ -125,6 +126,14 @@ export const TournamentLeagues = () => {
     return isOwner || isMember;
   });
 
+  // Filter all leagues (public and private) where current user is a member (for My Leagues tab)
+  // Only show leagues where user has joined, not where they are the owner
+  const userLeagues = tournamentPublicLeagues.filter((league) => {
+    if (!currentUser?.id) return false;
+    const isMember = league.joined_players?.includes(currentUser.id) ?? false;
+    return isMember;
+  });
+
   // Calculate total pot from public leagues (consistent stats regardless of tab)
   const totalPotForTournament = tournamentPublicLeagues.reduce(
     (sum, league) => sum + (league.entry_fee ?? 0) * (league.max_participants ?? 0),
@@ -147,7 +156,7 @@ export const TournamentLeagues = () => {
   };
 
   const handleCreateLeague = useCallback(() => {
-    // Default to 'private' if on private tab, otherwise 'public' (for featured and public tabs)
+    // Default to 'private' if on private tab, otherwise 'public' (for my_leagues and public tabs)
     const defaultLeagueType = activeGameTab === 'private' ? 'private' : 'public';
 
     navigation.navigate('CreateLeague', {
@@ -159,8 +168,27 @@ export const TournamentLeagues = () => {
   const handleLeaguePress = (league: League) => {
     if (!league.id) return;
 
-    // Navigate directly to LeagueHome - it handles private league join code flow
-    navigation.navigate('LeagueHome', { leagueId: league.id });
+    const isPrivate = league.type === 'private';
+    const isOwner = league.owner_id === currentUser?.id;
+    const isMember = league.joined_players?.includes(currentUser?.id ?? '') ?? false;
+    const isUserInLeague = isOwner || isMember;
+
+    // Check if league has started
+    const hasStarted = league.start_time ? new Date(league.start_time) <= new Date() : false;
+
+    // If private league and user is not in it, show access denied message
+    if (isPrivate && !isUserInLeague) {
+      Alert.alert('Private League', 'Sorry you are not allowed to enter this private league.');
+      return;
+    }
+
+    // If league has started, go directly to leaderboard
+    if (hasStarted) {
+      navigation.navigate('Leaderboard', { leagueId: league.id });
+    } else {
+      // League hasn't started yet, go to LeagueHome
+      navigation.navigate('LeagueHome', { leagueId: league.id });
+    }
   };
 
   // Handle Android hardware back button
@@ -202,7 +230,10 @@ export const TournamentLeagues = () => {
   }
 
   return (
-    <ScreenWrapper title="Tournament Leagues" headerBackgroundColor={tournamentTheme.primary}>
+    <ScreenWrapper
+      title={currentTournament?.short_name || 'Tournament Leagues'}
+      headerBackgroundColor={tournamentTheme.primary}
+    >
       <Container>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -221,6 +252,11 @@ export const TournamentLeagues = () => {
                 resizeMode="cover"
               />
             )}
+            <TournamentBadges
+              isLive={currentTournament?.is_live}
+              isFinished={currentTournament?.is_finished}
+              startsAt={currentTournament?.starts_at}
+            />
             <HeaderOverlay>
               {currentTournament?.name && <TournamentName>{currentTournament.name}</TournamentName>}
               <PotInfo>
@@ -274,6 +310,7 @@ export const TournamentLeagues = () => {
           <JoinLeagueList
             leagues={leagues}
             userPrivateLeagues={userPrivateLeagues}
+            userLeagues={userLeagues}
             onLeaguePress={handleLeaguePress}
             onCreateLeague={handleCreateLeague}
             loading={leaguesFetching}

@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
@@ -31,7 +30,6 @@ export const Container = styled(SafeAreaView).attrs({
   edges: ['bottom'],
 })`
   flex: 1;
-  padding-bottom: ${Platform.OS === 'android' ? '20px' : '0px'};
 `;
 
 export const ProfileButton = styled.Pressable`

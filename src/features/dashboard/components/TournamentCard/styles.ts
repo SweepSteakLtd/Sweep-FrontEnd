@@ -40,3 +40,14 @@ export const TournamentTitle = styled.Text`
   font-weight: 600;
   color: #ffffff;
 `;
+
+export const CardContent = styled.View`
+  flex: 1;
+  justify-content: flex-end;
+`;
+
+export const InfoRow = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;

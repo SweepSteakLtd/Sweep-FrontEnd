@@ -23,6 +23,7 @@ import {
 interface JoinLeagueListProps {
   leagues: League[];
   userPrivateLeagues?: League[];
+  userLeagues?: League[];
   onLeaguePress?: (league: League) => void;
   onLeagueDelete?: (leagueId: string) => void;
   onCreateLeague?: () => void;
@@ -35,7 +36,7 @@ interface JoinLeagueListProps {
 }
 
 const leagueTabs = [
-  { id: 'featured', label: 'Featured' },
+  { id: 'my_leagues', label: 'My Leagues' },
   { id: 'public', label: 'Public' },
   { id: 'private', label: 'Private' },
 ];
@@ -43,23 +44,29 @@ const leagueTabs = [
 export const JoinLeagueList = ({
   leagues,
   userPrivateLeagues = [],
+  userLeagues = [],
   onLeaguePress,
   onLeagueDelete,
   onCreateLeague,
   loading = false,
   searchQuery = '',
   onSearchChange,
-  activeLeagueTab = 'featured',
+  activeLeagueTab = 'my_leagues',
   onLeagueTabChange,
   activeTabColor,
 }: JoinLeagueListProps) => {
   const theme = useTheme();
 
   const isPrivateTab = activeLeagueTab === 'private';
+  const isMyLeaguesTab = activeLeagueTab === 'my_leagues';
   const isSearching = searchQuery.trim().length > 0;
 
   // Filter leagues based on tab
   const filteredLeagues = (() => {
+    if (isMyLeaguesTab) {
+      // Show only leagues where user is owner or member
+      return userLeagues;
+    }
     if (isPrivateTab) {
       if (isSearching) {
         // When searching private tab, leagues already contains only search results
@@ -69,7 +76,7 @@ export const JoinLeagueList = ({
       // When not searching, show user's private leagues
       return userPrivateLeagues;
     }
-    // Featured/Public tabs: show leagues from search (already filtered by API)
+    // Public tab: show leagues from search (already filtered by API)
     // Filter out private leagues for safety
     return leagues.filter((league) => league.type !== 'private');
   })();
@@ -87,6 +94,9 @@ export const JoinLeagueList = ({
 
   // For private tab: show prompt when no search and no user leagues
   const showPrivateEmptyState = isPrivateTab && !isSearching && userPrivateLeagues.length === 0;
+
+  // For my leagues tab: show message when user hasn't joined any leagues
+  const showMyLeaguesEmptyState = isMyLeaguesTab && userLeagues.length === 0;
 
   return (
     <>
@@ -120,8 +130,12 @@ export const JoinLeagueList = ({
         )}
       </SearchAndCreateRow>
 
-      {/* Private tab: show prompt when not searching and no user leagues */}
-      {showPrivateEmptyState ? (
+      {/* My Leagues tab: show message when user hasn't joined any leagues */}
+      {showMyLeaguesEmptyState ? (
+        <EmptyState>
+          <EmptyStateText>You haven't joined any leagues yet.</EmptyStateText>
+        </EmptyState>
+      ) : showPrivateEmptyState ? (
         <JoinCodeContainer>
           <JoinCodeTitle>Join a Private League</JoinCodeTitle>
           <JoinCodeDescription>

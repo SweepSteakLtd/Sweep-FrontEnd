@@ -5,7 +5,6 @@ import { BackHandler } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useTheme } from 'styled-components/native';
 import { Button } from '~/components/Button/Button';
-import { ComplianceFooter } from '~/components/ComplianceFooter/ComplianceFooter';
 import { DevMockButton } from '~/components/DevMockButton/DevMockButton';
 import { Input } from '~/components/Input/Input';
 import { Typography } from '~/components/Typography/Typography';
@@ -36,8 +35,8 @@ export const Login = () => {
   const navigation = useNavigation<NavigationProp>();
   const { login, loading } = useLogin();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('marin.obranovic@gmail.com');
+  const [password, setPassword] = useState('Dude1234#');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   // Handle Android hardware back button
@@ -107,14 +106,6 @@ export const Login = () => {
           </Header>
 
           <FormContainer>
-            <Typography
-              variant="body"
-              color={theme.colors.text.tertiary}
-              style={{ marginBottom: 10 }}
-            >
-              Sign in to your account
-            </Typography>
-
             <Input
               variant="light"
               label="Email"
@@ -171,14 +162,18 @@ export const Login = () => {
                 })
               }
               fullWidth={false}
-              title="Don't have an account? Create one"
-            />
+            >
+              <Typography variant="body" color={theme.colors.button.text}>
+                Don't have an account?{' '}
+                <Typography variant="body" weight="bold" color={theme.colors.button.text}>
+                  Create one
+                </Typography>
+              </Typography>
+            </Button>
 
             <DevMockButton position="inline" />
           </FormContainer>
         </ContentWrapper>
-
-        <ComplianceFooter />
       </KeyboardAwareScrollView>
     </Container>
   );

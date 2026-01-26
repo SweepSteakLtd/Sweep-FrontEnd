@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: http://localhost:8080/openapi.json
- * Generated: 2026-01-16T20:11:24.665Z
+ * Generated: 2026-01-26T21:06:45.831Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -73,6 +73,7 @@ export const tournamentSchema = z.object({
   id: z.string().optional(),
   external_id: z.string().optional(),
   name: z.string().optional(),
+  short_name: z.string().optional(),
   starts_at: z.string().optional(),
   finishes_at: z.string().optional(),
   description: z.string().optional(),
@@ -156,6 +157,7 @@ export const tournamentSchema = z.object({
   tour: z.string().optional(),
   is_live: z.boolean().optional(),
   is_finished: z.boolean().optional(),
+  total_staked: z.number().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });
@@ -281,6 +283,7 @@ export const leagueSchema = z.object({
       id: z.string().optional(),
       external_id: z.string().optional(),
       name: z.string().optional(),
+      short_name: z.string().optional(),
       starts_at: z.string().optional(),
       finishes_at: z.string().optional(),
       description: z.string().optional(),
@@ -364,6 +367,7 @@ export const leagueSchema = z.object({
       tour: z.string().optional(),
       is_live: z.boolean().optional(),
       is_finished: z.boolean().optional(),
+      totalStaked: z.number().optional(),
       created_at: z.string().optional(),
       updated_at: z.string().optional(),
     })

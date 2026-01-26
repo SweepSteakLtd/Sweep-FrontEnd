@@ -13,6 +13,7 @@ interface ButtonProps extends TouchableOpacityProps {
   fullWidth?: boolean;
   backgroundColor?: string;
   primaryColor?: string;
+  children?: React.ReactNode;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -24,6 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidth = true,
   backgroundColor,
   primaryColor,
+  children,
   ...props
 }) => {
   const theme = useTheme();
@@ -35,6 +37,11 @@ export const Button: React.FC<ButtonProps> = ({
   const renderContent = () => {
     if (loading) {
       return <ActivityIndicator color={getTextColor(variant, theme)} />;
+    }
+
+    // If children are provided, render them directly
+    if (children) {
+      return children;
     }
 
     // If both icon and title are provided, show them together
