@@ -45,7 +45,7 @@ interface LeaderboardTeamCardProps {
   canExpand?: boolean;
   /** Whether this team is pinned */
   isPinned?: boolean;
-  /** Whether this team can be pinned (not own team, tournament started) */
+  /** Whether this team can be pinned */
   canPin?: boolean;
   /** Callback to toggle pin state */
   onTogglePin?: () => void;

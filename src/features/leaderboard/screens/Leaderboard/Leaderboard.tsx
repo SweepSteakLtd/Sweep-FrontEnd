@@ -122,8 +122,8 @@ export const Leaderboard = () => {
           data={filteredEntries}
           renderItem={({ item, index }) => {
             const entryId = getEntryId(item);
-            const isEntryPinned = isPinned(entryId);
             const isOwnTeam = isCurrentUserEntry(item);
+            const isEntryPinned = isPinned(entryId, isOwnTeam);
             const isFirst = index === 0;
             const isLast = index === filteredEntries.length - 1;
 
@@ -145,8 +145,8 @@ export const Leaderboard = () => {
                     currentUserNickname={currentUserNickname}
                     canExpand={tournamentStarted}
                     isPinned={isEntryPinned}
-                    canPin={!isOwnTeam}
-                    onTogglePin={() => togglePin(entryId)}
+                    canPin={true}
+                    onTogglePin={() => togglePin(entryId, isOwnTeam)}
                     openSwipeableId={openSwipeableId}
                     onSwipeableOpen={setOpenSwipeableId}
                     isOpenTournament={isOpenTournament}

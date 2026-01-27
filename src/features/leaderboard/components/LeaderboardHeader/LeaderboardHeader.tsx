@@ -1,17 +1,17 @@
 import React from 'react';
 import { Image, View } from 'react-native';
+import { Icon } from '~/components/Icon/Icon';
+import { CURRENCY_FORMAT, ICON_SIZES } from '~/constants/ui';
 import { formatCurrency } from '~/utils/currency';
 import {
   Container,
-  HeaderRow,
   LeagueName,
-  PrizeAmount,
-  PrizeCard,
-  PrizeLabel,
+  NumberOfTeams,
+  PrizePool,
+  PrizePoolAmount,
+  StatItem,
+  StatsRow,
   styles,
-  TeamsCard,
-  TeamsCount,
-  TeamsLabel,
   TournamentInfo,
   TournamentName,
 } from './styles';
@@ -31,26 +31,28 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
   totalTeams,
   coverPhoto,
 }) => {
-  const hasCover = !!coverPhoto;
-
   const content = (
     <>
-      <TournamentInfo hasCover={hasCover}>
+      <TournamentInfo>
         <LeagueName>{leagueName}</LeagueName>
         <TournamentName>{tournamentName}</TournamentName>
       </TournamentInfo>
 
-      <HeaderRow>
-        <TeamsCard>
-          <TeamsCount>{totalTeams ?? 0}</TeamsCount>
-          <TeamsLabel>Teams competing</TeamsLabel>
-        </TeamsCard>
-
-        <PrizeCard>
-          <PrizeAmount>{formatCurrency(totalPot)}</PrizeAmount>
-          <PrizeLabel>Prize pool</PrizeLabel>
-        </PrizeCard>
-      </HeaderRow>
+      <StatsRow>
+        <StatItem>
+          <NumberOfTeams>
+            <Icon name="👥" size={ICON_SIZES.HEADER} accessibilityLabel="Teams:" />{' '}
+            {totalTeams ?? 0} {totalTeams === 1 ? 'Team' : 'Teams'}
+          </NumberOfTeams>
+          <PrizePool>
+            <Icon name="💵" size={ICON_SIZES.HEADER} accessibilityLabel="Prize pool:" />{' '}
+            <PrizePoolAmount>
+              {formatCurrency(totalPot, CURRENCY_FORMAT.HIDE_PENCE)}
+            </PrizePoolAmount>{' '}
+            Prize Pool
+          </PrizePool>
+        </StatItem>
+      </StatsRow>
     </>
   );
 

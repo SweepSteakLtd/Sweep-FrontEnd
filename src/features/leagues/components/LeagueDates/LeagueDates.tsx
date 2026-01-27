@@ -16,8 +16,22 @@ export const LeagueDates = ({ startTime, endTime }: LeagueDatesProps) => {
     return null;
   }
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string, onlyDate: boolean, onlyTime: boolean) => {
     const date = new Date(dateString);
+    if (onlyDate) {
+      return date.toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+    }
+    if (onlyTime) {
+      return date.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+
     return date.toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'short',
@@ -33,18 +47,15 @@ export const LeagueDates = ({ startTime, endTime }: LeagueDatesProps) => {
         <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 20 }}>
           📅
         </Typography>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <TimeLabel>Starts</TimeLabel>
-          <TimeValue>{formatDate(startTime)}</TimeValue>
+          <TimeValue>{formatDate(startTime, true, false)}</TimeValue>
+          <TimeValue>{formatDate(startTime, false, true)}</TimeValue>
         </View>
-      </TimeRow>
-      <TimeRow>
-        <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 20 }}>
-          📅
-        </Typography>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <TimeLabel>Ends</TimeLabel>
-          <TimeValue>{formatDate(endTime)}</TimeValue>
+          <TimeValue>{formatDate(endTime, true, false)}</TimeValue>
+          <TimeValue>{formatDate(endTime, false, true)}</TimeValue>
         </View>
       </TimeRow>
     </Container>

@@ -1,5 +1,6 @@
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
+import { HEADER_MIN_HEIGHT } from '~/constants/ui';
 import type { Theme } from '~/theme/theme';
 import { hexWithOpacity } from '~/utils/color';
 
@@ -20,6 +21,7 @@ export const HeaderSection = styled.View<HeaderSectionProps>`
   padding-bottom: 16px;
   margin-bottom: 16px;
   overflow: hidden;
+  min-height: ${HEADER_MIN_HEIGHT.STANDARD}px;
 `;
 
 export const HeaderBackgroundImage = styled.Image`
@@ -33,6 +35,9 @@ export const HeaderBackgroundImage = styled.Image`
 export const HeaderOverlay = styled.View`
   background-color: rgba(0, 0, 0, 0.5);
   padding-bottom: 16px;
+  min-height: ${HEADER_MIN_HEIGHT.STANDARD}px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const PotInfo = styled.View`
@@ -49,10 +54,6 @@ export const PotLabel = styled.Text`
   font-size: 14px;
   color: #333333;
   margin-bottom: 8px;
-`;
-
-export const AmountWrapper = styled.View`
-  margin-top: 4px;
 `;
 
 export const EmptyState = styled.View`
@@ -72,24 +73,11 @@ export const StatItem = styled.View`
   flex: 1;
   background-color: ${({ theme }: { theme: Theme }) =>
     hexWithOpacity(theme.colors.backgroundLight, 0.8)};
-  padding: 16px;
+  padding: 8px 20px;
   border-radius: 16px;
   align-items: center;
-`;
-
-interface StatValueProps {
-  color?: string;
-}
-
-export const StatValue = styled.Text<StatValueProps>`
-  font-size: 18px;
-  font-weight: 600;
-  color: ${({ color }: StatValueProps) => color || '#ffffff'};
-`;
-
-export const StatLabel = styled.Text`
-  font-size: 12px;
-  color: #333333;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 export const TournamentName = styled.Text`
@@ -98,4 +86,22 @@ export const TournamentName = styled.Text`
   color: #ffffff;
   text-align: center;
   padding: 16px 32px;
+  margin-top: 32px;
+`;
+
+export const PrizePool = styled.Text`
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+`;
+
+export const PrizePoolAmount = styled.Text`
+  font-weight: 700;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+`;
+
+export const NumberOfLeagues = styled.Text`
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
 `;

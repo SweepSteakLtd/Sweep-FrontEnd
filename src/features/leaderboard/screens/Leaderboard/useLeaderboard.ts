@@ -21,7 +21,7 @@ export const useLeaderboard = (leagueId: string) => {
   const { data: leagueData, isLoading: isLeagueLoading } = useGetLeague(leagueId);
   const { data: tournaments } = useGetTournaments();
   const { data: currentUser } = useGetUser();
-  const { pinnedTeamId, togglePin, isPinned } = usePinnedTeam(leagueId);
+  const { pinnedTeamId, togglePin, isPinned, isUserTeamUnpinned } = usePinnedTeam(leagueId);
 
   const league = leagueData?.league;
 
@@ -85,32 +85,45 @@ export const useLeaderboard = (leagueId: string) => {
   const isLoading = isLeaderboardLoading || isLeagueLoading;
 
   // Sort entries:
-  // 1. Current user's teams first
-  // 2. Pinned team (if any, and not already in user's teams)
-  // 3. Other teams (alphabetically before tournament, by rank after)
+  // 1. User's teams that are pinned by default (not explicitly unpinned)
+  // 2. Explicitly pinned team (if any, and not a user team)
+  // 3. All other teams in their original rank order (including unpinned user teams)
   const sortedEntries = useMemo(() => {
-    const userTeams = entries.filter(isCurrentUserEntry);
-    const pinnedTeam = pinnedTeamId
-      ? entries.find((entry) => getEntryId(entry) === pinnedTeamId && !isCurrentUserEntry(entry))
-      : null;
-    const otherTeams = entries.filter(
-      (entry) => !isCurrentUserEntry(entry) && getEntryId(entry) !== pinnedTeamId,
-    );
+    // User teams that are pinned by default (not explicitly unpinned)
+    const defaultPinnedUserTeams = entries.filter((entry) => {
+      const entryId = getEntryId(entry);
+      return isCurrentUserEntry(entry) && !isUserTeamUnpinned(entryId) && pinnedTeamId !== entryId;
+    });
 
-    // Before tournament starts, sort other teams alphabetically
+    // Explicitly pinned team (could be user team or other team)
+    const explicitlyPinnedTeam = pinnedTeamId
+      ? entries.filter((entry) => getEntryId(entry) === pinnedTeamId)
+      : [];
+
+    // All other teams (including unpinned user teams) in rank order
+    const otherTeams = entries.filter((entry) => {
+      const entryId = getEntryId(entry);
+      const isUserTeam = isCurrentUserEntry(entry);
+      const isExplicitlyPinned = entryId === pinnedTeamId;
+      const isDefaultPinned = isUserTeam && !isUserTeamUnpinned(entryId);
+
+      return !isExplicitlyPinned && !isDefaultPinned;
+    });
+
+    // Before tournament starts, sort teams alphabetically
     if (!tournamentStarted) {
-      const sortedUserTeams = [...userTeams].sort((a, b) =>
+      const sortedDefaultPinned = [...defaultPinnedUserTeams].sort((a, b) =>
         (a.name.main ?? '').localeCompare(b.name.main ?? ''),
       );
-      const sortedOtherTeams = [...otherTeams].sort((a, b) =>
+      const sortedOther = [...otherTeams].sort((a, b) =>
         (a.name.main ?? '').localeCompare(b.name.main ?? ''),
       );
-      return [...sortedUserTeams, ...(pinnedTeam ? [pinnedTeam] : []), ...sortedOtherTeams];
+      return [...explicitlyPinnedTeam, ...sortedDefaultPinned, ...sortedOther];
     }
 
-    // After tournament starts, keep original rank order
-    return [...userTeams, ...(pinnedTeam ? [pinnedTeam] : []), ...otherTeams];
-  }, [entries, tournamentStarted, isCurrentUserEntry, pinnedTeamId]);
+    // After tournament starts, keep original rank order for other teams
+    return [...explicitlyPinnedTeam, ...defaultPinnedUserTeams, ...otherTeams];
+  }, [entries, tournamentStarted, isCurrentUserEntry, pinnedTeamId, isUserTeamUnpinned]);
 
   const filteredEntries = useMemo(() => {
     if (!searchQuery) return sortedEntries;

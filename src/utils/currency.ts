@@ -37,9 +37,15 @@ export const poundsToPence = (pounds: number | string): number => {
 /**
  * Convert pence to pounds and format as currency
  * @param pence - Amount in pence (e.g., 9999)
- * @returns Formatted currency string (e.g., "£99.99")
+ * @param hidePence - If true, removes decimal places (e.g., "£99" instead of "£99.99")
+ * @returns Formatted currency string (e.g., "£99.99" or "£99")
  */
-export const formatCurrency = (pence?: number | null): string => {
+export const formatCurrency = (pence?: number | null, hidePence = false): string => {
   const pounds = penceToPounds(pence);
+
+  if (hidePence) {
+    return `£${Math.round(pounds).toLocaleString()}`;
+  }
+
   return `£${pounds.toFixed(2)}`;
 };

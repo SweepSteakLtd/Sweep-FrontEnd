@@ -1,57 +1,57 @@
 import styled from 'styled-components/native';
 import type { Theme } from '~/theme/theme';
+import { hexWithOpacity } from '~/utils/color';
 
 export const Container = styled.View`
-  padding: 20px;
+  padding: 16px 16px 0;
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
 `;
 
 export const LeagueName = styled.Text`
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
+  text-align: center;
   margin-bottom: 16px;
+  margin-top: 16px;
 `;
 
 export const CodeCardWrapper = styled.View`
   margin-bottom: 16px;
 `;
 
-export const InfoWrapper = styled.View`
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.background};
-  border-radius: 16px;
-  padding: 16px;
-`;
-
-export const InfoRow = styled.View`
+export const StatsRow = styled.View`
   flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
 `;
 
-export const InfoItem = styled.View`
-  align-items: center;
+export const StatItem = styled.View`
   flex: 1;
-`;
-
-export const InfoIcon = styled.View`
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
-  background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
-  justify-content: center;
+  background-color: ${({ theme }: { theme: Theme }) =>
+    hexWithOpacity(theme.colors.backgroundLight, 0.8)};
+  padding: 8px 20px;
+  border-radius: 16px;
   align-items: center;
-  margin-bottom: 8px;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
-export const InfoLabel = styled.Text`
-  font-size: 12px;
-  font-weight: 400;
-  color: ${({ theme }: { theme: Theme }) => theme.colors.text.tertiary};
-  margin-bottom: 4px;
-`;
-
-export const InfoValue = styled.Text`
+export const NumberOfTeams = styled.Text`
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
+`;
+
+export const PrizePool = styled.Text`
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }: { theme: Theme }) => theme.colors.text.secondary};
+`;
+
+export const PrizePoolAmount = styled.Text`
+  font-weight: 700;
   color: ${({ theme }: { theme: Theme }) => theme.colors.text.primary};
 `;

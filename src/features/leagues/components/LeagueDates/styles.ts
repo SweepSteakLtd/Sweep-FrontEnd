@@ -3,9 +3,11 @@ import type { Theme } from '~/theme/theme';
 
 export const Container = styled.View`
   margin: 16px;
-  padding: 16px;
+  padding: 8px 16px;
   background-color: ${({ theme }: { theme: Theme }) => theme.colors.backgroundLight};
   border-radius: 12px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const TimeRow = styled.View`

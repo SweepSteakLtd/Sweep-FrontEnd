@@ -1,23 +1,21 @@
 import React from 'react';
-import { useTheme } from 'styled-components/native';
-import { Typography } from '~/components/Typography/Typography';
+import { Icon } from '~/components/Icon/Icon';
+import { CURRENCY_FORMAT, ICON_SIZES } from '~/constants/ui';
 import { formatCurrency } from '~/utils/currency';
 import { JoinCodeCard } from '../JoinCodeCard/JoinCodeCard';
 import {
   CodeCardWrapper,
   Container,
-  InfoIcon,
-  InfoItem,
-  InfoLabel,
-  InfoRow,
-  InfoValue,
-  InfoWrapper,
   LeagueName,
+  NumberOfTeams,
+  PrizePool,
+  PrizePoolAmount,
+  StatItem,
+  StatsRow,
 } from './styles';
 
 type LeagueHeaderProps = {
   leagueName?: string;
-  yourEntries: number;
   totalTeams: number;
   totalPot: number;
   joinCode?: string;
@@ -26,14 +24,11 @@ type LeagueHeaderProps = {
 
 export const LeagueHeader = ({
   leagueName,
-  yourEntries,
   totalTeams,
   totalPot,
   joinCode,
   isOwner,
 }: LeagueHeaderProps) => {
-  const theme = useTheme();
-
   if (!leagueName) {
     return null;
   }
@@ -46,39 +41,21 @@ export const LeagueHeader = ({
           <JoinCodeCard joinCode={joinCode} leagueName={leagueName} />
         </CodeCardWrapper>
       )}
-      <InfoWrapper>
-        <InfoRow>
-          <InfoItem>
-            <InfoIcon>
-              <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
-                📝
-              </Typography>
-            </InfoIcon>
-            <InfoLabel>YOUR ENTRIES</InfoLabel>
-            <InfoValue>{yourEntries}</InfoValue>
-          </InfoItem>
-
-          <InfoItem>
-            <InfoIcon>
-              <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
-                👥
-              </Typography>
-            </InfoIcon>
-            <InfoLabel>TEAMS</InfoLabel>
-            <InfoValue>{totalTeams}</InfoValue>
-          </InfoItem>
-
-          <InfoItem>
-            <InfoIcon>
-              <Typography variant="body" color={theme.colors.text.primary} style={{ fontSize: 24 }}>
-                🏆
-              </Typography>
-            </InfoIcon>
-            <InfoLabel>TOTAL POT</InfoLabel>
-            <InfoValue>{formatCurrency(totalPot)}</InfoValue>
-          </InfoItem>
-        </InfoRow>
-      </InfoWrapper>
+      <StatsRow>
+        <StatItem>
+          <NumberOfTeams>
+            <Icon name="👥" size={ICON_SIZES.HEADER} accessibilityLabel="Teams:" /> {totalTeams}{' '}
+            {totalTeams === 1 ? 'Team' : 'Teams'}
+          </NumberOfTeams>
+          <PrizePool>
+            <Icon name="💵" size={ICON_SIZES.HEADER} accessibilityLabel="Prize pool:" />{' '}
+            <PrizePoolAmount>
+              {formatCurrency(totalPot, CURRENCY_FORMAT.HIDE_PENCE)}
+            </PrizePoolAmount>{' '}
+            Prize Pool
+          </PrizePool>
+        </StatItem>
+      </StatsRow>
     </Container>
   );
 };

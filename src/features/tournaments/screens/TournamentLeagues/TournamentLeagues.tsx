@@ -3,7 +3,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, BackHandler, RefreshControl, ScrollView } from 'react-native';
-import { AnimatedAmount } from '~/components/AnimatedAmount/AnimatedAmount';
 import { ScreenWrapper } from '~/components/ScreenWrapper/ScreenWrapper';
 import { TournamentBadges } from '~/components/TournamentBadges/TournamentBadges';
 import { useTournamentTheme } from '~/context/TournamentThemeContext';
@@ -14,21 +13,22 @@ import type { League } from '~/services/apis/League/types';
 import { useGetLeagues } from '~/services/apis/League/useGetLeagues';
 import { useGetTournaments } from '~/services/apis/Tournament/useGetTournaments';
 import { useGetUser } from '~/services/apis/User/useGetUser';
-import { penceToPounds } from '~/utils/currency';
+import { formatCurrency } from '~/utils/currency';
 
+import { Icon } from '~/components/Icon/Icon';
+import { CURRENCY_FORMAT, ICON_SIZES } from '~/constants/ui';
 import {
-  AmountWrapper,
   Container,
   EmptyState,
   GlobalStatsContainer,
   HeaderBackgroundImage,
   HeaderOverlay,
   HeaderSection,
-  PotInfo,
+  NumberOfLeagues,
   PotLabel,
+  PrizePool,
+  PrizePoolAmount,
   StatItem,
-  StatLabel,
-  StatValue,
   TournamentName,
 } from './styles';
 import { TournamentLeaguesSkeleton } from './TournamentLeaguesSkeleton';
@@ -141,7 +141,6 @@ export const TournamentLeagues = () => {
   );
 
   // Calculate global stats from public leagues (consistent regardless of tab)
-  const totalLeagues = tournamentPublicLeagues.length;
   const totalEntrants = tournamentPublicLeagues.reduce(
     (sum, league) => sum + (league.joined_players?.length ?? 0),
     0,
@@ -259,50 +258,20 @@ export const TournamentLeagues = () => {
             />
             <HeaderOverlay>
               {currentTournament?.name && <TournamentName>{currentTournament.name}</TournamentName>}
-              <PotInfo>
-                <PotLabel>Total Staked</PotLabel>
-                <AmountWrapper>
-                  <AnimatedAmount
-                    value={penceToPounds(totalPotForTournament)}
-                    variant="title"
-                    align="center"
-                    weight="bold"
-                    decimals={2}
-                    color={tournamentTheme.primary}
-                    style={{
-                      textShadowColor: 'rgba(0, 0, 0, 0.3)',
-                      textShadowOffset: { width: 1, height: 1 },
-                      textShadowRadius: 2,
-                    }}
-                  />
-                </AmountWrapper>
-              </PotInfo>
+
               <GlobalStatsContainer>
                 <StatItem>
-                  <StatValue
-                    color={tournamentTheme.primary}
-                    style={{
-                      textShadowColor: 'rgba(0, 0, 0, 0.3)',
-                      textShadowOffset: { width: 1, height: 1 },
-                      textShadowRadius: 2,
-                    }}
-                  >
-                    {totalLeagues}
-                  </StatValue>
-                  <StatLabel>Leagues</StatLabel>
-                </StatItem>
-                <StatItem>
-                  <StatValue
-                    color={tournamentTheme.primary}
-                    style={{
-                      textShadowColor: 'rgba(0, 0, 0, 0.3)',
-                      textShadowOffset: { width: 1, height: 1 },
-                      textShadowRadius: 2,
-                    }}
-                  >
-                    {totalEntrants}
-                  </StatValue>
-                  <StatLabel>Entrants</StatLabel>
+                  <NumberOfLeagues>
+                    <Icon name="👥" size={ICON_SIZES.HEADER} accessibilityLabel="Teams:" />{' '}
+                    {totalEntrants} {totalEntrants === 1 ? 'Team' : 'Teams'}
+                  </NumberOfLeagues>
+                  <PrizePool>
+                    <Icon name="💵" size={ICON_SIZES.HEADER} accessibilityLabel="Prize pool:" />{' '}
+                    <PrizePoolAmount>
+                      {formatCurrency(totalPotForTournament, CURRENCY_FORMAT.HIDE_PENCE)}
+                    </PrizePoolAmount>{' '}
+                    Prize Pool
+                  </PrizePool>
                 </StatItem>
               </GlobalStatsContainer>
             </HeaderOverlay>

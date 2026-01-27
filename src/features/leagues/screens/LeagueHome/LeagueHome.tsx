@@ -15,7 +15,6 @@ import { LeagueDates } from '../../components/LeagueDates/LeagueDates';
 import { LeagueDescription } from '../../components/LeagueDescription/LeagueDescription';
 import { LeagueHeader } from '../../components/LeagueHeader/LeagueHeader';
 import { PrivateLeagueGate } from '../../components/PrivateLeagueGate/PrivateLeagueGate';
-import { TournamentBanner } from '../../components/TournamentBanner/TournamentBanner';
 import { useLeague } from '../../hooks/useLeague';
 import { LeagueHomeSkeleton } from './LeagueHomeSkeleton';
 import {
@@ -42,7 +41,6 @@ export const LeagueHome = () => {
     carouselData,
     totalPot,
     totalTeams,
-    currentEntries,
     isLoading,
     isOwner,
     joinCode,
@@ -100,7 +98,6 @@ export const LeagueHome = () => {
             <HeaderOverlay>
               <LeagueHeader
                 leagueName={league?.name}
-                yourEntries={currentEntries}
                 totalTeams={totalTeams}
                 totalPot={totalPot}
                 joinCode={joinCode}
@@ -108,8 +105,7 @@ export const LeagueHome = () => {
               />
             </HeaderOverlay>
           </HeaderSection>
-
-          <TournamentBanner tournament={tournament} />
+          <LeagueDates startTime={league?.start_time} endTime={league?.end_time} />
 
           <ButtonsContainer>
             {!hasEnded && (
@@ -133,8 +129,6 @@ export const LeagueHome = () => {
               fullWidth
             />
           </ButtonsContainer>
-
-          <LeagueDates startTime={league?.start_time} endTime={league?.end_time} />
 
           <LeagueDescription description={league?.description} />
 
