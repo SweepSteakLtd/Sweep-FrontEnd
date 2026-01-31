@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: http://localhost:8080/openapi.json
- * Generated: 2026-01-26T21:06:45.831Z
+ * Generated: 2026-01-31T19:20:38.213Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -117,7 +117,7 @@ export const tournamentSchema = z.object({
     .array(
       z.object({
         id: z.string().optional(),
-        external_id: z.string().optional(),
+        external_ids: z.record(z.string(), z.unknown()).optional(),
         level: z.number().optional(),
         current_score: z.number().optional(),
         position: z.number().optional(),
@@ -155,6 +155,7 @@ export const tournamentSchema = z.object({
   instructions: z.array(z.string()).optional().default([]),
   course_name: z.string().optional(),
   tour: z.string().optional(),
+  status: z.string().optional(),
   is_live: z.boolean().optional(),
   is_finished: z.boolean().optional(),
   total_staked: z.number().optional(),
@@ -327,7 +328,7 @@ export const leagueSchema = z.object({
         .array(
           z.object({
             id: z.string().optional(),
-            external_id: z.string().optional(),
+            external_ids: z.record(z.string(), z.unknown()).optional(),
             level: z.number().optional(),
             current_score: z.number().optional(),
             position: z.number().optional(),
@@ -365,6 +366,7 @@ export const leagueSchema = z.object({
       instructions: z.array(z.string()).optional().default([]),
       course_name: z.string().optional(),
       tour: z.string().optional(),
+      status: z.string().optional(),
       is_live: z.boolean().optional(),
       is_finished: z.boolean().optional(),
       totalStaked: z.number().optional(),
@@ -570,7 +572,7 @@ export type Leaderboard = z.infer<typeof leaderboardSchema>;
 // Player
 export const playerSchema = z.object({
   id: z.string().optional(),
-  external_id: z.string().optional(),
+  external_ids: z.record(z.string(), z.unknown()).optional(),
   level: z.number().optional(),
   current_score: z.number().optional(),
   position: z.number().optional(),
