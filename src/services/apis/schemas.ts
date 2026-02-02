@@ -5,7 +5,7 @@
  * To regenerate, run: yarn generate-schemas
  *
  * Source: http://localhost:8080/openapi.json
- * Generated: 2026-01-31T19:20:38.213Z
+ * Generated: 2026-02-02T23:03:49.315Z
  *
  * Note: Schemas are intentionally relaxed (optional fields, flexible types)
  * to handle real-world API responses gracefully.
@@ -369,7 +369,7 @@ export const leagueSchema = z.object({
       status: z.string().optional(),
       is_live: z.boolean().optional(),
       is_finished: z.boolean().optional(),
-      totalStaked: z.number().optional(),
+      total_staked: z.number().optional(),
       created_at: z.string().optional(),
       updated_at: z.string().optional(),
     })
