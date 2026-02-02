@@ -134,12 +134,6 @@ export const TournamentLeagues = () => {
     return isMember;
   });
 
-  // Calculate total pot from public leagues (consistent stats regardless of tab)
-  const totalPotForTournament = tournamentPublicLeagues.reduce(
-    (sum, league) => sum + (league.entry_fee ?? 0) * (league.max_participants ?? 0),
-    0,
-  );
-
   // Calculate global stats from public leagues (consistent regardless of tab)
   const totalEntrants = tournamentPublicLeagues.reduce(
     (sum, league) => sum + (league.joined_players?.length ?? 0),
@@ -268,7 +262,7 @@ export const TournamentLeagues = () => {
                   <PrizePool>
                     <Icon name="💵" size={ICON_SIZES.HEADER} accessibilityLabel="Prize pool:" />{' '}
                     <PrizePoolAmount>
-                      {formatCurrency(totalPotForTournament, CURRENCY_FORMAT.HIDE_PENCE)}
+                      {formatCurrency(currentTournament?.total_staked, CURRENCY_FORMAT.HIDE_PENCE)}
                     </PrizePoolAmount>{' '}
                     Prize Pool
                   </PrizePool>
