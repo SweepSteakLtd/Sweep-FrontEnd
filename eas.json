@@ -7,6 +7,7 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "node": "20.19.4",
       "ios": {
         "resourceClass": "m-medium"
       },
@@ -16,6 +17,7 @@
     },
     "test": {
       "distribution": "internal",
+      "node": "20.19.4",
       "ios": {
         "simulator": false,
         "resourceClass": "m-medium"
@@ -29,6 +31,7 @@
     },
     "test-simulator": {
       "distribution": "internal",
+      "node": "20.19.4",
       "ios": {
         "simulator": true,
         "resourceClass": "m-medium"
@@ -39,6 +42,7 @@
     },
     "preview": {
       "autoIncrement": true,
+      "node": "20.19.4",
       "ios": {
         "distribution": "store",
         "resourceClass": "m-medium"
@@ -54,6 +58,7 @@
     "production": {
       "distribution": "store",
       "autoIncrement": true,
+      "node": "20.19.4",
       "ios": {
         "resourceClass": "m-medium"
       },

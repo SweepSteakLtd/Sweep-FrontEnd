@@ -8,7 +8,9 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "backgroundColor": "#000000"
+      "backgroundColor": "#2d5016",
+      "image": "./assets/ChipinSmoothApp.png",
+      "resizeMode": "contain"
     },
     "androidStatusBar": {
       "barStyle": "light-content",
