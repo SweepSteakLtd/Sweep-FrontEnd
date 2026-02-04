@@ -64,9 +64,7 @@ export const TournamentLeagues = () => {
   const { data: tournaments = [] } = useGetTournaments();
   const { data: currentUser } = useGetUser();
 
-  const currentTournament = tournaments.find(
-    (t) => t.id === tournamentId || t.external_id === tournamentId,
-  );
+  const currentTournament = tournaments.find((t) => t.id === tournamentId);
 
   // Fetch public/featured leagues (uses search_term which respects privacy)
   const {
