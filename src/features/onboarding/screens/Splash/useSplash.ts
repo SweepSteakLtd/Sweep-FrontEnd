@@ -1,8 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { firebaseAuth } from '~/lib/firebase';
 import type { RootStackParamList } from '~/navigation/types';
+import {
+  fetchTournaments,
+  tournamentQueryKeys,
+} from '~/services/apis/Tournament/useGetTournaments';
 import { fetchUser } from '~/services/apis/User/useGetUser';
 import { verifyGBG } from '~/services/apis/User/useVerifyGBG';
 
@@ -10,10 +15,23 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const useSplash = () => {
   const navigation = useNavigation<NavigationProp>();
+  const queryClient = useQueryClient();
   const hasNavigated = useRef(false);
   const [isCheckingGBG, setIsCheckingGBG] = useState(false);
 
   useEffect(() => {
+    // Helper function to prefetch dashboard data and navigate
+    const navigateToDashboard = async () => {
+      // Prefetch tournament data while still on splash screen
+      await queryClient.prefetchQuery({
+        queryKey: tournamentQueryKeys.tournaments,
+        queryFn: fetchTournaments,
+      });
+
+      hasNavigated.current = true;
+      navigation.replace('Dashboard');
+    };
+
     const checkAuthAndNavigate = async () => {
       // Prevent double navigation
       if (hasNavigated.current) return;
@@ -48,8 +66,7 @@ export const useSplash = () => {
 
         // User is verified - go to dashboard
         if (user.is_identity_verified === true) {
-          hasNavigated.current = true;
-          navigation.replace('Dashboard');
+          await navigateToDashboard();
           return;
         }
 
@@ -59,12 +76,12 @@ export const useSplash = () => {
 
           try {
             const gbgResult = await verifyGBG(user.kyc_instance_id);
-            hasNavigated.current = true;
 
             if (gbgResult.status === 'PASS') {
-              navigation.replace('Dashboard');
+              await navigateToDashboard();
             } else {
               // IN_PROGRESS, FAIL, MANUAL - show verification pending
+              hasNavigated.current = true;
               navigation.replace('VerificationPending');
             }
           } catch {
@@ -88,7 +105,7 @@ export const useSplash = () => {
     };
 
     checkAuthAndNavigate();
-  }, [navigation]);
+  }, [navigation, queryClient]);
 
   return {
     isCheckingGBG,

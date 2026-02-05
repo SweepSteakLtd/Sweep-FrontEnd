@@ -10,8 +10,10 @@ import { installMockInterceptor } from './src/lib/mocks/interceptor';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { theme } from './src/theme/theme';
 
-// Install mock interceptor globally
-installMockInterceptor();
+// Install mock interceptor globally (development only)
+if (__DEV__) {
+  installMockInterceptor();
+}
 
 // Clear all mock configurations on app start (run once)
 // (async () => {
@@ -53,18 +55,18 @@ const ThemedStatusBar = () => {
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <KeyboardProvider>
-        <ThemeProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <BottomSheetProvider>
-              <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <KeyboardProvider>
+              <BottomSheetProvider>
                 <ThemedStatusBar />
                 <RootNavigator />
-              </AuthProvider>
-            </BottomSheetProvider>
-          </QueryClientProvider>
-        </ThemeProvider>
-      </KeyboardProvider>
+              </BottomSheetProvider>
+            </KeyboardProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 }
