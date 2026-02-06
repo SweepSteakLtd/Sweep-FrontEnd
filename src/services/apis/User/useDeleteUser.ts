@@ -14,7 +14,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
  * Deletes the current user account
  */
 const deleteUser = async (email: string): Promise<void> => {
-  return api.delete(`/api/users/me?email=${encodeURIComponent(email)}`);
+  return api.delete(`/api/users/me?email=${encodeURIComponent(email)}&removeFirebase=true`);
 };
 
 export const useDeleteUser = () => {
