@@ -6,7 +6,7 @@ on:
       profile:
         description: 'Build profile to use'
         required: true
-        default: 'test'
+        default: 'production'
         type: choice
         options:
           - test
@@ -47,23 +47,26 @@ jobs:
 
       - name: Build on EAS
         run: |
+          set -euo pipefail
           PROFILE="${{ github.event.inputs.profile }}"
           PLATFORM="${{ github.event.inputs.platform }}"
+
+          echo "EAS Build: profile=${PROFILE} platform=${PLATFORM}"
           
           # For preview and production profiles, auto-submit iOS builds only
           if [ "$PROFILE" == "preview" ] || [ "$PROFILE" == "production" ]; then
             if [ "$PLATFORM" == "ios" ]; then
-              eas build --platform ios --profile $PROFILE --auto-submit --non-interactive --no-wait
+              eas build --platform ios --profile "$PROFILE" --auto-submit --non-interactive --no-wait
             elif [ "$PLATFORM" == "android" ]; then
-              eas build --platform android --profile $PROFILE --non-interactive --no-wait
+              eas build --platform android --profile "$PROFILE" --non-interactive --no-wait
             else
               # For "all", build iOS with auto-submit and Android without
-              eas build --platform ios --profile $PROFILE --auto-submit --non-interactive --no-wait
-              eas build --platform android --profile $PROFILE --non-interactive --no-wait
+              eas build --platform ios --profile "$PROFILE" --auto-submit --non-interactive --no-wait
+              eas build --platform android --profile "$PROFILE" --non-interactive --no-wait
             fi
           else
-            # For test profile, builds automatically go to TestFlight
-            eas build --platform $PLATFORM --profile $PROFILE --non-interactive --no-wait
+            # For test profile, build without auto-submit
+            eas build --platform "$PLATFORM" --profile "$PROFILE" --non-interactive --no-wait
           fi
 
       - name: Comment on commit

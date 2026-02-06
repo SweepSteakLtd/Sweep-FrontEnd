@@ -1,11 +1,32 @@
 import { z } from 'zod';
 
+const middleNamesSchema = z
+  .string()
+  .optional()
+  .refine(
+    (val) => {
+      // Optional field: allow undefined/empty string
+      if (!val || val.trim() === '') return true;
+      // Allow letters, spaces, apostrophes, and hyphens (incl. common accented latin chars)
+      return /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/.test(val.trim());
+    },
+    { message: 'Middle names can only contain letters, spaces, hyphens, and apostrophes' },
+  )
+  .refine(
+    (val) => {
+      if (!val || val.trim() === '') return true;
+      return val.trim().length <= 50;
+    },
+    { message: 'Middle names must be 50 characters or less' },
+  );
+
 // Step 1: Basic Info
 export const basicInfoSchema = z.object({
   firstName: z
     .string()
     .min(1, 'First name is required')
     .min(2, 'First name must be at least 2 characters'),
+  middleNames: middleNamesSchema,
   lastName: z
     .string()
     .min(1, 'Last name is required')
@@ -84,6 +105,7 @@ export const createProfileSchema = z.object({
     .string()
     .min(1, 'First name is required')
     .min(2, 'First name must be at least 2 characters'),
+  middleNames: middleNamesSchema,
   lastName: z
     .string()
     .min(1, 'Last name is required')

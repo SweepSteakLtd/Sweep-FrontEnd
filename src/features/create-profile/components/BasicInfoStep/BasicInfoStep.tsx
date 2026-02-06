@@ -53,7 +53,7 @@ export const BasicInfoStep = ({
 
       <Input
         variant="light"
-        label="Middle Names (Optional)"
+        label="Middle Names"
         value={middleNames}
         onChangeText={onMiddleNamesChange}
         placeholder="Michael James"

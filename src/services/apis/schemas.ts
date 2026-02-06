@@ -17,6 +17,7 @@ import { z } from 'zod';
 export const userSchema = z.object({
   id: z.string().optional(),
   first_name: z.string().optional(),
+  middle_names: z.string().optional(),
   last_name: z.string().optional(),
   nickname: z.string().optional(),
   email: z.string().optional(),

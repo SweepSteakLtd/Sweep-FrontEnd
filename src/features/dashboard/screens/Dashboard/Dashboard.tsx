@@ -67,7 +67,13 @@ export const Dashboard = () => {
 
   if (loading) {
     return (
-      <ScreenWrapper title="" showBackButton={false} showProfile leftComponent={headerLeftComponent}>
+      <ScreenWrapper
+        title="Tournaments"
+        showBackButton={false}
+        showProfile
+        leftComponent={headerLeftComponent}
+        headerContentPaddingLeft={0}
+      >
         <TournamentGrid>
           <View style={{ padding: 20 }}>
             {/* Show 3 skeleton cards while loading */}
@@ -82,7 +88,13 @@ export const Dashboard = () => {
 
   if (error) {
     return (
-      <ScreenWrapper title="" showBackButton={false} showProfile leftComponent={headerLeftComponent}>
+      <ScreenWrapper
+        title="Tournaments"
+        showBackButton={false}
+        showProfile
+        leftComponent={headerLeftComponent}
+        headerContentPaddingLeft={0}
+      >
         <EmptyState>
           <EmptyStateText>Failed to load tournaments</EmptyStateText>
           <EmptyStateText style={{ fontSize: 14, marginTop: 8, opacity: 0.7 }}>
@@ -94,7 +106,13 @@ export const Dashboard = () => {
   }
 
   return (
-    <ScreenWrapper title="" showBackButton={false} showProfile leftComponent={headerLeftComponent}>
+    <ScreenWrapper
+      title="Tournaments"
+      showBackButton={false}
+      showProfile
+      leftComponent={headerLeftComponent}
+      headerContentPaddingLeft={0}
+    >
       {tournaments.length === 0 ? (
         <EmptyState>
           <EmptyStateText>No tournaments available</EmptyStateText>

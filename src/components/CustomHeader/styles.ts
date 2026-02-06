@@ -5,6 +5,10 @@ interface BackgroundColorProps {
   backgroundColor?: string;
 }
 
+interface HeaderContentProps {
+  paddingLeft?: number;
+}
+
 export const SafeAreaContainer = styled.View<BackgroundColorProps>`
   background-color: ${({ backgroundColor, theme }: BackgroundColorProps & { theme: Theme }) =>
     backgroundColor || theme.colors.primary};
@@ -15,11 +19,11 @@ export const Container = styled.View<BackgroundColorProps>`
     backgroundColor || theme.colors.primary};
 `;
 
-export const HeaderContent = styled.View`
+export const HeaderContent = styled.View<HeaderContentProps>`
   flex-direction: row;
   align-items: center;
   min-height: 48px;
-  padding-left: 8px;
+  padding-left: ${({ paddingLeft }: HeaderContentProps) => paddingLeft ?? 8}px;
 `;
 
 export const LeftSection = styled.View`

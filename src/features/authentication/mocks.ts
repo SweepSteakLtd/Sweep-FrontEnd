@@ -3,6 +3,7 @@ export const userProfileCompleteMock = {
   data: {
     id: 'mock-user-123',
     first_name: 'Mock',
+    middle_names: 'Middle',
     last_name: 'User',
     nickname: 'mockuser',
     email: 'mock@example.com',
@@ -43,6 +44,7 @@ export const userProfileUnverifiedMock = {
   data: {
     id: 'mock-user-unverified',
     first_name: 'Unverified',
+    middle_names: 'Middle',
     last_name: 'User',
     nickname: 'unverified',
     email: 'unverified@example.com',
@@ -91,6 +93,7 @@ export const profileCreationSuccessMock = {
   data: {
     id: 'new-user-123',
     first_name: 'New',
+    middle_names: 'Middle',
     last_name: 'User',
     nickname: '',
     email: 'newuser@example.com',
