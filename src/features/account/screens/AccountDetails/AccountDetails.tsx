@@ -147,6 +147,14 @@ export const AccountDetails = () => {
             </InputRow>
             <InputRow>
               <Input
+                label="Middle Names"
+                value={user?.middle_names || ''}
+                editable={false}
+                placeholder="Middle names"
+              />
+            </InputRow>
+            <InputRow>
+              <Input
                 label="Last Name"
                 value={user?.last_name || ''}
                 editable={false}

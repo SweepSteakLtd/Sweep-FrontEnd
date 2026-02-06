@@ -26,6 +26,7 @@ interface ScreenWrapperProps {
   rightLogo?: React.ReactNode;
   headerBackgroundColor?: string;
   contentBackgroundColor?: string;
+  headerContentPaddingLeft?: number;
 }
 
 export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
@@ -40,6 +41,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   rightLogo,
   headerBackgroundColor,
   contentBackgroundColor,
+  headerContentPaddingLeft,
 }) => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -88,6 +90,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
             leftLogo={leftLogo}
             rightLogo={rightLogo}
             backgroundColor={headerBackgroundColor}
+            contentPaddingLeft={headerContentPaddingLeft}
           />
         )}
         {children}

@@ -198,6 +198,7 @@ export const useCreateProfileForm = () => {
         // Basic Info - validate with Zod
         const validation = validateWithZod<FieldErrors>(basicInfoSchema, {
           firstName: formData.firstName,
+          middleNames: formData.middleNames,
           lastName: formData.lastName,
         });
 
@@ -294,6 +295,7 @@ export const useCreateProfileForm = () => {
   const handleSubmit = async (): Promise<void> => {
     const validation = validateWithZod<FieldErrors>(createProfileSchema, {
       firstName: formData.firstName,
+      middleNames: formData.middleNames,
       lastName: formData.lastName,
       phoneNumber: formData.phoneNumber,
       bio: formData.bio,

@@ -4,17 +4,17 @@
     "slug": "sweepsteak",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/ChipinSmoothApp.png",
+    "icon": "./assets/ChipInLogo.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "backgroundColor": "#2d5016",
-      "image": "./assets/ChipinSmoothApp.png",
+      "backgroundColor": "#FFFFFF",
+      "image": "./assets/ChipInLogo.jpg",
       "resizeMode": "contain"
     },
     "androidStatusBar": {
-      "barStyle": "light-content",
-      "backgroundColor": "#2d5016",
+      "barStyle": "dark-content",
+      "backgroundColor": "#FFFFFF",
       "translucent": false
     },
     "ios": {
@@ -32,7 +32,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/ChipInLogo.jpg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.sweepsteak.app",
