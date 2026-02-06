@@ -4,8 +4,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import type { Address } from '~/components/AddressLookup/AddressLookup';
+import { firebaseAuth } from '~/lib/firebase';
 import { validateWithZod } from '~/lib/validation/zodHelpers';
 import type { RootStackParamList } from '~/navigation/types';
+import { api } from '~/services/apis/apiClient';
 import { userQueryKeys } from '~/services/apis/User/useGetUser';
 import { poundsToPence } from '~/utils/currency';
 import type { PhoneNumberStepHandle } from '../components/PhoneNumberStep/PhoneNumberStep';
@@ -316,6 +318,17 @@ export const useCreateProfileForm = () => {
     setFieldErrors({});
     setScreenState('loading');
     setLoadingComplete(false);
+
+    // Delete existing user profile before creating new one
+    try {
+      const email = firebaseAuth.currentUser?.email;
+      if (email) {
+        await api.delete(`/api/users/me?email=${encodeURIComponent(email)}`);
+      }
+    } catch (error) {
+      // Ignore error if user doesn't exist yet - this is expected for new users
+      console.log('Delete user skipped (user may not exist yet):', error);
+    }
 
     const result = await createProfile({
       first_name: formData.firstName,
