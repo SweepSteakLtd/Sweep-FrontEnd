@@ -30,10 +30,6 @@ export const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({
       label: 'One number',
       met: /[0-9]/.test(password),
     },
-    {
-      label: 'One special character (!@#$%^&*)',
-      met: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    },
   ];
 
   return (
